@@ -1,26 +1,21 @@
-# スマレジ - Claude MCP (Microservice Connection Point)
+# スマレジ - Claude MCP (Model Context Protocol) サーバー
 
-スマレジPOSシステムのデータをClaudeと連携させるためのマイクロサービスです。このAPIを通じて、スマレジのデータを取得し、Claudeによる自然言語での分析や質問応答を実現します。
+スマレジPOSシステムのデータをClaudeやその他のLLMと連携するためのMCPサーバーです。このツールを使用することで、スマレジのPOSデータにAIアシスタントがアクセスし、自然言語での分析や質問応答が可能になります。
 
 ## 機能
 
-- スマレジAPIとの連携
-  - 商品情報の取得
-  - 売上情報の取得
-  - 在庫情報の取得
-  - 店舗情報の取得
-  - 従業員情報の取得
-- Claude APIとの連携
-  - テキスト生成
-  - チャット機能
-  - スマレジデータの分析
+- スマレジデータへのアクセス
+  - 商品情報の取得 (`get_products`)
+  - 売上情報の取得 (`get_sales`)
+  - 店舗情報の取得 (`get_stores`)
+  - 売上分析機能 (`analyze_sales`)
 
 ## 必要条件
 
-- Node.js (v14以上)
-- npm または yarn
-- スマレジAPIのアクセス権限
-- Claude APIのアクセスキー
+- [Bun](https://bun.sh) 1.0.0以上
+- Node.js 18.0.0以上（一部の依存関係用）
+- TypeScript
+- スマレジAPIのアクセス権限（実装時）
 
 ## インストール
 
@@ -30,37 +25,7 @@ git clone <リポジトリURL>
 cd smaregi-mcp
 
 # 依存パッケージのインストール
-npm install
-
-# 環境変数の設定
-cp .env.example .env
-# .envファイルを編集して必要な値を設定してください
-```
-
-## 環境変数の設定
-
-`.env`ファイルに以下の環境変数を設定してください：
-
-```
-# スマレジAPI認証情報
-SMAREGI_CLIENT_ID=your_client_id
-SMAREGI_CLIENT_SECRET=your_client_secret
-SMAREGI_CONTRACT_ID=your_contract_id
-SMAREGI_ACCESS_TOKEN_URL=https://id.smaregi.jp/app/token
-SMAREGI_API_BASE_URL=https://api.smaregi.jp
-
-# Claude API認証情報
-CLAUDE_API_KEY=your_claude_api_key
-CLAUDE_API_URL=https://api.anthropic.com/v1
-
-# サーバー設定
-PORT=3000
-NODE_ENV=development
-LOG_LEVEL=info
-
-# JWT Secret (認証用)
-JWT_SECRET=your_jwt_secret_key
-JWT_EXPIRES_IN=1d
+bun install
 ```
 
 ## 使用方法
@@ -68,125 +33,121 @@ JWT_EXPIRES_IN=1d
 ### サーバーの起動
 
 ```bash
-# 開発モード
-npm run dev
+# 開発モード（ファイル変更を監視）
+bun dev
 
 # 本番モード
-npm start
+bun start
 ```
 
-サーバーは`http://localhost:3000`で起動します（環境変数で設定した場合は異なるポートになります）。
+### Claude Desktopとの連携設定
 
-### API認証
+Claude Desktopで使用する場合は、以下の設定を行います。
 
-全てのAPIエンドポイントでJWT認証が必要です。トークンを取得するには：
-
-```bash
-curl -X POST http://localhost:3000/api/auth/login \
-  -H "Content-Type: application/json" \
-  -d '{"username": "admin", "password": "password"}'
-```
-
-レスポンス例：
-
+macOSの場合:
 ```json
+// ~/Library/Application Support/Claude/claude_desktop_config.json
 {
-  "success": true,
-  "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...",
-  "user": {
-    "id": 1,
-    "username": "admin",
-    "role": "admin"
+  "smaregi": {
+    "command": "/path/to/bun",
+    "args": ["run", "/path/to/smaregi-mcp/src/index.ts"]
   }
 }
 ```
 
-### APIエンドポイント
-
-#### 認証
-
-- `POST /api/auth/login` - ログイン
-- `GET /api/auth/verify` - トークン検証
-
-#### スマレジデータ
-
-- `GET /api/smaregi/products` - 商品一覧の取得
-- `GET /api/smaregi/products/:productCode` - 商品詳細の取得
-- `GET /api/smaregi/sales` - 売上一覧の取得
-- `GET /api/smaregi/sales/:transactionId` - 売上詳細の取得
-- `GET /api/smaregi/inventory` - 在庫一覧の取得
-- `GET /api/smaregi/stores` - 店舗一覧の取得
-- `GET /api/smaregi/staff` - 従業員一覧の取得
-
-#### Claude連携
-
-- `POST /api/claude/generate` - テキスト生成
-- `POST /api/claude/chat` - チャット
-- `POST /api/claude/analyze-smaregi` - スマレジデータの分析
-- `PUT /api/claude/config` - Claudeの設定更新
-
-## 使用例
-
-### スマレジデータの分析
-
-```bash
-curl -X POST http://localhost:3000/api/claude/analyze-smaregi \
-  -H "Content-Type: application/json" \
-  -H "Authorization: Bearer YOUR_JWT_TOKEN" \
-  -d '{
-    "query": "先月の売上が最も高かった商品は何ですか？",
-    "dataTypes": ["products", "sales"],
-    "params": {
-      "sales": {
-        "from": "2023-01-01",
-        "to": "2023-01-31"
-      }
-    }
-  }'
-```
-
-## エラーハンドリング
-
-APIはエラー発生時に適切なHTTPステータスコードとJSONレスポンスを返します：
-
+Windowsの場合:
 ```json
+// %APPDATA%\Claude\claude_desktop_config.json
 {
-  "success": false,
-  "error": "エラーメッセージ"
+  "smaregi": {
+    "command": "C:\\path\\to\\bun.exe",
+    "args": ["run", "C:\\path\\to\\smaregi-mcp\\src\\index.ts"]
+  }
 }
 ```
 
-## 開発
+## 実装の詳細
 
-### プロジェクト構造
+### 提供ツール
 
-```
-smaregi-mcp/
-├── config/           # 設定ファイル
-├── docs/             # ドキュメント
-├── logs/             # ログファイル（production環境）
-├── src/
-│   ├── api/          # APIルート
-│   ├── auth/         # 認証関連
-│   ├── models/       # データモデル
-│   ├── services/     # サービス層
-│   ├── utils/        # ユーティリティ
-│   └── index.js      # エントリーポイント
-├── .env              # 環境変数
-├── .env.example      # 環境変数の例
-├── package.json      # パッケージ情報
-└── README.md         # このファイル
+1. **get_products**: 商品情報の取得
+   - 利用可能なパラメータ:
+     - `limit`: 返す商品数の上限
+     - `page`: ページング用のページ番号
+     - `category`: カテゴリでフィルタリング
+
+2. **get_sales**: 売上情報の取得
+   - 利用可能なパラメータ:
+     - `startDate`: 開始日（YYYY-MM-DD形式）
+     - `endDate`: 終了日（YYYY-MM-DD形式）
+     - `storeId`: 店舗IDでフィルタリング
+     - `limit`: 返す売上レコード数の上限
+     - `page`: ページング用のページ番号
+
+3. **get_stores**: 店舗情報の取得
+   - パラメータなし
+
+4. **analyze_sales**: 売上分析
+   - 利用可能なパラメータ:
+     - `analysisType`: 分析タイプ（"top_products", "sales_by_category", "store_comparison", "daily_trend"）
+     - `startDate`: 分析の開始日（YYYY-MM-DD形式）
+     - `endDate`: 分析の終了日（YYYY-MM-DD形式）
+     - `limit`: 結果に含める項目の上限数
+
+### 開発
+
+現在のバージョンではモックデータを使用していますが、実際のスマレジAPIとの連携を実装する予定です。APIクライアントは `src/services/` ディレクトリに実装される予定です。
+
+## カスタマイズと拡張
+
+実際のスマレジAPIとの連携を実装するには、`index.ts`内のツール実装を修正し、実際のAPIクライアントを使用するよう変更してください。また、必要に応じて新しいツールを追加することも可能です。
+
+```typescript
+// 実装例
+import { SmaregiApiClient } from './services/smaregiApiClient';
+
+const apiClient = new SmaregiApiClient({
+  clientId: process.env.SMAREGI_CLIENT_ID,
+  clientSecret: process.env.SMAREGI_CLIENT_SECRET,
+  contractId: process.env.SMAREGI_CONTRACT_ID
+});
+
+// Products tool implementation
+server.tool(
+  "get_products",
+  "...",
+  ProductsQuerySchema.shape,
+  async (args) => {
+    try {
+      // 実際のAPIを呼び出す
+      const products = await apiClient.getProducts(args);
+      
+      return {
+        content: [
+          {
+            type: "text",
+            text: JSON.stringify(products, null, 2),
+          },
+        ],
+        isError: false,
+      };
+    } catch (error) {
+      // エラー処理
+    }
+  }
+);
 ```
 
 ## ライセンス
 
-このプロジェクトは[ISCライセンス](LICENSE)の下で公開されています。
+このプロジェクトはISCライセンスの下で公開されています。
 
-## 著者
+## 貢献
 
-- [著者名]
+バグ報告、機能リクエスト、プルリクエストを歓迎します。大きな変更を行う前には、まずIssueを開いて議論してください。
 
 ## 謝辞
 
 - [スマレジ](https://smaregi.jp/)
 - [Anthropic（Claude）](https://www.anthropic.com/)
+- [Model Context Protocol](https://modelcontextprotocol.ai/)
