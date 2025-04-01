@@ -1,0 +1,98 @@
+get:
+  tags:
+    - 会員
+  summary: 顧客タイプセクション一覧取得
+  description: 顧客タイプセクション情報の一覧を取得します。
+  operationId: getCustomerTypeSections
+  parameters:
+    - name: customer_type_section_id
+      in: query
+      description: 顧客タイプセクションID
+      schema:
+        type: integer
+    - name: customer_type_id
+      in: query
+      description: 顧客タイプID
+      schema:
+        type: integer
+    - name: name
+      in: query
+      description: セクション名
+      schema:
+        type: string
+    - name: limit
+      in: query
+      description: 取得件数
+      schema:
+        type: integer
+        default: 20
+    - name: page
+      in: query
+      description: ページ番号
+      schema:
+        type: integer
+        default: 1
+  responses:
+    '200':
+      description: 成功
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              customerTypeSections:
+                type: array
+                items:
+                  $ref: '../../schemas/customer_classification/CustomerTypeSection.yaml'
+              pagination:
+                $ref: '../../schemas/common/Pagination.yaml'
+    '401':
+      description: 認証エラー
+      content:
+        application/json:
+          schema:
+            $ref: '../../schemas/common/Error.yaml'
+  security:
+    - AppAccessToken:
+        - pos.customers:read
+    - UserAccessToken:
+        - pos.customers:read
+
+patch:
+  tags:
+    - 会員
+  summary: 顧客タイプセクション更新
+  description: 顧客タイプセクション情報を更新します。
+  operationId: updateCustomerTypeSection
+  requestBody:
+    content:
+      application/json:
+        schema:
+          $ref: '../../schemas/customer_classification/CustomerTypeSectionUpdate.yaml'
+    required: true
+  responses:
+    '200':
+      description: 成功
+    '400':
+      description: バリデーションエラー
+      content:
+        application/json:
+          schema:
+            $ref: '../../schemas/common/Error.yaml'
+    '401':
+      description: 認証エラー
+      content:
+        application/json:
+          schema:
+            $ref: '../../schemas/common/Error.yaml'
+    '404':
+      description: 指定されたセクションが存在しない
+      content:
+        application/json:
+          schema:
+            $ref: '../../schemas/common/Error.yaml'
+  security:
+    - AppAccessToken:
+        - pos.customers:write
+    - UserAccessToken:
+        - pos.customers:write

@@ -1,0 +1,29 @@
+get:
+  tags:
+    - 決済
+  summary: CAT/CCTカード会社一覧取得
+  description: CAT/CCTカード会社情報の一覧を取得します。
+  operationId: getCatCctCardCompanies
+  responses:
+    '200':
+      description: 成功
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              catCctCardCompanies:
+                type: array
+                items:
+                  $ref: '../../schemas/payment_hardware/CatCctCardCompany.yaml'
+    '401':
+      description: 認証エラー
+      content:
+        application/json:
+          schema:
+            $ref: '../../schemas/common/Error.yaml'
+  security:
+    - AppAccessToken:
+        - pos.products:read
+    - UserAccessToken:
+        - pos.products:read

@@ -350,24 +350,34 @@ StocktakingProduct:
 StocktakingStock:
   $ref: './stocktakings/StocktakingStock.yaml'
 
-# その他スキーマ
+# 税率系スキーマ
 TaxRate:
-  $ref: './others/TaxRate.yaml'
+  $ref: './tax_system/TaxRate.yaml'
 ReduceTaxRate:
-  $ref: './others/ReduceTaxRate.yaml'
+  $ref: './tax_system/ReduceTaxRate.yaml'
+
+# レシート系スキーマ
 ReceiptRemark:
-  $ref: './others/ReceiptRemark.yaml'
+  $ref: './receipt/ReceiptRemark.yaml'
+ReceiptRemarkCreate:
+  $ref: './receipt/ReceiptRemarkCreate.yaml'
+
+# 値引き系スキーマ
 DiscountDivision:
-  $ref: './others/DiscountDivision.yaml'
+  $ref: './discount/DiscountDivision.yaml'
+
+# 決済ハードウェア系スキーマ
 CatCctCardCompany:
-  $ref: './others/CatCctCardCompany.yaml'
+  $ref: './payment_hardware/CatCctCardCompany.yaml'
+
+# 顧客区分系スキーマ
 CustomerType:
-  $ref: './others/CustomerType.yaml'
+  $ref: './customer_classification/CustomerType.yaml'
 CustomerTypeCreate:
-  $ref: './others/CustomerTypeCreate.yaml'
+  $ref: './customer_classification/CustomerTypeCreate.yaml'
 CustomerTypeUpdate:
-  $ref: './others/CustomerTypeUpdate.yaml'
+  $ref: './customer_classification/CustomerTypeUpdate.yaml'
 CustomerTypeSection:
-  $ref: './others/CustomerTypeSection.yaml'
+  $ref: './customer_classification/CustomerTypeSection.yaml'
 CustomerTypeSectionUpdate:
-  $ref: './others/CustomerTypeSectionUpdate.yaml'
+  $ref: './customer_classification/CustomerTypeSectionUpdate.yaml'

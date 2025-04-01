@@ -292,18 +292,26 @@
 /stocktakings/stocks:
   $ref: './stocktakings/stocktakings_stocks.yaml'
 
-# その他API
+# 税率系API
 /tax_rates:
-  $ref: './others/tax_rates.yaml'
+  $ref: './tax_system/tax_rates.yaml'
 /reduce_tax_rates:
-  $ref: './others/reduce_tax_rates.yaml'
+  $ref: './tax_system/reduce_tax_rates.yaml'
+
+# レシート系API
 /receipt_remarks:
-  $ref: './others/receipt_remarks.yaml'
+  $ref: './receipt/receipt_remarks.yaml'
+
+# 値引き系API
 /discount_divisions:
-  $ref: './others/discount_divisions.yaml'
+  $ref: './discount/discount_divisions.yaml'
+
+# 決済ハードウェア系API
 /cat_cct_card_companies:
-  $ref: './others/cat_cct_card_companies.yaml'
+  $ref: './payment_hardware/cat_cct_card_companies.yaml'
+
+# 顧客区分系API
 /customer_types:
-  $ref: './others/customer_types.yaml'
+  $ref: './customer_classification/customer_types.yaml'
 /customer_type_sections:
-  $ref: './others/customer_type_sections.yaml'
+  $ref: './customer_classification/customer_type_sections.yaml'

@@ -1,0 +1,29 @@
+get:
+  tags:
+    - 税率
+  summary: 税率一覧取得
+  description: 税率情報の一覧を取得します。
+  operationId: getTaxRates
+  responses:
+    '200':
+      description: 成功
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              taxRates:
+                type: array
+                items:
+                  $ref: '../../schemas/tax_system/TaxRate.yaml'
+    '401':
+      description: 認証エラー
+      content:
+        application/json:
+          schema:
+            $ref: '../../schemas/common/Error.yaml'
+  security:
+    - AppAccessToken:
+        - pos.products:read
+    - UserAccessToken:
+        - pos.products:read
