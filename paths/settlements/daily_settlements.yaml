@@ -1,0 +1,157 @@
+get:
+  tags:
+    - 精算
+  summary: 日次締め一覧取得
+  description: 日次締め情報一覧を取得します。
+  parameters:
+    - name: fields
+      in: query
+      description: 取得したいフィールド名（カンマ区切りで指定可）
+      schema:
+        type: array
+        items:
+          type: string
+        example: [dailySettlementId, storeId, businessDate, closingDate]
+    - name: sort
+      in: query
+      description: 並び順（カンマ区切りで指定可）
+      schema:
+        type: string
+        example: businessDate,DESC
+    - name: limit
+      in: query
+      description: 取得上限数
+      schema:
+        type: integer
+        example: 50
+    - name: page
+      in: query
+      description: ページ番号
+      schema:
+        type: integer
+        example: 1
+    - name: daily_settlement_id
+      in: query
+      description: 日次締めID
+      schema:
+        type: string
+    - name: store_id
+      in: query
+      description: 店舗ID
+      schema:
+        type: string
+    - name: business_date-from
+      in: query
+      description: 営業日(From)
+      schema:
+        type: string
+        format: date
+    - name: business_date-to
+      in: query
+      description: 営業日(To)
+      schema:
+        type: string
+        format: date
+    - name: closing_date-from
+      in: query
+      description: 締め日(From)
+      schema:
+        type: string
+        format: date
+    - name: closing_date-to
+      in: query
+      description: 締め日(To)
+      schema:
+        type: string
+        format: date
+    - name: closing_date_time-from
+      in: query
+      description: 締め日時(From)
+      schema:
+        type: string
+        format: date-time
+    - name: closing_date_time-to
+      in: query
+      description: 締め日時(To)
+      schema:
+        type: string
+        format: date-time
+    - name: staff_id
+      in: query
+      description: スタッフID
+      schema:
+        type: string
+    - name: status
+      in: query
+      description: ステータス(0:未確定, 1:確定)
+      schema:
+        type: string
+        enum: ['0', '1']
+    - name: ins_date_time-from
+      in: query
+      description: 登録日時(From)
+      schema:
+        type: string
+        format: date-time
+    - name: ins_date_time-to
+      in: query
+      description: 登録日時(To)
+      schema:
+        type: string
+        format: date-time
+    - name: upd_date_time-from
+      in: query
+      description: 更新日時(From)
+      schema:
+        type: string
+        format: date-time
+    - name: upd_date_time-to
+      in: query
+      description: 更新日時(To)
+      schema:
+        type: string
+        format: date-time
+  responses:
+    '200':
+      description: 取得成功
+      content:
+        application/json:
+          schema:
+            type: array
+            items:
+              $ref: '../../schemas/settlements/DailySettlement.yaml'
+  security:
+    - AppAccessToken:
+        - pos.transactions:read
+    - UserAccessToken:
+        - pos.transactions:read
+
+post:
+  tags:
+    - 精算
+  summary: 日次締め登録
+  description: 日次締め情報を登録します。
+  requestBody:
+    required: true
+    content:
+      application/json:
+        schema:
+          $ref: '../../schemas/settlements/DailySettlementCreate.yaml'
+  responses:
+    '200':
+      description: 登録成功
+      content:
+        application/json:
+          schema:
+            $ref: '../../schemas/settlements/DailySettlement.yaml'
+    '400':
+      description: 入力チェックエラーの場合
+      content:
+        application/json:
+          schema:
+            $ref: '../../schemas/common/Error.yaml'
+  security:
+    - AppAccessToken:
+        - pos.transactions:write
+    - UserAccessToken:
+        - pos.transactions:write

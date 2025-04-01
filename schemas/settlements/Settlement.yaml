@@ -1,0 +1,86 @@
+type: object
+properties:
+  settlementId:
+    type: string
+    description: 精算ID
+  settlementNo:
+    type: string
+    description: 精算番号
+  storeId:
+    type: string
+    description: 店舗ID
+  storeName:
+    type: string
+    description: 店舗名
+  terminalId:
+    type: string
+    description: 端末ID
+  terminalName:
+    type: string
+    description: 端末名
+  staffId:
+    type: string
+    description: スタッフID
+  staffName:
+    type: string
+    description: スタッフ名
+  settlementDateTime:
+    type: string
+    format: date-time
+    description: 精算日時
+  openingDateTime:
+    type: string
+    format: date-time
+    description: レジ開始日時
+  closingDateTime:
+    type: string
+    format: date-time
+    description: レジ締め日時
+  summary:
+    type: object
+    properties:
+      salesTotal:
+        type: number
+        format: float
+        description: 売上合計
+      returnTotal:
+        type: number
+        format: float
+        description: 返品合計
+      discountTotal:
+        type: number
+        format: float
+        description: 値引合計
+      transactionCount:
+        type: integer
+        description: 取引件数
+      customerCount:
+        type: integer
+        description: 客数
+  payments:
+    type: array
+    items:
+      type: object
+      properties:
+        paymentMethodId:
+          type: string
+          description: 支払方法ID
+        paymentMethodName:
+          type: string
+          description: 支払方法名
+        amount:
+          type: number
+          format: float
+          description: 金額
+        count:
+          type: integer
+          description: 件数
+    description: 支払方法別集計
+  insDateTime:
+    type: string
+    format: date-time
+    description: 登録日時
+  updDateTime:
+    type: string
+    format: date-time
+    description: 更新日時
