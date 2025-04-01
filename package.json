@@ -12,7 +12,8 @@
     "lint:fix": "eslint \"**/*.ts\" --fix",
     "format": "prettier --write \"**/*.{ts,js,json,md}\"",
     "check": "bun run lint && tsc --noEmit",
-    "test": "bun test"
+    "test": "bun test",
+    "generate-api": "node ai/generate_openapi.js"
   },
   "keywords": [
     "smaregi",
@@ -32,7 +33,9 @@
     "@eslint/js": "^9.22.0",
     "@types/node": "^20.10.0",
     "eslint": "^8.57.0",
+    "js-yaml": "^4.1.0",
     "openapi-typescript": "^7.6.1",
+    "playwright": "^1.43.0",
     "prettier": "3.5.3",
     "typescript": "^5.0.0",
     "typescript-eslint": "^8.26.1"
