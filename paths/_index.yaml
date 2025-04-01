@@ -109,6 +109,18 @@
   $ref: './sales/bargain_products.yaml'
 /bargain/{id}/products/{bargainProductId}:
   $ref: './sales/bargain_products_id.yaml'
+/bargain:
+  $ref: './sales/bargain.yaml'
+/bargain/{id}:
+  $ref: './sales/bargain_id.yaml'
+/bargain/{id}/stores:
+  $ref: './sales/bargain_stores.yaml'
+/bargain/{id}/stores/{bargainStoreId}:
+  $ref: './sales/bargain_stores_id.yaml'
+/bargain/{id}/products:
+  $ref: './sales/bargain_products.yaml'
+/bargain/{id}/products/{bargainProductId}:
+  $ref: './sales/bargain_products_id.yaml'
 
 # オプショングループAPI
 /product_option_groups:
