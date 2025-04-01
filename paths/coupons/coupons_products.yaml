@@ -1,0 +1,105 @@
+parameters:
+  - name: id
+    in: path
+    description: クーポンID
+    required: true
+    schema:
+      type: integer
+
+get:
+  tags:
+    - セール
+  summary: クーポン適用商品一覧取得
+  description: クーポンに適用される商品の一覧を取得します。
+  operationId: getCouponProducts
+  parameters:
+    - name: limit
+      in: query
+      description: 取得件数
+      schema:
+        type: integer
+        default: 20
+    - name: page
+      in: query
+      description: ページ番号
+      schema:
+        type: integer
+        default: 1
+  responses:
+    '200':
+      description: 成功
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              couponProducts:
+                type: array
+                items:
+                  $ref: '../../schemas/coupons/CouponProduct.yaml'
+              pagination:
+                $ref: '../../schemas/common/Pagination.yaml'
+    '401':
+      description: 認証エラー
+      content:
+        application/json:
+          schema:
+            $ref: '../../schemas/common/Error.yaml'
+    '404':
+      description: 指定されたIDのクーポンが存在しない
+      content:
+        application/json:
+          schema:
+            $ref: '../../schemas/common/Error.yaml'
+  security:
+    - AppAccessToken:
+        - pos.products:read
+    - UserAccessToken:
+        - pos.products:read
+
+post:
+  tags:
+    - セール
+  summary: クーポン適用商品登録
+  description: クーポンに適用される商品を登録します。
+  operationId: createCouponProduct
+  requestBody:
+    content:
+      application/json:
+        schema:
+          $ref: '../../schemas/coupons/CouponProductCreate.yaml'
+    required: true
+  responses:
+    '201':
+      description: 成功
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              id:
+                type: integer
+                description: クーポン適用商品ID
+    '400':
+      description: バリデーションエラー
+      content:
+        application/json:
+          schema:
+            $ref: '../../schemas/common/Error.yaml'
+    '401':
+      description: 認証エラー
+      content:
+        application/json:
+          schema:
+            $ref: '../../schemas/common/Error.yaml'
+    '404':
+      description: 指定されたIDのクーポンが存在しない
+      content:
+        application/json:
+          schema:
+            $ref: '../../schemas/common/Error.yaml'
+  security:
+    - AppAccessToken:
+        - pos.products:write
+    - UserAccessToken:
+        - pos.products:write

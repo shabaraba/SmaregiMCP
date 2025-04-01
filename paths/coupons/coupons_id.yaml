@@ -1,0 +1,104 @@
+parameters:
+  - name: id
+    in: path
+    description: クーポンID
+    required: true
+    schema:
+      type: integer
+
+get:
+  tags:
+    - セール
+  summary: クーポン取得
+  description: クーポン情報を取得します。
+  operationId: getCoupon
+  responses:
+    '200':
+      description: 成功
+      content:
+        application/json:
+          schema:
+            $ref: '../../schemas/coupons/Coupon.yaml'
+    '401':
+      description: 認証エラー
+      content:
+        application/json:
+          schema:
+            $ref: '../../schemas/common/Error.yaml'
+    '404':
+      description: 指定されたIDのクーポンが存在しない
+      content:
+        application/json:
+          schema:
+            $ref: '../../schemas/common/Error.yaml'
+  security:
+    - AppAccessToken:
+        - pos.products:read
+    - UserAccessToken:
+        - pos.products:read
+
+patch:
+  tags:
+    - セール
+  summary: クーポン更新
+  description: クーポン情報を更新します。
+  operationId: updateCoupon
+  requestBody:
+    content:
+      application/json:
+        schema:
+          $ref: '../../schemas/coupons/CouponUpdate.yaml'
+    required: true
+  responses:
+    '200':
+      description: 成功
+    '400':
+      description: バリデーションエラー
+      content:
+        application/json:
+          schema:
+            $ref: '../../schemas/common/Error.yaml'
+    '401':
+      description: 認証エラー
+      content:
+        application/json:
+          schema:
+            $ref: '../../schemas/common/Error.yaml'
+    '404':
+      description: 指定されたIDのクーポンが存在しない
+      content:
+        application/json:
+          schema:
+            $ref: '../../schemas/common/Error.yaml'
+  security:
+    - AppAccessToken:
+        - pos.products:write
+    - UserAccessToken:
+        - pos.products:write
+
+delete:
+  tags:
+    - セール
+  summary: クーポン削除
+  description: クーポン情報を削除します。
+  operationId: deleteCoupon
+  responses:
+    '204':
+      description: 成功
+    '401':
+      description: 認証エラー
+      content:
+        application/json:
+          schema:
+            $ref: '../../schemas/common/Error.yaml'
+    '404':
+      description: 指定されたIDのクーポンが存在しない
+      content:
+        application/json:
+          schema:
+            $ref: '../../schemas/common/Error.yaml'
+  security:
+    - AppAccessToken:
+        - pos.products:write
+    - UserAccessToken:
+        - pos.products:write

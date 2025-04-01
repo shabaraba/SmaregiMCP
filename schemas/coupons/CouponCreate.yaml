@@ -1,0 +1,82 @@
+type: object
+description: クーポン登録情報
+properties:
+  couponName:
+    type: string
+    description: クーポン名
+  couponCode:
+    type: string
+    description: クーポンコード
+  couponType:
+    type: integer
+    description: クーポン種別（1:値引き額、2:割引率、3:ポイント加算）
+  couponValue:
+    type: integer
+    description: クーポン値（値引き額、割引率、加算ポイント）
+  maxDiscount:
+    type: integer
+    description: 最大値引き額
+  minAmount:
+    type: integer
+    description: 適用最低金額
+  startDate:
+    type: string
+    format: date
+    description: 開始日
+  endDate:
+    type: string
+    format: date
+    description: 終了日
+  bonusDay:
+    type: string
+    description: ボーナスデー（1:月曜日、2:火曜日、...、7:日曜日）
+  bonusMonth:
+    type: integer
+    description: ボーナス月（1:1月、2:2月、...、12:12月）
+  uniqueUse:
+    type: boolean
+    description: ユニーク使用（true:可、false:不可）
+  validDays:
+    type: integer
+    description: 有効日数
+  validCount:
+    type: integer
+    description: 有効回数
+  limitCount:
+    type: integer
+    description: 利用制限回数
+  isPublic:
+    type: boolean
+    description: 公開フラグ（true:公開、false:非公開）
+  description:
+    type: string
+    description: 説明文
+  image:
+    type: string
+    description: 画像URL
+  storeTarget:
+    type: string
+    description: 対象店舗（1:全店舗、2:個別指定）
+  storeIds:
+    type: array
+    description: 適用店舗IDリスト
+    items:
+      type: integer
+  productTarget:
+    type: string
+    description: 対象商品（1:全商品、2:個別指定）
+  isExcludeProductTarget:
+    type: boolean
+    description: 商品対象除外フラグ（true:除外、false:含む）
+  isApplyBargain:
+    type: boolean
+    description: バーゲン併用可否（true:併用可、false:併用不可）
+  isApplyOtherCoupon:
+    type: boolean
+    description: 他クーポン併用可否（true:併用可、false:併用不可）
+required:
+  - couponName
+  - couponType
+  - couponValue
+  - startDate
+  - endDate

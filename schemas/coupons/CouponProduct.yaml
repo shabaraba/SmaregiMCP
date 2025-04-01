@@ -1,0 +1,44 @@
+type: object
+description: クーポン適用商品情報
+properties:
+  id:
+    type: integer
+    description: クーポン適用商品ID
+  couponId:
+    type: integer
+    description: クーポンID
+  productId:
+    type: integer
+    description: 商品ID
+  productCode:
+    type: string
+    description: 商品コード
+  productName:
+    type: string
+    description: 商品名
+  categoryId:
+    type: integer
+    description: 部門ID
+  categoryName:
+    type: string
+    description: 部門名
+  discountType:
+    type: integer
+    description: 値引き種別（1:値引き額、2:割引率、3:ポイント加算）
+  discountValue:
+    type: integer
+    description: 値引き値（値引き額、割引率、加算ポイント）
+  createDate:
+    type: string
+    format: date-time
+    description: 作成日時
+  updateDate:
+    type: string
+    format: date-time
+    description: 更新日時
+required:
+  - id
+  - couponId
+  - productId
+  - discountType
+  - discountValue

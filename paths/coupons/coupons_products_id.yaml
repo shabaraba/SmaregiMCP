@@ -1,0 +1,110 @@
+parameters:
+  - name: id
+    in: path
+    description: クーポンID
+    required: true
+    schema:
+      type: integer
+  - name: couponProductId
+    in: path
+    description: クーポン適用商品ID
+    required: true
+    schema:
+      type: integer
+
+get:
+  tags:
+    - セール
+  summary: クーポン適用商品取得
+  description: クーポンに適用される商品の情報を取得します。
+  operationId: getCouponProduct
+  responses:
+    '200':
+      description: 成功
+      content:
+        application/json:
+          schema:
+            $ref: '../../schemas/coupons/CouponProduct.yaml'
+    '401':
+      description: 認証エラー
+      content:
+        application/json:
+          schema:
+            $ref: '../../schemas/common/Error.yaml'
+    '404':
+      description: 指定されたIDのクーポンまたはクーポン適用商品が存在しない
+      content:
+        application/json:
+          schema:
+            $ref: '../../schemas/common/Error.yaml'
+  security:
+    - AppAccessToken:
+        - pos.products:read
+    - UserAccessToken:
+        - pos.products:read
+
+patch:
+  tags:
+    - セール
+  summary: クーポン適用商品更新
+  description: クーポンに適用される商品の情報を更新します。
+  operationId: updateCouponProduct
+  requestBody:
+    content:
+      application/json:
+        schema:
+          $ref: '../../schemas/coupons/CouponProductUpdate.yaml'
+    required: true
+  responses:
+    '200':
+      description: 成功
+    '400':
+      description: バリデーションエラー
+      content:
+        application/json:
+          schema:
+            $ref: '../../schemas/common/Error.yaml'
+    '401':
+      description: 認証エラー
+      content:
+        application/json:
+          schema:
+            $ref: '../../schemas/common/Error.yaml'
+    '404':
+      description: 指定されたIDのクーポンまたはクーポン適用商品が存在しない
+      content:
+        application/json:
+          schema:
+            $ref: '../../schemas/common/Error.yaml'
+  security:
+    - AppAccessToken:
+        - pos.products:write
+    - UserAccessToken:
+        - pos.products:write
+
+delete:
+  tags:
+    - セール
+  summary: クーポン適用商品削除
+  description: クーポンに適用される商品の情報を削除します。
+  operationId: deleteCouponProduct
+  responses:
+    '204':
+      description: 成功
+    '401':
+      description: 認証エラー
+      content:
+        application/json:
+          schema:
+            $ref: '../../schemas/common/Error.yaml'
+    '404':
+      description: 指定されたIDのクーポンまたはクーポン適用商品が存在しない
+      content:
+        application/json:
+          schema:
+            $ref: '../../schemas/common/Error.yaml'
+  security:
+    - AppAccessToken:
+        - pos.products:write
+    - UserAccessToken:
+        - pos.products:write
