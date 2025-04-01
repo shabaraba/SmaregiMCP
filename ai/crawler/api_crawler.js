@@ -1,6 +1,11 @@
-const { chromium } = require('playwright');
-const fs = require('fs').promises;
-const path = require('path');
+import path from 'path';
+import { promises as fs } from 'fs';
+import { chromium } from 'playwright';
+import { fileURLToPath } from 'url';
+
+// ESモジュールでの __dirname の代替
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
 /**
  * スマレジAPIドキュメントをクロールしてOpenAPI仕様を生成するクラス
@@ -291,7 +296,7 @@ class ApiCrawler {
    * OpenAPI仕様をファイルに保存
    */
   async saveOpenApiSpec(openapi, outputPath) {
-    const yaml = require('js-yaml');
+    const yaml = await import('js-yaml');
     const outputDir = path.dirname(outputPath);
     
     // ディレクトリが存在しない場合は作成
@@ -308,7 +313,7 @@ class ApiCrawler {
    * APIセクションごとにファイルを分割して保存
    */
   async splitAndSaveOpenApiSpec(openapi, baseDir) {
-    const yaml = require('js-yaml');
+    const yaml = await import('js-yaml');
 
     // paths と schemas を分割保存
     await this.splitPaths(openapi.paths, path.join(baseDir, 'paths'));
@@ -331,7 +336,8 @@ class ApiCrawler {
    * パスをタグごとに分割して保存
    */
   async splitPaths(paths, outputDir) {
-    const yaml = require('js-yaml');
+    const yamlModule = await import('js-yaml');
+    const yaml = yamlModule.default;
     const pathsByTag = {};
     
     // パスをタグごとに整理
@@ -403,10 +409,4 @@ class ApiCrawler {
   }
 }
 
-module.exports = ApiCrawler;
-
-// 直接実行する場合
-if (require.main === module) {
-  const crawler = new ApiCrawler('https://www1.smaregi.dev/apidoc/');
-  crawler.run().catch(console.error);
-}
+export default ApiCrawler;

@@ -1,8 +1,13 @@
 #!/usr/bin/env node
 
-const path = require('path');
-const fs = require('fs').promises;
-const { execSync } = require('child_process');
+import path from 'path';
+import { promises as fs } from 'fs';
+import { execSync } from 'child_process';
+import { fileURLToPath } from 'url';
+
+// ESモジュールでの __dirname の代替
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
 /**
  * メイン実行関数
@@ -21,7 +26,8 @@ async function main() {
     
     // OpenAPIジェネレーターを実行
     console.log('Running OpenAPI generator...');
-    const OpenApiGenerator = require('./crawler/generate_openapi');
+    const OpenApiGeneratorModule = await import('./crawler/generate_openapi.js');
+    const OpenApiGenerator = OpenApiGeneratorModule.default;
     const generator = new OpenApiGenerator('https://www1.smaregi.dev/apidoc/');
     await generator.run();
     

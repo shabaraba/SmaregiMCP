@@ -1,6 +1,11 @@
-const { chromium } = require('playwright');
-const fs = require('fs').promises;
-const path = require('path');
+import path from 'path';
+import { promises as fs } from 'fs';
+import { chromium } from 'playwright';
+import { fileURLToPath } from 'url';
+
+// ESモジュールでの __dirname の代替
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
 /**
  * APIエンドポイントの詳細情報を解析するクラス
@@ -337,7 +342,8 @@ class ApiEndpointParser {
    * OpenAPIの部分的なパスオブジェクトをYAMLファイルに保存
    */
   async savePathsToFile(paths, outputDir, endpointName) {
-    const yaml = require('js-yaml');
+    const yamlModule = await import('js-yaml');
+    const yaml = yamlModule.default;
     
     // ディレクトリが存在しない場合は作成
     await fs.mkdir(outputDir, { recursive: true });
@@ -377,6 +383,8 @@ class ApiEndpointParser {
           
           await fs.mkdir(tagOutputDir, { recursive: true });
           
+          const yamlModule = await import('js-yaml');
+          const yaml = yamlModule.default;
           const pathYaml = yaml.dump(pathObj, { lineWidth: -1 });
           await fs.writeFile(pathFilePath, pathYaml, 'utf8');
           
@@ -390,6 +398,8 @@ class ApiEndpointParser {
       }
       
       // インデックスファイルを作成
+      const yamlModule = await import('js-yaml');
+      const yaml = yamlModule.default;
       const indexYaml = yaml.dump(pathIndexes, { lineWidth: -1 });
       await fs.writeFile(path.join(outputDir, '_index.yaml'), indexYaml, 'utf8');
       
@@ -401,21 +411,4 @@ class ApiEndpointParser {
   }
 }
 
-module.exports = ApiEndpointParser;
-
-// 直接実行する場合
-if (require.main === module) {
-  const ApiCrawler = require('./api_crawler');
-  
-  async function main() {
-    const crawler = new ApiCrawler('https://www1.smaregi.dev/apidoc/');
-    await crawler.initialize();
-    const endpoints = await crawler.crawlIndexPage();
-    await crawler.close();
-    
-    const parser = new ApiEndpointParser('https://www1.smaregi.dev/apidoc/');
-    await parser.run(endpoints, path.join(__dirname, '../../paths'));
-  }
-  
-  main().catch(console.error);
-}
+export default ApiEndpointParser;

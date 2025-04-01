@@ -1,6 +1,10 @@
-const fs = require('fs').promises;
-const path = require('path');
-const yaml = require('js-yaml');
+import path from 'path';
+import { promises as fs } from 'fs';
+import { fileURLToPath } from 'url';
+
+// ESモジュールでの __dirname の代替
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
 /**
  * APIレスポンス例からOpenAPIスキーマを生成するクラス
@@ -140,6 +144,8 @@ class SchemaGenerator {
       const fileName = `${schemaName}.yaml`;
       const filePath = path.join(outputDir, fileName);
       
+      const yamlModule = await import('js-yaml');
+      const yaml = yamlModule.default;
       const schemaYaml = yaml.dump(schema, { lineWidth: -1 });
       await fs.writeFile(filePath, schemaYaml, 'utf8');
       
@@ -152,6 +158,8 @@ class SchemaGenerator {
       indexContent[schemaName] = `./${schemaName}.yaml`;
     }
     
+    const yamlModule = await import('js-yaml');
+    const yaml = yamlModule.default;
     const indexPath = path.join(outputDir, '_index.yaml');
     const indexYaml = yaml.dump(indexContent, { lineWidth: -1 });
     await fs.writeFile(indexPath, indexYaml, 'utf8');
@@ -189,34 +197,4 @@ class SchemaGenerator {
   }
 }
 
-module.exports = SchemaGenerator;
-
-// 直接実行する場合
-if (require.main === module) {
-  const ApiCrawler = require('./api_crawler');
-  const ApiEndpointParser = require('./api_endpoint_parser');
-  
-  async function main() {
-    const crawler = new ApiCrawler('https://www1.smaregi.dev/apidoc/');
-    await crawler.initialize();
-    const endpoints = await crawler.crawlIndexPage();
-    await crawler.close();
-    
-    const parser = new ApiEndpointParser('https://www1.smaregi.dev/apidoc/');
-    await parser.initialize();
-    
-    const allEndpointDetails = [];
-    for (const endpoint of endpoints) {
-      const detailedEndpoint = await parser.parseEndpointDetails(endpoint);
-      allEndpointDetails.push(detailedEndpoint);
-    }
-    
-    await parser.close();
-    
-    const schemaGenerator = new SchemaGenerator();
-    schemaGenerator.generateSchemasFromEndpoints(allEndpointDetails);
-    await schemaGenerator.saveSchemas(path.join(__dirname, '../../schemas'));
-  }
-  
-  main().catch(console.error);
-}
+export default SchemaGenerator;

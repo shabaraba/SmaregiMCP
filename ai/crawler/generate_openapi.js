@@ -1,8 +1,10 @@
-const path = require('path');
-const fs = require('fs').promises;
-const ApiCrawler = require('./api_crawler');
-const ApiEndpointParser = require('./api_endpoint_parser');
-const SchemaGenerator = require('./schema_generator');
+import path from 'path';
+import { promises as fs } from 'fs';
+import { fileURLToPath } from 'url';
+
+// ESモジュールでの __dirname の代替
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
 /**
  * スマレジAPIドキュメントからOpenAPI仕様を生成するメインクラス
@@ -10,7 +12,7 @@ const SchemaGenerator = require('./schema_generator');
 class OpenApiGenerator {
   constructor(apiDocsUrl) {
     this.apiDocsUrl = apiDocsUrl;
-    this.outputDir = path.join(__dirname, '../../');
+    this.outputDir = path.join(path.dirname(__dirname), '../');
     this.pathsDir = path.join(this.outputDir, 'paths');
     this.schemasDir = path.join(this.outputDir, 'schemas');
   }
@@ -23,6 +25,7 @@ class OpenApiGenerator {
       console.log('Starting OpenAPI generation process...');
       
       // APIドキュメントのエンドポイント一覧を取得
+      const { default: ApiCrawler } = await import('./api_crawler.js');
       const crawler = new ApiCrawler(this.apiDocsUrl);
       await crawler.initialize();
       const endpoints = await crawler.crawlIndexPage();
@@ -31,6 +34,7 @@ class OpenApiGenerator {
       console.log(`Found ${endpoints.length} API endpoint categories`);
       
       // 各エンドポイントの詳細情報を解析
+      const { default: ApiEndpointParser } = await import('./api_endpoint_parser.js');
       const parser = new ApiEndpointParser(this.apiDocsUrl);
       await parser.initialize();
       
@@ -74,6 +78,7 @@ class OpenApiGenerator {
     await fs.mkdir(this.pathsDir, { recursive: true });
     
     // 各エンドポイントのパスを生成
+    const { default: ApiEndpointParser } = await import('./api_endpoint_parser.js');
     const parser = new ApiEndpointParser(this.apiDocsUrl);
     const pathIndexes = {};
     
@@ -94,7 +99,8 @@ class OpenApiGenerator {
         const pathFileName = pathUrl.replace(/\//g, '_').replace(/[{}]/g, '_').replace(/^_/, '') + '.yaml';
         const pathFilePath = path.join(tagOutputDir, pathFileName);
         
-        const yaml = require('js-yaml');
+        const yamlModule = await import('js-yaml');
+        const yaml = yamlModule.default;
         const pathYaml = yaml.dump(pathObj, { lineWidth: -1 });
         await fs.writeFile(pathFilePath, pathYaml, 'utf8');
         
@@ -108,7 +114,8 @@ class OpenApiGenerator {
     }
     
     // インデックスファイルを作成
-    const yaml = require('js-yaml');
+    const yamlModule = await import('js-yaml');
+    const yaml = yamlModule.default;
     const indexYaml = yaml.dump(pathIndexes, { lineWidth: -1 });
     await fs.writeFile(path.join(this.pathsDir, '_index.yaml'), indexYaml, 'utf8');
     
@@ -132,6 +139,7 @@ class OpenApiGenerator {
     await fs.mkdir(this.schemasDir, { recursive: true });
     
     // スキーマを生成
+    const { default: SchemaGenerator } = await import('./schema_generator.js');
     const schemaGenerator = new SchemaGenerator();
     schemaGenerator.generateSchemasFromEndpoints(endpoints);
     
@@ -338,7 +346,8 @@ class OpenApiGenerator {
     };
     
     // YAML形式で保存
-    const yaml = require('js-yaml');
+    const yamlModule = await import('js-yaml');
+    const yaml = yamlModule.default;
     const openapiYaml = yaml.dump(openapi, { lineWidth: -1 });
     await fs.writeFile(path.join(this.outputDir, 'openapi.yaml'), openapiYaml, 'utf8');
     
@@ -365,10 +374,4 @@ class OpenApiGenerator {
   }
 }
 
-// 直接実行する場合
-if (require.main === module) {
-  const generator = new OpenApiGenerator('https://www1.smaregi.dev/apidoc/');
-  generator.run().catch(console.error);
-}
-
-module.exports = OpenApiGenerator;
+export default OpenApiGenerator;
