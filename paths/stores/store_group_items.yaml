@@ -1,0 +1,115 @@
+get:
+  summary: 店舗分類項目一覧取得
+  description: |
+    店舗分類項目一覧を取得します。
+    
+    Plans:
+    スタンダード・プレミアム・プレミアムプラス・フードビジネス・リテールビジネス
+    
+    sortで使用可能なパラメータ
+    - storeGroupItemId：店舗分類項目ID
+    - storeGroupId：店舗分類ID
+    - storeId：店舗ID
+    - updDateTime：更新日時
+  tags:
+    - 店舗
+  security:
+    - AppAccessToken: [pos.stores:read]
+    - UserAccessToken: [pos.stores:read]
+  parameters:
+    - name: contract_id
+      in: path
+      required: true
+      schema:
+        type: string
+      description: 契約ID
+    - name: fields
+      in: query
+      schema:
+        type: array
+        items:
+          type: string
+      description: |
+        検索パラメータ（カンマ区切りで指定可）
+        Response項目を指定可能
+        ※一部項目(withで指定する項目、2階層目以降の項目)については指定不可
+    - name: sort
+      in: query
+      schema:
+        type: string
+      description: |
+        並び順（カンマ区切りで指定可）
+        指定可能な項目については上記参照
+    - name: limit
+      in: query
+      schema:
+        type: integer
+      description: 上限数
+    - name: page
+      in: query
+      schema:
+        type: integer
+      description: ページ
+    - name: store_group_item_id
+      in: query
+      schema:
+        type: string
+      description: 店舗分類項目ID
+    - name: store_group_id
+      in: query
+      schema:
+        type: string
+      description: 店舗分類ID
+    - name: store_id
+      in: query
+      schema:
+        type: string
+      description: 店舗ID
+  responses:
+    '200':
+      description: 取得成功
+      content:
+        application/json:
+          schema:
+            type: array
+            items:
+              $ref: '../../schemas/stores/StoreGroupItem.yaml'
+
+post:
+  summary: 店舗分類項目登録
+  description: |
+    店舗分類項目を登録します。
+    
+    Plans:
+    スタンダード・プレミアム・プレミアムプラス・フードビジネス・リテールビジネス
+  tags:
+    - 店舗
+  security:
+    - AppAccessToken: [pos.stores:write]
+    - UserAccessToken: [pos.stores:write]
+  parameters:
+    - name: contract_id
+      in: path
+      required: true
+      schema:
+        type: string
+      description: 契約ID
+  requestBody:
+    required: true
+    content:
+      application/json:
+        schema:
+          $ref: '../../schemas/stores/StoreGroupItemCreate.yaml'
+  responses:
+    '200':
+      description: 登録成功
+      content:
+        application/json:
+          schema:
+            $ref: '../../schemas/stores/StoreGroupItem.yaml'
+    '400':
+      description: 入力チェックエラーの場合
+      content:
+        application/json:
+          schema:
+            $ref: '../../schemas/common/Error.yaml'

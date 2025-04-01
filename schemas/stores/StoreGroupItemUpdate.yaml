@@ -1,0 +1,11 @@
+type: object
+description: 店舗分類項目更新情報
+properties:
+  storeGroupId:
+    type: string
+    description: 店舗分類ID
+    example: "1"
+  storeId:
+    type: string
+    description: 店舗ID
+    example: "101"
