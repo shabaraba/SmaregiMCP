@@ -1,0 +1,25 @@
+type: object
+required:
+  - shipmentDate
+  - storeId
+  - destinationStoreId
+properties:
+  storeId:
+    type: string
+    description: 出荷元店舗ID
+  shipmentDate:
+    type: string
+    format: date
+    description: 出荷日
+  destinationStoreId:
+    type: string
+    description: 出荷先店舗ID
+  memo:
+    type: string
+    description: メモ
+    maxLength: 255
+  status:
+    type: string
+    enum: ['0', '1', '2']
+    description: ステータス(0:未確定, 1:確定, 2:キャンセル)
+    default: '0'

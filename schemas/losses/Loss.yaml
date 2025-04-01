@@ -1,0 +1,26 @@
+type: object
+properties:
+  lossId:
+    type: string
+    description: ロスID
+  storeId:
+    type: string
+    description: 店舗ID
+  lossDivisionId:
+    type: string
+    description: ロス区分ID
+  lossDate:
+    type: string
+    format: date
+    description: ロス日
+  memo:
+    type: string
+    description: メモ
+  insDateTime:
+    type: string
+    format: date-time
+    description: 登録日時
+  updDateTime:
+    type: string
+    format: date-time
+    description: 更新日時

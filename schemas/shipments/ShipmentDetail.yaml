@@ -1,0 +1,25 @@
+type: object
+properties:
+  shipmentId:
+    type: string
+    description: 出荷ID
+  shipmentDetailId:
+    type: string
+    description: 出荷明細ID
+  productId:
+    type: string
+    description: 商品ID
+  quantity:
+    type: string
+    description: 数量
+  memo:
+    type: string
+    description: メモ
+  insDateTime:
+    type: string
+    format: date-time
+    description: 登録日時
+  updDateTime:
+    type: string
+    format: date-time
+    description: 更新日時

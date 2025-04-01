@@ -1,0 +1,77 @@
+get:
+  tags:
+    - ロス
+  summary: ロス区分一覧取得
+  description: ロス区分情報一覧を取得します。
+  parameters:
+    - name: fields
+      in: query
+      description: 検索パラメータ（カンマ区切りで指定可）
+      schema:
+        type: array
+        items:
+          type: string
+    - name: sort
+      in: query
+      description: 並び順（カンマ区切りで指定可）
+      schema:
+        type: string
+    - name: limit
+      in: query
+      description: 上限数
+      schema:
+        type: integer
+    - name: page
+      in: query
+      description: ページ
+      schema:
+        type: integer
+    - name: loss_division_id
+      in: query
+      description: ロス区分ID
+      schema:
+        type: string
+  responses:
+    '200':
+      description: 取得成功
+      content:
+        application/json:
+          schema:
+            type: array
+            items:
+              $ref: '../../schemas/losses/LossDivision.yaml'
+  security:
+    - AppAccessToken:
+        - pos.losses:read
+    - UserAccessToken:
+        - pos.losses:read
+
+post:
+  tags:
+    - ロス
+  summary: ロス区分登録
+  description: ロス区分情報を登録します。
+  requestBody:
+    required: true
+    content:
+      application/json:
+        schema:
+          $ref: '../../schemas/losses/LossDivisionCreate.yaml'
+  responses:
+    '200':
+      description: 登録成功
+      content:
+        application/json:
+          schema:
+            $ref: '../../schemas/losses/LossDivision.yaml'
+    '400':
+      description: 入力チェックエラーの場合
+      content:
+        application/json:
+          schema:
+            $ref: '../../schemas/common/Error.yaml'
+  security:
+    - AppAccessToken:
+        - pos.losses:write
+    - UserAccessToken:
+        - pos.losses:write

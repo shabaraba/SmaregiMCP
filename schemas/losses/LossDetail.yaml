@@ -1,0 +1,31 @@
+type: object
+properties:
+  lossId:
+    type: string
+    description: ロスID
+  lossDetailId:
+    type: string
+    description: ロス明細ID
+  productId:
+    type: string
+    description: 商品ID
+  productName:
+    type: string
+    description: 商品名
+  quantity:
+    type: string
+    description: 数量
+  unitCost:
+    type: string
+    description: 単価
+  memo:
+    type: string
+    description: メモ
+  insDateTime:
+    type: string
+    format: date-time
+    description: 登録日時
+  updDateTime:
+    type: string
+    format: date-time
+    description: 更新日時

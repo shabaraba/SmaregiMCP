@@ -1,0 +1,107 @@
+get:
+  tags:
+    - ロス
+  summary: ロス区分取得
+  description: ロス区分情報を取得します。
+  parameters:
+    - name: id
+      in: path
+      required: true
+      description: ロス区分ID
+      schema:
+        type: string
+    - name: fields
+      in: query
+      description: 検索パラメータ（カンマ区切りで指定可）
+      schema:
+        type: array
+        items:
+          type: string
+  responses:
+    '200':
+      description: 取得成功
+      content:
+        application/json:
+          schema:
+            $ref: '../../schemas/losses/LossDivision.yaml'
+    '404':
+      description: 指定されたロス区分IDが存在しない場合
+      content:
+        application/json:
+          schema:
+            $ref: '../../schemas/common/Error.yaml'
+  security:
+    - AppAccessToken:
+        - pos.losses:read
+    - UserAccessToken:
+        - pos.losses:read
+
+patch:
+  tags:
+    - ロス
+  summary: ロス区分更新
+  description: ロス区分情報を更新します。
+  parameters:
+    - name: id
+      in: path
+      required: true
+      description: ロス区分ID
+      schema:
+        type: string
+  requestBody:
+    required: true
+    content:
+      application/json:
+        schema:
+          $ref: '../../schemas/losses/LossDivisionUpdate.yaml'
+  responses:
+    '200':
+      description: 更新成功
+      content:
+        application/json:
+          schema:
+            $ref: '../../schemas/losses/LossDivision.yaml'
+    '400':
+      description: 入力チェックエラーの場合
+      content:
+        application/json:
+          schema:
+            $ref: '../../schemas/common/Error.yaml'
+    '404':
+      description: 指定されたロス区分IDが存在しない場合
+      content:
+        application/json:
+          schema:
+            $ref: '../../schemas/common/Error.yaml'
+  security:
+    - AppAccessToken:
+        - pos.losses:write
+    - UserAccessToken:
+        - pos.losses:write
+
+delete:
+  tags:
+    - ロス
+  summary: ロス区分削除
+  description: ロス区分情報を削除します。
+  parameters:
+    - name: id
+      in: path
+      required: true
+      description: ロス区分ID
+      schema:
+        type: string
+  responses:
+    '200':
+      description: 削除成功
+    '404':
+      description: 指定されたロス区分IDが存在しない場合
+      content:
+        application/json:
+          schema:
+            $ref: '../../schemas/common/Error.yaml'
+  security:
+    - AppAccessToken:
+        - pos.losses:write
+    - UserAccessToken:
+        - pos.losses:write
