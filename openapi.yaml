@@ -23,7 +23,10 @@ paths:
   $ref: ./paths/_index.yaml
 components:
   schemas:
-    $ref: ./schemas/_index.yaml
+    Error:
+      $ref: './schemas/Error.yaml'
+    Pagination:
+      $ref: './schemas/Pagination.yaml'
   securitySchemes:
     AppAccessToken:
       type: oauth2
