@@ -1,9 +1,0 @@
-type: object
-description: セール店舗登録情報
-properties:
-  storeId:
-    type: string
-    description: 店舗ID
-    example: "1"
-required:
-  - storeId
