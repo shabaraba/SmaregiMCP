@@ -1,0 +1,41 @@
+type: object
+properties:
+  firstName:
+    type: boolean
+    description: 名前必須フラグ
+  lastName:
+    type: boolean
+    description: 苗字必須フラグ
+  firstNameKana:
+    type: boolean
+    description: 名前カナ必須フラグ
+  lastNameKana:
+    type: boolean
+    description: 苗字カナ必須フラグ
+  sex:
+    type: boolean
+    description: 性別必須フラグ
+  birthDate:
+    type: boolean
+    description: 生年月日必須フラグ
+  zipCode:
+    type: boolean
+    description: 郵便番号必須フラグ
+  address:
+    type: boolean
+    description: 住所必須フラグ
+  phoneNumber:
+    type: boolean
+    description: 電話番号必須フラグ
+  mobileNumber:
+    type: boolean
+    description: 携帯電話番号必須フラグ
+  mailAddress:
+    type: boolean
+    description: メールアドレス必須フラグ
+  companyName:
+    type: boolean
+    description: 会社名必須フラグ
+  departmentName:
+    type: boolean
+    description: 部署名必須フラグ

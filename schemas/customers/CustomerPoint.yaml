@@ -1,0 +1,12 @@
+type: object
+properties:
+  customerId:
+    type: string
+    description: 会員ID
+  points:
+    type: integer
+    description: ポイント
+  pointExpireDate:
+    type: string
+    format: date
+    description: ポイント有効期限

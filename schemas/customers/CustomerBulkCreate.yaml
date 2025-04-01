@@ -1,0 +1,9 @@
+type: object
+required:
+  - customers
+properties:
+  customers:
+    type: array
+    items:
+      $ref: './CustomerCreate.yaml'
+    description: 会員情報リスト

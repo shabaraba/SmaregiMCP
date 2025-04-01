@@ -1,0 +1,116 @@
+get:
+  tags:
+    - 会員
+  summary: 会員ポイント情報取得
+  description: 指定したIDの会員のポイント情報を取得します。
+  parameters:
+    - name: id
+      in: path
+      required: true
+      description: 会員ID
+      schema:
+        type: string
+  responses:
+    '200':
+      description: 取得成功
+      content:
+        application/json:
+          schema:
+            $ref: '../../schemas/customers/CustomerPoint.yaml'
+    '404':
+      description: 対象リソースが存在しない場合
+      content:
+        application/json:
+          schema:
+            $ref: '../../schemas/common/Error.yaml'
+  security:
+    - AppAccessToken:
+        - pos.customers:read
+    - UserAccessToken:
+        - pos.customers:read
+
+put:
+  tags:
+    - 会員
+  summary: 会員ポイント情報更新
+  description: 指定したIDの会員のポイント情報を更新します。
+  parameters:
+    - name: id
+      in: path
+      required: true
+      description: 会員ID
+      schema:
+        type: string
+  requestBody:
+    required: true
+    content:
+      application/json:
+        schema:
+          $ref: '../../schemas/customers/CustomerPointUpdate.yaml'
+  responses:
+    '200':
+      description: 更新成功
+      content:
+        application/json:
+          schema:
+            $ref: '../../schemas/customers/CustomerPoint.yaml'
+    '400':
+      description: 入力チェックエラーの場合
+      content:
+        application/json:
+          schema:
+            $ref: '../../schemas/common/Error.yaml'
+    '404':
+      description: 対象リソースが存在しない場合
+      content:
+        application/json:
+          schema:
+            $ref: '../../schemas/common/Error.yaml'
+  security:
+    - AppAccessToken:
+        - pos.customers:write
+    - UserAccessToken:
+        - pos.customers:write
+
+patch:
+  tags:
+    - 会員
+  summary: 会員ポイント加減算
+  description: 指定したIDの会員のポイントを加減算します。
+  parameters:
+    - name: id
+      in: path
+      required: true
+      description: 会員ID
+      schema:
+        type: string
+  requestBody:
+    required: true
+    content:
+      application/json:
+        schema:
+          $ref: '../../schemas/customers/CustomerPointRelativeUpdate.yaml'
+  responses:
+    '200':
+      description: 更新成功
+      content:
+        application/json:
+          schema:
+            $ref: '../../schemas/customers/CustomerPoint.yaml'
+    '400':
+      description: 入力チェックエラーの場合
+      content:
+        application/json:
+          schema:
+            $ref: '../../schemas/common/Error.yaml'
+    '404':
+      description: 対象リソースが存在しない場合
+      content:
+        application/json:
+          schema:
+            $ref: '../../schemas/common/Error.yaml'
+  security:
+    - AppAccessToken:
+        - pos.customers:write
+    - UserAccessToken:
+        - pos.customers:write

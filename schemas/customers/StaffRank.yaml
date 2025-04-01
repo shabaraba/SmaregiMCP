@@ -1,0 +1,27 @@
+type: object
+properties:
+  staffRankId:
+    type: string
+    description: スタッフランクID
+  staffRankName:
+    type: string
+    description: スタッフランク名
+  discountRate:
+    type: number
+    format: float
+    description: 社員割引率
+  pointRate:
+    type: number
+    format: float
+    description: ポイント付与率
+  note:
+    type: string
+    description: 備考
+  insDateTime:
+    type: string
+    format: date-time
+    description: 登録日時
+  updDateTime:
+    type: string
+    format: date-time
+    description: 更新日時

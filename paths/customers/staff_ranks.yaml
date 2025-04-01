@@ -1,0 +1,134 @@
+get:
+  tags:
+    - 会員
+  summary: スタッフランク一覧取得
+  description: スタッフランク情報一覧を取得します。
+  parameters:
+    - name: fields
+      in: query
+      description: 取得したいフィールド名（カンマ区切りで指定可）
+      schema:
+        type: array
+        items:
+          type: string
+        example: [staffRankId, staffRankName]
+    - name: sort
+      in: query
+      description: 並び順（カンマ区切りで指定可）
+      schema:
+        type: string
+        example: staffRankId,DESC
+    - name: limit
+      in: query
+      description: 取得上限数
+      schema:
+        type: integer
+        example: 50
+    - name: page
+      in: query
+      description: ページ番号
+      schema:
+        type: integer
+        example: 1
+    - name: staff_rank_id
+      in: query
+      description: スタッフランクID
+      schema:
+        type: string
+    - name: staff_rank_name
+      in: query
+      description: スタッフランク名（部分一致）
+      schema:
+        type: string
+    - name: discount_rate-from
+      in: query
+      description: 社員割引率(From)
+      schema:
+        type: number
+        format: float
+    - name: discount_rate-to
+      in: query
+      description: 社員割引率(To)
+      schema:
+        type: number
+        format: float
+    - name: point_rate-from
+      in: query
+      description: ポイント付与率(From)
+      schema:
+        type: number
+        format: float
+    - name: point_rate-to
+      in: query
+      description: ポイント付与率(To)
+      schema:
+        type: number
+        format: float
+    - name: ins_date_time-from
+      in: query
+      description: 登録日時(From)
+      schema:
+        type: string
+        format: date-time
+    - name: ins_date_time-to
+      in: query
+      description: 登録日時(To)
+      schema:
+        type: string
+        format: date-time
+    - name: upd_date_time-from
+      in: query
+      description: 更新日時(From)
+      schema:
+        type: string
+        format: date-time
+    - name: upd_date_time-to
+      in: query
+      description: 更新日時(To)
+      schema:
+        type: string
+        format: date-time
+  responses:
+    '200':
+      description: 取得成功
+      content:
+        application/json:
+          schema:
+            type: array
+            items:
+              $ref: '../../schemas/customers/StaffRank.yaml'
+  security:
+    - AppAccessToken:
+        - pos.customers:read
+    - UserAccessToken:
+        - pos.customers:read
+
+post:
+  tags:
+    - 会員
+  summary: スタッフランク登録
+  description: スタッフランク情報を登録します。
+  requestBody:
+    required: true
+    content:
+      application/json:
+        schema:
+          $ref: '../../schemas/customers/StaffRankCreate.yaml'
+  responses:
+    '200':
+      description: 登録成功
+      content:
+        application/json:
+          schema:
+            $ref: '../../schemas/customers/StaffRank.yaml'
+    '400':
+      description: 入力チェックエラーの場合
+      content:
+        application/json:
+          schema:
+            $ref: '../../schemas/common/Error.yaml'
+  security:
+    - AppAccessToken:
+        - pos.customers:write
+    - UserAccessToken:
+        - pos.customers:write
