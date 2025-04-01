@@ -1,0 +1,98 @@
+get:
+  tags:
+    - 支払方法
+  summary: 店舗支払方法一覧取得
+  description: 店舗に設定された支払方法情報一覧を取得します。
+  parameters:
+    - name: store_id
+      in: path
+      required: true
+      description: 店舗ID
+      schema:
+        type: string
+    - name: fields
+      in: query
+      description: 取得したいフィールド名（カンマ区切りで指定可）
+      schema:
+        type: array
+        items:
+          type: string
+        example: [storePaymentMethodId, paymentMethodId, paymentMethodName]
+    - name: sort
+      in: query
+      description: 並び順（カンマ区切りで指定可）
+      schema:
+        type: string
+        example: paymentMethodId,ASC
+    - name: limit
+      in: query
+      description: 取得上限数
+      schema:
+        type: integer
+        example: 50
+    - name: page
+      in: query
+      description: ページ番号
+      schema:
+        type: integer
+        example: 1
+    - name: store_payment_method_id
+      in: query
+      description: 店舗支払方法ID
+      schema:
+        type: string
+    - name: payment_method_id
+      in: query
+      description: 支払方法ID
+      schema:
+        type: string
+    - name: status
+      in: query
+      description: ステータス(0:無効, 1:有効)
+      schema:
+        type: string
+        enum: ['0', '1']
+    - name: ins_date_time-from
+      in: query
+      description: 登録日時(From)
+      schema:
+        type: string
+        format: date-time
+    - name: ins_date_time-to
+      in: query
+      description: 登録日時(To)
+      schema:
+        type: string
+        format: date-time
+    - name: upd_date_time-from
+      in: query
+      description: 更新日時(From)
+      schema:
+        type: string
+        format: date-time
+    - name: upd_date_time-to
+      in: query
+      description: 更新日時(To)
+      schema:
+        type: string
+        format: date-time
+  responses:
+    '200':
+      description: 取得成功
+      content:
+        application/json:
+          schema:
+            type: array
+            items:
+              $ref: '../../schemas/payments/StorePaymentMethod.yaml'
+    '404':
+      description: 対象店舗が存在しない場合
+      content:
+        application/json:
+          schema:
+            $ref: '../../schemas/common/Error.yaml'
+  security:
+    - AppAccessToken:
+        - pos.transactions:read
+    - UserAccessToken:
+        - pos.transactions:read

@@ -1,0 +1,16 @@
+type: object
+properties:
+  paymentMethodDivisionId:
+    type: string
+    description: 支払方法区分ID
+  paymentMethodDivisionName:
+    type: string
+    description: 支払方法区分名
+  insDateTime:
+    type: string
+    format: date-time
+    description: 登録日時
+  updDateTime:
+    type: string
+    format: date-time
+    description: 更新日時

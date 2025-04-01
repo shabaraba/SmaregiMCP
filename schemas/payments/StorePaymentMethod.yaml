@@ -1,0 +1,29 @@
+type: object
+properties:
+  storePaymentMethodId:
+    type: string
+    description: 店舗支払方法ID
+  storeId:
+    type: string
+    description: 店舗ID
+  storeName:
+    type: string
+    description: 店舗名
+  paymentMethodId:
+    type: string
+    description: 支払方法ID
+  paymentMethodName:
+    type: string
+    description: 支払方法名
+  status:
+    type: string
+    enum: ['0', '1']
+    description: ステータス(0:無効, 1:有効)
+  insDateTime:
+    type: string
+    format: date-time
+    description: 登録日時
+  updDateTime:
+    type: string
+    format: date-time
+    description: 更新日時
