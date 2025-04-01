@@ -1,0 +1,84 @@
+type: object
+properties:
+  terminalCode:
+    type: string
+    description: レジ端末コード
+  terminalName:
+    type: string
+    description: レジ端末名
+  storeId:
+    type: string
+    description: 店舗ID
+  terminalType:
+    type: string
+    enum: ['1', '2', '3']
+    description: レジ端末種別(1:PC, 2:iPad, 3:ハンディ)
+  printerType:
+    type: string
+    enum: ['0', '1', '2', '3']
+    description: プリンタ種別(0:なし, 1:ロール紙, 2:A4, 3:サーマル)
+  printerName:
+    type: string
+    description: プリンタ名
+  printerIPAddress:
+    type: string
+    description: プリンタIPアドレス
+  printerPort:
+    type: string
+    description: プリンタポート
+  drawerType:
+    type: string
+    enum: ['0', '1']
+    description: ドロア種別(0:なし, 1:あり)
+  drawerName:
+    type: string
+    description: ドロア名
+  drawerIPAddress:
+    type: string
+    description: ドロアIPアドレス
+  drawerPort:
+    type: string
+    description: ドロアポート
+  cardReaderType:
+    type: string
+    enum: ['0', '1', '2']
+    description: カードリーダー種別(0:なし, 1:磁気, 2:IC)
+  cardReaderName:
+    type: string
+    description: カードリーダー名
+  cardReaderIPAddress:
+    type: string
+    description: カードリーダーIPアドレス
+  cardReaderPort:
+    type: string
+    description: カードリーダーポート
+  scannerType:
+    type: string
+    enum: ['0', '1']
+    description: スキャナー種別(0:なし, 1:あり)
+  scannerName:
+    type: string
+    description: スキャナー名
+  scannerIPAddress:
+    type: string
+    description: スキャナーIPアドレス
+  scannerPort:
+    type: string
+    description: スキャナーポート
+  displayType:
+    type: string
+    enum: ['0', '1']
+    description: 客面ディスプレイ種別(0:なし, 1:あり)
+  displayName:
+    type: string
+    description: 客面ディスプレイ名
+  displayIPAddress:
+    type: string
+    description: 客面ディスプレイIPアドレス
+  displayPort:
+    type: string
+    description: 客面ディスプレイポート
+  status:
+    type: string
+    enum: ['0', '1']
+    description: ステータス(0:無効, 1:有効)
