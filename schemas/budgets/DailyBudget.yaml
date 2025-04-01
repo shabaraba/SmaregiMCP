@@ -1,0 +1,112 @@
+type: object
+properties:
+  budgetId:
+    type: string
+    description: 予算ID
+  storeId:
+    type: string
+    description: 店舗ID
+  storeName:
+    type: string
+    description: 店舗名
+  date:
+    type: string
+    format: date
+    description: 日付
+  salesBudget:
+    type: number
+    format: float
+    description: 売上予算
+  salesTaxBudget:
+    type: number
+    format: float
+    description: 売上税予算
+  customerCountBudget:
+    type: number
+    format: float
+    description: 客数予算
+  averageCustomerPriceBudget:
+    type: number
+    format: float
+    description: 客単価予算
+  grossProfitBudget:
+    type: number
+    format: float
+    description: 粗利益予算
+  grossProfitRatioBudget:
+    type: number
+    format: float
+    description: 粗利益率予算
+  creditPointBudget:
+    type: number
+    format: float
+    description: ポイント付与予算
+  discountBudget:
+    type: number
+    format: float
+    description: 値引予算
+  salesBudgetDetail:
+    type: object
+    properties:
+      goods:
+        type: number
+        format: float
+        description: 物販売上予算
+      food:
+        type: number
+        format: float
+        description: 飲食売上予算
+      service:
+        type: number
+        format: float
+        description: サービス売上予算
+      other:
+        type: number
+        format: float
+        description: その他売上予算
+  salesTaxBudgetDetail:
+    type: object
+    properties:
+      goods:
+        type: number
+        format: float
+        description: 物販売上税予算
+      food:
+        type: number
+        format: float
+        description: 飲食売上税予算
+      service:
+        type: number
+        format: float
+        description: サービス売上税予算
+      other:
+        type: number
+        format: float
+        description: その他売上税予算
+  customerCountBudgetDetail:
+    type: object
+    properties:
+      goods:
+        type: number
+        format: float
+        description: 物販客数予算
+      food:
+        type: number
+        format: float
+        description: 飲食客数予算
+      service:
+        type: number
+        format: float
+        description: サービス客数予算
+      other:
+        type: number
+        format: float
+        description: その他客数予算
+  insDateTime:
+    type: string
+    format: date-time
+    description: 登録日時
+  updDateTime:
+    type: string
+    format: date-time
+    description: 更新日時

@@ -1,0 +1,209 @@
+get:
+  tags:
+    - 予算
+  summary: 日次予算一覧取得
+  description: 指定した日付の日次予算情報一覧を取得します。
+  parameters:
+    - name: date
+      in: path
+      required: true
+      description: 日付（YYYY-MM-DD形式）
+      schema:
+        type: string
+        format: date
+    - name: fields
+      in: query
+      description: 取得したいフィールド名（カンマ区切りで指定可）
+      schema:
+        type: array
+        items:
+          type: string
+        example: [budgetId, storeId, date, salesBudget]
+    - name: sort
+      in: query
+      description: 並び順（カンマ区切りで指定可）
+      schema:
+        type: string
+        example: storeId,ASC
+    - name: limit
+      in: query
+      description: 取得上限数
+      schema:
+        type: integer
+        example: 50
+    - name: page
+      in: query
+      description: ページ番号
+      schema:
+        type: integer
+        example: 1
+    - name: budget_id
+      in: query
+      description: 予算ID
+      schema:
+        type: string
+    - name: store_id
+      in: query
+      description: 店舗ID
+      schema:
+        type: string
+    - name: ins_date_time-from
+      in: query
+      description: 登録日時(From)
+      schema:
+        type: string
+        format: date-time
+    - name: ins_date_time-to
+      in: query
+      description: 登録日時(To)
+      schema:
+        type: string
+        format: date-time
+    - name: upd_date_time-from
+      in: query
+      description: 更新日時(From)
+      schema:
+        type: string
+        format: date-time
+    - name: upd_date_time-to
+      in: query
+      description: 更新日時(To)
+      schema:
+        type: string
+        format: date-time
+  responses:
+    '200':
+      description: 取得成功
+      content:
+        application/json:
+          schema:
+            type: array
+            items:
+              $ref: '../../schemas/budgets/DailyBudget.yaml'
+  security:
+    - AppAccessToken:
+        - pos.transactions:read
+    - UserAccessToken:
+        - pos.transactions:read
+
+post:
+  tags:
+    - 予算
+  summary: 日次予算登録
+  description: 指定した日付の日次予算情報を登録します。
+  parameters:
+    - name: date
+      in: path
+      required: true
+      description: 日付（YYYY-MM-DD形式）
+      schema:
+        type: string
+        format: date
+  requestBody:
+    required: true
+    content:
+      application/json:
+        schema:
+          $ref: '../../schemas/budgets/DailyBudgetCreate.yaml'
+  responses:
+    '200':
+      description: 登録成功
+      content:
+        application/json:
+          schema:
+            $ref: '../../schemas/budgets/DailyBudget.yaml'
+    '400':
+      description: 入力チェックエラーの場合
+      content:
+        application/json:
+          schema:
+            $ref: '../../schemas/common/Error.yaml'
+  security:
+    - AppAccessToken:
+        - pos.transactions:write
+    - UserAccessToken:
+        - pos.transactions:write
+
+put:
+  tags:
+    - 予算
+  summary: 日次予算更新
+  description: 指定した日付の日次予算情報を更新します。
+  parameters:
+    - name: date
+      in: path
+      required: true
+      description: 日付（YYYY-MM-DD形式）
+      schema:
+        type: string
+        format: date
+    - name: store_id
+      in: query
+      required: true
+      description: 店舗ID
+      schema:
+        type: string
+  requestBody:
+    required: true
+    content:
+      application/json:
+        schema:
+          $ref: '../../schemas/budgets/DailyBudgetUpdate.yaml'
+  responses:
+    '200':
+      description: 更新成功
+      content:
+        application/json:
+          schema:
+            $ref: '../../schemas/budgets/DailyBudget.yaml'
+    '400':
+      description: 入力チェックエラーの場合
+      content:
+        application/json:
+          schema:
+            $ref: '../../schemas/common/Error.yaml'
+    '404':
+      description: 対象リソースが存在しない場合
+      content:
+        application/json:
+          schema:
+            $ref: '../../schemas/common/Error.yaml'
+  security:
+    - AppAccessToken:
+        - pos.transactions:write
+    - UserAccessToken:
+        - pos.transactions:write
+
+delete:
+  tags:
+    - 予算
+  summary: 日次予算削除
+  description: 指定した日付の日次予算情報を削除します。
+  parameters:
+    - name: date
+      in: path
+      required: true
+      description: 日付（YYYY-MM-DD形式）
+      schema:
+        type: string
+        format: date
+    - name: store_id
+      in: query
+      required: true
+      description: 店舗ID
+      schema:
+        type: string
+  responses:
+    '204':
+      description: 削除成功
+    '404':
+      description: 対象リソースが存在しない場合
+      content:
+        application/json:
+          schema:
+            $ref: '../../schemas/common/Error.yaml'
+  security:
+    - AppAccessToken:
+        - pos.transactions:write
+    - UserAccessToken:
+        - pos.transactions:write

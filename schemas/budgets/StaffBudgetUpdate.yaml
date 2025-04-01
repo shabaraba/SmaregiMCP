@@ -1,0 +1,14 @@
+type: object
+properties:
+  salesBudget:
+    type: number
+    format: float
+    description: 売上予算
+  customerCountBudget:
+    type: number
+    format: float
+    description: 客数予算
+  averageCustomerPriceBudget:
+    type: number
+    format: float
+    description: 客単価予算

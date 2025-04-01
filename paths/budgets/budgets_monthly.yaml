@@ -1,0 +1,92 @@
+get:
+  tags:
+    - 予算
+  summary: 月次予算一覧取得
+  description: 月次予算情報一覧を取得します。
+  parameters:
+    - name: fields
+      in: query
+      description: 取得したいフィールド名（カンマ区切りで指定可）
+      schema:
+        type: array
+        items:
+          type: string
+        example: [budgetId, storeId, yearMonth, salesBudget]
+    - name: sort
+      in: query
+      description: 並び順（カンマ区切りで指定可）
+      schema:
+        type: string
+        example: yearMonth,DESC
+    - name: limit
+      in: query
+      description: 取得上限数
+      schema:
+        type: integer
+        example: 50
+    - name: page
+      in: query
+      description: ページ番号
+      schema:
+        type: integer
+        example: 1
+    - name: budget_id
+      in: query
+      description: 予算ID
+      schema:
+        type: string
+    - name: store_id
+      in: query
+      description: 店舗ID
+      schema:
+        type: string
+    - name: year_month-from
+      in: query
+      description: 年月(From)
+      schema:
+        type: string
+        format: date
+    - name: year_month-to
+      in: query
+      description: 年月(To)
+      schema:
+        type: string
+        format: date
+    - name: ins_date_time-from
+      in: query
+      description: 登録日時(From)
+      schema:
+        type: string
+        format: date-time
+    - name: ins_date_time-to
+      in: query
+      description: 登録日時(To)
+      schema:
+        type: string
+        format: date-time
+    - name: upd_date_time-from
+      in: query
+      description: 更新日時(From)
+      schema:
+        type: string
+        format: date-time
+    - name: upd_date_time-to
+      in: query
+      description: 更新日時(To)
+      schema:
+        type: string
+        format: date-time
+  responses:
+    '200':
+      description: 取得成功
+      content:
+        application/json:
+          schema:
+            type: array
+            items:
+              $ref: '../../schemas/budgets/MonthlyBudget.yaml'
+  security:
+    - AppAccessToken:
+        - pos.transactions:read
+    - UserAccessToken:
+        - pos.transactions:read
