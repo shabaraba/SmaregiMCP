@@ -1,0 +1,26 @@
+type: object
+description: 棚卸在庫登録情報
+properties:
+  stocktakingId:
+    type: integer
+    description: 棚卸ID
+  storeId:
+    type: integer
+    description: 店舗ID
+  productId:
+    type: integer
+    description: 商品ID
+  inventoryQuantity:
+    type: number
+    format: float
+    description: システム在庫数
+  countedQuantity:
+    type: number
+    format: float
+    description: 実在庫数
+required:
+  - stocktakingId
+  - storeId
+  - productId
+  - inventoryQuantity
+  - countedQuantity

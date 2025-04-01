@@ -1,0 +1,145 @@
+get:
+  tags:
+    - 棚卸
+  summary: 棚卸在庫一覧取得
+  description: 棚卸に登録されている在庫情報の一覧を取得します。
+  operationId: getStocktakingStocks
+  parameters:
+    - name: stocktaking_id
+      in: query
+      description: 棚卸ID
+      schema:
+        type: integer
+    - name: store_id
+      in: query
+      description: 店舗ID
+      schema:
+        type: integer
+    - name: product_id
+      in: query
+      description: 商品ID
+      schema:
+        type: integer
+    - name: limit
+      in: query
+      description: 取得件数
+      schema:
+        type: integer
+        default: 20
+    - name: page
+      in: query
+      description: ページ番号
+      schema:
+        type: integer
+        default: 1
+  responses:
+    '200':
+      description: 成功
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              stocktakingStocks:
+                type: array
+                items:
+                  $ref: '../../schemas/stocktakings/StocktakingStock.yaml'
+              pagination:
+                $ref: '../../schemas/common/Pagination.yaml'
+    '400':
+      description: バリデーションエラー
+      content:
+        application/json:
+          schema:
+            $ref: '../../schemas/common/Error.yaml'
+    '401':
+      description: 認証エラー
+      content:
+        application/json:
+          schema:
+            $ref: '../../schemas/common/Error.yaml'
+  security:
+    - AppAccessToken:
+        - pos.stocktaking:read
+    - UserAccessToken:
+        - pos.stocktaking:read
+
+post:
+  tags:
+    - 棚卸
+  summary: 棚卸在庫登録
+  description: 棚卸在庫情報を登録します。
+  operationId: createStocktakingStock
+  requestBody:
+    content:
+      application/json:
+        schema:
+          $ref: '../../schemas/stocktakings/StocktakingStockCreate.yaml'
+    required: true
+  responses:
+    '201':
+      description: 成功
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              id:
+                type: integer
+                description: 棚卸在庫ID
+    '400':
+      description: バリデーションエラー
+      content:
+        application/json:
+          schema:
+            $ref: '../../schemas/common/Error.yaml'
+    '401':
+      description: 認証エラー
+      content:
+        application/json:
+          schema:
+            $ref: '../../schemas/common/Error.yaml'
+  security:
+    - AppAccessToken:
+        - pos.stocktaking:write
+    - UserAccessToken:
+        - pos.stocktaking:write
+
+patch:
+  tags:
+    - 棚卸
+  summary: 棚卸在庫更新
+  description: 棚卸在庫情報を更新します。
+  operationId: updateStocktakingStock
+  requestBody:
+    content:
+      application/json:
+        schema:
+          $ref: '../../schemas/stocktakings/StocktakingStockUpdate.yaml'
+    required: true
+  responses:
+    '200':
+      description: 成功
+    '400':
+      description: バリデーションエラー
+      content:
+        application/json:
+          schema:
+            $ref: '../../schemas/common/Error.yaml'
+    '401':
+      description: 認証エラー
+      content:
+        application/json:
+          schema:
+            $ref: '../../schemas/common/Error.yaml'
+    '404':
+      description: 指定された棚卸在庫が存在しない
+      content:
+        application/json:
+          schema:
+            $ref: '../../schemas/common/Error.yaml'
+  security:
+    - AppAccessToken:
+        - pos.stocktaking:write
+    - UserAccessToken:
+        - pos.stocktaking:write

@@ -1,0 +1,45 @@
+type: object
+description: 棚卸登録情報
+properties:
+  stocktakingName:
+    type: string
+    description: 棚卸名
+  storeId:
+    type: integer
+    description: 店舗ID
+  stocktakingStatus:
+    type: integer
+    description: 棚卸ステータス（1:集計中、2:完了）
+  startDate:
+    type: string
+    format: date-time
+    description: 開始日時
+  endDate:
+    type: string
+    format: date-time
+    description: 終了日時
+  stockAmount:
+    type: integer
+    description: 合計在庫金額
+  staffId:
+    type: integer
+    description: 担当スタッフID
+  memo:
+    type: string
+    description: メモ
+  isExcludeOutOfStock:
+    type: boolean
+    description: 在庫なし商品除外フラグ（true:除外する、false:除外しない）
+  categoryTarget:
+    type: integer
+    description: 部門対象（1:全部門、2:指定部門）
+  categoryIds:
+    type: array
+    description: 対象部門IDリスト（categoryTargetが2の場合に必須）
+    items:
+      type: integer
+required:
+  - stocktakingName
+  - storeId
+  - stocktakingStatus
+  - startDate

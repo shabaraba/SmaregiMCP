@@ -1,0 +1,20 @@
+type: object
+description: 棚卸部門更新情報
+properties:
+  stocktakingId:
+    type: integer
+    description: 棚卸ID
+  storeId:
+    type: integer
+    description: 店舗ID
+  categoryId:
+    type: integer
+    description: 部門ID
+  isComplete:
+    type: boolean
+    description: 棚卸実施済みフラグ（true:実施済み、false:未実施）
+required:
+  - stocktakingId
+  - storeId
+  - categoryId
+  - isComplete
