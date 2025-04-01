@@ -1,0 +1,100 @@
+get:
+  tags:
+    - 仕入先
+  summary: 仕入先情報取得
+  description: 指定したIDの仕入先情報を取得します。
+  parameters:
+    - name: id
+      in: path
+      required: true
+      description: 仕入先ID
+      schema:
+        type: string
+  responses:
+    '200':
+      description: 取得成功
+      content:
+        application/json:
+          schema:
+            $ref: '../../schemas/suppliers/Supplier.yaml'
+    '404':
+      description: 対象リソースが存在しない場合
+      content:
+        application/json:
+          schema:
+            $ref: '../../schemas/common/Error.yaml'
+  security:
+    - AppAccessToken:
+        - pos.suppliers:read
+    - UserAccessToken:
+        - pos.suppliers:read
+
+put:
+  tags:
+    - 仕入先
+  summary: 仕入先情報更新
+  description: 指定したIDの仕入先情報を更新します。
+  parameters:
+    - name: id
+      in: path
+      required: true
+      description: 仕入先ID
+      schema:
+        type: string
+  requestBody:
+    required: true
+    content:
+      application/json:
+        schema:
+          $ref: '../../schemas/suppliers/SupplierUpdate.yaml'
+  responses:
+    '200':
+      description: 更新成功
+      content:
+        application/json:
+          schema:
+            $ref: '../../schemas/suppliers/Supplier.yaml'
+    '400':
+      description: 入力チェックエラーの場合
+      content:
+        application/json:
+          schema:
+            $ref: '../../schemas/common/Error.yaml'
+    '404':
+      description: 対象リソースが存在しない場合
+      content:
+        application/json:
+          schema:
+            $ref: '../../schemas/common/Error.yaml'
+  security:
+    - AppAccessToken:
+        - pos.suppliers:write
+    - UserAccessToken:
+        - pos.suppliers:write
+
+delete:
+  tags:
+    - 仕入先
+  summary: 仕入先情報削除
+  description: 指定したIDの仕入先情報を削除します。
+  parameters:
+    - name: id
+      in: path
+      required: true
+      description: 仕入先ID
+      schema:
+        type: string
+  responses:
+    '204':
+      description: 削除成功
+    '404':
+      description: 対象リソースが存在しない場合
+      content:
+        application/json:
+          schema:
+            $ref: '../../schemas/common/Error.yaml'
+  security:
+    - AppAccessToken:
+        - pos.suppliers:write
+    - UserAccessToken:
+        - pos.suppliers:write

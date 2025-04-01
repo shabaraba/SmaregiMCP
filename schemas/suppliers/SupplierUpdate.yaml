@@ -1,0 +1,39 @@
+type: object
+properties:
+  supplierCode:
+    type: string
+    description: 仕入先コード
+  supplierName:
+    type: string
+    description: 仕入先名
+  supplierAbbr:
+    type: string
+    description: 仕入先略称
+  supplierDivisionId:
+    type: string
+    description: 仕入先区分ID
+  zipCode:
+    type: string
+    description: 郵便番号
+  address:
+    type: string
+    description: 住所
+  phoneNumber:
+    type: string
+    description: 電話番号
+  faxNumber:
+    type: string
+    description: FAX番号
+  mailAddress:
+    type: string
+    description: メールアドレス
+  contactPersonName:
+    type: string
+    description: 担当者名
+  note:
+    type: string
+    description: 備考
+  status:
+    type: string
+    enum: ['0', '1']
+    description: ステータス(0:無効, 1:有効)

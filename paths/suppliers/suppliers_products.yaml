@@ -1,0 +1,161 @@
+get:
+  tags:
+    - 仕入先
+  summary: 仕入先商品一覧取得
+  description: 指定した仕入先の商品情報一覧を取得します。
+  parameters:
+    - name: id
+      in: path
+      required: true
+      description: 仕入先ID
+      schema:
+        type: string
+    - name: fields
+      in: query
+      description: 取得したいフィールド名（カンマ区切りで指定可）
+      schema:
+        type: array
+        items:
+          type: string
+        example: [supplierProductId, productId, productName]
+    - name: sort
+      in: query
+      description: 並び順（カンマ区切りで指定可）
+      schema:
+        type: string
+        example: productCode,ASC
+    - name: limit
+      in: query
+      description: 取得上限数
+      schema:
+        type: integer
+        example: 50
+    - name: page
+      in: query
+      description: ページ番号
+      schema:
+        type: integer
+        example: 1
+    - name: supplier_product_id
+      in: query
+      description: 仕入先商品ID
+      schema:
+        type: string
+    - name: product_id
+      in: query
+      description: 商品ID
+      schema:
+        type: string
+    - name: product_code
+      in: query
+      description: 商品コード
+      schema:
+        type: string
+    - name: product_name
+      in: query
+      description: 商品名（部分一致）
+      schema:
+        type: string
+    - name: supplier_product_code
+      in: query
+      description: 仕入先商品コード
+      schema:
+        type: string
+    - name: supplier_product_name
+      in: query
+      description: 仕入先商品名（部分一致）
+      schema:
+        type: string
+    - name: status
+      in: query
+      description: ステータス(0:無効, 1:有効)
+      schema:
+        type: string
+        enum: ['0', '1']
+    - name: ins_date_time-from
+      in: query
+      description: 登録日時(From)
+      schema:
+        type: string
+        format: date-time
+    - name: ins_date_time-to
+      in: query
+      description: 登録日時(To)
+      schema:
+        type: string
+        format: date-time
+    - name: upd_date_time-from
+      in: query
+      description: 更新日時(From)
+      schema:
+        type: string
+        format: date-time
+    - name: upd_date_time-to
+      in: query
+      description: 更新日時(To)
+      schema:
+        type: string
+        format: date-time
+  responses:
+    '200':
+      description: 取得成功
+      content:
+        application/json:
+          schema:
+            type: array
+            items:
+              $ref: '../../schemas/suppliers/SupplierProduct.yaml'
+    '404':
+      description: 対象仕入先が存在しない場合
+      content:
+        application/json:
+          schema:
+            $ref: '../../schemas/common/Error.yaml'
+  security:
+    - AppAccessToken:
+        - pos.suppliers:read
+    - UserAccessToken:
+        - pos.suppliers:read
+
+post:
+  tags:
+    - 仕入先
+  summary: 仕入先商品登録
+  description: 指定した仕入先に商品情報を登録します。
+  parameters:
+    - name: id
+      in: path
+      required: true
+      description: 仕入先ID
+      schema:
+        type: string
+  requestBody:
+    required: true
+    content:
+      application/json:
+        schema:
+          $ref: '../../schemas/suppliers/SupplierProductCreate.yaml'
+  responses:
+    '200':
+      description: 登録成功
+      content:
+        application/json:
+          schema:
+            $ref: '../../schemas/suppliers/SupplierProduct.yaml'
+    '400':
+      description: 入力チェックエラーの場合
+      content:
+        application/json:
+          schema:
+            $ref: '../../schemas/common/Error.yaml'
+    '404':
+      description: 対象仕入先が存在しない場合
+      content:
+        application/json:
+          schema:
+            $ref: '../../schemas/common/Error.yaml'
+  security:
+    - AppAccessToken:
+        - pos.suppliers:write
+    - UserAccessToken:
+        - pos.suppliers:write

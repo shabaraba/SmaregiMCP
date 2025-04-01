@@ -1,0 +1,53 @@
+type: object
+properties:
+  supplierProductId:
+    type: string
+    description: 仕入先商品ID
+  supplierId:
+    type: string
+    description: 仕入先ID
+  supplierName:
+    type: string
+    description: 仕入先名
+  productId:
+    type: string
+    description: 商品ID
+  productCode:
+    type: string
+    description: 商品コード
+  productName:
+    type: string
+    description: 商品名
+  supplierProductCode:
+    type: string
+    description: 仕入先商品コード
+  supplierProductName:
+    type: string
+    description: 仕入先商品名
+  costPrice:
+    type: number
+    format: float
+    description: 原価
+  orderPoint:
+    type: number
+    format: float
+    description: 発注点
+  orderLot:
+    type: number
+    format: float
+    description: 発注ロット
+  leadTime:
+    type: integer
+    description: リードタイム（日数）
+  status:
+    type: string
+    enum: ['0', '1']
+    description: ステータス(0:無効, 1:有効)
+  insDateTime:
+    type: string
+    format: date-time
+    description: 登録日時
+  updDateTime:
+    type: string
+    format: date-time
+    description: 更新日時

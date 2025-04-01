@@ -1,0 +1,5 @@
+type: object
+properties:
+  supplierDivisionName:
+    type: string
+    description: 仕入先区分名
