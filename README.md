@@ -1,153 +1,66 @@
-# スマレジ - Claude MCP (Model Context Protocol) サーバー
+# スマレジ・プラットフォームAPI OpenAPI仕様
 
-スマレジPOSシステムのデータをClaudeやその他のLLMと連携するためのMCPサーバーです。このツールを使用することで、スマレジのPOSデータにAIアシスタントがアクセスし、自然言語での分析や質問応答が可能になります。
+## 概要
 
-## 機能
+スマレジ・プラットフォームAPIのOpenAPI 3.0仕様書です。このリポジトリでは、スマレジのPOS機能を利用するためのAPIインターフェースを定義しています。
 
-- スマレジデータへのアクセス
-  - 商品情報の取得 (`get_products`)
-  - 売上情報の取得 (`get_sales`)
-  - 店舗情報の取得 (`get_stores`)
-  - 売上分析機能 (`analyze_sales`)
+## 構成
 
-## 必要条件
+APIの仕様は次のように構成されています：
 
-- [Bun](https://bun.sh) 1.0.0以上
-- Node.js 18.0.0以上（一部の依存関係用）
-- TypeScript
-- スマレジAPIのアクセス権限（実装時）
-
-## インストール
-
-```bash
-# リポジトリのクローン
-git clone <リポジトリURL>
-cd smaregi-mcp
-
-# 依存パッケージのインストール
-bun install
-```
+- `openapi.yaml`: メインのOpenAPI仕様ファイル
+- `paths/`: APIエンドポイントの定義
+- `schemas/`: データモデルの定義
 
 ## 使用方法
 
-### サーバーの起動
+### APIドキュメントの表示
+
+このリポジトリをクローンした後、以下のいずれかの方法でAPIドキュメントを表示できます：
+
+1. Swagger UIを使用
+2. Redocを使用
+3. Stoplight Studioを使用
+
+### 例：Swagger UIでの表示
 
 ```bash
-# 開発モード（ファイル変更を監視）
-bun dev
-
-# 本番モード
-bun start
+# Swagger UIのDockerイメージを使用
+docker run -p 8080:8080 -e SWAGGER_JSON=/openapi.yaml -v $(pwd):/usr/share/nginx/html/specs swaggerapi/swagger-ui
 ```
 
-### Claude Desktopとの連携設定
+ブラウザで `http://localhost:8080` にアクセスすると、APIドキュメントが表示されます。
 
-Claude Desktopで使用する場合は、以下の設定を行います。
+## API概要
 
-macOSの場合:
-```json
-// ~/Library/Application Support/Claude/claude_desktop_config.json
-{
-  "smaregi": {
-    "command": "/path/to/bun",
-    "args": ["run", "/path/to/smaregi-mcp/src/index.ts"]
-  }
-}
-```
+このAPIを使用して、以下の機能にアクセスできます：
 
-Windowsの場合:
-```json
-// %APPDATA%\Claude\claude_desktop_config.json
-{
-  "smaregi": {
-    "command": "C:\\path\\to\\bun.exe",
-    "args": ["run", "C:\\path\\to\\smaregi-mcp\\src\\index.ts"]
-  }
-}
-```
+- 部門管理
+- 商品管理
+- 在庫管理
+- 取引管理
+- 会員管理
+- 店舗管理
+- スタッフ管理
+- 予算管理
+- 仕入先管理
+- 発注/入荷/出荷管理
+- 棚卸管理
+など
 
-## 実装の詳細
+## 認証
 
-### 提供ツール
+APIはOAuth 2.0認証を使用しています。APIを呼び出すには、以下のいずれかの認証情報が必要です：
 
-1. **get_products**: 商品情報の取得
-   - 利用可能なパラメータ:
-     - `limit`: 返す商品数の上限
-     - `page`: ページング用のページ番号
-     - `category`: カテゴリでフィルタリング
+1. アプリアクセストークン（ClientCredentials）
+2. ユーザーアクセストークン（AuthorizationCode）
 
-2. **get_sales**: 売上情報の取得
-   - 利用可能なパラメータ:
-     - `startDate`: 開始日（YYYY-MM-DD形式）
-     - `endDate`: 終了日（YYYY-MM-DD形式）
-     - `storeId`: 店舗IDでフィルタリング
-     - `limit`: 返す売上レコード数の上限
-     - `page`: ページング用のページ番号
+詳細はAPIドキュメントの「Authentication」セクションを参照してください。
 
-3. **get_stores**: 店舗情報の取得
-   - パラメータなし
+## 利用条件
 
-4. **analyze_sales**: 売上分析
-   - 利用可能なパラメータ:
-     - `analysisType`: 分析タイプ（"top_products", "sales_by_category", "store_comparison", "daily_trend"）
-     - `startDate`: 分析の開始日（YYYY-MM-DD形式）
-     - `endDate`: 分析の終了日（YYYY-MM-DD形式）
-     - `limit`: 結果に含める項目の上限数
-
-### 開発
-
-現在のバージョンではモックデータを使用していますが、実際のスマレジAPIとの連携を実装する予定です。APIクライアントは `src/services/` ディレクトリに実装される予定です。
-
-## カスタマイズと拡張
-
-実際のスマレジAPIとの連携を実装するには、`index.ts`内のツール実装を修正し、実際のAPIクライアントを使用するよう変更してください。また、必要に応じて新しいツールを追加することも可能です。
-
-```typescript
-// 実装例
-import { SmaregiApiClient } from './services/smaregiApiClient';
-
-const apiClient = new SmaregiApiClient({
-  clientId: process.env.SMAREGI_CLIENT_ID,
-  clientSecret: process.env.SMAREGI_CLIENT_SECRET,
-  contractId: process.env.SMAREGI_CONTRACT_ID
-});
-
-// Products tool implementation
-server.tool(
-  "get_products",
-  "...",
-  ProductsQuerySchema.shape,
-  async (args) => {
-    try {
-      // 実際のAPIを呼び出す
-      const products = await apiClient.getProducts(args);
-      
-      return {
-        content: [
-          {
-            type: "text",
-            text: JSON.stringify(products, null, 2),
-          },
-        ],
-        isError: false,
-      };
-    } catch (error) {
-      // エラー処理
-    }
-  }
-);
-```
+スマレジ・プラットフォームAPIの利用には、スマレジとの契約が必要です。詳細は[スマレジ公式ウェブサイト](https://www.smaregi.jp/)を参照してください。
 
 ## ライセンス
 
-このプロジェクトはISCライセンスの下で公開されています。
-
-## 貢献
-
-バグ報告、機能リクエスト、プルリクエストを歓迎します。大きな変更を行う前には、まずIssueを開いて議論してください。
-
-## 謝辞
-
-- [スマレジ](https://smaregi.jp/)
-- [Anthropic（Claude）](https://www.anthropic.com/)
-- [Model Context Protocol](https://modelcontextprotocol.ai/)
+このOpenAPI仕様は、スマレジが提供するAPIの使用方法を示すためのものであり、スマレジの利用規約に基づいて提供されています。

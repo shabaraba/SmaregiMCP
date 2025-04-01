@@ -1,0 +1,24 @@
+type: object
+description: エラーレスポンス
+properties:
+  type:
+    type: string
+    description: エラータイプ
+    example: 'about:blank'
+  title:
+    type: string
+    description: エラータイトル
+    example: 'Bad Request'
+  detail:
+    type: string
+    description: エラーの詳細メッセージ
+    example: '入力パラメータが正しくありません'
+  status:
+    type: integer
+    description: HTTPステータスコード
+    example: 400
+required:
+  - type
+  - title
+  - detail
+  - status

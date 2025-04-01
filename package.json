@@ -32,8 +32,14 @@
     "@eslint/js": "^9.22.0",
     "@types/node": "^20.10.0",
     "eslint": "^8.57.0",
+    "openapi-typescript": "^7.6.1",
     "prettier": "3.5.3",
     "typescript": "^5.0.0",
     "typescript-eslint": "^8.26.1"
+  },
+  "main": "eslint.config.js",
+  "directories": {
+    "doc": "docs",
+    "test": "tests"
   }
 }

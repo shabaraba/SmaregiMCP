@@ -1,0 +1,116 @@
+openapi: 3.0.3
+info:
+  title: スマレジ・プラットフォームAPI POS仕様
+  description: |
+    スマレジ・プラットフォームAPIのPOS機能を利用するためのAPI仕様書です。
+    POSシステムの基本機能である商品管理、在庫管理、取引管理などの機能を提供します。
+  version: 1.0.0
+  contact:
+    name: スマレジサポート
+    url: https://www.smaregi.jp/support/
+servers:
+  - url: https://api.smaregi.dev/{contractId}/pos
+    description: サンドボックス環境
+    variables:
+      contractId:
+        description: 契約ID
+        default: dummy
+  - url: https://api.smaregi.jp/{contractId}/pos
+    description: 本番環境
+    variables:
+      contractId:
+        description: 契約ID
+        default: dummy
+
+paths:
+  $ref: './paths/_index.yaml'
+
+components:
+  securitySchemes:
+    AppAccessToken:
+      type: oauth2
+      description: アプリアクセストークン。
+      flows:
+        clientCredentials:
+          tokenUrl: https://id.smaregi.dev/app/{contractId}/token
+          refreshUrl: https://id.smaregi.dev/app/{contractId}/token
+          scopes:
+            pos.products:read: 商品/部門の参照ができます。
+            pos.products:write: 商品/部門の更新ができます。
+            pos.customers:read: 会員/ポイントの参照ができます。
+            pos.customers:write: 会員/ポイントの更新ができます。
+            pos.stock:read: 在庫の参照ができます。
+            pos.stock:write: 在庫の更新ができます。
+            pos.stock-changes:read: 在庫変動履歴の参照ができます。
+            pos.transactions:read: 取引/予算/精算/日次締め情報の参照ができます。
+            pos.transactions:write: 取引/予算/精算/日次締め情報の更新ができます。
+            pos.suppliers:read: 仕入先の参照ができます。
+            pos.suppliers:write: 仕入先の更新ができます。
+            pos.stores:read: 店舗の参照ができます。
+            pos.stores:write: 店舗の更新ができます。
+            pos.staffs:read: スタッフの参照ができます。
+            pos.staffs:write: スタッフの更新ができます。
+            pos.losses:read: ロスの参照ができます。
+            pos.losses:write: ロスの更新ができます。
+            pos.orders:read: 発注/入荷/出荷の参照ができます。
+            pos.orders:write: 発注/入荷/出荷の更新ができます。
+            pos.transfers:read: 店間移動(入出庫)の参照ができます。
+            pos.transfers:write: 店間移動(入出庫)の更新ができます。
+            pos.stocktaking:read: 棚卸の参照ができます。
+    UserAccessToken:
+      type: oauth2
+      description: |
+        ユーザーアクセストークン。
+        管理画面における制御と同等の、ユーザー（＝スタッフ）の所属店舗による制御や、属する役割・役職に設定された各種権限に基づく実行制御が適用されます。
+      flows:
+        authorizationCode:
+          authorizationUrl: https://id.smaregi.dev/authorize
+          tokenUrl: https://id.smaregi.dev/authorize/token
+          refreshUrl: https://id.smaregi.dev/authorize/token
+          scopes:
+            pos.products:read: 商品/部門の参照ができます。
+            pos.products:write: 商品/部門の更新ができます。
+            pos.customers:read: 会員/ポイントの参照ができます。
+            pos.customers:write: 会員/ポイントの更新ができます。
+            pos.stock:read: 在庫の参照ができます。
+            pos.stock:write: 在庫の更新ができます。
+            pos.stock-changes:read: 在庫変動履歴の参照ができます。
+            pos.transactions:read: 取引/予算/精算/日次締め情報の参照ができます。
+            pos.transactions:write: 取引/予算/精算/日次締め情報の更新ができます。
+            pos.suppliers:read: 仕入先の参照ができます。
+            pos.suppliers:write: 仕入先の更新ができます。
+            pos.stores:read: 店舗の参照ができます。
+            pos.stores:write: 店舗の更新ができます。
+            pos.staffs:read: スタッフの参照ができます。
+            pos.staffs:write: スタッフの更新ができます。
+  
+  schemas:
+    $ref: './schemas/_index.yaml'
+
+tags:
+  - name: 部門
+    description: 部門に関する操作
+  - name: 商品
+    description: 商品に関する操作
+  - name: 取引
+    description: 取引に関する操作
+  - name: 在庫
+    description: 在庫に関する操作
+  - name: 店舗
+    description: 店舗に関する操作
+  - name: スタッフ
+    description: スタッフに関する操作
+  - name: 会員
+    description: 会員に関する操作
+  - name: セール
+    description: セール情報に関する操作
+  - name: 仕入先
+    description: 仕入先に関する操作
+  - name: 発注
+    description: 発注に関する操作
+  - name: 入出庫
+    description: 入庫・出庫に関する操作
+  - name: 棚卸
+    description: 棚卸に関する操作
+  - name: 支払方法
+    description: 支払方法に関する操作

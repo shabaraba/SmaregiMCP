@@ -1,0 +1,29 @@
+type: object
+description: 事前会計更新リクエスト
+properties:
+  customerId:
+    type: integer
+    format: int64
+    description: 会員ID
+    nullable: true
+  staffId:
+    type: integer
+    format: int64
+    description: スタッフID
+    nullable: true
+  status:
+    type: integer
+    description: |-
+      ステータス
+      * 1: 未会計
+      * 2: 会計済
+  memo:
+    type: string
+    description: メモ
+    nullable: true
+  transactionId:
+    type: integer
+    format: int64
+    description: 取引ID
+    nullable: true
+minProperties: 1

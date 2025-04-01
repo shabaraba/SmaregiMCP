@@ -1,0 +1,35 @@
+type: object
+description: 商品店舗関連情報
+properties:
+  productId:
+    type: string
+    description: 商品ID
+    example: "1"
+  storeId:
+    type: string
+    description: 店舗ID
+    example: "1"
+  productOptionGroupId:
+    type: string
+    description: 商品オプショングループID
+    example: "1"
+  assignDivision:
+    type: string
+    description: 取扱区分 (0:販売する、1:販売しない)
+    enum: ["0", "1"]
+    default: "0"
+    example: "0"
+  insDateTime:
+    type: string
+    format: date-time
+    description: 登録日時
+    example: "2023-01-01T00:00:00+09:00"
+  updDateTime:
+    type: string
+    format: date-time
+    description: 更新日時
+    example: "2023-01-01T00:00:00+09:00"
+required:
+  - productId
+  - storeId
+  - assignDivision

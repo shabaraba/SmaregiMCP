@@ -1,0 +1,36 @@
+type: object
+description: 部門グループ情報
+properties:
+  categoryGroupId:
+    type: string
+    description: 部門グループID
+    example: '1'
+  categoryGroupCode:
+    type: string
+    description: 部門グループコード (10文字以内)
+    maxLength: 10
+    pattern: ^[ -~]+$
+    example: 'GROUP1'
+  categoryGroupName:
+    type: string
+    description: 部門グループ名 (85文字以内)
+    maxLength: 85
+    example: '食品グループ'
+  displaySequence:
+    type: string
+    description: 表示順序 (0-999999999)
+    pattern: ^[0-9]{1,9}$
+    example: '1'
+  insDateTime:
+    type: string
+    description: 登録日時
+    format: date-time
+    example: '2025-01-01T00:00:00+09:00'
+  updDateTime:
+    type: string
+    description: 更新日時
+    format: date-time
+    example: '2025-01-01T00:00:00+09:00'
+required:
+  - categoryGroupId
+  - categoryGroupName

@@ -1,0 +1,76 @@
+patch:
+  summary: 部門グループ更新
+  description: |
+    指定された部門グループを更新します。
+    
+    Plans:
+    スタンダード・プレミアム・プレミアムプラス・フードビジネス・リテールビジネス
+  tags:
+    - 部門
+  security:
+    - AppAccessToken: [pos.products:write]
+    - UserAccessToken: [pos.products:write]
+  parameters:
+    - name: contract_id
+      in: path
+      required: true
+      schema:
+        type: string
+      description: 契約ID
+    - name: id
+      in: path
+      required: true
+      schema:
+        type: string
+      description: 部門グループID
+  requestBody:
+    required: true
+    content:
+      application/json:
+        schema:
+          $ref: '../../schemas/categories/CategoryGroupUpdate.yaml'
+  responses:
+    '200':
+      description: 更新成功
+      content:
+        application/json:
+          schema:
+            $ref: '../../schemas/categories/CategoryGroup.yaml'
+    '400':
+      description: |
+        入力チェックエラーの場合
+        指定された部門グループコードが重複する場合
+    '404':
+      description: 指定されたIDが存在しない場合
+delete:
+  summary: 部門グループ削除
+  description: |
+    指定された部門グループを削除します。
+    
+    Plans:
+    スタンダード・プレミアム・プレミアムプラス・フードビジネス・リテールビジネス
+  tags:
+    - 部門
+  security:
+    - AppAccessToken: [pos.products:write]
+    - UserAccessToken: [pos.products:write]
+  parameters:
+    - name: contract_id
+      in: path
+      required: true
+      schema:
+        type: string
+      description: 契約ID
+    - name: id
+      in: path
+      required: true
+      schema:
+        type: string
+      description: 部門グループID
+  responses:
+    '200':
+      description: 削除成功
+    '400':
+      description: 指定された部門グループに紐付いている部門が存在する場合
+    '404':
+      description: 指定されたIDが存在しない場合

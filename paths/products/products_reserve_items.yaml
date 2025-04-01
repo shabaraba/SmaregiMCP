@@ -1,0 +1,188 @@
+parameters:
+  - name: id
+    in: path
+    description: 商品ID
+    required: true
+    schema:
+      type: integer
+      format: int64
+
+get:
+  summary: 商品の予約項目取得
+  description: 指定した商品IDの予約項目情報を取得します。
+  operationId: getProductReserveItems
+  tags:
+    - 商品
+  parameters:
+    - name: fields
+      in: query
+      description: 取得するフィールド
+      schema:
+        type: array
+        items:
+          type: string
+        default: ["*"]
+  responses:
+    '200':
+      description: 商品の予約項目情報を返却
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              items:
+                type: array
+                items:
+                  $ref: '#/components/schemas/ProductReserveItem'
+              total:
+                type: integer
+                description: 総件数
+    '400':
+      description: リクエストパラメータが不正
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    '401':
+      description: 認証エラー
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    '403':
+      description: 権限エラー
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    '404':
+      description: 商品が存在しない
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+  security:
+    - AppAccessToken:
+        - pos.products:read
+    - UserAccessToken:
+        - pos.products:read
+
+post:
+  summary: 商品の予約項目登録
+  description: 指定した商品IDに予約項目情報を登録します。
+  operationId: createProductReserveItem
+  tags:
+    - 商品
+  requestBody:
+    required: true
+    content:
+      application/json:
+        schema:
+          $ref: '#/components/schemas/ProductReserveItem'
+  responses:
+    '201':
+      description: 商品予約項目の登録に成功
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ProductReserveItem'
+    '400':
+      description: リクエストパラメータが不正
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    '401':
+      description: 認証エラー
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    '403':
+      description: 権限エラー
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    '404':
+      description: 商品が存在しない
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    '409':
+      description: 既存データとの競合エラー
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+  security:
+    - AppAccessToken:
+        - pos.products:write
+    - UserAccessToken:
+        - pos.products:write
+
+put:
+  summary: 商品の予約項目一括更新
+  description: 指定した商品IDの予約項目情報を一括で更新します。
+  operationId: updateProductReserveItems
+  tags:
+    - 商品
+  requestBody:
+    required: true
+    content:
+      application/json:
+        schema:
+          type: object
+          properties:
+            items:
+              type: array
+              items:
+                $ref: '#/components/schemas/ProductReserveItem'
+  responses:
+    '200':
+      description: 商品予約項目情報の更新に成功
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              items:
+                type: array
+                items:
+                  $ref: '#/components/schemas/ProductReserveItem'
+    '400':
+      description: リクエストパラメータが不正
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    '401':
+      description: 認証エラー
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    '403':
+      description: 権限エラー
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    '404':
+      description: 商品が存在しない
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    '409':
+      description: 既存データとの競合エラー
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+  security:
+    - AppAccessToken:
+        - pos.products:write
+    - UserAccessToken:
+        - pos.products:write
