@@ -1,0 +1,36 @@
+type: object
+description: バンドル販売商品情報
+properties:
+  bundleProductId:
+    type: string
+    description: バンドル販売商品ID
+    example: "12345"
+  productBundleGroupId:
+    type: string
+    description: 商品バンドルグループID
+    example: "1"
+  categoryId:
+    type: string
+    description: 部門ID
+    example: "101"
+  productId:
+    type: string
+    description: 商品ID
+    example: "10001"
+  productGroupCode:
+    type: string
+    description: 商品グループコード
+    example: "SPR2024"
+  insDateTime:
+    type: string
+    description: 登録日時
+    format: date-time
+    example: "2025-03-15T10:00:00+09:00"
+  updDateTime:
+    type: string
+    description: 更新日時
+    format: date-time
+    example: "2025-03-15T10:00:00+09:00"
+required:
+  - bundleProductId
+  - productBundleGroupId
