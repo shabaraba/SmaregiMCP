@@ -1,0 +1,24 @@
+type: object
+description: 出庫修正申請登録情報
+properties:
+  outgoingStockId:
+    type: integer
+    description: 出庫ID
+  storeId:
+    type: integer
+    description: 店舗ID
+  requestDate:
+    type: string
+    format: date
+    description: 申請日
+  requestReason:
+    type: string
+    description: 申請理由
+  requestStaffId:
+    type: integer
+    description: 申請スタッフID
+required:
+  - outgoingStockId
+  - storeId
+  - requestDate
+  - requestReason

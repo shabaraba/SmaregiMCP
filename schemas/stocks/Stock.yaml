@@ -1,0 +1,47 @@
+type: object
+description: 在庫情報
+properties:
+  storeId:
+    type: integer
+    description: 店舗ID
+  storeName:
+    type: string
+    description: 店舗名
+  productId:
+    type: integer
+    description: 商品ID
+  productCode:
+    type: string
+    description: 商品コード
+  productName:
+    type: string
+    description: 商品名
+  barcode:
+    type: string
+    description: バーコード
+  categoryId:
+    type: integer
+    description: 部門ID
+  categoryName:
+    type: string
+    description: 部門名
+  quantity:
+    type: number
+    format: float
+    description: 在庫数
+  reservedQuantity:
+    type: number
+    format: float
+    description: 予約在庫数
+  originalQuantity:
+    type: number
+    format: float
+    description: 棚卸前在庫数
+  lastUpdateDate:
+    type: string
+    format: date-time
+    description: 最終更新日時
+required:
+  - storeId
+  - productId
+  - quantity

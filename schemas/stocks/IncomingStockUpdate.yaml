@@ -1,0 +1,42 @@
+type: object
+description: 入庫更新情報
+properties:
+  division:
+    type: integer
+    description: 入庫区分（1:仕入、2:店舗間移動、3:返品）
+  status:
+    type: integer
+    description: 入庫ステータス（1:計画中、2:確定済）
+  storeId:
+    type: integer
+    description: 店舗ID
+  supplierStoreId:
+    type: integer
+    description: 出庫元店舗ID
+  supplierId:
+    type: integer
+    description: 仕入先ID
+  arrivalId:
+    type: integer
+    description: 入荷ID
+  arrivalDate:
+    type: string
+    format: date
+    description: 入荷日
+  orderId:
+    type: integer
+    description: 発注ID
+  targetDate:
+    type: string
+    format: date
+    description: 入庫日
+  estimatedDate:
+    type: string
+    format: date
+    description: 入庫予定日
+  staffId:
+    type: integer
+    description: 担当スタッフID
+  memo:
+    type: string
+    description: メモ

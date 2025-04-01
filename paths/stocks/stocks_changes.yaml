@@ -1,0 +1,87 @@
+get:
+  tags:
+    - 在庫
+  summary: 在庫変動履歴一覧取得
+  description: 条件を指定して、在庫変動履歴の一覧を取得します。
+  operationId: getStockChanges
+  parameters:
+    - name: store_id
+      in: query
+      description: 店舗ID
+      schema:
+        type: integer
+    - name: product_id
+      in: query
+      description: 商品ID
+      schema:
+        type: integer
+    - name: product_code
+      in: query
+      description: 商品コード
+      schema:
+        type: string
+    - name: product_name
+      in: query
+      description: 商品名
+      schema:
+        type: string
+    - name: division
+      in: query
+      description: 変動区分（1:取引、2:入庫、3:出庫、4:棚卸、5:発注、6:受注、7:ロス、8:その他）
+      schema:
+        type: integer
+    - name: target_date_from
+      in: query
+      description: 変動日（FROM）（Y-m-d）
+      schema:
+        type: string
+        format: date
+    - name: target_date_to
+      in: query
+      description: 変動日（TO）（Y-m-d）
+      schema:
+        type: string
+        format: date
+    - name: limit
+      in: query
+      description: 取得件数
+      schema:
+        type: integer
+        default: 20
+    - name: page
+      in: query
+      description: ページ番号
+      schema:
+        type: integer
+        default: 1
+  responses:
+    '200':
+      description: 成功
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              stockChanges:
+                type: array
+                items:
+                  $ref: '../../schemas/stocks/StockChange.yaml'
+              pagination:
+                $ref: '../../schemas/common/Pagination.yaml'
+    '400':
+      description: バリデーションエラー
+      content:
+        application/json:
+          schema:
+            $ref: '../../schemas/common/Error.yaml'
+    '401':
+      description: 認証エラー
+      content:
+        application/json:
+          schema:
+            $ref: '../../schemas/common/Error.yaml'
+  security:
+    - AppAccessToken:
+        - pos.stock-changes:read
+    - UserAccessToken:
+        - pos.stock-changes:read

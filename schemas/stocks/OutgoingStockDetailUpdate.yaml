@@ -1,0 +1,31 @@
+type: object
+description: 出庫詳細更新情報
+properties:
+  details:
+    type: array
+    description: 出庫詳細更新情報の配列
+    items:
+      type: object
+      properties:
+        id:
+          type: integer
+          description: 出庫詳細ID
+        productId:
+          type: integer
+          description: 商品ID
+        quantity:
+          type: number
+          format: float
+          description: 数量
+        costPrice:
+          type: integer
+          description: 仕入単価
+        memo:
+          type: string
+          description: メモ
+      required:
+        - id
+        - productId
+        - quantity
+required:
+  - details
