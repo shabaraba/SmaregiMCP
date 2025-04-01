@@ -1,0 +1,121 @@
+get:
+  tags:
+    - スタッフ
+  summary: 役割一覧取得
+  description: 役割情報一覧を取得します。
+  parameters:
+    - name: fields
+      in: query
+      description: 取得したいフィールド名（カンマ区切りで指定可）
+      schema:
+        type: array
+        items:
+          type: string
+        example: [roleId, roleName]
+    - name: sort
+      in: query
+      description: 並び順（カンマ区切りで指定可）
+      schema:
+        type: string
+        example: roleId,DESC
+    - name: limit
+      in: query
+      description: 取得上限数
+      schema:
+        type: integer
+        example: 50
+    - name: page
+      in: query
+      description: ページ番号
+      schema:
+        type: integer
+        example: 1
+    - name: role_id
+      in: query
+      description: 役割ID
+      schema:
+        type: string
+    - name: role_name
+      in: query
+      description: 役割名（部分一致）
+      schema:
+        type: string
+    - name: permission_id
+      in: query
+      description: 権限ID
+      schema:
+        type: string
+    - name: permission_value
+      in: query
+      description: 権限値(0:無効, 1:有効)
+      schema:
+        type: integer
+        enum: [0, 1]
+    - name: ins_date_time-from
+      in: query
+      description: 登録日時(From)
+      schema:
+        type: string
+        format: date-time
+    - name: ins_date_time-to
+      in: query
+      description: 登録日時(To)
+      schema:
+        type: string
+        format: date-time
+    - name: upd_date_time-from
+      in: query
+      description: 更新日時(From)
+      schema:
+        type: string
+        format: date-time
+    - name: upd_date_time-to
+      in: query
+      description: 更新日時(To)
+      schema:
+        type: string
+        format: date-time
+  responses:
+    '200':
+      description: 取得成功
+      content:
+        application/json:
+          schema:
+            type: array
+            items:
+              $ref: '../../schemas/staffs/Role.yaml'
+  security:
+    - AppAccessToken:
+        - pos.staffs:read
+    - UserAccessToken:
+        - pos.staffs:read
+
+post:
+  tags:
+    - スタッフ
+  summary: 役割登録
+  description: 役割情報を登録します。
+  requestBody:
+    required: true
+    content:
+      application/json:
+        schema:
+          $ref: '../../schemas/staffs/RoleCreate.yaml'
+  responses:
+    '200':
+      description: 登録成功
+      content:
+        application/json:
+          schema:
+            $ref: '../../schemas/staffs/Role.yaml'
+    '400':
+      description: 入力チェックエラーの場合
+      content:
+        application/json:
+          schema:
+            $ref: '../../schemas/common/Error.yaml'
+  security:
+    - AppAccessToken:
+        - pos.staffs:write
+    - UserAccessToken:
+        - pos.staffs:write

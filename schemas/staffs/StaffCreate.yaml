@@ -1,0 +1,66 @@
+type: object
+required:
+  - staffCode
+  - password
+  - staffAuthorization
+properties:
+  staffCode:
+    type: string
+    description: スタッフコード
+  firstName:
+    type: string
+    description: 名前
+  lastName:
+    type: string
+    description: 苗字
+  firstNameKana:
+    type: string
+    description: 名前カナ
+  lastNameKana:
+    type: string
+    description: 苗字カナ
+  tel:
+    type: string
+    description: 電話番号
+  mobilePhone:
+    type: string
+    description: 携帯電話番号
+  mail:
+    type: string
+    description: メールアドレス
+  zipCode:
+    type: string
+    description: 郵便番号
+  address:
+    type: string
+    description: 住所
+  password:
+    type: string
+    description: パスワード
+  staffAuthorization:
+    type: string
+    enum: ['0', '1', '2', '3']
+    description: 権限(0:なし, 1:店舗管理者, 2:店舗スタッフ, 3:システム管理者)
+  salePassword:
+    type: string
+    description: 販売パスワード
+  startAtHourOfDay:
+    type: string
+    description: 稼働開始時間（HH:mm）
+  endAtHourOfDay:
+    type: string
+    description: 稼働終了時間（HH:mm）
+  storeIds:
+    type: array
+    items:
+      type: string
+    description: 所属店舗IDリスト
+  roleIds:
+    type: array
+    items:
+      type: string
+    description: 役割IDリスト
+  status:
+    type: string
+    enum: ['1', '2']
+    description: ステータス(1:有効, 2:無効)
