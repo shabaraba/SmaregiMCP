@@ -1,0 +1,49 @@
+get:
+  summary: 通貨詳細を取得
+  description: 指定されたコードの通貨詳細を取得します。
+  operationId: getCurrencyByCode
+  tags:
+    - 通貨
+  security:
+    - AppAccessToken: 
+      - common.currencies:read
+    - UserAccessToken:
+      - common.currencies:read
+  parameters:
+    - name: code
+      in: path
+      description: 通貨コード（ISO 4217）
+      required: true
+      schema:
+        type: string
+  responses:
+    '200':
+      description: 正常レスポンス
+      content:
+        application/json:
+          schema:
+            $ref: '../../schemas/currencies/Currency.yaml'
+    '400':
+      description: Bad Request
+      content:
+        application/json:
+          schema:
+            $ref: '../../schemas/common/Error.yaml'
+    '401':
+      description: Unauthorized
+      content:
+        application/json:
+          schema:
+            $ref: '../../schemas/common/Error.yaml'
+    '403':
+      description: Forbidden
+      content:
+        application/json:
+          schema:
+            $ref: '../../schemas/common/Error.yaml'
+    '404':
+      description: Not Found
+      content:
+        application/json:
+          schema:
+            $ref: '../../schemas/common/Error.yaml'

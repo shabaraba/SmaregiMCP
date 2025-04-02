@@ -1,0 +1,47 @@
+type: object
+description: 通貨情報
+properties:
+  code:
+    type: string
+    description: 通貨コード（ISO 4217）
+    example: "JPY"
+  name:
+    type: string
+    description: 通貨名
+    example: "日本円"
+  symbol:
+    type: string
+    description: 通貨記号
+    example: "¥"
+  decimals:
+    type: integer
+    description: 小数点以下の桁数
+    example: 0
+  isDefault:
+    type: boolean
+    description: デフォルト通貨フラグ
+    example: true
+  exchangeRate:
+    type: number
+    format: float
+    description: デフォルト通貨に対する為替レート
+    example: 1.0
+  createdDateTime:
+    type: string
+    format: date-time
+    description: 作成日時
+    example: "2022-01-01T00:00:00+09:00"
+  updatedDateTime:
+    type: string
+    format: date-time
+    description: 更新日時
+    example: "2022-01-01T00:00:00+09:00"
+required:
+  - code
+  - name
+  - symbol
+  - decimals
+  - isDefault
+  - exchangeRate
+  - createdDateTime
+  - updatedDateTime

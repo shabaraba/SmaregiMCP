@@ -1,0 +1,70 @@
+get:
+  summary: 税率一覧を取得
+  description: 税率の一覧を取得します。
+  operationId: getTaxRates
+  tags:
+    - 税率
+  security:
+    - AppAccessToken: 
+      - common.taxes:read
+    - UserAccessToken:
+      - common.taxes:read
+  parameters:
+    - name: limit
+      in: query
+      description: 1ページあたりの最大件数
+      schema:
+        type: integer
+        minimum: 1
+        maximum: 1000
+        default: 100
+    - name: page
+      in: query
+      description: ページ番号
+      schema:
+        type: integer
+        minimum: 1
+        default: 1
+    - name: sort
+      in: query
+      description: 並び順の指定
+      schema:
+        type: string
+    - name: date
+      in: query
+      description: 指定した日付時点で有効な税率を取得
+      schema:
+        type: string
+        format: date
+  responses:
+    '200':
+      description: 正常レスポンス
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              taxRates:
+                type: array
+                items:
+                  $ref: '../../schemas/taxes/TaxRate.yaml'
+              pagination:
+                $ref: '../../schemas/common/Pagination.yaml'
+    '400':
+      description: Bad Request
+      content:
+        application/json:
+          schema:
+            $ref: '../../schemas/common/Error.yaml'
+    '401':
+      description: Unauthorized
+      content:
+        application/json:
+          schema:
+            $ref: '../../schemas/common/Error.yaml'
+    '403':
+      description: Forbidden
+      content:
+        application/json:
+          schema:
+            $ref: '../../schemas/common/Error.yaml'

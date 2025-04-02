@@ -1,0 +1,64 @@
+get:
+  summary: 通貨一覧を取得
+  description: 通貨の一覧を取得します。
+  operationId: getCurrencies
+  tags:
+    - 通貨
+  security:
+    - AppAccessToken: 
+      - common.currencies:read
+    - UserAccessToken:
+      - common.currencies:read
+  parameters:
+    - name: limit
+      in: query
+      description: 1ページあたりの最大件数
+      schema:
+        type: integer
+        minimum: 1
+        maximum: 1000
+        default: 100
+    - name: page
+      in: query
+      description: ページ番号
+      schema:
+        type: integer
+        minimum: 1
+        default: 1
+    - name: sort
+      in: query
+      description: 並び順の指定
+      schema:
+        type: string
+  responses:
+    '200':
+      description: 正常レスポンス
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              currencies:
+                type: array
+                items:
+                  $ref: '../../schemas/currencies/Currency.yaml'
+              pagination:
+                $ref: '../../schemas/common/Pagination.yaml'
+    '400':
+      description: Bad Request
+      content:
+        application/json:
+          schema:
+            $ref: '../../schemas/common/Error.yaml'
+    '401':
+      description: Unauthorized
+      content:
+        application/json:
+          schema:
+            $ref: '../../schemas/common/Error.yaml'
+    '403':
+      description: Forbidden
+      content:
+        application/json:
+          schema:
+            $ref: '../../schemas/common/Error.yaml'

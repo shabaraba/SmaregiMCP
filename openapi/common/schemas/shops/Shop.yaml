@@ -1,0 +1,98 @@
+type: object
+description: 店舗情報
+properties:
+  id:
+    type: string
+    description: 店舗ID
+    example: "shop_123456"
+  name:
+    type: string
+    description: 店舗名
+    example: "スマレジ本店"
+  code:
+    type: string
+    description: 店舗コード
+    example: "SHOP001"
+  address:
+    type: object
+    description: 住所情報
+    properties:
+      postalCode:
+        type: string
+        description: 郵便番号
+        example: "106-0032"
+      country:
+        type: string
+        description: 国
+        example: "日本"
+      prefecture:
+        type: string
+        description: 都道府県
+        example: "東京都"
+      city:
+        type: string
+        description: 市区町村
+        example: "港区"
+      street:
+        type: string
+        description: 番地等
+        example: "六本木1-1-1"
+      building:
+        type: string
+        description: ビル名等
+        example: "スマレジビル 1F"
+  phone:
+    type: string
+    description: 電話番号
+    example: "03-1234-5678"
+  email:
+    type: string
+    description: メールアドレス
+    example: "shop@example.com"
+  timezone:
+    type: string
+    description: タイムゾーン
+    example: "Asia/Tokyo"
+  isActive:
+    type: boolean
+    description: 有効フラグ
+    example: true
+  openingHours:
+    type: array
+    description: 営業時間
+    items:
+      type: object
+      properties:
+        dayOfWeek:
+          type: integer
+          description: 曜日（0:日曜、1:月曜、...、6:土曜）
+          example: 1
+        openTime:
+          type: string
+          description: 開店時間
+          example: "10:00"
+        closeTime:
+          type: string
+          description: 閉店時間
+          example: "21:00"
+        isHoliday:
+          type: boolean
+          description: 定休日フラグ
+          example: false
+  createdDateTime:
+    type: string
+    format: date-time
+    description: 作成日時
+    example: "2022-01-01T00:00:00+09:00"
+  updatedDateTime:
+    type: string
+    format: date-time
+    description: 更新日時
+    example: "2022-01-01T00:00:00+09:00"
+required:
+  - id
+  - name
+  - code
+  - isActive
+  - createdDateTime
+  - updatedDateTime
