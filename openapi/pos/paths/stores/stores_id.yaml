@@ -11,12 +11,6 @@ get:
     - AppAccessToken: [pos.stores:read]
     - UserAccessToken: [pos.stores:read]
   parameters:
-    - name: contract_id
-      in: path
-      required: true
-      schema:
-        type: string
-      description: 契約ID
     - name: id
       in: path
       required: true
@@ -60,12 +54,6 @@ patch:
     - AppAccessToken: [pos.stores:write]
     - UserAccessToken: [pos.stores:write]
   parameters:
-    - name: contract_id
-      in: path
-      required: true
-      schema:
-        type: string
-      description: 契約ID
     - name: id
       in: path
       required: true
@@ -111,12 +99,6 @@ delete:
     - AppAccessToken: [pos.stores:write]
     - UserAccessToken: [pos.stores:write]
   parameters:
-    - name: contract_id
-      in: path
-      required: true
-      schema:
-        type: string
-      description: 契約ID
     - name: id
       in: path
       required: true

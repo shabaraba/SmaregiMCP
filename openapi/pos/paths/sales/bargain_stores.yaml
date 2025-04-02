@@ -14,12 +14,6 @@ get:
     - AppAccessToken: [pos.products:read]
     - UserAccessToken: [pos.products:read]
   parameters:
-    - name: contract_id
-      in: path
-      required: true
-      schema:
-        type: string
-      description: 契約ID
     - name: id
       in: path
       required: true
@@ -81,12 +75,6 @@ post:
     - AppAccessToken: [pos.products:write]
     - UserAccessToken: [pos.products:write]
   parameters:
-    - name: contract_id
-      in: path
-      required: true
-      schema:
-        type: string
-      description: 契約ID
     - name: id
       in: path
       required: true

@@ -17,12 +17,6 @@ get:
     - AppAccessToken: [pos.stores:read]
     - UserAccessToken: [pos.stores:read]
   parameters:
-    - name: contract_id
-      in: path
-      required: true
-      schema:
-        type: string
-      description: 契約ID
     - name: fields
       in: query
       schema:
@@ -87,13 +81,6 @@ post:
   security:
     - AppAccessToken: [pos.stores:write]
     - UserAccessToken: [pos.stores:write]
-  parameters:
-    - name: contract_id
-      in: path
-      required: true
-      schema:
-        type: string
-      description: 契約ID
   requestBody:
     required: true
     content:
