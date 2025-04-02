@@ -60,15 +60,15 @@ get:
               preSales:
                 type: array
                 items:
-                  $ref: "#/components/schemas/PreSale"
+                  $ref: "../../schemas/transactions/PreSale.yaml"
               pagination:
-                $ref: "#/components/schemas/Pagination"
+                $ref: "../../schemas/common/Pagination.yaml"
     "400":
       description: バリデーションエラー
       content:
         application/json:
           schema:
-            $ref: "#/components/schemas/Error"
+            $ref: "../../schemas/common/Error.yaml"
   security:
     - AppAccessToken:
         - pos.transactions:read
@@ -88,7 +88,7 @@ post:
     content:
       application/json:
         schema:
-          $ref: "#/components/schemas/PreSaleCreate"
+          $ref: "../../schemas/transactions/PreSaleCreate.yaml"
   responses:
     "201":
       description: 成功時のレスポンス
@@ -106,7 +106,7 @@ post:
       content:
         application/json:
           schema:
-            $ref: "#/components/schemas/Error"
+            $ref: "../../schemas/common/Error.yaml"
   security:
     - AppAccessToken:
         - pos.transactions:write

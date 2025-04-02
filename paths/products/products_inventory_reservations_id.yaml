@@ -35,31 +35,31 @@ get:
       content:
         application/json:
           schema:
-            $ref: '#/components/schemas/ProductInventoryReservation'
+            $ref: '../../schemas/products/ProductInventoryReservation.yaml'
     '400':
       description: リクエストパラメータが不正
       content:
         application/json:
           schema:
-            $ref: '#/components/schemas/Error'
+            $ref: '../../schemas/common/Error.yaml'
     '401':
       description: 認証エラー
       content:
         application/json:
           schema:
-            $ref: '#/components/schemas/Error'
+            $ref: '../../schemas/common/Error.yaml'
     '403':
       description: 権限エラー
       content:
         application/json:
           schema:
-            $ref: '#/components/schemas/Error'
+            $ref: '../../schemas/common/Error.yaml'
     '404':
       description: 商品または在庫引当情報が存在しない
       content:
         application/json:
           schema:
-            $ref: '#/components/schemas/Error'
+            $ref: '../../schemas/common/Error.yaml'
   security:
     - AppAccessToken:
         - pos.products:read
@@ -77,44 +77,44 @@ put:
     content:
       application/json:
         schema:
-          $ref: '#/components/schemas/ProductInventoryReservation'
+          $ref: '../../schemas/products/ProductInventoryReservation.yaml'
   responses:
     '200':
       description: 商品の在庫引当情報の更新に成功
       content:
         application/json:
           schema:
-            $ref: '#/components/schemas/ProductInventoryReservation'
+            $ref: '../../schemas/products/ProductInventoryReservation.yaml'
     '400':
       description: リクエストパラメータが不正
       content:
         application/json:
           schema:
-            $ref: '#/components/schemas/Error'
+            $ref: '../../schemas/common/Error.yaml'
     '401':
       description: 認証エラー
       content:
         application/json:
           schema:
-            $ref: '#/components/schemas/Error'
+            $ref: '../../schemas/common/Error.yaml'
     '403':
       description: 権限エラー
       content:
         application/json:
           schema:
-            $ref: '#/components/schemas/Error'
+            $ref: '../../schemas/common/Error.yaml'
     '404':
       description: 商品または在庫引当情報が存在しない
       content:
         application/json:
           schema:
-            $ref: '#/components/schemas/Error'
+            $ref: '../../schemas/common/Error.yaml'
     '409':
       description: 既存データとの競合エラー
       content:
         application/json:
           schema:
-            $ref: '#/components/schemas/Error'
+            $ref: '../../schemas/common/Error.yaml'
   security:
     - AppAccessToken:
         - pos.products:write
@@ -135,31 +135,31 @@ delete:
       content:
         application/json:
           schema:
-            $ref: '#/components/schemas/Error'
+            $ref: '../../schemas/common/Error.yaml'
     '401':
       description: 認証エラー
       content:
         application/json:
           schema:
-            $ref: '#/components/schemas/Error'
+            $ref: '../../schemas/common/Error.yaml'
     '403':
       description: 権限エラー
       content:
         application/json:
           schema:
-            $ref: '#/components/schemas/Error'
+            $ref: '../../schemas/common/Error.yaml'
     '404':
       description: 商品または在庫引当情報が存在しない
       content:
         application/json:
           schema:
-            $ref: '#/components/schemas/Error'
+            $ref: '../../schemas/common/Error.yaml'
     '409':
       description: 削除できない状態（他のデータから参照されているなど）
       content:
         application/json:
           schema:
-            $ref: '#/components/schemas/Error'
+            $ref: '../../schemas/common/Error.yaml'
   security:
     - AppAccessToken:
         - pos.products:write

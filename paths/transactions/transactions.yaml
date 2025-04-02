@@ -86,15 +86,15 @@ get:
               transactions:
                 type: array
                 items:
-                  $ref: "#/components/schemas/Transaction"
+                  $ref: "../../schemas/transactions/Transaction.yaml"
               pagination:
-                $ref: "#/components/schemas/Pagination"
+                $ref: "../../schemas/common/Pagination.yaml"
     "400":
       description: バリデーションエラー
       content:
         application/json:
           schema:
-            $ref: "#/components/schemas/Error"
+            $ref: "../../schemas/common/Error.yaml"
   security:
     - AppAccessToken:
         - pos.transactions:read
@@ -114,7 +114,7 @@ post:
     content:
       application/json:
         schema:
-          $ref: "#/components/schemas/TransactionCreate"
+          $ref: "../../schemas/transactions/TransactionCreate.yaml"
   responses:
     "201":
       description: 成功時のレスポンス
@@ -132,7 +132,7 @@ post:
       content:
         application/json:
           schema:
-            $ref: "#/components/schemas/Error"
+            $ref: "../../schemas/common/Error.yaml"
   security:
     - AppAccessToken:
         - pos.transactions:write

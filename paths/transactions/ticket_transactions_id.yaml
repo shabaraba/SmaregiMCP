@@ -17,13 +17,13 @@ get:
       content:
         application/json:
           schema:
-            $ref: "#/components/schemas/TicketTransaction"
+            $ref: "../../schemas/transactions/TicketTransaction.yaml"
     "404":
       description: 指定されたチケット取引が見つからない
       content:
         application/json:
           schema:
-            $ref: "#/components/schemas/Error"
+            $ref: "../../schemas/common/Error.yaml"
   security:
     - AppAccessToken:
         - pos.transactions:read
@@ -81,13 +81,13 @@ put:
       content:
         application/json:
           schema:
-            $ref: "#/components/schemas/Error"
+            $ref: "../../schemas/common/Error.yaml"
     "404":
       description: 指定されたチケット取引が見つからない
       content:
         application/json:
           schema:
-            $ref: "#/components/schemas/Error"
+            $ref: "../../schemas/common/Error.yaml"
   security:
     - AppAccessToken:
         - pos.transactions:write

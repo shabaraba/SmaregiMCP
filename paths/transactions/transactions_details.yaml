@@ -22,13 +22,13 @@ get:
               details:
                 type: array
                 items:
-                  $ref: "#/components/schemas/TransactionDetail"
+                  $ref: "../../schemas/transactions/TransactionDetail.yaml"
     "404":
       description: 指定された取引が見つからない
       content:
         application/json:
           schema:
-            $ref: "#/components/schemas/Error"
+            $ref: "../../schemas/common/Error.yaml"
   security:
     - AppAccessToken:
         - pos.transactions:read

@@ -47,7 +47,7 @@ get:
               items:
                 type: array
                 items:
-                  $ref: '#/components/schemas/ProductImage'
+                  $ref: '../../schemas/products/ProductImage.yaml'
               total:
                 type: integer
                 description: 総件数
@@ -62,19 +62,19 @@ get:
       content:
         application/json:
           schema:
-            $ref: '#/components/schemas/Error'
+            $ref: '../../schemas/common/Error.yaml'
     '401':
       description: 認証エラー
       content:
         application/json:
           schema:
-            $ref: '#/components/schemas/Error'
+            $ref: '../../schemas/common/Error.yaml'
     '403':
       description: 権限エラー
       content:
         application/json:
           schema:
-            $ref: '#/components/schemas/Error'
+            $ref: '../../schemas/common/Error.yaml'
   security:
     - AppAccessToken:
         - pos.products:read
@@ -92,50 +92,50 @@ post:
     content:
       multipart/form-data:
         schema:
-          $ref: '#/components/schemas/ProductImageUpload'
+          $ref: '../../schemas/products/ProductImageUpload.yaml'
   responses:
     '201':
       description: 商品画像のアップロードに成功
       content:
         application/json:
           schema:
-            $ref: '#/components/schemas/ProductImage'
+            $ref: '../../schemas/products/ProductImage.yaml'
     '400':
       description: リクエストパラメータが不正
       content:
         application/json:
           schema:
-            $ref: '#/components/schemas/Error'
+            $ref: '../../schemas/common/Error.yaml'
     '401':
       description: 認証エラー
       content:
         application/json:
           schema:
-            $ref: '#/components/schemas/Error'
+            $ref: '../../schemas/common/Error.yaml'
     '403':
       description: 権限エラー
       content:
         application/json:
           schema:
-            $ref: '#/components/schemas/Error'
+            $ref: '../../schemas/common/Error.yaml'
     '404':
       description: 商品が存在しない
       content:
         application/json:
           schema:
-            $ref: '#/components/schemas/Error'
+            $ref: '../../schemas/common/Error.yaml'
     '413':
       description: ファイルサイズが上限を超えている
       content:
         application/json:
           schema:
-            $ref: '#/components/schemas/Error'
+            $ref: '../../schemas/common/Error.yaml'
     '415':
       description: サポートされていないファイル形式
       content:
         application/json:
           schema:
-            $ref: '#/components/schemas/Error'
+            $ref: '../../schemas/common/Error.yaml'
   security:
     - AppAccessToken:
         - pos.products:write
