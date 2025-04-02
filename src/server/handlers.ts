@@ -1,8 +1,16 @@
+// モジュールのインポート
 import * as fs from 'node:fs';
 import * as path from 'node:path';
 // @ts-ignore - 型定義の問題を回避
 import * as yaml from 'js-yaml';
+import { fileURLToPath } from 'url';
 import { log } from '../utils/index.js';
+
+// モジュールのディレクトリパスを取得
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+// プロジェクトのルートディレクトリを取得（__dirnameは src/server なので2階層上がルート）
+const PROJECT_ROOT = path.resolve(__dirname, '..', '..');
 
 /**
  * OpenAPI仕様をYAML形式から読み込む関数
@@ -31,62 +39,65 @@ function loadYamlSpec(filePath: string): any {
  * スマレジプロジェクトのルートディレクトリからOpenAPI仕様のパスを取得
  */
 function getOpenApiSpecPath(): string {
-  // プロジェクトのルートディレクトリを特定（現在の作業ディレクトリを利用）
-  const rootDir = process.cwd();
+  log(`Project root directory: ${PROJECT_ROOT}`);
   
   // 候補となるパスを設定
   const possiblePaths = [
-    path.resolve(rootDir, 'openapi.yaml'),
-    path.resolve(rootDir, 'openapi/pos/openapi.yaml'),
-    path.resolve(rootDir, 'openapi/common/openapi.yaml')
+    path.resolve(PROJECT_ROOT, 'openapi.yaml'),
+    path.resolve(PROJECT_ROOT, 'openapi', 'pos', 'openapi.yaml'),
+    path.resolve(PROJECT_ROOT, 'openapi', 'common', 'openapi.yaml')
   ];
+  
+  log(`Checking possible paths: ${possiblePaths.join(', ')}`);
   
   // 存在する最初のパスを使用
   for (const candidatePath of possiblePaths) {
+    log(`Checking if exists: ${candidatePath}`);
     if (fs.existsSync(candidatePath)) {
       log(`OpenAPI spec found at ${candidatePath}`);
       return candidatePath;
+    } else {
+      log(`File not found: ${candidatePath}`);
     }
   }
   
-  // 見つからない場合はデフォルトを返す前にデバッグ情報を出力
+  // 見つからない場合はデバッグ情報を出力
   log(`Warning: OpenAPI spec not found at expected locations`);
-  log(`Current working directory: ${rootDir}`);
   
   // openapi ディレクトリがある場合はその内容を確認
-  const openapiDir = path.resolve(rootDir, 'openapi');
+  const openapiDir = path.resolve(PROJECT_ROOT, 'openapi');
   if (fs.existsSync(openapiDir)) {
+    log(`Openapi directory exists at: ${openapiDir}`);
     log(`Listing files in openapi directory:`);
     try {
-      const listDir = (dir: string, prefix = '') => {
-        const files = fs.readdirSync(dir);
-        files.forEach(file => {
-          const filePath = path.join(dir, file);
-          if (fs.statSync(filePath).isDirectory()) {
-            log(`${prefix}/${file}/`);
-            listDir(filePath, `${prefix}/${file}`);
-          } else {
-            log(`${prefix}/${file}`);
-          }
-        });
-      };
-      listDir(openapiDir, 'openapi');
+      const files = fs.readdirSync(openapiDir);
+      log(`Files in openapi dir: ${files.join(', ')}`);
+      
+      // さらに詳細を確認
+      for (const file of files) {
+        const filePath = path.join(openapiDir, file);
+        if (fs.statSync(filePath).isDirectory()) {
+          const subFiles = fs.readdirSync(filePath);
+          log(`Files in ${file}/: ${subFiles.join(', ')}`);
+        }
+      }
     } catch (e) {
       log(`Error listing openapi directory: ${e instanceof Error ? e.message : String(e)}`);
     }
   } else {
-    log(`openapi directory not found`);
+    log(`openapi directory not found at: ${openapiDir}`);
     log(`Listing files in project root:`);
     try {
-      const files = fs.readdirSync(rootDir);
-      log(files.join(', '));
+      const files = fs.readdirSync(PROJECT_ROOT);
+      log(`Files in project root: ${files.join(', ')}`);
     } catch (e) {
       log(`Error listing directory: ${e instanceof Error ? e.message : String(e)}`);
     }
   }
   
   // デフォルトのパス（最初の候補）を返す
-  return possiblePaths[0];
+  log(`Returning default path: ${possiblePaths[1]}`);
+  return possiblePaths[1]; // POSのOpenAPIファイルをデフォルトとして返す
 }
 
 /**
