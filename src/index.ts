@@ -145,17 +145,28 @@ async function main() {
 
     // Handle tool calls
     server.setRequestHandler(CallToolRequestSchema, async (request) => {
+      console.log('Received request:', JSON.stringify(request, null, 2));
       const toolName = request.params.name;
       log('Received tool call:', toolName);
+      console.log('Tool name:', toolName);
       
       try {
+        console.log('Setting up handlers...');
         const handlers = setupHandlers();
+        console.log('Handlers setup complete. Available handlers:', Object.keys(handlers));
+        
         const handler = handlers[toolName];
         if (!handler) {
+          console.error(`Unknown tool: ${toolName}`);
           throw new Error(`Unknown tool: ${toolName}`);
         }
-        return await handler(request);
+        
+        console.log(`Executing handler for tool: ${toolName}`);
+        const result = await handler(request);
+        console.log(`Handler execution complete. Result:`, JSON.stringify(result, null, 2));
+        return result;
       } catch (error) {
+        console.error('Error handling tool call:', error);
         log('Error handling tool call:', error);
         return {
           toolResult: {

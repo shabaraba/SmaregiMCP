@@ -15,10 +15,7 @@ servers:
     description: 本番環境
 
 paths:
-  /{contract_id}/pos:
-    parameters:
-      - $ref: "#/components/parameters/contract_id"
-    $ref: './paths/_index.yaml'
+  $ref: './paths/_index.yaml'
 
 components:
   parameters:
@@ -90,7 +87,78 @@ components:
             pos.staffs:write: スタッフの更新ができます。
   
   schemas:
-    $ref: './schemas/_index.yaml'
+    Error:
+      $ref: './schemas/common/Error.yaml'
+    Pagination:
+      $ref: './schemas/common/Pagination.yaml'
+    
+    # 部門系スキーマ
+    Category:
+      $ref: './schemas/categories/Category.yaml'
+    CategoryGroup:
+      $ref: './schemas/categories/CategoryGroup.yaml'
+    CategoryCreate:
+      $ref: './schemas/categories/CategoryCreate.yaml'
+    CategoryUpdate:
+      $ref: './schemas/categories/CategoryUpdate.yaml'
+    CategoryGroupCreate:
+      $ref: './schemas/categories/CategoryGroupCreate.yaml'
+    CategoryGroupUpdate:
+      $ref: './schemas/categories/CategoryGroupUpdate.yaml'
+    
+    # 商品系スキーマ
+    Product:
+      $ref: './schemas/products/Product.yaml'
+    ProductCreate:
+      $ref: './schemas/products/ProductCreate.yaml'
+    ProductUpdate:
+      $ref: './schemas/products/ProductUpdate.yaml'
+    ProductBulkCreate:
+      $ref: './schemas/products/ProductBulkCreate.yaml'
+    ProductBulkUpdate:
+      $ref: './schemas/products/ProductBulkUpdate.yaml'
+    ProductPrice:
+      $ref: './schemas/products/ProductPrice.yaml'
+    ProductPriceChange:
+      $ref: './schemas/products/ProductPriceChange.yaml'
+    ProductReserveItem:
+      $ref: './schemas/products/ProductReserveItem.yaml'
+    ProductAttribute:
+      $ref: './schemas/products/ProductAttribute.yaml'
+    ProductAttributeItem:
+      $ref: './schemas/products/ProductAttributeItem.yaml'
+    ProductStore:
+      $ref: './schemas/products/ProductStore.yaml'
+    ProductInventoryReservation:
+      $ref: './schemas/products/ProductInventoryReservation.yaml'
+    ProductReserveItemLabel:
+      $ref: './schemas/products/ProductReserveItemLabel.yaml'
+    ProductImage:
+      $ref: './schemas/products/ProductImage.yaml'
+    ProductImageUpload:
+      $ref: './schemas/products/ProductImageUpload.yaml'
+    
+    # 取引系スキーマ
+    Transaction:
+      $ref: './schemas/transactions/Transaction.yaml'
+    TransactionCreate:
+      $ref: './schemas/transactions/TransactionCreate.yaml'
+    TransactionUpdate:
+      $ref: './schemas/transactions/TransactionUpdate.yaml'
+    TransactionDetail:
+      $ref: './schemas/transactions/TransactionDetail.yaml'
+    Layaway:
+      $ref: './schemas/transactions/Layaway.yaml'
+    LayawayCreate:
+      $ref: './schemas/transactions/LayawayCreate.yaml'
+    PreSale:
+      $ref: './schemas/transactions/PreSale.yaml'
+    PreSaleCreate:
+      $ref: './schemas/transactions/PreSaleCreate.yaml'
+    PreSaleUpdate:
+      $ref: './schemas/transactions/PreSaleUpdate.yaml'
+    TicketTransaction:
+      $ref: './schemas/transactions/TicketTransaction.yaml'
 
 tags:
   - name: 部門

@@ -17,20 +17,20 @@ const PROJECT_ROOT = path.resolve(__dirname, '..', '..');
  */
 function loadYamlSpec(filePath: string): any {
   try {
-    log(`Loading YAML spec from: ${filePath}`);
+    console.log(`Loading YAML spec from: ${filePath}`);
     const content = fs.readFileSync(filePath, 'utf8');
-    log(`File read successfully, size: ${content.length} bytes`);
+    console.log(`File read successfully, size: ${content.length} bytes`);
     
     // 最初の数行をログに出力
     const previewLines = content.split('\n').slice(0, 5).join('\n');
-    log(`Preview of content: \n${previewLines}...\n`);
+    console.log(`Preview of content: \n${previewLines}...\n`);
     
     // YAMLをパース
     const result = yaml.load(content);
-    log(`YAML parsed successfully`);
+    console.log(`YAML parsed successfully`);
     return result;
   } catch (error) {
-    log(`Error loading YAML: ${error instanceof Error ? error.message : String(error)}`);
+    console.log(`Error loading YAML: ${error instanceof Error ? error.message : String(error)}`);
     throw new Error(`Failed to load YAML spec: ${error instanceof Error ? error.message : String(error)}`);
   }
 }
@@ -39,7 +39,25 @@ function loadYamlSpec(filePath: string): any {
  * スマレジプロジェクトのルートディレクトリからOpenAPI仕様のパスを取得
  */
 function getOpenApiSpecPath(): string {
-  log(`Project root directory: ${PROJECT_ROOT}`);
+  console.log(`Project root directory: ${PROJECT_ROOT}`);
+  
+  // 環境変数から指定されたパスがあれば、それを最優先で使用
+  const envSpecPath = process.env.OPENAPI_SPEC_PATH;
+  if (envSpecPath) {
+    // 相対パスなら、プロジェクトルートからの相対パスとして解決
+    const specPath = envSpecPath.startsWith('./') || envSpecPath.startsWith('../')
+      ? path.resolve(PROJECT_ROOT, envSpecPath)
+      : envSpecPath;
+    
+    console.log(`Using OpenAPI spec path from environment: ${specPath}`);
+    
+    if (fs.existsSync(specPath)) {
+      console.log(`OpenAPI spec found at ${specPath}`);
+      return specPath;
+    } else {
+      console.log(`Warning: Specified OpenAPI spec not found at ${specPath}`);
+    }
+  }
   
   // 候補となるパスを設定
   const possiblePaths = [
@@ -51,55 +69,55 @@ function getOpenApiSpecPath(): string {
     path.resolve(PROJECT_ROOT, 'dist', 'openapi', 'common', 'openapi.yaml')
   ];
   
-  log(`Checking possible paths: ${possiblePaths.join(', ')}`);
+  console.log(`Checking possible paths: ${possiblePaths.join(', ')}`);
   
   // 存在する最初のパスを使用
   for (const candidatePath of possiblePaths) {
-    log(`Checking if exists: ${candidatePath}`);
+    console.log(`Checking if exists: ${candidatePath}`);
     if (fs.existsSync(candidatePath)) {
-      log(`OpenAPI spec found at ${candidatePath}`);
+      console.log(`OpenAPI spec found at ${candidatePath}`);
       return candidatePath;
     } else {
-      log(`File not found: ${candidatePath}`);
+      console.log(`File not found: ${candidatePath}`);
     }
   }
   
   // 見つからない場合はデバッグ情報を出力
-  log(`Warning: OpenAPI spec not found at expected locations`);
+  console.log(`Warning: OpenAPI spec not found at expected locations`);
   
   // openapi ディレクトリがある場合はその内容を確認
   const openapiDir = path.resolve(PROJECT_ROOT, 'openapi');
   if (fs.existsSync(openapiDir)) {
-    log(`Openapi directory exists at: ${openapiDir}`);
-    log(`Listing files in openapi directory:`);
+    console.log(`Openapi directory exists at: ${openapiDir}`);
+    console.log(`Listing files in openapi directory:`);
     try {
       const files = fs.readdirSync(openapiDir);
-      log(`Files in openapi dir: ${files.join(', ')}`);
+      console.log(`Files in openapi dir: ${files.join(', ')}`);
       
       // さらに詳細を確認
       for (const file of files) {
         const filePath = path.join(openapiDir, file);
         if (fs.statSync(filePath).isDirectory()) {
           const subFiles = fs.readdirSync(filePath);
-          log(`Files in ${file}/: ${subFiles.join(', ')}`);
+          console.log(`Files in ${file}/: ${subFiles.join(', ')}`);
         }
       }
     } catch (e) {
-      log(`Error listing openapi directory: ${e instanceof Error ? e.message : String(e)}`);
+      console.log(`Error listing openapi directory: ${e instanceof Error ? e.message : String(e)}`);
     }
   } else {
-    log(`openapi directory not found at: ${openapiDir}`);
-    log(`Listing files in project root:`);
+    console.log(`openapi directory not found at: ${openapiDir}`);
+    console.log(`Listing files in project root:`);
     try {
       const files = fs.readdirSync(PROJECT_ROOT);
-      log(`Files in project root: ${files.join(', ')}`);
+      console.log(`Files in project root: ${files.join(', ')}`);
     } catch (e) {
-      log(`Error listing directory: ${e instanceof Error ? e.message : String(e)}`);
+      console.log(`Error listing directory: ${e instanceof Error ? e.message : String(e)}`);
     }
   }
   
   // デフォルトのパス（最初の候補）を返す
-  log(`Returning default path: ${possiblePaths[1]}`);
+  console.log(`Returning default path: ${possiblePaths[1]}`);
   return possiblePaths[1]; // POSのOpenAPIファイルをデフォルトとして返す
 }
 
@@ -202,14 +220,38 @@ function getEndpointInfo(spec: any, path: string, method: string): any {
  * ツールハンドラーを設定する関数
  */
 export function setupHandlers() {
+  console.log('Getting OpenAPI spec path...');
   const specPath = getOpenApiSpecPath();
+  console.log(`Using OpenAPI spec path: ${specPath}`);
+  
   let spec: any;
-
   try {
     spec = loadYamlSpec(specPath);
+    console.log('OpenAPI spec loaded successfully');
   } catch (error) {
+    console.log('Error loading OpenAPI spec:', error);
     log('Error loading OpenAPI spec:', error);
-    throw new Error(`Failed to load OpenAPI specification: ${error instanceof Error ? error.message : String(error)}`);
+    
+    // エラーメッセージをデバッグしやすい形に
+    const errorMsg = error instanceof Error ? error.message : String(error);
+    console.log(`Detailed error: ${errorMsg}`);
+    
+    // 代替として簡易版のOpenAPIオブジェクトを作成して使用
+    console.log('Falling back to simple OpenAPI spec');
+    spec = {
+      info: {
+        title: "スマレジAPI (Fallback)",
+        description: "スマレジAPIの簡易モード（YAML読み込みエラーのため）",
+        version: "1.0.0"
+      },
+      paths: {},
+      tags: [
+        { name: "商品", description: "商品に関する操作" },
+        { name: "取引", description: "取引に関する操作" },
+        { name: "在庫", description: "在庫に関する操作" }
+      ]
+    };
+    console.log('Using fallback spec');
   }
 
   return {
