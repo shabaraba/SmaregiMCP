@@ -4,7 +4,7 @@
  */
 
 export interface paths {
-    "/categories": {
+    "/{contract_id}/pos/categories": {
         parameters: {
             query?: never;
             header?: never;
@@ -48,10 +48,7 @@ export interface paths {
                     level?: "1" | "2" | "3";
                 };
                 header?: never;
-                path: {
-                    /** @description 契約ID */
-                    contract_id: string;
-                };
+                path?: never;
                 cookie?: never;
             };
             requestBody?: never;
@@ -80,10 +77,7 @@ export interface paths {
             parameters: {
                 query?: never;
                 header?: never;
-                path: {
-                    /** @description 契約ID */
-                    contract_id: string;
-                };
+                path?: never;
                 cookie?: never;
             };
             requestBody: {
@@ -116,7 +110,7 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
-    "/categories/{id}": {
+    "/{contract_id}/pos/categories/{id}": {
         parameters: {
             query?: never;
             header?: never;
@@ -142,8 +136,6 @@ export interface paths {
                 };
                 header?: never;
                 path: {
-                    /** @description 契約ID */
-                    contract_id: string;
                     /** @description 部門ID */
                     id: string;
                 };
@@ -177,8 +169,6 @@ export interface paths {
                 query?: never;
                 header?: never;
                 path: {
-                    /** @description 契約ID */
-                    contract_id: string;
                     /** @description 部門ID */
                     id: string;
                 };
@@ -227,8 +217,6 @@ export interface paths {
                 query?: never;
                 header?: never;
                 path: {
-                    /** @description 契約ID */
-                    contract_id: string;
                     /** @description 部門ID */
                     id: string;
                 };
@@ -269,7 +257,7 @@ export interface paths {
         };
         trace?: never;
     };
-    "/category_groups": {
+    "/{contract_id}/pos/category_groups": {
         parameters: {
             query?: never;
             header?: never;
@@ -311,10 +299,7 @@ export interface paths {
                     category_group_code?: string;
                 };
                 header?: never;
-                path: {
-                    /** @description 契約ID */
-                    contract_id: string;
-                };
+                path?: never;
                 cookie?: never;
             };
             requestBody?: never;
@@ -343,10 +328,7 @@ export interface paths {
             parameters: {
                 query?: never;
                 header?: never;
-                path: {
-                    /** @description 契約ID */
-                    contract_id: string;
-                };
+                path?: never;
                 cookie?: never;
             };
             requestBody: {
@@ -381,7 +363,7 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
-    "/category_groups/{id}": {
+    "/{contract_id}/pos/category_groups/{id}": {
         parameters: {
             query?: never;
             header?: never;
@@ -404,8 +386,6 @@ export interface paths {
                 query?: never;
                 header?: never;
                 path: {
-                    /** @description 契約ID */
-                    contract_id: string;
                     /** @description 部門グループID */
                     id: string;
                 };
@@ -451,8 +431,6 @@ export interface paths {
                 query?: never;
                 header?: never;
                 path: {
-                    /** @description 契約ID */
-                    contract_id: string;
                     /** @description 部門グループID */
                     id: string;
                 };
@@ -493,7 +471,7 @@ export interface paths {
         };
         trace?: never;
     };
-    "/products": {
+    "/{contract_id}/pos/products": {
         parameters: {
             query?: never;
             header?: never;
@@ -519,7 +497,7 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
-    "/products/{id}": {
+    "/{contract_id}/pos/products/{id}": {
         parameters: {
             query?: never;
             header?: never;
@@ -550,7 +528,7 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
-    "/products/bulk": {
+    "/{contract_id}/pos/products/bulk": {
         parameters: {
             query?: never;
             header?: never;
@@ -578,7 +556,7 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
-    "/products/{id}/prices": {
+    "/{contract_id}/pos/products/{id}/prices": {
         parameters: {
             query?: never;
             header?: never;
@@ -609,7 +587,7 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
-    "/products/{id}/prices/changes": {
+    "/{contract_id}/pos/products/{id}/prices/changes": {
         parameters: {
             query?: never;
             header?: never;
@@ -632,7 +610,7 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
-    "/products/{id}/reserve_items": {
+    "/{contract_id}/pos/products/{id}/reserve_items": {
         parameters: {
             query?: never;
             header?: never;
@@ -663,7 +641,7 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
-    "/products/attributes": {
+    "/{contract_id}/pos/products/attributes": {
         parameters: {
             query?: never;
             header?: never;
@@ -687,7 +665,7 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
-    "/products/attribute_items": {
+    "/{contract_id}/pos/products/attribute_items": {
         parameters: {
             query?: never;
             header?: never;
@@ -711,7 +689,7 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
-    "/products/{id}/stores": {
+    "/{contract_id}/pos/products/{id}/stores": {
         parameters: {
             query?: never;
             header?: never;
@@ -742,7 +720,7 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
-    "/products/{id}/inventory_reservations": {
+    "/{contract_id}/pos/products/{id}/inventory_reservations": {
         parameters: {
             query?: never;
             header?: never;
@@ -773,7 +751,7 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
-    "/products/reserve_item_labels": {
+    "/{contract_id}/pos/products/reserve_item_labels": {
         parameters: {
             query?: never;
             header?: never;
@@ -797,7 +775,7 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
-    "/products/images": {
+    "/{contract_id}/pos/products/images": {
         parameters: {
             query?: never;
             header?: never;
@@ -821,7 +799,7 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
-    "/products/{id}/image": {
+    "/{contract_id}/pos/products/{id}/image": {
         parameters: {
             query?: never;
             header?: never;
@@ -852,7 +830,7 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
-    "/products/{id}/icon_image": {
+    "/{contract_id}/pos/products/{id}/icon_image": {
         parameters: {
             query?: never;
             header?: never;
@@ -883,7 +861,7 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
-    "/products/{product_id}/prices/{price_division}/{store_id}/{start_date}": {
+    "/{contract_id}/pos/products/{product_id}/prices/{price_division}/{store_id}/{start_date}": {
         parameters: {
             query?: never;
             header?: never;
@@ -912,7 +890,7 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
-    "/products/{product_id}/reserve_items/{no}": {
+    "/{contract_id}/pos/products/{product_id}/reserve_items/{no}": {
         parameters: {
             query?: never;
             header?: never;
@@ -945,7 +923,7 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
-    "/products/attributes/{no}": {
+    "/{contract_id}/pos/products/attributes/{no}": {
         parameters: {
             query?: never;
             header?: never;
@@ -976,7 +954,7 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
-    "/products/attribute_items/{code}": {
+    "/{contract_id}/pos/products/attribute_items/{code}": {
         parameters: {
             query?: never;
             header?: never;
@@ -1007,7 +985,7 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
-    "/products/{id}/inventory_reservations/{reservation_product_id}": {
+    "/{contract_id}/pos/products/{id}/inventory_reservations/{reservation_product_id}": {
         parameters: {
             query?: never;
             header?: never;
@@ -1040,7 +1018,7 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
-    "/products/reserve_item_labels/{no}": {
+    "/{contract_id}/pos/products/reserve_item_labels/{no}": {
         parameters: {
             query?: never;
             header?: never;
@@ -1071,7 +1049,7 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
-    "/transactions": {
+    "/{contract_id}/pos/transactions": {
         parameters: {
             query?: never;
             header?: never;
@@ -1191,7 +1169,7 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
-    "/transactions/{id}": {
+    "/{contract_id}/pos/transactions/{id}": {
         parameters: {
             query?: never;
             header?: never;
@@ -1340,7 +1318,7 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
-    "/transactions/{id}/details": {
+    "/{contract_id}/pos/transactions/{id}/details": {
         parameters: {
             query?: never;
             header?: never;
@@ -1393,7 +1371,7 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
-    "/layaways": {
+    "/{contract_id}/pos/layaways": {
         parameters: {
             query?: never;
             header?: never;
@@ -1505,7 +1483,7 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
-    "/layaways/{id}": {
+    "/{contract_id}/pos/layaways/{id}": {
         parameters: {
             query?: never;
             header?: never;
@@ -1598,7 +1576,7 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
-    "/pre_sales": {
+    "/{contract_id}/pos/pre_sales": {
         parameters: {
             query?: never;
             header?: never;
@@ -1710,7 +1688,7 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
-    "/pre_sales/{id}": {
+    "/{contract_id}/pos/pre_sales/{id}": {
         parameters: {
             query?: never;
             header?: never;
@@ -1859,7 +1837,7 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
-    "/ticket_transactions": {
+    "/{contract_id}/pos/ticket_transactions": {
         parameters: {
             query?: never;
             header?: never;
@@ -1931,7 +1909,7 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
-    "/ticket_transactions/{id}": {
+    "/{contract_id}/pos/ticket_transactions/{id}": {
         parameters: {
             query?: never;
             header?: never;
@@ -2048,7 +2026,7 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
-    "/customers": {
+    "/{contract_id}/pos/customers": {
         parameters: {
             query?: never;
             header?: never;
@@ -2208,7 +2186,7 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
-    "/customers/{id}": {
+    "/{contract_id}/pos/customers/{id}": {
         parameters: {
             query?: never;
             header?: never;
@@ -2340,7 +2318,7 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
-    "/customers/bulk": {
+    "/{contract_id}/pos/customers/bulk": {
         parameters: {
             query?: never;
             header?: never;
@@ -2437,7 +2415,7 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
-    "/customers/{id}/points": {
+    "/{contract_id}/pos/customers/{id}/points": {
         parameters: {
             query?: never;
             header?: never;
@@ -2584,7 +2562,7 @@ export interface paths {
         };
         trace?: never;
     };
-    "/customer_ranks": {
+    "/{contract_id}/pos/customer_ranks": {
         parameters: {
             query?: never;
             header?: never;
@@ -2686,7 +2664,7 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
-    "/customer_ranks/{id}": {
+    "/{contract_id}/pos/customer_ranks/{id}": {
         parameters: {
             query?: never;
             header?: never;
@@ -2818,7 +2796,7 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
-    "/staff_ranks": {
+    "/{contract_id}/pos/staff_ranks": {
         parameters: {
             query?: never;
             header?: never;
@@ -2922,7 +2900,7 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
-    "/staff_ranks/{id}": {
+    "/{contract_id}/pos/staff_ranks/{id}": {
         parameters: {
             query?: never;
             header?: never;
@@ -3054,7 +3032,7 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
-    "/customers/required": {
+    "/{contract_id}/pos/customers/required": {
         parameters: {
             query?: never;
             header?: never;
@@ -3093,7 +3071,7 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
-    "/stocks": {
+    "/{contract_id}/pos/stocks": {
         parameters: {
             query?: never;
             header?: never;
@@ -3117,7 +3095,7 @@ export interface paths {
         patch: operations["updateStock"];
         trace?: never;
     };
-    "/stocks/changes": {
+    "/{contract_id}/pos/stocks/changes": {
         parameters: {
             query?: never;
             header?: never;
@@ -3137,7 +3115,7 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
-    "/bargain": {
+    "/{contract_id}/pos/bargain": {
         parameters: {
             query?: never;
             header?: never;
@@ -3181,10 +3159,7 @@ export interface paths {
                     term_end?: string;
                 };
                 header?: never;
-                path: {
-                    /** @description 契約ID */
-                    contract_id: string;
-                };
+                path?: never;
                 cookie?: never;
             };
             requestBody?: never;
@@ -3213,10 +3188,7 @@ export interface paths {
             parameters: {
                 query?: never;
                 header?: never;
-                path: {
-                    /** @description 契約ID */
-                    contract_id: string;
-                };
+                path?: never;
                 cookie?: never;
             };
             requestBody: {
@@ -3251,7 +3223,7 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
-    "/bargain/{id}": {
+    "/{contract_id}/pos/bargain/{id}": {
         parameters: {
             query?: never;
             header?: never;
@@ -3274,8 +3246,6 @@ export interface paths {
                 query?: never;
                 header?: never;
                 path: {
-                    /** @description 契約ID */
-                    contract_id: string;
                     /** @description セールID */
                     id: string;
                 };
@@ -3316,8 +3286,6 @@ export interface paths {
                 query?: never;
                 header?: never;
                 path: {
-                    /** @description 契約ID */
-                    contract_id: string;
                     /** @description セールID */
                     id: string;
                 };
@@ -3351,7 +3319,7 @@ export interface paths {
         };
         trace?: never;
     };
-    "/bargain/{id}/stores": {
+    "/{contract_id}/pos/bargain/{id}/stores": {
         parameters: {
             query?: never;
             header?: never;
@@ -3390,8 +3358,6 @@ export interface paths {
                 };
                 header?: never;
                 path: {
-                    /** @description 契約ID */
-                    contract_id: string;
                     /** @description セールID */
                     id: string;
                 };
@@ -3424,8 +3390,6 @@ export interface paths {
                 query?: never;
                 header?: never;
                 path: {
-                    /** @description 契約ID */
-                    contract_id: string;
                     /** @description セールID */
                     id: string;
                 };
@@ -3463,7 +3427,7 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
-    "/bargain/{id}/stores/{bargainStoreId}": {
+    "/{contract_id}/pos/bargain/{id}/stores/{bargainStoreId}": {
         parameters: {
             query?: never;
             header?: never;
@@ -3486,8 +3450,6 @@ export interface paths {
                 query?: never;
                 header?: never;
                 path: {
-                    /** @description 契約ID */
-                    contract_id: string;
                     /** @description セールID */
                     id: string;
                     /** @description セール店舗ID */
@@ -3530,8 +3492,6 @@ export interface paths {
                 query?: never;
                 header?: never;
                 path: {
-                    /** @description 契約ID */
-                    contract_id: string;
                     /** @description セールID */
                     id: string;
                     /** @description セール店舗ID */
@@ -3567,7 +3527,7 @@ export interface paths {
         };
         trace?: never;
     };
-    "/bargain/{id}/products": {
+    "/{contract_id}/pos/bargain/{id}/products": {
         parameters: {
             query?: never;
             header?: never;
@@ -3609,8 +3569,6 @@ export interface paths {
                 };
                 header?: never;
                 path: {
-                    /** @description 契約ID */
-                    contract_id: string;
                     /** @description セールID */
                     id: string;
                 };
@@ -3643,8 +3601,6 @@ export interface paths {
                 query?: never;
                 header?: never;
                 path: {
-                    /** @description 契約ID */
-                    contract_id: string;
                     /** @description セールID */
                     id: string;
                 };
@@ -3682,7 +3638,7 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
-    "/bargain/{id}/products/{bargainProductId}": {
+    "/{contract_id}/pos/bargain/{id}/products/{bargainProductId}": {
         parameters: {
             query?: never;
             header?: never;
@@ -3705,8 +3661,6 @@ export interface paths {
                 query?: never;
                 header?: never;
                 path: {
-                    /** @description 契約ID */
-                    contract_id: string;
                     /** @description セールID */
                     id: string;
                     /** @description セール商品ID */
@@ -3749,8 +3703,6 @@ export interface paths {
                 query?: never;
                 header?: never;
                 path: {
-                    /** @description 契約ID */
-                    contract_id: string;
                     /** @description セールID */
                     id: string;
                     /** @description セール商品ID */
@@ -3786,7 +3738,7 @@ export interface paths {
         };
         trace?: never;
     };
-    "/product_option_groups": {
+    "/{contract_id}/pos/product_option_groups": {
         parameters: {
             query?: never;
             header?: never;
@@ -3828,10 +3780,7 @@ export interface paths {
                     condition_id?: string;
                 };
                 header?: never;
-                path: {
-                    /** @description 契約ID */
-                    contract_id: string;
-                };
+                path?: never;
                 cookie?: never;
             };
             requestBody?: never;
@@ -3860,10 +3809,7 @@ export interface paths {
             parameters: {
                 query?: never;
                 header?: never;
-                path: {
-                    /** @description 契約ID */
-                    contract_id: string;
-                };
+                path?: never;
                 cookie?: never;
             };
             requestBody: {
@@ -3898,7 +3844,7 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
-    "/product_option_groups/{id}": {
+    "/{contract_id}/pos/product_option_groups/{id}": {
         parameters: {
             query?: never;
             header?: never;
@@ -3926,8 +3872,6 @@ export interface paths {
                 };
                 header?: never;
                 path: {
-                    /** @description 契約ID */
-                    contract_id: string;
                     /** @description オプショングループID */
                     id: string;
                 };
@@ -3970,8 +3914,6 @@ export interface paths {
                 query?: never;
                 header?: never;
                 path: {
-                    /** @description 契約ID */
-                    contract_id: string;
                     /** @description オプショングループID */
                     id: string;
                 };
@@ -4021,8 +3963,6 @@ export interface paths {
                 query?: never;
                 header?: never;
                 path: {
-                    /** @description 契約ID */
-                    contract_id: string;
                     /** @description オプショングループID */
                     id: string;
                 };
@@ -4065,7 +4005,7 @@ export interface paths {
         };
         trace?: never;
     };
-    "/product_option_groups/{id}/products/{product_id}": {
+    "/{contract_id}/pos/product_option_groups/{id}/products/{product_id}": {
         parameters: {
             query?: never;
             header?: never;
@@ -4088,8 +4028,6 @@ export interface paths {
                 query?: never;
                 header?: never;
                 path: {
-                    /** @description 契約ID */
-                    contract_id: string;
                     /** @description オプショングループID */
                     id: string;
                     /** @description 商品ID */
@@ -4134,7 +4072,7 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
-    "/bundles": {
+    "/{contract_id}/pos/bundles": {
         parameters: {
             query?: never;
             header?: never;
@@ -4178,10 +4116,7 @@ export interface paths {
                     term_to?: string;
                 };
                 header?: never;
-                path: {
-                    /** @description 契約ID */
-                    contract_id: string;
-                };
+                path?: never;
                 cookie?: never;
             };
             requestBody?: never;
@@ -4210,10 +4145,7 @@ export interface paths {
             parameters: {
                 query?: never;
                 header?: never;
-                path: {
-                    /** @description 契約ID */
-                    contract_id: string;
-                };
+                path?: never;
                 cookie?: never;
             };
             requestBody: {
@@ -4248,7 +4180,7 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
-    "/bundles/{id}": {
+    "/{contract_id}/pos/bundles/{id}": {
         parameters: {
             query?: never;
             header?: never;
@@ -4274,8 +4206,6 @@ export interface paths {
                 };
                 header?: never;
                 path: {
-                    /** @description 契約ID */
-                    contract_id: string;
                     /** @description バンドル販売ID */
                     id: string;
                 };
@@ -4309,8 +4239,6 @@ export interface paths {
                 query?: never;
                 header?: never;
                 path: {
-                    /** @description 契約ID */
-                    contract_id: string;
                     /** @description バンドル販売ID */
                     id: string;
                 };
@@ -4351,8 +4279,6 @@ export interface paths {
                 query?: never;
                 header?: never;
                 path: {
-                    /** @description 契約ID */
-                    contract_id: string;
                     /** @description バンドル販売ID */
                     id: string;
                 };
@@ -4386,7 +4312,7 @@ export interface paths {
         };
         trace?: never;
     };
-    "/bundles/{id}/products/{bundleProductId}": {
+    "/{contract_id}/pos/bundles/{id}/products/{bundleProductId}": {
         parameters: {
             query?: never;
             header?: never;
@@ -4409,8 +4335,6 @@ export interface paths {
                 query?: never;
                 header?: never;
                 path: {
-                    /** @description 契約ID */
-                    contract_id: string;
                     /** @description バンドル販売ID */
                     id: string;
                     /** @description バンドル販売商品ID */
@@ -4443,7 +4367,7 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
-    "/stores": {
+    "/{contract_id}/pos/stores": {
         parameters: {
             query?: never;
             header?: never;
@@ -4488,10 +4412,7 @@ export interface paths {
                     store_division?: "0" | "1";
                 };
                 header?: never;
-                path: {
-                    /** @description 契約ID */
-                    contract_id: string;
-                };
+                path?: never;
                 cookie?: never;
             };
             requestBody?: never;
@@ -4520,10 +4441,7 @@ export interface paths {
             parameters: {
                 query?: never;
                 header?: never;
-                path: {
-                    /** @description 契約ID */
-                    contract_id: string;
-                };
+                path?: never;
                 cookie?: never;
             };
             requestBody: {
@@ -4558,7 +4476,7 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
-    "/stores/{id}": {
+    "/{contract_id}/pos/stores/{id}": {
         parameters: {
             query?: never;
             header?: never;
@@ -4584,8 +4502,6 @@ export interface paths {
                 };
                 header?: never;
                 path: {
-                    /** @description 契約ID */
-                    contract_id: string;
                     /** @description 店舗ID */
                     id: string;
                 };
@@ -4628,8 +4544,6 @@ export interface paths {
                 query?: never;
                 header?: never;
                 path: {
-                    /** @description 契約ID */
-                    contract_id: string;
                     /** @description 店舗ID */
                     id: string;
                 };
@@ -4679,8 +4593,6 @@ export interface paths {
                 query?: never;
                 header?: never;
                 path: {
-                    /** @description 契約ID */
-                    contract_id: string;
                     /** @description 店舗ID */
                     id: string;
                 };
@@ -4723,7 +4635,7 @@ export interface paths {
         };
         trace?: never;
     };
-    "/stores/{store_id}/products": {
+    "/{contract_id}/pos/stores/{store_id}/products": {
         parameters: {
             query?: never;
             header?: never;
@@ -4753,8 +4665,6 @@ export interface paths {
                 };
                 header?: never;
                 path: {
-                    /** @description 契約ID */
-                    contract_id: string;
                     /** @description 店舗ID */
                     store_id: string;
                 };
@@ -4812,8 +4722,6 @@ export interface paths {
                 query?: never;
                 header?: never;
                 path: {
-                    /** @description 契約ID */
-                    contract_id: string;
                     /** @description 店舗ID */
                     store_id: string;
                 };
@@ -4887,7 +4795,7 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
-    "/stores/{store_id}/product_prices": {
+    "/{contract_id}/pos/stores/{store_id}/product_prices": {
         parameters: {
             query?: never;
             header?: never;
@@ -4922,7 +4830,7 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
-    "/store_groups": {
+    "/{contract_id}/pos/store_groups": {
         parameters: {
             query?: never;
             header?: never;
@@ -4961,10 +4869,7 @@ export interface paths {
                     store_group_id?: string;
                 };
                 header?: never;
-                path: {
-                    /** @description 契約ID */
-                    contract_id: string;
-                };
+                path?: never;
                 cookie?: never;
             };
             requestBody?: never;
@@ -4993,10 +4898,7 @@ export interface paths {
             parameters: {
                 query?: never;
                 header?: never;
-                path: {
-                    /** @description 契約ID */
-                    contract_id: string;
-                };
+                path?: never;
                 cookie?: never;
             };
             requestBody: {
@@ -5031,7 +4933,7 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
-    "/store_groups/{id}": {
+    "/{contract_id}/pos/store_groups/{id}": {
         parameters: {
             query?: never;
             header?: never;
@@ -5054,8 +4956,6 @@ export interface paths {
                 query?: never;
                 header?: never;
                 path: {
-                    /** @description 契約ID */
-                    contract_id: string;
                     /** @description 店舗分類ID */
                     id: string;
                 };
@@ -5105,8 +5005,6 @@ export interface paths {
                 query?: never;
                 header?: never;
                 path: {
-                    /** @description 契約ID */
-                    contract_id: string;
                     /** @description 店舗分類ID */
                     id: string;
                 };
@@ -5149,7 +5047,7 @@ export interface paths {
         };
         trace?: never;
     };
-    "/store_group_items": {
+    "/{contract_id}/pos/store_group_items": {
         parameters: {
             query?: never;
             header?: never;
@@ -5194,10 +5092,7 @@ export interface paths {
                     store_id?: string;
                 };
                 header?: never;
-                path: {
-                    /** @description 契約ID */
-                    contract_id: string;
-                };
+                path?: never;
                 cookie?: never;
             };
             requestBody?: never;
@@ -5226,10 +5121,7 @@ export interface paths {
             parameters: {
                 query?: never;
                 header?: never;
-                path: {
-                    /** @description 契約ID */
-                    contract_id: string;
-                };
+                path?: never;
                 cookie?: never;
             };
             requestBody: {
@@ -5264,7 +5156,7 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
-    "/store_group_items/{id}": {
+    "/{contract_id}/pos/store_group_items/{id}": {
         parameters: {
             query?: never;
             header?: never;
@@ -5287,8 +5179,6 @@ export interface paths {
                 query?: never;
                 header?: never;
                 path: {
-                    /** @description 契約ID */
-                    contract_id: string;
                     /** @description 店舗分類項目ID */
                     id: string;
                 };
@@ -5329,8 +5219,6 @@ export interface paths {
                 query?: never;
                 header?: never;
                 path: {
-                    /** @description 契約ID */
-                    contract_id: string;
                     /** @description 店舗分類項目ID */
                     id: string;
                 };
@@ -5373,7 +5261,7 @@ export interface paths {
         };
         trace?: never;
     };
-    "/staffs": {
+    "/{contract_id}/pos/staffs": {
         parameters: {
             query?: never;
             header?: never;
@@ -5491,7 +5379,7 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
-    "/staffs/{id}": {
+    "/{contract_id}/pos/staffs/{id}": {
         parameters: {
             query?: never;
             header?: never;
@@ -5623,7 +5511,7 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
-    "/roles": {
+    "/{contract_id}/pos/roles": {
         parameters: {
             query?: never;
             header?: never;
@@ -5723,7 +5611,7 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
-    "/roles/{id}": {
+    "/{contract_id}/pos/roles/{id}": {
         parameters: {
             query?: never;
             header?: never;
@@ -5855,7 +5743,7 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
-    "/budgets/monthly": {
+    "/{contract_id}/pos/budgets/monthly": {
         parameters: {
             query?: never;
             header?: never;
@@ -5919,7 +5807,7 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
-    "/budgets/daily/{date}": {
+    "/{contract_id}/pos/budgets/daily/{date}": {
         parameters: {
             query?: never;
             header?: never;
@@ -6108,7 +5996,7 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
-    "/budgets/staff": {
+    "/{contract_id}/pos/budgets/staff": {
         parameters: {
             query?: never;
             header?: never;
@@ -6291,7 +6179,7 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
-    "/suppliers": {
+    "/{contract_id}/pos/suppliers": {
         parameters: {
             query?: never;
             header?: never;
@@ -6397,7 +6285,7 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
-    "/suppliers/{id}": {
+    "/{contract_id}/pos/suppliers/{id}": {
         parameters: {
             query?: never;
             header?: never;
@@ -6529,7 +6417,7 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
-    "/suppliers/{id}/products": {
+    "/{contract_id}/pos/suppliers/{id}/products": {
         parameters: {
             query?: never;
             header?: never;
@@ -6659,7 +6547,7 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
-    "/supplier_divisions": {
+    "/{contract_id}/pos/supplier_divisions": {
         parameters: {
             query?: never;
             header?: never;
@@ -6755,7 +6643,7 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
-    "/supplier_divisions/{id}": {
+    "/{contract_id}/pos/supplier_divisions/{id}": {
         parameters: {
             query?: never;
             header?: never;
@@ -6887,7 +6775,7 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
-    "/terminals": {
+    "/{contract_id}/pos/terminals": {
         parameters: {
             query?: never;
             header?: never;
@@ -6991,7 +6879,7 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
-    "/terminals/{id}": {
+    "/{contract_id}/pos/terminals/{id}": {
         parameters: {
             query?: never;
             header?: never;
@@ -7123,7 +7011,7 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
-    "/settlements": {
+    "/{contract_id}/pos/settlements": {
         parameters: {
             query?: never;
             header?: never;
@@ -7237,7 +7125,7 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
-    "/daily_settlements": {
+    "/{contract_id}/pos/daily_settlements": {
         parameters: {
             query?: never;
             header?: never;
@@ -7349,7 +7237,7 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
-    "/payment_methods": {
+    "/{contract_id}/pos/payment_methods": {
         parameters: {
             query?: never;
             header?: never;
@@ -7455,7 +7343,7 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
-    "/payment_methods/{id}": {
+    "/{contract_id}/pos/payment_methods/{id}": {
         parameters: {
             query?: never;
             header?: never;
@@ -7587,7 +7475,7 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
-    "/stores/{store_id}/payment_methods": {
+    "/{contract_id}/pos/stores/{store_id}/payment_methods": {
         parameters: {
             query?: never;
             header?: never;
@@ -7661,7 +7549,7 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
-    "/payment_method_divisions": {
+    "/{contract_id}/pos/payment_method_divisions": {
         parameters: {
             query?: never;
             header?: never;
@@ -7757,7 +7645,7 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
-    "/payment_method_divisions/{id}": {
+    "/{contract_id}/pos/payment_method_divisions/{id}": {
         parameters: {
             query?: never;
             header?: never;
@@ -7889,7 +7777,7 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
-    "/app_payment_methods": {
+    "/{contract_id}/pos/app_payment_methods": {
         parameters: {
             query?: never;
             header?: never;
@@ -7989,7 +7877,7 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
-    "/app_payment_methods/{id}": {
+    "/{contract_id}/pos/app_payment_methods/{id}": {
         parameters: {
             query?: never;
             header?: never;
@@ -8073,7 +7961,7 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
-    "/coupons": {
+    "/{contract_id}/pos/coupons": {
         parameters: {
             query?: never;
             header?: never;
@@ -8097,7 +7985,7 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
-    "/coupons/{id}": {
+    "/{contract_id}/pos/coupons/{id}": {
         parameters: {
             query?: never;
             header?: never;
@@ -8128,7 +8016,7 @@ export interface paths {
         patch: operations["updateCoupon"];
         trace?: never;
     };
-    "/coupons/{id}/products": {
+    "/{contract_id}/pos/coupons/{id}/products": {
         parameters: {
             query?: never;
             header?: never;
@@ -8155,7 +8043,7 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
-    "/coupons/{id}/products/{couponProductId}": {
+    "/{contract_id}/pos/coupons/{id}/products/{couponProductId}": {
         parameters: {
             query?: never;
             header?: never;
@@ -8188,7 +8076,7 @@ export interface paths {
         patch: operations["updateCouponProduct"];
         trace?: never;
     };
-    "/losses": {
+    "/{contract_id}/pos/losses": {
         parameters: {
             query?: never;
             header?: never;
@@ -8286,7 +8174,7 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
-    "/losses/{id}": {
+    "/{contract_id}/pos/losses/{id}": {
         parameters: {
             query?: never;
             header?: never;
@@ -8421,7 +8309,7 @@ export interface paths {
         };
         trace?: never;
     };
-    "/losses/{id}/details": {
+    "/{contract_id}/pos/losses/{id}/details": {
         parameters: {
             query?: never;
             header?: never;
@@ -8481,7 +8369,7 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
-    "/loss_divisions": {
+    "/{contract_id}/pos/loss_divisions": {
         parameters: {
             query?: never;
             header?: never;
@@ -8567,7 +8455,7 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
-    "/loss_divisions/{id}": {
+    "/{contract_id}/pos/loss_divisions/{id}": {
         parameters: {
             query?: never;
             header?: never;
@@ -8702,7 +8590,7 @@ export interface paths {
         };
         trace?: never;
     };
-    "/orders": {
+    "/{contract_id}/pos/orders": {
         parameters: {
             query?: never;
             header?: never;
@@ -8806,7 +8694,7 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
-    "/orders/{id}": {
+    "/{contract_id}/pos/orders/{id}": {
         parameters: {
             query?: never;
             header?: never;
@@ -8941,7 +8829,7 @@ export interface paths {
         };
         trace?: never;
     };
-    "/orders/products": {
+    "/{contract_id}/pos/orders/products": {
         parameters: {
             query?: never;
             header?: never;
@@ -9001,7 +8889,7 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
-    "/orders/stores": {
+    "/{contract_id}/pos/orders/stores": {
         parameters: {
             query?: never;
             header?: never;
@@ -9049,7 +8937,7 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
-    "/arrivals": {
+    "/{contract_id}/pos/arrivals": {
         parameters: {
             query?: never;
             header?: never;
@@ -9149,7 +9037,7 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
-    "/arrivals/{id}": {
+    "/{contract_id}/pos/arrivals/{id}": {
         parameters: {
             query?: never;
             header?: never;
@@ -9251,7 +9139,7 @@ export interface paths {
         };
         trace?: never;
     };
-    "/arrivals/{id}/details": {
+    "/{contract_id}/pos/arrivals/{id}/details": {
         parameters: {
             query?: never;
             header?: never;
@@ -9311,7 +9199,7 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
-    "/shipments": {
+    "/{contract_id}/pos/shipments": {
         parameters: {
             query?: never;
             header?: never;
@@ -9409,7 +9297,7 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
-    "/shipments/{id}": {
+    "/{contract_id}/pos/shipments/{id}": {
         parameters: {
             query?: never;
             header?: never;
@@ -9544,7 +9432,7 @@ export interface paths {
         };
         trace?: never;
     };
-    "/shipments/{id}/details": {
+    "/{contract_id}/pos/shipments/{id}/details": {
         parameters: {
             query?: never;
             header?: never;
@@ -9604,7 +9492,7 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
-    "/incoming_stocks": {
+    "/{contract_id}/pos/incoming_stocks": {
         parameters: {
             query?: never;
             header?: never;
@@ -9628,7 +9516,7 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
-    "/incoming_stocks/{id}": {
+    "/{contract_id}/pos/incoming_stocks/{id}": {
         parameters: {
             query?: never;
             header?: never;
@@ -9659,7 +9547,7 @@ export interface paths {
         patch: operations["updateIncomingStock"];
         trace?: never;
     };
-    "/incoming_stocks/{id}/details": {
+    "/{contract_id}/pos/incoming_stocks/{id}/details": {
         parameters: {
             query?: never;
             header?: never;
@@ -9686,7 +9574,7 @@ export interface paths {
         patch: operations["updateIncomingStockDetails"];
         trace?: never;
     };
-    "/outgoing_stocks": {
+    "/{contract_id}/pos/outgoing_stocks": {
         parameters: {
             query?: never;
             header?: never;
@@ -9710,7 +9598,7 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
-    "/outgoing_stocks/{id}": {
+    "/{contract_id}/pos/outgoing_stocks/{id}": {
         parameters: {
             query?: never;
             header?: never;
@@ -9741,7 +9629,7 @@ export interface paths {
         patch: operations["updateOutgoingStock"];
         trace?: never;
     };
-    "/outgoing_stocks/{id}/details": {
+    "/{contract_id}/pos/outgoing_stocks/{id}/details": {
         parameters: {
             query?: never;
             header?: never;
@@ -9768,7 +9656,7 @@ export interface paths {
         patch: operations["updateOutgoingStockDetails"];
         trace?: never;
     };
-    "/correction_requests/outgoing_stocks": {
+    "/{contract_id}/pos/correction_requests/outgoing_stocks": {
         parameters: {
             query?: never;
             header?: never;
@@ -9792,7 +9680,7 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
-    "/correction_requests/outgoing_stocks/{id}": {
+    "/{contract_id}/pos/correction_requests/outgoing_stocks/{id}": {
         parameters: {
             query?: never;
             header?: never;
@@ -9823,7 +9711,7 @@ export interface paths {
         patch: operations["updateCorrectionOutgoingStock"];
         trace?: never;
     };
-    "/stocktakings": {
+    "/{contract_id}/pos/stocktakings": {
         parameters: {
             query?: never;
             header?: never;
@@ -9847,7 +9735,7 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
-    "/stocktakings/categories": {
+    "/{contract_id}/pos/stocktakings/categories": {
         parameters: {
             query?: never;
             header?: never;
@@ -9871,7 +9759,7 @@ export interface paths {
         patch: operations["updateStocktakingCategory"];
         trace?: never;
     };
-    "/stocktakings/products": {
+    "/{contract_id}/pos/stocktakings/products": {
         parameters: {
             query?: never;
             header?: never;
@@ -9895,7 +9783,7 @@ export interface paths {
         patch: operations["updateStocktakingProduct"];
         trace?: never;
     };
-    "/stocktakings/stocks": {
+    "/{contract_id}/pos/stocktakings/stocks": {
         parameters: {
             query?: never;
             header?: never;
@@ -9923,7 +9811,7 @@ export interface paths {
         patch: operations["updateStocktakingStock"];
         trace?: never;
     };
-    "/tax_rates": {
+    "/{contract_id}/pos/tax_rates": {
         parameters: {
             query?: never;
             header?: never;
@@ -9943,7 +9831,7 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
-    "/reduce_tax_rates": {
+    "/{contract_id}/pos/reduce_tax_rates": {
         parameters: {
             query?: never;
             header?: never;
@@ -9963,7 +9851,7 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
-    "/receipt_remarks": {
+    "/{contract_id}/pos/receipt_remarks": {
         parameters: {
             query?: never;
             header?: never;
@@ -9987,7 +9875,7 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
-    "/discount_divisions": {
+    "/{contract_id}/pos/discount_divisions": {
         parameters: {
             query?: never;
             header?: never;
@@ -10007,7 +9895,7 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
-    "/cat_cct_card_companies": {
+    "/{contract_id}/pos/cat_cct_card_companies": {
         parameters: {
             query?: never;
             header?: never;
@@ -10027,7 +9915,7 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
-    "/customer_types": {
+    "/{contract_id}/pos/customer_types": {
         parameters: {
             query?: never;
             header?: never;
@@ -10051,7 +9939,7 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
-    "/customer_type_sections": {
+    "/{contract_id}/pos/customer_type_sections": {
         parameters: {
             query?: never;
             header?: never;
@@ -10079,6 +9967,49 @@ export interface paths {
 export type webhooks = Record<string, never>;
 export interface components {
     schemas: {
+        /** @description エラーレスポンス */
+        Error: {
+            /**
+             * @description エラータイプ
+             * @example about:blank
+             */
+            type: string;
+            /**
+             * @description エラータイトル
+             * @example Bad Request
+             */
+            title: string;
+            /**
+             * @description エラーの詳細メッセージ
+             * @example 入力パラメータが正しくありません
+             */
+            detail: string;
+            /**
+             * @description HTTPステータスコード
+             * @example 400
+             */
+            status: number;
+        };
+        /** @description ページネーション情報 */
+        Pagination: {
+            /**
+             * @description 1ページあたりの最大件数 (1-1000)
+             * @default 100
+             * @example 100
+             */
+            limit: number;
+            /**
+             * @description ページ番号 (1始まり)
+             * @default 1
+             * @example 1
+             */
+            page: number;
+            /**
+             * @description 並び順の指定 (カンマ区切りで複数指定可能。降順は「:desc」を付加)
+             * @example updDateTime:desc
+             */
+            sort?: string;
+        };
         /** @description 部門情報 */
         Category: {
             /**
@@ -10170,6 +10101,41 @@ export interface components {
              * @example 季節商品
              */
             tag?: string;
+            /**
+             * Format: date-time
+             * @description 登録日時
+             * @example 2025-01-01T00:00:00+09:00
+             */
+            insDateTime?: string;
+            /**
+             * Format: date-time
+             * @description 更新日時
+             * @example 2025-01-01T00:00:00+09:00
+             */
+            updDateTime?: string;
+        };
+        /** @description 部門グループ情報 */
+        CategoryGroup: {
+            /**
+             * @description 部門グループID
+             * @example 1
+             */
+            categoryGroupId: string;
+            /**
+             * @description 部門グループコード (10文字以内)
+             * @example GROUP1
+             */
+            categoryGroupCode?: string;
+            /**
+             * @description 部門グループ名 (85文字以内)
+             * @example 食品グループ
+             */
+            categoryGroupName: string;
+            /**
+             * @description 表示順序 (0-999999999)
+             * @example 1
+             */
+            displaySequence?: string;
             /**
              * Format: date-time
              * @description 登録日時
@@ -10341,41 +10307,6 @@ export interface components {
              * @example 季節商品
              */
             tag?: string;
-        };
-        /** @description 部門グループ情報 */
-        CategoryGroup: {
-            /**
-             * @description 部門グループID
-             * @example 1
-             */
-            categoryGroupId: string;
-            /**
-             * @description 部門グループコード (10文字以内)
-             * @example GROUP1
-             */
-            categoryGroupCode?: string;
-            /**
-             * @description 部門グループ名 (85文字以内)
-             * @example 食品グループ
-             */
-            categoryGroupName: string;
-            /**
-             * @description 表示順序 (0-999999999)
-             * @example 1
-             */
-            displaySequence?: string;
-            /**
-             * Format: date-time
-             * @description 登録日時
-             * @example 2025-01-01T00:00:00+09:00
-             */
-            insDateTime?: string;
-            /**
-             * Format: date-time
-             * @description 更新日時
-             * @example 2025-01-01T00:00:00+09:00
-             */
-            updDateTime?: string;
         };
         /** @description 部門グループ登録情報 */
         CategoryGroupCreate: {
@@ -10638,29 +10569,6 @@ export interface components {
              * @example 2023-01-01T00:00:00+09:00
              */
             updDateTime?: string;
-        };
-        /** @description エラーレスポンス */
-        Error: {
-            /**
-             * @description エラータイプ
-             * @example about:blank
-             */
-            type: string;
-            /**
-             * @description エラータイトル
-             * @example Bad Request
-             */
-            title: string;
-            /**
-             * @description エラーの詳細メッセージ
-             * @example 入力パラメータが正しくありません
-             */
-            detail: string;
-            /**
-             * @description HTTPステータスコード
-             * @example 400
-             */
-            status: number;
         };
         /** @description 商品登録情報 */
         ProductCreate: {
@@ -11398,15 +11306,15 @@ export interface components {
                 }[];
             };
         };
-        /** @description 商品一括更新情報 */
-        ProductBulkUpdate: {
-            /** @description 更新する商品の配列 */
-            items: components["schemas"]["ProductUpdate"][];
-        };
         /** @description 商品一括登録情報 */
         ProductBulkCreate: {
             /** @description 登録する商品の配列 */
             items: components["schemas"]["ProductCreate"][];
+        };
+        /** @description 商品一括更新情報 */
+        ProductBulkUpdate: {
+            /** @description 更新する商品の配列 */
+            items: components["schemas"]["ProductUpdate"][];
         };
         /** @description 商品価格情報 */
         ProductPrice: {
@@ -11931,26 +11839,6 @@ export interface components {
              * @description 更新日時
              */
             updatedDateTime: string;
-        };
-        /** @description ページネーション情報 */
-        Pagination: {
-            /**
-             * @description 1ページあたりの最大件数 (1-1000)
-             * @default 100
-             * @example 100
-             */
-            limit: number;
-            /**
-             * @description ページ番号 (1始まり)
-             * @default 1
-             * @example 1
-             */
-            page: number;
-            /**
-             * @description 並び順の指定 (カンマ区切りで複数指定可能。降順は「:desc」を付加)
-             * @example updDateTime:desc
-             */
-            sort?: string;
         };
         /** @description 取引作成リクエスト */
         TransactionCreate: {
@@ -17658,86 +17546,12 @@ export interface components {
             /** @description 表示順 */
             displayOrder?: number;
         };
-        /** @description 在庫一括更新情報 */
-        StockBulkUpdate: {
-            /** @description 在庫更新情報の配列 */
-            stocks: components["schemas"]["StockUpdate"][];
-        };
-        /** @description 在庫相対更新情報（増減） */
-        StockRelativeUpdate: {
-            /** @description 店舗ID */
-            storeId: number;
-            /** @description 商品ID */
-            productId: number;
-            /**
-             * Format: float
-             * @description 増減数量（正の値で増加、負の値で減少）
-             */
-            addQuantity: number;
-            /** @description 区分（1:取引、2:入庫、3:出庫、4:棚卸、5:発注、6:受注、7:ロス、8:その他） */
-            division: number;
-            /** @description メモ */
-            memo?: string;
-        };
-        /** @description 在庫相対一括更新情報（増減） */
-        StockBulkRelativeUpdate: {
-            /** @description 在庫相対更新情報の配列 */
-            stocks: components["schemas"]["StockRelativeUpdate"][];
-        };
-        /** @description バンドル販売商品情報 */
-        BundleProduct: {
-            /**
-             * @description バンドル販売商品ID
-             * @example 12345
-             */
-            bundleProductId: string;
-            /**
-             * @description 商品バンドルグループID
-             * @example 1
-             */
-            productBundleGroupId: string;
-            /**
-             * @description 部門ID
-             * @example 101
-             */
-            categoryId?: string;
-            /**
-             * @description 商品ID
-             * @example 10001
-             */
-            productId?: string;
-            /**
-             * @description 商品グループコード
-             * @example SPR2024
-             */
-            productGroupCode?: string;
-            /**
-             * Format: date-time
-             * @description 登録日時
-             * @example 2025-03-15T10:00:00+09:00
-             */
-            insDateTime?: string;
-            /**
-             * Format: date-time
-             * @description 更新日時
-             * @example 2025-03-15T10:00:00+09:00
-             */
-            updDateTime?: string;
-        };
-        /** @description 顧客タイプ更新情報 */
-        CustomerTypeUpdate: {
-            /** @description 顧客タイプコード */
-            code?: string;
-            /** @description 顧客タイプ名 */
-            name?: string;
-            /** @description デフォルト設定（true:デフォルト、false:デフォルトでない） */
-            isDefault?: boolean;
-            /** @description 表示順 */
-            displayOrder?: number;
-        };
     };
     responses: never;
-    parameters: never;
+    parameters: {
+        /** @description 契約ID */
+        contract_id: string;
+    };
     requestBodies: never;
     headers: never;
     pathItems: never;
