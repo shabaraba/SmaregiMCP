@@ -7,7 +7,7 @@ post:
   tags:
     - 認証
   parameters:
-    - name: contractId
+    - name: contract_id
       in: path
       description: アプリユーザーの契約ID
       required: true

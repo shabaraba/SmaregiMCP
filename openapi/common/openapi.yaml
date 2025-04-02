@@ -22,7 +22,7 @@ servers:
     description: 本番環境（API用）
 
 paths:
-  /app/{contractId}/token:
+  /app/{contract_id}/token:
     $ref: './paths/auth/app_token.yaml'
   /authorize:
     $ref: './paths/auth/authorize.yaml'
@@ -63,7 +63,7 @@ components:
       description: アプリアクセストークン。アプリとしてアプリユーザーのデータにAPIアクセスする際に使用します。
       flows:
         clientCredentials:
-          tokenUrl: https://id.smaregi.dev/app/{contractId}/token
+          tokenUrl: https://id.smaregi.dev/app/{contract_id}/token
           scopes:
             pos.products:read: 商品/部門の参照ができます。
             pos.products:write: 商品/部門の更新ができます。
