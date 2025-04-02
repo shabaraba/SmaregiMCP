@@ -1,0 +1,32 @@
+type: object
+description: アクセストークン発行レスポンス
+properties:
+  scope:
+    type: string
+    description: アクセストークンで有効なスコープリスト
+    example: "pos.products:read pos.products:write"
+  token_type:
+    type: string
+    description: トークンタイプ
+    example: "Bearer"
+  expires_in:
+    type: integer
+    description: アクセストークンの有効期間(秒)
+    example: 3600
+  access_token:
+    type: string
+    description: アクセストークン
+    example: "eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9..."
+  refresh_token:
+    type: string
+    description: リフレッシュトークン。スコープにoffline_accessを指定した時のみ含まれる。
+    example: "def50200d0b6..."
+  id_token:
+    type: string
+    description: IDトークン。スコープにopenidを指定した時のみ含まれる。
+    example: "eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9..."
+required:
+  - token_type
+  - expires_in
+  - access_token
+  - scope

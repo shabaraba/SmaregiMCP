@@ -1,0 +1,19 @@
+type: object
+description: Webhook通知の基本フォーマット
+properties:
+  contractId:
+    type: string
+    description: イベントの発生した契約ID
+    example: "user_contract"
+  event:
+    type: string
+    description: イベント名
+    example: "AppSubscription"
+  action:
+    type: string
+    description: イベントのアクション名
+    example: "start"
+required:
+  - contractId
+  - event
+  - action

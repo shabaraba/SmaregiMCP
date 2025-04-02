@@ -1,0 +1,75 @@
+allOf:
+  - $ref: './WebhookBase.yaml'
+  - type: object
+    description: アプリ利用に関する通知
+    properties:
+      event:
+        type: string
+        enum: ["AppSubscription"]
+        description: イベント名
+        example: "AppSubscription"
+      action:
+        type: string
+        enum: ["start", "end", "change-plan", "change-options", "force-stop", "cancel-force-stop"]
+        description: アクション名
+        example: "start"
+      date:
+        type: string
+        format: date
+        description: アクション発生日(yyyy-mm-dd)
+        example: "2020-01-01"
+      clientId:
+        type: string
+        description: 認証認可情報のクライアントID
+        example: "XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX"
+      plan:
+        type: object
+        description: プラン情報
+        properties:
+          trial_days:
+            type: integer
+            description: お試し日数
+            example: 15
+          price:
+            type: integer
+            description: プラン合計価格
+            example: 3000
+          unit_price:
+            type: integer
+            description: プラン単価
+            example: 1000
+          quantity:
+            type: integer
+            description: 数量
+            example: 3
+          name:
+            type: string
+            description: プラン名
+            example: "スタンダードプラン"
+      options:
+        type: array
+        description: オプション情報
+        items:
+          type: object
+          properties:
+            price:
+              type: integer
+              description: オプション合計価格
+              example: 3000
+            unit_price:
+              type: integer
+              description: オプション単価
+              example: 1000
+            quantity:
+              type: integer
+              description: 数量
+              example: 3
+            name:
+              type: string
+              description: オプション名
+              example: "オプション1"
+    required:
+      - event
+      - action
+      - date
+      - clientId

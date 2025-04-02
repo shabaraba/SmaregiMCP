@@ -1,0 +1,54 @@
+post:
+  summary: ユーザーアクセストークンを取得
+  description: |
+    認可コードを使ってユーザーアクセストークンを取得します。
+    クライアントIDとクライアントシークレットは、スマレジ・デベロッパーズでアプリの「環境設定」ページから確認できます。
+  operationId: getUserAccessToken
+  tags:
+    - 認証
+  security:
+    - BasicAuth: []
+  requestBody:
+    required: true
+    content:
+      application/x-www-form-urlencoded:
+        schema:
+          type: object
+          properties:
+            grant_type:
+              type: string
+              description: 認証フロータイプ（認可コードフロー）
+              enum: [authorization_code]
+            code:
+              type: string
+              description: 取得した認可コード
+            redirect_uri:
+              type: string
+              description: ユーザー認可の要求時に指定したリダイレクトURIと同じ値
+            code_verifier:
+              type: string
+              description: |
+                PKCE (RFC 7636) の Code Verifier 値。
+                認可エンドポイントで PKCE code_challenge を指定した場合、必須。
+          required:
+            - grant_type
+            - code
+  responses:
+    '200':
+      description: 正常レスポンス
+      content:
+        application/json:
+          schema:
+            $ref: '../../schemas/auth/AccessTokenResponse.yaml'
+    '400':
+      description: Bad Request
+      content:
+        application/json:
+          schema:
+            $ref: '../../schemas/common/Error.yaml'
+    '401':
+      description: Unauthorized
+      content:
+        application/json:
+          schema:
+            $ref: '../../schemas/common/Error.yaml'

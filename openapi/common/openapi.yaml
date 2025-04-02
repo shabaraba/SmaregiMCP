@@ -1,0 +1,143 @@
+openapi: 3.0.3
+info:
+  title: スマレジ・プラットフォームAPI 共通仕様
+  description: |
+    スマレジ・プラットフォームAPIの共通部分の仕様についてをまとめたものです。
+    スマレジ・プラットフォームAPIを利用する事で、仕様の範囲内で外部システムから、スマレジ・POSをはじめ、スマレジ・ウェイター、スマレジ・タイムカード、各プロダクトのデータにアクセスすることができます。
+    ※各プロダクトのAPI機能詳細については、各仕様書をご参照ください。
+    ※各プロダクトの仕様変更に伴い、APIの仕様が変更される場合があります。
+  version: 1.0.0
+  contact:
+    name: スマレジサポート
+    url: https://www.smaregi.jp/support/
+
+servers:
+  - url: https://id.smaregi.dev
+    description: サンドボックス環境（認証用）
+  - url: https://api.smaregi.dev
+    description: サンドボックス環境（API用）
+  - url: https://id.smaregi.jp
+    description: 本番環境（認証用）
+  - url: https://api.smaregi.jp
+    description: 本番環境（API用）
+
+paths:
+  /app/{contractId}/token:
+    $ref: './paths/auth/app_token.yaml'
+  /authorize:
+    $ref: './paths/auth/authorize.yaml'
+  /authorize/token:
+    $ref: './paths/auth/user_token.yaml'
+  /authorize/token/refresh:
+    $ref: './paths/auth/refresh_token.yaml'
+  /userinfo:
+    $ref: './paths/auth/userinfo.yaml'
+
+components:
+  schemas:
+    Error:
+      $ref: './schemas/common/Error.yaml'
+      
+    AccessTokenResponse:
+      $ref: './schemas/auth/AccessTokenResponse.yaml'
+        
+    UserInfo:
+      $ref: './schemas/auth/UserInfo.yaml'
+        
+    WebhookBase:
+      $ref: './schemas/webhook/WebhookBase.yaml'
+      
+    AppSubscriptionWebhook:
+      $ref: './schemas/webhook/AppSubscriptionWebhook.yaml'
+
+  securitySchemes:
+    BasicAuth:
+      type: http
+      scheme: basic
+      description: |
+        Basic認証。
+        クライアントIDとクライアントシークレットを使用した認証に使用します。
+        
+    AppAccessToken:
+      type: oauth2
+      description: アプリアクセストークン。アプリとしてアプリユーザーのデータにAPIアクセスする際に使用します。
+      flows:
+        clientCredentials:
+          tokenUrl: https://id.smaregi.dev/app/{contractId}/token
+          scopes:
+            pos.products:read: 商品/部門の参照ができます。
+            pos.products:write: 商品/部門の更新ができます。
+            pos.customers:read: 会員/ポイントの参照ができます。
+            pos.customers:write: 会員/ポイントの更新ができます。
+            pos.stock:read: 在庫の参照ができます。
+            pos.stock:write: 在庫の更新ができます。
+            pos.stock-changes:read: 在庫変動履歴の参照ができます。
+            pos.transactions:read: 取引/予算/精算/日次締め情報の参照ができます。
+            pos.transactions:write: 取引/予算/精算/日次締め情報の更新ができます。
+            pos.suppliers:read: 仕入先の参照ができます。
+            pos.suppliers:write: 仕入先の更新ができます。
+            pos.stores:read: 店舗の参照ができます。
+            pos.stores:write: 店舗の更新ができます。
+            pos.staffs:read: スタッフの参照ができます。
+            pos.staffs:write: スタッフの更新ができます。
+            pos.losses:read: ロスの参照ができます。
+            pos.losses:write: ロスの更新ができます。
+            pos.orders:read: 発注/入荷/出荷の参照ができます。
+            pos.orders:write: 発注/入荷/出荷の更新ができます。
+            pos.transfers:read: 店間移動(入出庫)の参照ができます。
+            pos.transfers:write: 店間移動(入出庫)の更新ができます。
+            pos.stocktaking:read: 棚卸の参照ができます。
+            common.contracts:read: 契約情報の参照ができます。
+            common.taxes:read: 税率情報の参照ができます。
+            common.currencies:read: 通貨情報の参照ができます。
+            common.shop:read: 店舗情報の参照ができます。
+            openid: OAuthログイン認証の基本スコープ、ユーザー識別子の取得
+            profile: ユーザーのプロファイル情報の取得
+            email: ユーザーのメールアドレスの取得
+            offline_access: リフレッシュトークンの取得
+            
+    UserAccessToken:
+      type: oauth2
+      description: |
+        ユーザーアクセストークン。
+        ユーザーの認可を得て、そのユーザーの権限でAPIアクセスする際に使用します。
+      flows:
+        authorizationCode:
+          authorizationUrl: https://id.smaregi.dev/authorize
+          tokenUrl: https://id.smaregi.dev/authorize/token
+          refreshUrl: https://id.smaregi.dev/authorize/token
+          scopes:
+            pos.products:read: 商品/部門の参照ができます。
+            pos.products:write: 商品/部門の更新ができます。
+            pos.customers:read: 会員/ポイントの参照ができます。
+            pos.customers:write: 会員/ポイントの更新ができます。
+            pos.stock:read: 在庫の参照ができます。
+            pos.stock:write: 在庫の更新ができます。
+            pos.stock-changes:read: 在庫変動履歴の参照ができます。
+            pos.transactions:read: 取引/予算/精算/日次締め情報の参照ができます。
+            pos.transactions:write: 取引/予算/精算/日次締め情報の更新ができます。
+            pos.suppliers:read: 仕入先の参照ができます。
+            pos.suppliers:write: 仕入先の更新ができます。
+            pos.stores:read: 店舗の参照ができます。
+            pos.stores:write: 店舗の更新ができます。
+            pos.staffs:read: スタッフの参照ができます。
+            pos.staffs:write: スタッフの更新ができます。
+            pos.losses:read: ロスの参照ができます。
+            pos.losses:write: ロスの更新ができます。
+            pos.orders:read: 発注/入荷/出荷の参照ができます。
+            pos.orders:write: 発注/入荷/出荷の更新ができます。
+            pos.transfers:read: 店間移動(入出庫)の参照ができます。
+            pos.transfers:write: 店間移動(入出庫)の更新ができます。
+            pos.stocktaking:read: 棚卸の参照ができます。
+            common.contracts:read: 契約情報の参照ができます。
+            common.taxes:read: 税率情報の参照ができます。
+            common.currencies:read: 通貨情報の参照ができます。
+            common.shop:read: 店舗情報の参照ができます。
+            openid: OAuthログイン認証の基本スコープ、ユーザー識別子の取得
+            profile: ユーザーのプロファイル情報の取得
+            email: ユーザーのメールアドレスの取得
+            offline_access: リフレッシュトークンの取得
+
+tags:
+  - name: 認証
+    description: アクセストークンの取得やユーザー認証に関する操作

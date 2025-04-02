@@ -1,0 +1,73 @@
+get:
+  summary: ユーザー認可を要求
+  description: |
+    ユーザーにログインと認可を要求するためのエンドポイントです。
+    ユーザーをこのエンドポイントにリダイレクトし、認可を得た後に指定したリダイレクトURIに認可コードを含めてリダイレクトされます。
+  operationId: authorizeUser
+  tags:
+    - 認証
+  parameters:
+    - name: response_type
+      in: query
+      description: レスポンスタイプ（認可コードフロー）
+      required: true
+      schema:
+        type: string
+        enum: [code]
+    - name: client_id
+      in: query
+      description: アプリのクライアントID
+      required: true
+      schema:
+        type: string
+    - name: scope
+      in: query
+      description: |
+        ユーザーに認可を要求するスコープ。
+        複数の場合は半角スペースで結合して指定。
+      required: true
+      schema:
+        type: string
+    - name: state
+      in: query
+      description: |
+        CSRF対策に設定するランダムな文字列。
+        動的にランダムな文字列を生成して利用することを推奨。
+      schema:
+        type: string
+    - name: redirect_uri
+      in: query
+      description: |
+        ユーザー認可後のリダイレクト先URL。
+        スマレジ・デベロッパーズでアプリに登録したリダイレクトURIと一致する必要あり。
+      schema:
+        type: string
+    - name: code_challenge
+      in: query
+      description: |
+        PKCE (RFC 7636) の Code Challenge 値。
+        publicクライアントは必須、confidentialクライアントは推奨。
+      schema:
+        type: string
+    - name: code_challenge_method
+      in: query
+      description: PKCE (RFC 7636) の Code Challenge メソッド
+      schema:
+        type: string
+        enum: [S256]
+  responses:
+    '302':
+      description: リダイレクト（認可成功）
+      headers:
+        Location:
+          schema:
+            type: string
+          description: |
+            リダイレクト先URL、認可コードとステートを含む
+            例：https://example.com/callback?code=authorization_code&state=state_value
+    '400':
+      description: Bad Request
+      content:
+        application/json:
+          schema:
+            $ref: '../../schemas/common/Error.yaml'
