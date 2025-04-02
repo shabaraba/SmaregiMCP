@@ -99,4 +99,4 @@ get:
       content:
         application/json:
           schema:
-            $ref: '../../schemas/common/Error.yaml'
+            $ref: './../../schemas/common/Error.yaml'

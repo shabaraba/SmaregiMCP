@@ -72,21 +72,21 @@ get:
               stocktakings:
                 type: array
                 items:
-                  $ref: '../../schemas/stocktakings/Stocktaking.yaml'
+                  $ref: './../../schemas/stocktakings/Stocktaking.yaml'
               pagination:
-                $ref: '../../schemas/common/Pagination.yaml'
+                $ref: './../../schemas/common/Pagination.yaml'
     '400':
       description: バリデーションエラー
       content:
         application/json:
           schema:
-            $ref: '../../schemas/common/Error.yaml'
+            $ref: './../../schemas/common/Error.yaml'
     '401':
       description: 認証エラー
       content:
         application/json:
           schema:
-            $ref: '../../schemas/common/Error.yaml'
+            $ref: './../../schemas/common/Error.yaml'
   security:
     - AppAccessToken:
         - pos.stocktaking:read
@@ -103,7 +103,7 @@ post:
     content:
       application/json:
         schema:
-          $ref: '../../schemas/stocktakings/StocktakingCreate.yaml'
+          $ref: './../../schemas/stocktakings/StocktakingCreate.yaml'
     required: true
   responses:
     '201':
@@ -121,13 +121,13 @@ post:
       content:
         application/json:
           schema:
-            $ref: '../../schemas/common/Error.yaml'
+            $ref: './../../schemas/common/Error.yaml'
     '401':
       description: 認証エラー
       content:
         application/json:
           schema:
-            $ref: '../../schemas/common/Error.yaml'
+            $ref: './../../schemas/common/Error.yaml'
   security:
     - AppAccessToken:
         - pos.stocktaking:write

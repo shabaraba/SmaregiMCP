@@ -74,7 +74,7 @@ get:
       content:
         application/json:
           schema:
-            $ref: '../../schemas/common/Error.yaml'
+            $ref: './../../schemas/common/Error.yaml'
 
 post:
   summary: 商品発注点設定
@@ -148,10 +148,10 @@ post:
       content:
         application/json:
           schema:
-            $ref: '../../schemas/common/Error.yaml'
+            $ref: './../../schemas/common/Error.yaml'
     '404':
       description: 指定された店舗IDが存在しない場合
       content:
         application/json:
           schema:
-            $ref: '../../schemas/common/Error.yaml'
+            $ref: './../../schemas/common/Error.yaml'

@@ -70,7 +70,7 @@ get:
           schema:
             type: array
             items:
-              $ref: '../../schemas/categories/Category.yaml'
+              $ref: './../../schemas/categories/Category.yaml'
 post:
   summary: 部門登録
   description: |
@@ -95,13 +95,13 @@ post:
     content:
       application/json:
         schema:
-          $ref: '../../schemas/categories/CategoryCreate.yaml'
+          $ref: './../../schemas/categories/CategoryCreate.yaml'
   responses:
     '200':
       description: 更新成功
       content:
         application/json:
           schema:
-            $ref: '../../schemas/categories/Category.yaml'
+            $ref: './../../schemas/categories/Category.yaml'
     '400':
       description: 入力チェックエラーの場合

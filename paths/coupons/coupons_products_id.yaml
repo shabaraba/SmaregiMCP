@@ -24,19 +24,19 @@ get:
       content:
         application/json:
           schema:
-            $ref: '../../schemas/coupons/CouponProduct.yaml'
+            $ref: './../../schemas/coupons/CouponProduct.yaml'
     '401':
       description: 認証エラー
       content:
         application/json:
           schema:
-            $ref: '../../schemas/common/Error.yaml'
+            $ref: './../../schemas/common/Error.yaml'
     '404':
       description: 指定されたIDのクーポンまたはクーポン適用商品が存在しない
       content:
         application/json:
           schema:
-            $ref: '../../schemas/common/Error.yaml'
+            $ref: './../../schemas/common/Error.yaml'
   security:
     - AppAccessToken:
         - pos.products:read
@@ -53,7 +53,7 @@ patch:
     content:
       application/json:
         schema:
-          $ref: '../../schemas/coupons/CouponProductUpdate.yaml'
+          $ref: './../../schemas/coupons/CouponProductUpdate.yaml'
     required: true
   responses:
     '200':
@@ -63,19 +63,19 @@ patch:
       content:
         application/json:
           schema:
-            $ref: '../../schemas/common/Error.yaml'
+            $ref: './../../schemas/common/Error.yaml'
     '401':
       description: 認証エラー
       content:
         application/json:
           schema:
-            $ref: '../../schemas/common/Error.yaml'
+            $ref: './../../schemas/common/Error.yaml'
     '404':
       description: 指定されたIDのクーポンまたはクーポン適用商品が存在しない
       content:
         application/json:
           schema:
-            $ref: '../../schemas/common/Error.yaml'
+            $ref: './../../schemas/common/Error.yaml'
   security:
     - AppAccessToken:
         - pos.products:write
@@ -96,13 +96,13 @@ delete:
       content:
         application/json:
           schema:
-            $ref: '../../schemas/common/Error.yaml'
+            $ref: './../../schemas/common/Error.yaml'
     '404':
       description: 指定されたIDのクーポンまたはクーポン適用商品が存在しない
       content:
         application/json:
           schema:
-            $ref: '../../schemas/common/Error.yaml'
+            $ref: './../../schemas/common/Error.yaml'
   security:
     - AppAccessToken:
         - pos.products:write

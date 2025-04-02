@@ -72,7 +72,7 @@ get:
           schema:
             type: array
             items:
-              $ref: '../../schemas/sales/Bargain.yaml'
+              $ref: './../../schemas/sales/Bargain.yaml'
 
 post:
   summary: セール登録
@@ -98,17 +98,17 @@ post:
     content:
       application/json:
         schema:
-          $ref: '../../schemas/sales/BargainCreate.yaml'
+          $ref: './../../schemas/sales/BargainCreate.yaml'
   responses:
     '200':
       description: 取得成功
       content:
         application/json:
           schema:
-            $ref: '../../schemas/sales/Bargain.yaml'
+            $ref: './../../schemas/sales/Bargain.yaml'
     '400':
       description: セール終了日が開始日以前の場合
       content:
         application/json:
           schema:
-            $ref: '../../schemas/common/Error.yaml'
+            $ref: './../../schemas/common/Error.yaml'

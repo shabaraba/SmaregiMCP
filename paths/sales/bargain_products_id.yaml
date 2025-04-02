@@ -34,20 +34,20 @@ patch:
     content:
       application/json:
         schema:
-          $ref: '../../schemas/sales/BargainProductUpdate.yaml'
+          $ref: './../../schemas/sales/BargainProductUpdate.yaml'
   responses:
     '200':
       description: 取得成功
       content:
         application/json:
           schema:
-            $ref: '../../schemas/sales/BargainProduct.yaml'
+            $ref: './../../schemas/sales/BargainProduct.yaml'
     '400':
       description: 入力チェックエラーの場合
       content:
         application/json:
           schema:
-            $ref: '../../schemas/common/Error.yaml'
+            $ref: './../../schemas/common/Error.yaml'
 
 delete:
   summary: セール商品削除
@@ -88,4 +88,4 @@ delete:
       content:
         application/json:
           schema:
-            $ref: '../../schemas/common/Error.yaml'
+            $ref: './../../schemas/common/Error.yaml'

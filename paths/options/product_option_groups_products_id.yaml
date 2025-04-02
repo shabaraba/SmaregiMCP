@@ -37,7 +37,7 @@ delete:
       content:
         application/json:
           schema:
-            $ref: '../../schemas/common/Error.yaml'
+            $ref: './../../schemas/common/Error.yaml'
     '404':
       description: |
         URIで指定されたオプショングループが存在しない場合
@@ -46,4 +46,4 @@ delete:
       content:
         application/json:
           schema:
-            $ref: '../../schemas/common/Error.yaml'
+            $ref: './../../schemas/common/Error.yaml'

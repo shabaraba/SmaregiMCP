@@ -79,7 +79,7 @@ get:
           schema:
             type: array
             items:
-              $ref: '../../schemas/budgets/DailyBudget.yaml'
+              $ref: './../../schemas/budgets/DailyBudget.yaml'
   security:
     - AppAccessToken:
         - pos.transactions:read
@@ -104,20 +104,20 @@ post:
     content:
       application/json:
         schema:
-          $ref: '../../schemas/budgets/DailyBudgetCreate.yaml'
+          $ref: './../../schemas/budgets/DailyBudgetCreate.yaml'
   responses:
     '200':
       description: 登録成功
       content:
         application/json:
           schema:
-            $ref: '../../schemas/budgets/DailyBudget.yaml'
+            $ref: './../../schemas/budgets/DailyBudget.yaml'
     '400':
       description: 入力チェックエラーの場合
       content:
         application/json:
           schema:
-            $ref: '../../schemas/common/Error.yaml'
+            $ref: './../../schemas/common/Error.yaml'
   security:
     - AppAccessToken:
         - pos.transactions:write
@@ -148,26 +148,26 @@ put:
     content:
       application/json:
         schema:
-          $ref: '../../schemas/budgets/DailyBudgetUpdate.yaml'
+          $ref: './../../schemas/budgets/DailyBudgetUpdate.yaml'
   responses:
     '200':
       description: 更新成功
       content:
         application/json:
           schema:
-            $ref: '../../schemas/budgets/DailyBudget.yaml'
+            $ref: './../../schemas/budgets/DailyBudget.yaml'
     '400':
       description: 入力チェックエラーの場合
       content:
         application/json:
           schema:
-            $ref: '../../schemas/common/Error.yaml'
+            $ref: './../../schemas/common/Error.yaml'
     '404':
       description: 対象リソースが存在しない場合
       content:
         application/json:
           schema:
-            $ref: '../../schemas/common/Error.yaml'
+            $ref: './../../schemas/common/Error.yaml'
   security:
     - AppAccessToken:
         - pos.transactions:write
@@ -201,7 +201,7 @@ delete:
       content:
         application/json:
           schema:
-            $ref: '../../schemas/common/Error.yaml'
+            $ref: './../../schemas/common/Error.yaml'
   security:
     - AppAccessToken:
         - pos.transactions:write

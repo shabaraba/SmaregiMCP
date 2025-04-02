@@ -40,13 +40,13 @@ get:
           schema:
             type: array
             items:
-              $ref: '../../schemas/losses/LossDetail.yaml'
+              $ref: './../../schemas/losses/LossDetail.yaml'
     '404':
       description: 指定されたロスIDが存在しない場合
       content:
         application/json:
           schema:
-            $ref: '../../schemas/common/Error.yaml'
+            $ref: './../../schemas/common/Error.yaml'
   security:
     - AppAccessToken:
         - pos.losses:read

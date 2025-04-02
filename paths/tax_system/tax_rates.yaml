@@ -15,13 +15,13 @@ get:
               taxRates:
                 type: array
                 items:
-                  $ref: '../../schemas/tax_system/TaxRate.yaml'
+                  $ref: './../../schemas/tax_system/TaxRate.yaml'
     '401':
       description: 認証エラー
       content:
         application/json:
           schema:
-            $ref: '../../schemas/common/Error.yaml'
+            $ref: './../../schemas/common/Error.yaml'
   security:
     - AppAccessToken:
         - pos.products:read

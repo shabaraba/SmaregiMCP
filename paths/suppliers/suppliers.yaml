@@ -98,7 +98,7 @@ get:
           schema:
             type: array
             items:
-              $ref: '../../schemas/suppliers/Supplier.yaml'
+              $ref: './../../schemas/suppliers/Supplier.yaml'
   security:
     - AppAccessToken:
         - pos.suppliers:read
@@ -115,20 +115,20 @@ post:
     content:
       application/json:
         schema:
-          $ref: '../../schemas/suppliers/SupplierCreate.yaml'
+          $ref: './../../schemas/suppliers/SupplierCreate.yaml'
   responses:
     '200':
       description: 登録成功
       content:
         application/json:
           schema:
-            $ref: '../../schemas/suppliers/Supplier.yaml'
+            $ref: './../../schemas/suppliers/Supplier.yaml'
     '400':
       description: 入力チェックエラーの場合
       content:
         application/json:
           schema:
-            $ref: '../../schemas/common/Error.yaml'
+            $ref: './../../schemas/common/Error.yaml'
   security:
     - AppAccessToken:
         - pos.suppliers:write

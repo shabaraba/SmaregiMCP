@@ -85,7 +85,7 @@ get:
           schema:
             type: array
             items:
-              $ref: '../../schemas/orders/Order.yaml'
+              $ref: './../../schemas/orders/Order.yaml'
   security:
     - AppAccessToken:
         - pos.orders:read
@@ -102,20 +102,20 @@ post:
     content:
       application/json:
         schema:
-          $ref: '../../schemas/orders/OrderCreate.yaml'
+          $ref: './../../schemas/orders/OrderCreate.yaml'
   responses:
     '200':
       description: 登録成功
       content:
         application/json:
           schema:
-            $ref: '../../schemas/orders/Order.yaml'
+            $ref: './../../schemas/orders/Order.yaml'
     '400':
       description: 入力チェックエラーの場合
       content:
         application/json:
           schema:
-            $ref: '../../schemas/common/Error.yaml'
+            $ref: './../../schemas/common/Error.yaml'
   security:
     - AppAccessToken:
         - pos.orders:write

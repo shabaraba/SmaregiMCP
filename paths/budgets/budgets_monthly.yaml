@@ -84,7 +84,7 @@ get:
           schema:
             type: array
             items:
-              $ref: '../../schemas/budgets/MonthlyBudget.yaml'
+              $ref: './../../schemas/budgets/MonthlyBudget.yaml'
   security:
     - AppAccessToken:
         - pos.transactions:read

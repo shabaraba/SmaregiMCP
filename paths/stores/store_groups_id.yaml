@@ -28,26 +28,26 @@ patch:
     content:
       application/json:
         schema:
-          $ref: '../../schemas/stores/StoreGroupUpdate.yaml'
+          $ref: './../../schemas/stores/StoreGroupUpdate.yaml'
   responses:
     '200':
       description: 更新成功
       content:
         application/json:
           schema:
-            $ref: '../../schemas/stores/StoreGroup.yaml'
+            $ref: './../../schemas/stores/StoreGroup.yaml'
     '400':
       description: 入力チェックエラーの場合
       content:
         application/json:
           schema:
-            $ref: '../../schemas/common/Error.yaml'
+            $ref: './../../schemas/common/Error.yaml'
     '404':
       description: 指定されたIDが存在しない場合
       content:
         application/json:
           schema:
-            $ref: '../../schemas/common/Error.yaml'
+            $ref: './../../schemas/common/Error.yaml'
 
 delete:
   summary: 店舗分類削除
@@ -82,10 +82,10 @@ delete:
       content:
         application/json:
           schema:
-            $ref: '../../schemas/common/Error.yaml'
+            $ref: './../../schemas/common/Error.yaml'
     '404':
       description: 指定されたIDが存在しない場合
       content:
         application/json:
           schema:
-            $ref: '../../schemas/common/Error.yaml'
+            $ref: './../../schemas/common/Error.yaml'

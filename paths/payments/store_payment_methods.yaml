@@ -84,13 +84,13 @@ get:
           schema:
             type: array
             items:
-              $ref: '../../schemas/payments/StorePaymentMethod.yaml'
+              $ref: './../../schemas/payments/StorePaymentMethod.yaml'
     '404':
       description: 対象店舗が存在しない場合
       content:
         application/json:
           schema:
-            $ref: '../../schemas/common/Error.yaml'
+            $ref: './../../schemas/common/Error.yaml'
   security:
     - AppAccessToken:
         - pos.transactions:read

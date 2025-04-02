@@ -69,7 +69,7 @@ get:
           schema:
             type: array
             items:
-              $ref: '../../schemas/shipments/Shipment.yaml'
+              $ref: './../../schemas/shipments/Shipment.yaml'
   security:
     - AppAccessToken:
         - pos.orders:read
@@ -86,20 +86,20 @@ post:
     content:
       application/json:
         schema:
-          $ref: '../../schemas/shipments/ShipmentCreate.yaml'
+          $ref: './../../schemas/shipments/ShipmentCreate.yaml'
   responses:
     '200':
       description: 登録成功
       content:
         application/json:
           schema:
-            $ref: '../../schemas/shipments/Shipment.yaml'
+            $ref: './../../schemas/shipments/Shipment.yaml'
     '400':
       description: 入力チェックエラーの場合
       content:
         application/json:
           schema:
-            $ref: '../../schemas/common/Error.yaml'
+            $ref: './../../schemas/common/Error.yaml'
   security:
     - AppAccessToken:
         - pos.orders:write

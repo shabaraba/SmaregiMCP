@@ -43,21 +43,21 @@ get:
               stocktakingStocks:
                 type: array
                 items:
-                  $ref: '../../schemas/stocktakings/StocktakingStock.yaml'
+                  $ref: './../../schemas/stocktakings/StocktakingStock.yaml'
               pagination:
-                $ref: '../../schemas/common/Pagination.yaml'
+                $ref: './../../schemas/common/Pagination.yaml'
     '400':
       description: バリデーションエラー
       content:
         application/json:
           schema:
-            $ref: '../../schemas/common/Error.yaml'
+            $ref: './../../schemas/common/Error.yaml'
     '401':
       description: 認証エラー
       content:
         application/json:
           schema:
-            $ref: '../../schemas/common/Error.yaml'
+            $ref: './../../schemas/common/Error.yaml'
   security:
     - AppAccessToken:
         - pos.stocktaking:read
@@ -74,7 +74,7 @@ post:
     content:
       application/json:
         schema:
-          $ref: '../../schemas/stocktakings/StocktakingStockCreate.yaml'
+          $ref: './../../schemas/stocktakings/StocktakingStockCreate.yaml'
     required: true
   responses:
     '201':
@@ -92,13 +92,13 @@ post:
       content:
         application/json:
           schema:
-            $ref: '../../schemas/common/Error.yaml'
+            $ref: './../../schemas/common/Error.yaml'
     '401':
       description: 認証エラー
       content:
         application/json:
           schema:
-            $ref: '../../schemas/common/Error.yaml'
+            $ref: './../../schemas/common/Error.yaml'
   security:
     - AppAccessToken:
         - pos.stocktaking:write
@@ -115,7 +115,7 @@ patch:
     content:
       application/json:
         schema:
-          $ref: '../../schemas/stocktakings/StocktakingStockUpdate.yaml'
+          $ref: './../../schemas/stocktakings/StocktakingStockUpdate.yaml'
     required: true
   responses:
     '200':
@@ -125,19 +125,19 @@ patch:
       content:
         application/json:
           schema:
-            $ref: '../../schemas/common/Error.yaml'
+            $ref: './../../schemas/common/Error.yaml'
     '401':
       description: 認証エラー
       content:
         application/json:
           schema:
-            $ref: '../../schemas/common/Error.yaml'
+            $ref: './../../schemas/common/Error.yaml'
     '404':
       description: 指定された棚卸在庫が存在しない
       content:
         application/json:
           schema:
-            $ref: '../../schemas/common/Error.yaml'
+            $ref: './../../schemas/common/Error.yaml'
   security:
     - AppAccessToken:
         - pos.stocktaking:write

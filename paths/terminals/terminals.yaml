@@ -94,7 +94,7 @@ get:
           schema:
             type: array
             items:
-              $ref: '../../schemas/terminals/Terminal.yaml'
+              $ref: './../../schemas/terminals/Terminal.yaml'
   security:
     - AppAccessToken:
         - pos.staffs:read
@@ -111,20 +111,20 @@ post:
     content:
       application/json:
         schema:
-          $ref: '../../schemas/terminals/TerminalCreate.yaml'
+          $ref: './../../schemas/terminals/TerminalCreate.yaml'
   responses:
     '200':
       description: 登録成功
       content:
         application/json:
           schema:
-            $ref: '../../schemas/terminals/Terminal.yaml'
+            $ref: './../../schemas/terminals/Terminal.yaml'
     '400':
       description: 入力チェックエラーの場合
       content:
         application/json:
           schema:
-            $ref: '../../schemas/common/Error.yaml'
+            $ref: './../../schemas/common/Error.yaml'
   security:
     - AppAccessToken:
         - pos.staffs:write

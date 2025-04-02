@@ -23,13 +23,13 @@ get:
       content:
         application/json:
           schema:
-            $ref: '../../schemas/losses/LossDivision.yaml'
+            $ref: './../../schemas/losses/LossDivision.yaml'
     '404':
       description: 指定されたロス区分IDが存在しない場合
       content:
         application/json:
           schema:
-            $ref: '../../schemas/common/Error.yaml'
+            $ref: './../../schemas/common/Error.yaml'
   security:
     - AppAccessToken:
         - pos.losses:read
@@ -53,26 +53,26 @@ patch:
     content:
       application/json:
         schema:
-          $ref: '../../schemas/losses/LossDivisionUpdate.yaml'
+          $ref: './../../schemas/losses/LossDivisionUpdate.yaml'
   responses:
     '200':
       description: 更新成功
       content:
         application/json:
           schema:
-            $ref: '../../schemas/losses/LossDivision.yaml'
+            $ref: './../../schemas/losses/LossDivision.yaml'
     '400':
       description: 入力チェックエラーの場合
       content:
         application/json:
           schema:
-            $ref: '../../schemas/common/Error.yaml'
+            $ref: './../../schemas/common/Error.yaml'
     '404':
       description: 指定されたロス区分IDが存在しない場合
       content:
         application/json:
           schema:
-            $ref: '../../schemas/common/Error.yaml'
+            $ref: './../../schemas/common/Error.yaml'
   security:
     - AppAccessToken:
         - pos.losses:write
@@ -99,7 +99,7 @@ delete:
       content:
         application/json:
           schema:
-            $ref: '../../schemas/common/Error.yaml'
+            $ref: './../../schemas/common/Error.yaml'
   security:
     - AppAccessToken:
         - pos.losses:write

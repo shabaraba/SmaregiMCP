@@ -90,7 +90,7 @@ get:
           schema:
             type: array
             items:
-              $ref: '../../schemas/customers/CustomerRank.yaml'
+              $ref: './../../schemas/customers/CustomerRank.yaml'
   security:
     - AppAccessToken:
         - pos.customers:read
@@ -107,20 +107,20 @@ post:
     content:
       application/json:
         schema:
-          $ref: '../../schemas/customers/CustomerRankCreate.yaml'
+          $ref: './../../schemas/customers/CustomerRankCreate.yaml'
   responses:
     '200':
       description: 登録成功
       content:
         application/json:
           schema:
-            $ref: '../../schemas/customers/CustomerRank.yaml'
+            $ref: './../../schemas/customers/CustomerRank.yaml'
     '400':
       description: 入力チェックエラーの場合
       content:
         application/json:
           schema:
-            $ref: '../../schemas/common/Error.yaml'
+            $ref: './../../schemas/common/Error.yaml'
   security:
     - AppAccessToken:
         - pos.customers:write

@@ -55,21 +55,21 @@ get:
               correctionOutgoingStocks:
                 type: array
                 items:
-                  $ref: '../../schemas/stocks/CorrectionRequestOutgoingStock.yaml'
+                  $ref: './../../schemas/stocks/CorrectionRequestOutgoingStock.yaml'
               pagination:
-                $ref: '../../schemas/common/Pagination.yaml'
+                $ref: './../../schemas/common/Pagination.yaml'
     '400':
       description: バリデーションエラー
       content:
         application/json:
           schema:
-            $ref: '../../schemas/common/Error.yaml'
+            $ref: './../../schemas/common/Error.yaml'
     '401':
       description: 認証エラー
       content:
         application/json:
           schema:
-            $ref: '../../schemas/common/Error.yaml'
+            $ref: './../../schemas/common/Error.yaml'
   security:
     - AppAccessToken:
         - pos.transfers:read
@@ -86,7 +86,7 @@ post:
     content:
       application/json:
         schema:
-          $ref: '../../schemas/stocks/CorrectionRequestOutgoingStockCreate.yaml'
+          $ref: './../../schemas/stocks/CorrectionRequestOutgoingStockCreate.yaml'
     required: true
   responses:
     '201':
@@ -104,13 +104,13 @@ post:
       content:
         application/json:
           schema:
-            $ref: '../../schemas/common/Error.yaml'
+            $ref: './../../schemas/common/Error.yaml'
     '401':
       description: 認証エラー
       content:
         application/json:
           schema:
-            $ref: '../../schemas/common/Error.yaml'
+            $ref: './../../schemas/common/Error.yaml'
   security:
     - AppAccessToken:
         - pos.transfers:write

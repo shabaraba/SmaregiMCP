@@ -36,21 +36,21 @@ get:
               incomingStockDetails:
                 type: array
                 items:
-                  $ref: '../../schemas/stocks/IncomingStockDetail.yaml'
+                  $ref: './../../schemas/stocks/IncomingStockDetail.yaml'
               pagination:
-                $ref: '../../schemas/common/Pagination.yaml'
+                $ref: './../../schemas/common/Pagination.yaml'
     '401':
       description: 認証エラー
       content:
         application/json:
           schema:
-            $ref: '../../schemas/common/Error.yaml'
+            $ref: './../../schemas/common/Error.yaml'
     '404':
       description: 指定されたIDの入庫情報が存在しない
       content:
         application/json:
           schema:
-            $ref: '../../schemas/common/Error.yaml'
+            $ref: './../../schemas/common/Error.yaml'
   security:
     - AppAccessToken:
         - pos.transfers:read
@@ -67,7 +67,7 @@ patch:
     content:
       application/json:
         schema:
-          $ref: '../../schemas/stocks/IncomingStockDetailUpdate.yaml'
+          $ref: './../../schemas/stocks/IncomingStockDetailUpdate.yaml'
     required: true
   responses:
     '200':
@@ -77,19 +77,19 @@ patch:
       content:
         application/json:
           schema:
-            $ref: '../../schemas/common/Error.yaml'
+            $ref: './../../schemas/common/Error.yaml'
     '401':
       description: 認証エラー
       content:
         application/json:
           schema:
-            $ref: '../../schemas/common/Error.yaml'
+            $ref: './../../schemas/common/Error.yaml'
     '404':
       description: 指定されたIDの入庫情報が存在しない
       content:
         application/json:
           schema:
-            $ref: '../../schemas/common/Error.yaml'
+            $ref: './../../schemas/common/Error.yaml'
   security:
     - AppAccessToken:
         - pos.transfers:write

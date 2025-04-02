@@ -16,13 +16,13 @@ get:
       content:
         application/json:
           schema:
-            $ref: '../../schemas/customers/StaffRank.yaml'
+            $ref: './../../schemas/customers/StaffRank.yaml'
     '404':
       description: 対象リソースが存在しない場合
       content:
         application/json:
           schema:
-            $ref: '../../schemas/common/Error.yaml'
+            $ref: './../../schemas/common/Error.yaml'
   security:
     - AppAccessToken:
         - pos.customers:read
@@ -46,26 +46,26 @@ put:
     content:
       application/json:
         schema:
-          $ref: '../../schemas/customers/StaffRankUpdate.yaml'
+          $ref: './../../schemas/customers/StaffRankUpdate.yaml'
   responses:
     '200':
       description: 更新成功
       content:
         application/json:
           schema:
-            $ref: '../../schemas/customers/StaffRank.yaml'
+            $ref: './../../schemas/customers/StaffRank.yaml'
     '400':
       description: 入力チェックエラーの場合
       content:
         application/json:
           schema:
-            $ref: '../../schemas/common/Error.yaml'
+            $ref: './../../schemas/common/Error.yaml'
     '404':
       description: 対象リソースが存在しない場合
       content:
         application/json:
           schema:
-            $ref: '../../schemas/common/Error.yaml'
+            $ref: './../../schemas/common/Error.yaml'
   security:
     - AppAccessToken:
         - pos.customers:write
@@ -92,7 +92,7 @@ delete:
       content:
         application/json:
           schema:
-            $ref: '../../schemas/common/Error.yaml'
+            $ref: './../../schemas/common/Error.yaml'
   security:
     - AppAccessToken:
         - pos.customers:write

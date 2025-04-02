@@ -40,13 +40,13 @@ get:
           schema:
             type: array
             items:
-              $ref: '../../schemas/shipments/ShipmentDetail.yaml'
+              $ref: './../../schemas/shipments/ShipmentDetail.yaml'
     '404':
       description: 指定された出荷IDが存在しない場合
       content:
         application/json:
           schema:
-            $ref: '../../schemas/common/Error.yaml'
+            $ref: './../../schemas/common/Error.yaml'
   security:
     - AppAccessToken:
         - pos.orders:read

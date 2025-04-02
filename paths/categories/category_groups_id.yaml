@@ -28,14 +28,14 @@ patch:
     content:
       application/json:
         schema:
-          $ref: '../../schemas/categories/CategoryGroupUpdate.yaml'
+          $ref: './../../schemas/categories/CategoryGroupUpdate.yaml'
   responses:
     '200':
       description: 更新成功
       content:
         application/json:
           schema:
-            $ref: '../../schemas/categories/CategoryGroup.yaml'
+            $ref: './../../schemas/categories/CategoryGroup.yaml'
     '400':
       description: |
         入力チェックエラーの場合

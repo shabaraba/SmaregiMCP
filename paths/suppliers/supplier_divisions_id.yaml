@@ -16,13 +16,13 @@ get:
       content:
         application/json:
           schema:
-            $ref: '../../schemas/suppliers/SupplierDivision.yaml'
+            $ref: './../../schemas/suppliers/SupplierDivision.yaml'
     '404':
       description: 対象リソースが存在しない場合
       content:
         application/json:
           schema:
-            $ref: '../../schemas/common/Error.yaml'
+            $ref: './../../schemas/common/Error.yaml'
   security:
     - AppAccessToken:
         - pos.suppliers:read
@@ -46,26 +46,26 @@ put:
     content:
       application/json:
         schema:
-          $ref: '../../schemas/suppliers/SupplierDivisionUpdate.yaml'
+          $ref: './../../schemas/suppliers/SupplierDivisionUpdate.yaml'
   responses:
     '200':
       description: 更新成功
       content:
         application/json:
           schema:
-            $ref: '../../schemas/suppliers/SupplierDivision.yaml'
+            $ref: './../../schemas/suppliers/SupplierDivision.yaml'
     '400':
       description: 入力チェックエラーの場合
       content:
         application/json:
           schema:
-            $ref: '../../schemas/common/Error.yaml'
+            $ref: './../../schemas/common/Error.yaml'
     '404':
       description: 対象リソースが存在しない場合
       content:
         application/json:
           schema:
-            $ref: '../../schemas/common/Error.yaml'
+            $ref: './../../schemas/common/Error.yaml'
   security:
     - AppAccessToken:
         - pos.suppliers:write
@@ -92,7 +92,7 @@ delete:
       content:
         application/json:
           schema:
-            $ref: '../../schemas/common/Error.yaml'
+            $ref: './../../schemas/common/Error.yaml'
   security:
     - AppAccessToken:
         - pos.suppliers:write
