@@ -3,11 +3,11 @@ description: エラーレスポンス
 properties:
   type:
     type: string
-    description: エラータイプ
+    description: エラータイプを識別するURI、もしくはabout:blank
     example: 'about:blank'
   title:
     type: string
-    description: エラータイトル
+    description: エラーの概要
     example: 'Bad Request'
   detail:
     type: string
@@ -20,5 +20,3 @@ properties:
 required:
   - type
   - title
-  - detail
-  - status
