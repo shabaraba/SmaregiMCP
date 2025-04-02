@@ -43,9 +43,12 @@ function getOpenApiSpecPath(): string {
   
   // 候補となるパスを設定
   const possiblePaths = [
+    path.resolve(PROJECT_ROOT, 'openapi-simple.yaml'),
     path.resolve(PROJECT_ROOT, 'openapi.yaml'),
     path.resolve(PROJECT_ROOT, 'openapi', 'pos', 'openapi.yaml'),
-    path.resolve(PROJECT_ROOT, 'openapi', 'common', 'openapi.yaml')
+    path.resolve(PROJECT_ROOT, 'openapi', 'common', 'openapi.yaml'),
+    path.resolve(PROJECT_ROOT, 'dist', 'openapi', 'pos', 'openapi.yaml'),
+    path.resolve(PROJECT_ROOT, 'dist', 'openapi', 'common', 'openapi.yaml')
   ];
   
   log(`Checking possible paths: ${possiblePaths.join(', ')}`);
