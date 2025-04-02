@@ -5,6 +5,6 @@ properties:
     type: array
     description: 更新する商品の配列
     items:
-      $ref: '#/components/schemas/ProductUpdate'
+      $ref: '../../schemas/#/components/schemas/ProductUpdate.yaml'
 required:
   - items

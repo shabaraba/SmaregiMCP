@@ -30,25 +30,25 @@ get:
       content:
         application/json:
           schema:
-            $ref: '#/components/schemas/Error'
+            $ref: '../../schemas/common/Error.yaml'
     '401':
       description: 認証エラー
       content:
         application/json:
           schema:
-            $ref: '#/components/schemas/Error'
+            $ref: '../../schemas/common/Error.yaml'
     '403':
       description: 権限エラー
       content:
         application/json:
           schema:
-            $ref: '#/components/schemas/Error'
+            $ref: '../../schemas/common/Error.yaml'
     '404':
       description: 商品またはアイコン画像が存在しない
       content:
         application/json:
           schema:
-            $ref: '#/components/schemas/Error'
+            $ref: '../../schemas/common/Error.yaml'
   security:
     - AppAccessToken:
         - pos.products:read
@@ -84,37 +84,37 @@ put:
       content:
         application/json:
           schema:
-            $ref: '#/components/schemas/Error'
+            $ref: '../../schemas/common/Error.yaml'
     '401':
       description: 認証エラー
       content:
         application/json:
           schema:
-            $ref: '#/components/schemas/Error'
+            $ref: '../../schemas/common/Error.yaml'
     '403':
       description: 権限エラー
       content:
         application/json:
           schema:
-            $ref: '#/components/schemas/Error'
+            $ref: '../../schemas/common/Error.yaml'
     '404':
       description: 商品が存在しない
       content:
         application/json:
           schema:
-            $ref: '#/components/schemas/Error'
+            $ref: '../../schemas/common/Error.yaml'
     '413':
       description: ファイルサイズが上限を超えている
       content:
         application/json:
           schema:
-            $ref: '#/components/schemas/Error'
+            $ref: '../../schemas/common/Error.yaml'
     '415':
       description: サポートされていないファイル形式
       content:
         application/json:
           schema:
-            $ref: '#/components/schemas/Error'
+            $ref: '../../schemas/common/Error.yaml'
   security:
     - AppAccessToken:
         - pos.products:write
@@ -135,25 +135,25 @@ delete:
       content:
         application/json:
           schema:
-            $ref: '#/components/schemas/Error'
+            $ref: '../../schemas/common/Error.yaml'
     '401':
       description: 認証エラー
       content:
         application/json:
           schema:
-            $ref: '#/components/schemas/Error'
+            $ref: '../../schemas/common/Error.yaml'
     '403':
       description: 権限エラー
       content:
         application/json:
           schema:
-            $ref: '#/components/schemas/Error'
+            $ref: '../../schemas/common/Error.yaml'
     '404':
       description: 商品またはアイコン画像が存在しない
       content:
         application/json:
           schema:
-            $ref: '#/components/schemas/Error'
+            $ref: '../../schemas/common/Error.yaml'
   security:
     - AppAccessToken:
         - pos.products:write
