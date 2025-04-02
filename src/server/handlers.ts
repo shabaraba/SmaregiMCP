@@ -9,9 +9,20 @@ import { log } from '../utils/index.js';
  */
 function loadYamlSpec(filePath: string): any {
   try {
+    log(`Loading YAML spec from: ${filePath}`);
     const content = fs.readFileSync(filePath, 'utf8');
-    return yaml.load(content);
+    log(`File read successfully, size: ${content.length} bytes`);
+    
+    // 最初の数行をログに出力
+    const previewLines = content.split('\n').slice(0, 5).join('\n');
+    log(`Preview of content: \n${previewLines}...\n`);
+    
+    // YAMLをパース
+    const result = yaml.load(content);
+    log(`YAML parsed successfully`);
+    return result;
   } catch (error) {
+    log(`Error loading YAML: ${error instanceof Error ? error.message : String(error)}`);
     throw new Error(`Failed to load YAML spec: ${error instanceof Error ? error.message : String(error)}`);
   }
 }
@@ -22,7 +33,24 @@ function loadYamlSpec(filePath: string): any {
 function getOpenApiSpecPath(): string {
   // プロジェクトのルートディレクトリを特定（現在の作業ディレクトリを利用）
   const rootDir = process.cwd();
-  return path.resolve(rootDir, 'openapi.yaml');
+  const specPath = path.resolve(rootDir, 'openapi.yaml');
+  
+  // ファイルが存在するか確認
+  if (!fs.existsSync(specPath)) {
+    log(`Warning: OpenAPI spec not found at ${specPath}`);
+    log(`Current working directory: ${rootDir}`);
+    log(`Listing files in directory:`);
+    try {
+      const files = fs.readdirSync(rootDir);
+      log(files.join(', '));
+    } catch (e) {
+      log(`Error listing directory: ${e instanceof Error ? e.message : String(e)}`);
+    }
+  } else {
+    log(`OpenAPI spec found at ${specPath}`);
+  }
+  
+  return specPath;
 }
 
 /**

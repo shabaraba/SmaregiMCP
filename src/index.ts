@@ -66,8 +66,19 @@ export async function init() {
   const projectRoot = path.resolve(process.cwd());
   const scriptPath = path.join(projectRoot, 'src', 'index.ts');
   
+  // bunへのフルパスを探す
+  let bunPath;
+  try {
+    const { stdout } = await execAsync('which bun');
+    bunPath = stdout.toString().trim();
+    console.log(`Found bun at: ${bunPath}`);
+  } catch (err) {
+    bunPath = 'bun';
+    console.log('Could not find bun path, using "bun" as fallback');
+  }
+  
   const config = {
-    command: 'bun',
+    command: bunPath,
     args: [scriptPath, 'run'],
   };
 
