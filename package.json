@@ -13,7 +13,10 @@
     "format": "prettier --write \"**/*.{ts,js,json,md}\"",
     "check": "bun run lint && tsc --noEmit",
     "test": "bun test",
-    "generate-api": "node ai/generate_openapi.js"
+    "generate-api": "node ai/generate_openapi.js",
+    "mcp:init": "bun src/index.ts init",
+    "mcp:run": "bun src/index.ts run",
+    "mcp:dev": "bun --watch src/index.ts run"
   },
   "keywords": [
     "smaregi",
@@ -27,6 +30,9 @@
   "license": "ISC",
   "dependencies": {
     "@modelcontextprotocol/sdk": "^1.7.0",
+    "chalk": "^5.3.0",
+    "dotenv": "^16.4.5",
+    "js-yaml": "^4.1.0",
     "openapi-fetch": "^0.13.5",
     "zod": "^3.24.2"
   },
@@ -34,9 +40,9 @@
     "@apidevtools/swagger-cli": "^4.0.4",
     "@eslint/js": "^9.22.0",
     "@redocly/cli": "^1.34.1",
+    "@types/js-yaml": "^4.0.9",
     "@types/node": "^20.10.0",
     "eslint": "^8.57.0",
-    "js-yaml": "^4.1.0",
     "openapi-typescript": "^7.6.1",
     "playwright": "^1.51.1",
     "prettier": "3.5.3",

@@ -1,0 +1,33 @@
+openapi: 3.0.3
+info:
+  title: スマレジ・プラットフォームAPI POS仕様 (Simplified)
+  description: |
+    スマレジ・プラットフォームAPIのPOS機能を利用するためのAPI仕様書です。
+    POSシステムの基本機能である商品管理、在庫管理、取引管理などの機能を提供します。
+  version: 1.0.0
+  contact:
+    name: スマレジサポート
+    url: https://www.smaregi.jp/support/
+servers:
+  - url: https://api.smaregi.dev/{contractId}/pos
+    description: サンドボックス環境
+    variables:
+      contractId:
+        description: 契約ID
+        default: dummy
+paths:
+  /products:
+    get:
+      summary: 商品一覧取得API
+      tags: 
+        - 商品
+      responses:
+        '200':
+          description: OK
+tags:
+  - name: 商品
+    description: 商品に関する操作
+  - name: 取引
+    description: 取引に関する操作
+  - name: 在庫
+    description: 在庫に関する操作
