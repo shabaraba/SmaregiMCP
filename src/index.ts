@@ -61,10 +61,13 @@ export async function init() {
   );
 
   const nodePath = await findNodePath();
-  const scriptPath = path.resolve(__dirname, 'index.js');
+  
+  // 実行ファイルの絶対パスを取得
+  const projectRoot = path.resolve(process.cwd());
+  const scriptPath = path.join(projectRoot, 'src', 'index.ts');
   
   const config = {
-    command: nodePath,
+    command: 'bun',
     args: [scriptPath, 'run'],
   };
 
