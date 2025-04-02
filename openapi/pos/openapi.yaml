@@ -15,26 +15,30 @@ servers:
     description: 本番環境
 
 paths:
-  /{contractId}/pos:
+  /{contract_id}/pos:
     parameters:
-      - name: contractId
-        in: path
-        required: true
-        description: 契約ID
-        schema:
-          type: string
-          default: dummy
+      - $ref: "#/components/parameters/contract_id"
     $ref: './paths/_index.yaml'
 
 components:
+  parameters:
+    contract_id:
+      name: contract_id
+      in: path
+      required: true
+      description: 契約ID
+      schema:
+        type: string
+        default: dummy
+  
   securitySchemes:
     AppAccessToken:
       type: oauth2
       description: アプリアクセストークン。
       flows:
         clientCredentials:
-          tokenUrl: https://id.smaregi.dev/app/{contractId}/token
-          refreshUrl: https://id.smaregi.dev/app/{contractId}/token
+          tokenUrl: https://id.smaregi.dev/app/{contract_id}/token
+          refreshUrl: https://id.smaregi.dev/app/{contract_id}/token
           scopes:
             pos.products:read: 商品/部門の参照ができます。
             pos.products:write: 商品/部門の更新ができます。
