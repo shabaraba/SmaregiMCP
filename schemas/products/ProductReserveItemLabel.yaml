@@ -1,0 +1,33 @@
+type: object
+description: 商品予約項目ラベル情報
+properties:
+  no:
+    type: string
+    description: 予約項目ラベル番号
+    example: "1"
+  name:
+    type: string
+    description: 予約項目ラベル名
+    example: "商品種別"
+  status:
+    type: string
+    description: ステータス (0:無効、1:有効)
+    enum: ["0", "1"]
+    default: "1"
+    example: "1"
+  displaySequence:
+    type: string
+    description: 表示順序
+    example: "1"
+  insDateTime:
+    type: string
+    format: date-time
+    description: 登録日時
+    example: "2023-01-01T00:00:00+09:00"
+  updDateTime:
+    type: string
+    format: date-time
+    description: 更新日時
+    example: "2023-01-01T00:00:00+09:00"
+required:
+  - name

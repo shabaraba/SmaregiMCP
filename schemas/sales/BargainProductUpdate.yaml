@@ -1,0 +1,21 @@
+type: object
+description: セール商品更新情報
+properties:
+  targetDivision:
+    type: string
+    description: 対象区分 (1:部門、2:商品、3:グループコード)
+    enum: ["1", "2", "3"]
+    example: "2"
+  targetId:
+    type: string
+    description: 対象ID (部門ID、商品ID、グループコードのいずれか)
+    example: "10001"
+  division:
+    type: string
+    description: 割引区分 (1:割引、2:値引、3:価格指定)
+    enum: ["1", "2", "3"]
+    example: "1"
+  value:
+    type: string
+    description: 値 (割引率、値引額、または価格)
+    example: "20"

@@ -1,0 +1,33 @@
+type: object
+description: 商品予約項目情報
+properties:
+  productId:
+    type: string
+    description: 商品ID
+    example: "1"
+  no:
+    type: string
+    description: 予約項目番号
+    example: "1"
+  labelNo:
+    type: string
+    description: 予約項目ラベル番号
+    example: "1"
+  value:
+    type: string
+    description: 予約項目値
+    example: "ドリップコーヒー"
+  insDateTime:
+    type: string
+    format: date-time
+    description: 登録日時
+    example: "2023-01-01T00:00:00+09:00"
+  updDateTime:
+    type: string
+    format: date-time
+    description: 更新日時
+    example: "2023-01-01T00:00:00+09:00"
+required:
+  - productId
+  - no
+  - value

@@ -1,0 +1,36 @@
+get:
+  summary: 取引詳細一覧取得
+  description: 特定の取引の詳細情報（商品明細や支払明細）の一覧を取得します。
+  tags:
+    - 取引
+  parameters:
+    - name: id
+      in: path
+      required: true
+      description: 取引ID
+      schema:
+        type: integer
+        format: int64
+  responses:
+    "200":
+      description: 成功時のレスポンス
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              details:
+                type: array
+                items:
+                  $ref: "#/components/schemas/TransactionDetail"
+    "404":
+      description: 指定された取引が見つからない
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/Error"
+  security:
+    - AppAccessToken:
+        - pos.transactions:read
+    - UserAccessToken:
+        - pos.transactions:read

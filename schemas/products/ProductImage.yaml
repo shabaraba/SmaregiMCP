@@ -1,0 +1,54 @@
+type: object
+description: 商品画像情報
+properties:
+  imageId:
+    type: string
+    description: 商品画像ID
+    example: "1"
+  productId:
+    type: string
+    description: 商品ID
+    example: "1"
+  displaySequence:
+    type: string
+    description: 表示順序
+    example: "1"
+  imageUrl:
+    type: string
+    description: 画像URL
+    example: "https://example.com/images/product1.jpg"
+  imageType:
+    type: string
+    description: 画像タイプ (1:メイン画像、2:アイコン画像、3:詳細画像)
+    enum: ["1", "2", "3"]
+    example: "1"
+  size:
+    type: string
+    description: 画像サイズ(バイト)
+    example: "10240"
+  width:
+    type: string
+    description: 画像幅
+    example: "800"
+  height:
+    type: string
+    description: 画像高さ
+    example: "600"
+  staffId:
+    type: string
+    description: 登録スタッフID
+    example: "1"
+  insDateTime:
+    type: string
+    format: date-time
+    description: 登録日時
+    example: "2023-01-01T00:00:00+09:00"
+  updDateTime:
+    type: string
+    format: date-time
+    description: 更新日時
+    example: "2023-01-01T00:00:00+09:00"
+required:
+  - productId
+  - imageUrl
+  - imageType

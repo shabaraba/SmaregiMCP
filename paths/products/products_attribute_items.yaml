@@ -1,0 +1,141 @@
+get:
+  summary: 商品属性項目一覧の取得
+  description: 登録されている商品属性項目の一覧を取得します。
+  operationId: getProductAttributeItems
+  tags:
+    - 商品
+  parameters:
+    - name: limit
+      in: query
+      description: 取得件数
+      schema:
+        type: integer
+        format: int32
+        minimum: 1
+        maximum: 1000
+        default: 100
+    - name: page
+      in: query
+      description: ページ番号
+      schema:
+        type: integer
+        format: int32
+        minimum: 1
+        default: 1
+    - name: attributeNo
+      in: query
+      description: 属性番号
+      schema:
+        type: integer
+        format: int32
+    - name: attributeItemCode
+      in: query
+      description: 属性項目コード
+      schema:
+        type: string
+    - name: attributeItemName
+      in: query
+      description: 属性項目名称
+      schema:
+        type: string
+    - name: fields
+      in: query
+      description: 取得するフィールド
+      schema:
+        type: array
+        items:
+          type: string
+        default: ["*"]
+  responses:
+    '200':
+      description: 商品属性項目一覧を返却
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              items:
+                type: array
+                items:
+                  $ref: '#/components/schemas/ProductAttributeItem'
+              total:
+                type: integer
+                description: 総件数
+              limit:
+                type: integer
+                description: 取得件数
+              page:
+                type: integer
+                description: ページ番号
+    '400':
+      description: リクエストパラメータが不正
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    '401':
+      description: 認証エラー
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    '403':
+      description: 権限エラー
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+  security:
+    - AppAccessToken:
+        - pos.products:read
+    - UserAccessToken:
+        - pos.products:read
+
+post:
+  summary: 商品属性項目の新規登録
+  description: 商品属性項目を新規登録します。
+  operationId: createProductAttributeItem
+  tags:
+    - 商品
+  requestBody:
+    required: true
+    content:
+      application/json:
+        schema:
+          $ref: '#/components/schemas/ProductAttributeItem'
+  responses:
+    '201':
+      description: 商品属性項目の登録に成功
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ProductAttributeItem'
+    '400':
+      description: リクエストパラメータが不正
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    '401':
+      description: 認証エラー
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    '403':
+      description: 権限エラー
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    '409':
+      description: 既存データとの競合エラー
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+  security:
+    - AppAccessToken:
+        - pos.products:write
+    - UserAccessToken:
+        - pos.products:write

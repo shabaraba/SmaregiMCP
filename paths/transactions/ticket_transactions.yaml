@@ -1,0 +1,83 @@
+get:
+  summary: チケット取引一覧取得
+  description: |-
+    チケット取引一覧を取得します。
+    
+    レスポンスデータは作成日時の降順で取得されます。
+  tags:
+    - 取引
+  parameters:
+    - name: storeId
+      in: query
+      description: 店舗ID
+      schema:
+        type: integer
+        format: int64
+    - name: statusType
+      in: query
+      description: |-
+        ステータスタイプ
+        * 1: 未使用
+        * 2: 使用済
+        * 3: 期限切れ
+        * 4: 取消
+      schema:
+        type: integer
+        enum: [1, 2, 3, 4]
+    - name: ticketTransaction.ticketDateTimeFrom
+      in: query
+      description: チケット発行日時(From)。範囲検索（開始日時）
+      schema:
+        type: string
+        format: date-time
+    - name: ticketTransaction.ticketDateTimeTo
+      in: query
+      description: チケット発行日時(To)。範囲検索（終了日時）
+      schema:
+        type: string
+        format: date-time
+    - name: ticketTransaction.ticketCode
+      in: query
+      description: チケットコード
+      schema:
+        type: string
+    - name: limit
+      in: query
+      description: 最大取得件数
+      schema:
+        type: integer
+        minimum: 1
+        maximum: 1000
+        default: 100
+    - name: page
+      in: query
+      description: ページ番号
+      schema:
+        type: integer
+        minimum: 1
+        default: 1
+  responses:
+    "200":
+      description: 成功時のレスポンス
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              ticketTransactions:
+                type: array
+                items:
+                  $ref: "#/components/schemas/TicketTransaction"
+              pagination:
+                $ref: "#/components/schemas/Pagination"
+    "400":
+      description: バリデーションエラー
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/Error"
+  security:
+    - AppAccessToken:
+        - pos.transactions:read
+    - UserAccessToken:
+        - pos.transactions:read

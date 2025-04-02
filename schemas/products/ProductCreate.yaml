@@ -1,0 +1,351 @@
+type: object
+description: 商品登録情報
+properties:
+  categoryId:
+    type: string
+    description: 部門ID
+    example: "1"
+  productCode:
+    type: string
+    description: 商品コード (20文字以内)
+    maxLength: 20
+    pattern: ^[ -~]+$
+    example: "ITEM001"
+  productName:
+    type: string
+    description: 商品名 (85文字以内)
+    maxLength: 85
+    example: "有機栽培コーヒー"
+  productKana:
+    type: string
+    description: 商品カナ (85文字以内)
+    maxLength: 85
+    example: "ユウキサイバイコーヒー"
+  taxDivision:
+    type: string
+    description: 税区分 (0:税込、1:税抜、2:非課税)
+    enum: ["0", "1", "2"]
+    default: "1"
+    example: "1"
+  productPriceDivision:
+    type: string
+    description: 商品価格区分 (1:通常価格、2:オープン価格)
+    enum: ["1", "2"]
+    default: "1"
+    example: "1"
+  price:
+    type: string
+    description: 商品単価
+    example: "500"
+  customerPrice:
+    type: string
+    description: 会員価格
+    example: "450"
+  cost:
+    type: string
+    description: 原価
+    example: "300"
+  attribute:
+    type: string
+    description: 規格 (1000文字以内)
+    maxLength: 1000
+    example: "豆の種類：アラビカ種、焙煎：中煎り"
+  description:
+    type: string
+    description: 説明 (1000文字以内)
+    maxLength: 1000
+    example: "有機栽培されたコーヒー豆を使用し、香り高く仕上げました。"
+  catchCopy:
+    type: string
+    description: キャッチコピー (1000文字以内)
+    maxLength: 1000
+    example: "豊かな香りと深い味わい"
+  size:
+    type: string
+    description: サイズ (85文字以内)
+    maxLength: 85
+    example: "200g"
+  color:
+    type: string
+    description: カラー (85文字以内)
+    maxLength: 85
+    example: "ブラウン"
+  tag:
+    type: string
+    description: タグ (85文字以内)
+    maxLength: 85
+    example: "季節商品"
+  groupCode:
+    type: string
+    description: グループコード (85文字以内)
+    maxLength: 85
+    example: "COFFEE"
+  url:
+    type: string
+    description: URL (255文字以内)
+    maxLength: 255
+    example: "https://example.com/coffee"
+  printReceiptProductName:
+    type: string
+    description: レシート印字商品名 (64文字以内)
+    maxLength: 64
+    example: "有機コーヒー"
+  displaySequence:
+    type: string
+    description: 表示順序
+    example: "1"
+  displayFlag:
+    type: string
+    description: 端末表示フラグ (0:表示しない、1:表示する)
+    enum: ["0", "1"]
+    default: "1" 
+    example: "1"
+  division:
+    type: string
+    description: 商品区分 (0:通常商品、1:回数券、2:オプション商品)
+    enum: ["0", "1", "2"]
+    default: "0"
+    example: "0"
+  productOptionGroupId:
+    type: string
+    description: 商品オプショングループID
+    example: "1"
+  salesDivision:
+    type: string
+    description: 売上区分 (0:売上対象、1:売上対象外)
+    enum: ["0", "1"]
+    default: "0"
+    example: "0"
+  stockControlDivision:
+    type: string
+    description: 在庫管理区分 (0:在庫管理対象、1:在庫管理対象外)
+    enum: ["0", "1"]
+    default: "0"
+    example: "0"
+  pointNotApplicable:
+    type: string
+    description: ポイント対象区分 (0:ポイント対象、1:ポイント対象外)
+    enum: ["0", "1"]
+    default: "0"
+    example: "0"
+  taxFreeDivision:
+    type: string
+    description: 免税区分 (0:対象外、1:一般品、2:消耗品)
+    enum: ["0", "1", "2"]
+    default: "0"
+    example: "0"
+  calcDiscount:
+    type: string
+    description: 値引割引計算対象 (0:対象外、1:対象)
+    enum: ["0", "1"]
+    default: "1"
+    example: "1"
+  staffDiscountRate:
+    type: string
+    description: 社員販売割引率
+    example: "10"
+  useCategoryReduceTax:
+    type: string
+    description: 部門税設定参照フラグ (0:reduceTaxIdを使用、1:部門の税設定を使用)
+    enum: ["0", "1"]
+    default: "1"
+    example: "1"
+  reduceTaxId:
+    type: string
+    description: |
+      軽減税率ID
+      標準:null（または未設定）
+      軽減:10000001（特定商品の軽減税率適用）
+      選択[標準]:10000002（状態による適用[適用しない]）
+      選択[軽減]:10000003（状態による適用[適用する]）
+      選択[選択]:10000004（状態による適用[都度選択する]）
+    example: "10000001"
+  reduceTaxPrice:
+    type: string
+    description: 軽減税率用商品単価
+    example: "500"
+  reduceTaxCustomerPrice:
+    type: string
+    description: 軽減税率用商品会員単価
+    example: "450"
+  orderPoint:
+    type: string
+    description: 発注点
+    example: "10"
+  purchaseCost:
+    type: string
+    description: 仕入原価
+    example: "300"
+  supplierProductNo:
+    type: string
+    description: 品番
+    example: "S12345"
+  appStartDateTime:
+    type: string
+    format: date-time
+    description: 適用開始日時
+    example: "2023-01-01T00:00:00+09:00"
+  reserveItems:
+    type: array
+    description: 商品自由項目
+    items:
+      type: object
+      properties:
+        no:
+          type: string
+          description: 自由項目番号
+          example: "1"
+        value:
+          type: string
+          description: 自由項目値
+          example: "ドリップコーヒー"
+  prices:
+    type: array
+    description: 商品価格
+    items:
+      type: object
+      properties:
+        storeId:
+          type: string
+          description: 店舗ID
+          example: "1"
+        priceDivision:
+          type: string
+          description: 価格区分 (1:商品単価、2:会員単価)
+          enum: ["1", "2"]
+          example: "1"
+        startDate:
+          type: string
+          format: date
+          description: 適用開始日
+          example: "2023-01-01"
+        endDate:
+          type: string
+          format: date
+          description: 適用終了日
+          example: "2023-12-31"
+        price:
+          type: string
+          description: 価格
+          example: "500"
+  stores:
+    type: array
+    description: 商品取扱店舗
+    items:
+      type: object
+      properties:
+        storeId:
+          type: string
+          description: 店舗ID
+          example: "1"
+        productOptionGroupId:
+          type: string
+          description: 商品オプショングループID
+          example: "1"
+        assignDivision:
+          type: string
+          description: 取扱区分 (0:販売する、1:販売しない)
+          enum: ["0", "1"]
+          example: "0"
+  inventoryReservations:
+    type: array
+    description: 在庫引当商品
+    items:
+      type: object
+      properties:
+        reservationProductId:
+          type: string
+          description: 引当商品ID
+          example: "2"
+        reservationAmount:
+          type: string
+          description: 引当個数
+          example: "1"
+  attributeItems:
+    type: array
+    description: 商品属性項目
+    items:
+      type: object
+      properties:
+        code:
+          type: string
+          description: コード
+          example: "CODE01"
+        no:
+          type: string
+          description: 項目番号
+          example: "1"
+  orderSetting:
+    type: object
+    description: 発注設定
+    properties:
+      continuationDivision:
+        type: string
+        description: 継続区分
+      orderStatusDivision:
+        type: string
+        description: 発注状態 (0:発注不可、1:発注可)
+        enum: ["0", "1"]
+        example: "1"
+      orderNoReasonDivision:
+        type: string
+        description: 発注不可理由
+      orderUnit:
+        type: object
+        description: 発注単位
+        properties:
+          division:
+            type: string
+            description: 発注単位区分 (0:単位なし、1:単位あり)
+            enum: ["0", "1"]
+            example: "0"
+          num:
+            type: string
+            description: 発注数
+            example: "1"
+          name:
+            type: string
+            description: 発注単位名
+            example: "ケース"
+      orderLimitAmount:
+        type: string
+        description: 発注上限数
+        example: "100"
+      orderSupplierEditable:
+        type: string
+        description: 仕入先編集可能フラグ (0:不可、1:可能)
+        enum: ["0", "1"]
+        example: "0"
+      pbDivision:
+        type: string
+        description: PB商品区分 (0:NB、1:PB)
+        enum: ["0", "1"]
+        example: "1"
+      displayFlag:
+        type: string
+        description: 表示フラグ (0:表示しない、1:表示する)
+        enum: ["0", "1"]
+        example: "1"
+      stores:
+        type: array
+        description: 店舗別発注設定
+        items:
+          type: object
+          properties:
+            storeId:
+              type: string
+              description: 店舗ID
+              example: "1"
+            orderLimitAmount:
+              type: string
+              description: 発注上限数
+              example: "100"
+            displayFlag:
+              type: string
+              description: 表示フラグ (0:表示しない、1:表示する)
+              enum: ["-1", "0", "1"]
+              example: "-1"
+required:
+  - categoryId
+  - productName
+  - price

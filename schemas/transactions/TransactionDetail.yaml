@@ -1,0 +1,186 @@
+type: object
+description: 取引詳細情報
+properties:
+  id:
+    type: integer
+    format: int64
+    description: 取引明細ID
+  transactionId:
+    type: integer
+    format: int64
+    description: 取引ID
+  lineNo:
+    type: integer
+    description: 行番号
+  productId:
+    type: integer
+    format: int64
+    description: 商品ID
+    nullable: true
+  productCode:
+    type: string
+    description: 商品コード
+    nullable: true
+  productName:
+    type: string
+    description: 商品名
+  categoryId:
+    type: integer
+    format: int64
+    description: 部門ID
+    nullable: true
+  categoryName:
+    type: string
+    description: 部門名
+    nullable: true
+  price:
+    type: number
+    format: double
+    description: 単価
+  quantity:
+    type: number
+    format: double
+    description: 数量
+  unitDiscountAmount:
+    type: number
+    format: double
+    description: 単品値引額
+    nullable: true
+  unitDiscountRate:
+    type: number
+    format: double
+    description: 単品値引率
+    nullable: true
+  unitDiscountType:
+    type: integer
+    description: |-
+      単品値引種別
+      * 1: 金額値引
+      * 2: 率値引
+    nullable: true
+  subtotalAmount:
+    type: number
+    format: double
+    description: 小計金額
+  taxRate:
+    type: number
+    format: double
+    description: 税率
+  taxType:
+    type: integer
+    description: |-
+      税種別
+      * 1: 内税
+      * 2: 外税
+  taxIncludedAmount:
+    type: number
+    format: double
+    description: 内税額
+  taxExcludedAmount:
+    type: number
+    format: double
+    description: 外税額
+  detailType:
+    type: integer
+    description: |-
+      明細種別
+      * 1: 通常商品
+      * 2: セット親商品
+      * 3: セット子商品
+      * 4: 返品親明細
+      * 5: 返品子明細
+      * 6: 訂正明細
+      * 7: 取引値引
+      * 8: 小計値引
+      * 9: 小計割引
+      * 10: クーポン明細
+  parentLineNo:
+    type: integer
+    description: 親明細行番号
+    nullable: true
+  discountId:
+    type: integer
+    format: int64
+    description: 値引ID
+    nullable: true
+  discountName:
+    type: string
+    description: 値引名
+    nullable: true
+  couponId:
+    type: integer
+    format: int64
+    description: クーポンID
+    nullable: true
+  couponName:
+    type: string
+    description: クーポン名
+    nullable: true
+  couponCode:
+    type: string
+    description: クーポンコード
+    nullable: true
+  taxFreeDivision:
+    type: integer
+    description: |-
+      免税区分
+      * 0: 課税
+      * 1: 免税
+      * 2: 非課税
+  remark:
+    type: string
+    description: 備考
+    nullable: true
+  cost:
+    type: number
+    format: double
+    description: 原価
+    nullable: true
+  stockTransactionType:
+    type: integer
+    description: |-
+      在庫取引区分
+      * 1: 在庫引当あり
+      * 2: 在庫引当なし
+    nullable: true
+  costType:
+    type: integer
+    description: |-
+      原価区分
+      * 1: 移動平均原価
+      * 2: 最終仕入原価
+      * 3: 前日在庫単価
+    nullable: true
+  stockReserveId:
+    type: integer
+    format: int64
+    description: 在庫引当ID
+    nullable: true
+  serialCode:
+    type: string
+    description: シリアルコード
+    nullable: true
+  createdDateTime:
+    type: string
+    format: date-time
+    description: 作成日時
+  updatedDateTime:
+    type: string
+    format: date-time
+    description: 更新日時
+required:
+  - id
+  - transactionId
+  - lineNo
+  - productName
+  - price
+  - quantity
+  - subtotalAmount
+  - taxRate
+  - taxType
+  - taxIncludedAmount
+  - taxExcludedAmount
+  - detailType
+  - taxFreeDivision
+  - createdDateTime
+  - updatedDateTime

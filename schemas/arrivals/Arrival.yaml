@@ -1,0 +1,33 @@
+type: object
+properties:
+  arrivalId:
+    type: string
+    description: 入荷ID
+  orderId:
+    type: string
+    description: 発注ID
+  storeId:
+    type: string
+    description: 店舗ID
+  supplierId:
+    type: string
+    description: 仕入先ID
+  arrivalDate:
+    type: string
+    format: date
+    description: 入荷日
+  memo:
+    type: string
+    description: メモ
+  status:
+    type: string
+    enum: ['0', '1', '2']
+    description: ステータス(0:未確定, 1:確定, 2:キャンセル)
+  insDateTime:
+    type: string
+    format: date-time
+    description: 登録日時
+  updDateTime:
+    type: string
+    format: date-time
+    description: 更新日時

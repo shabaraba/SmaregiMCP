@@ -1,0 +1,161 @@
+parameters:
+  - name: id
+    in: path
+    description: 商品ID
+    required: true
+    schema:
+      type: integer
+      format: int64
+
+get:
+  summary: 商品アイコン画像の取得
+  description: 指定した商品IDのアイコン画像を取得します。
+  operationId: getProductIconImage
+  tags:
+    - 商品
+  responses:
+    '200':
+      description: 商品アイコン画像を返却
+      content:
+        image/jpeg:
+          schema:
+            type: string
+            format: binary
+        image/png:
+          schema:
+            type: string
+            format: binary
+    '400':
+      description: リクエストパラメータが不正
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    '401':
+      description: 認証エラー
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    '403':
+      description: 権限エラー
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    '404':
+      description: 商品またはアイコン画像が存在しない
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+  security:
+    - AppAccessToken:
+        - pos.products:read
+    - UserAccessToken:
+        - pos.products:read
+
+put:
+  summary: 商品アイコン画像の更新
+  description: 指定した商品IDのアイコン画像を更新します。
+  operationId: updateProductIconImage
+  tags:
+    - 商品
+  requestBody:
+    required: true
+    content:
+      multipart/form-data:
+        schema:
+          type: object
+          properties:
+            image:
+              type: string
+              format: binary
+              description: 画像ファイル（JPEG、PNG形式）
+  responses:
+    '200':
+      description: 商品アイコン画像の更新に成功
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ProductImage'
+    '400':
+      description: リクエストパラメータが不正
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    '401':
+      description: 認証エラー
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    '403':
+      description: 権限エラー
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    '404':
+      description: 商品が存在しない
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    '413':
+      description: ファイルサイズが上限を超えている
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    '415':
+      description: サポートされていないファイル形式
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+  security:
+    - AppAccessToken:
+        - pos.products:write
+    - UserAccessToken:
+        - pos.products:write
+
+delete:
+  summary: 商品アイコン画像の削除
+  description: 指定した商品IDのアイコン画像を削除します。
+  operationId: deleteProductIconImage
+  tags:
+    - 商品
+  responses:
+    '204':
+      description: 商品アイコン画像の削除に成功
+    '400':
+      description: リクエストパラメータが不正
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    '401':
+      description: 認証エラー
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    '403':
+      description: 権限エラー
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    '404':
+      description: 商品またはアイコン画像が存在しない
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+  security:
+    - AppAccessToken:
+        - pos.products:write
+    - UserAccessToken:
+        - pos.products:write

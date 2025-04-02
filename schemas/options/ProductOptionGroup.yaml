@@ -1,0 +1,43 @@
+type: object
+description: オプショングループ情報
+properties:
+  productOptionGroupId:
+    type: string
+    description: オプショングループID
+    example: "1"
+  productOptionGroupName:
+    type: string
+    description: オプショングループ名
+    maxLength: 85
+    example: "トッピング"
+  conditionId:
+    type: string
+    description: 条件ID (0:条件なし、1:全体、2:部門毎)
+    enum: ["0", "1", "2"]
+    example: "1"
+  max:
+    type: string
+    description: 適用条件の上限
+    example: "3"
+  min:
+    type: string
+    description: 適用条件の下限
+    example: "1"
+  syncDivision:
+    type: string
+    description: 同期区分
+    example: "0"
+  insDateTime:
+    type: string
+    description: 登録日時
+    format: date-time
+    example: "2025-06-15T10:00:00+09:00"
+  updDateTime:
+    type: string
+    description: 更新日時
+    format: date-time
+    example: "2025-06-15T10:00:00+09:00"
+required:
+  - productOptionGroupId
+  - productOptionGroupName
+  - conditionId

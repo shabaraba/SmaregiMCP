@@ -1,0 +1,95 @@
+get:
+  summary: チケット取引取得
+  description: チケット取引情報を取得します。
+  tags:
+    - 取引
+  parameters:
+    - name: id
+      in: path
+      required: true
+      description: チケット取引ID
+      schema:
+        type: integer
+        format: int64
+  responses:
+    "200":
+      description: 成功時のレスポンス
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/TicketTransaction"
+    "404":
+      description: 指定されたチケット取引が見つからない
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/Error"
+  security:
+    - AppAccessToken:
+        - pos.transactions:read
+    - UserAccessToken:
+        - pos.transactions:read
+
+put:
+  summary: チケット取引ステータス更新
+  description: |-
+    チケット取引のステータスを更新します。
+    
+    主にチケットの使用状態を変更するために使用します。
+  tags:
+    - 取引
+  parameters:
+    - name: id
+      in: path
+      required: true
+      description: チケット取引ID
+      schema:
+        type: integer
+        format: int64
+  requestBody:
+    required: true
+    content:
+      application/json:
+        schema:
+          type: object
+          required:
+            - statusType
+          properties:
+            statusType:
+              type: integer
+              description: |-
+                ステータスタイプ
+                * 1: 未使用
+                * 2: 使用済
+                * 3: 期限切れ
+                * 4: 取消
+              enum: [1, 2, 3, 4]
+  responses:
+    "200":
+      description: 成功時のレスポンス
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              message:
+                type: string
+                description: 更新完了メッセージ
+                example: "更新が完了しました"
+    "400":
+      description: バリデーションエラー
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/Error"
+    "404":
+      description: 指定されたチケット取引が見つからない
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/Error"
+  security:
+    - AppAccessToken:
+        - pos.transactions:write
+    - UserAccessToken:
+        - pos.transactions:write

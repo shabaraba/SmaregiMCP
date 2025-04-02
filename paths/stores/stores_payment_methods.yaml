@@ -1,0 +1,102 @@
+get:
+  summary: 店舗取扱支払方法一覧取得
+  description: |
+    店舗取扱支払方法一覧を取得します。
+    
+    Plans:
+    スタンダード・プレミアム・プレミアムプラス・フードビジネス・リテールビジネス
+    
+    sortで使用可能なパラメータ
+    - paymentMethodId：支払方法ID
+    - displaySequence：表示順
+  tags:
+    - 支払方法
+  security:
+    - AppAccessToken: [pos.stores:read]
+    - UserAccessToken: [pos.stores:read]
+  parameters:
+    - name: contract_id
+      in: path
+      required: true
+      schema:
+        type: string
+      description: 契約ID
+    - name: store_id
+      in: path
+      required: true
+      schema:
+        type: string
+      description: 店舗ID
+    - name: fields
+      in: query
+      schema:
+        type: array
+        items:
+          type: string
+      description: |
+        検索パラメータ（カンマ区切りで指定可）
+        Response項目を指定可能
+        ※一部項目(withで指定する項目、2階層目以降の項目)については指定不可
+    - name: sort
+      in: query
+      schema:
+        type: string
+      description: |
+        並び順（カンマ区切りで指定可）
+        指定可能な項目については上記参照
+    - name: limit
+      in: query
+      schema:
+        type: integer
+      description: 上限数
+    - name: page
+      in: query
+      schema:
+        type: integer
+      description: ページ
+  responses:
+    '200':
+      description: 取得成功
+      content:
+        application/json:
+          schema:
+            type: array
+            items:
+              type: object
+              properties:
+                storeId:
+                  type: string
+                  description: 店舗ID
+                  example: "1"
+                paymentMethodId:
+                  type: string
+                  description: 支払方法ID
+                  example: "101"
+                paymentMethodName:
+                  type: string
+                  description: 支払方法名
+                  example: "クレジットカード"
+                displaySequence:
+                  type: string
+                  description: 表示順
+                  example: "1"
+                insDateTime:
+                  type: string
+                  description: 登録日時
+                  format: date-time
+                  example: "2025-01-01T10:00:00+09:00"
+                updDateTime:
+                  type: string
+                  description: 更新日時
+                  format: date-time
+                  example: "2025-01-01T10:00:00+09:00"
+              required:
+                - storeId
+                - paymentMethodId
+                - paymentMethodName
+    '404':
+      description: 指定された店舗IDが存在しない場合
+      content:
+        application/json:
+          schema:
+            $ref: '../../schemas/common/Error.yaml'

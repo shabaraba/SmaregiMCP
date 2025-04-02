@@ -1,0 +1,160 @@
+parameters:
+  - name: no
+    in: path
+    description: 予約項目ラベル番号
+    required: true
+    schema:
+      type: integer
+      format: int32
+
+get:
+  summary: 予約項目ラベルの取得
+  description: 指定した番号の予約項目ラベル情報を取得します。
+  operationId: getProductReserveItemLabel
+  tags:
+    - 商品
+  parameters:
+    - name: fields
+      in: query
+      description: 取得するフィールド
+      schema:
+        type: array
+        items:
+          type: string
+        default: ["*"]
+  responses:
+    '200':
+      description: 予約項目ラベル情報を返却
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ProductReserveItemLabel'
+    '400':
+      description: リクエストパラメータが不正
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    '401':
+      description: 認証エラー
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    '403':
+      description: 権限エラー
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    '404':
+      description: 予約項目ラベルが存在しない
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+  security:
+    - AppAccessToken:
+        - pos.products:read
+    - UserAccessToken:
+        - pos.products:read
+
+put:
+  summary: 予約項目ラベルの更新
+  description: 指定した番号の予約項目ラベル情報を更新します。
+  operationId: updateProductReserveItemLabel
+  tags:
+    - 商品
+  requestBody:
+    required: true
+    content:
+      application/json:
+        schema:
+          $ref: '#/components/schemas/ProductReserveItemLabel'
+  responses:
+    '200':
+      description: 予約項目ラベルの更新に成功
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ProductReserveItemLabel'
+    '400':
+      description: リクエストパラメータが不正
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    '401':
+      description: 認証エラー
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    '403':
+      description: 権限エラー
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    '404':
+      description: 予約項目ラベルが存在しない
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    '409':
+      description: 既存データとの競合エラー
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+  security:
+    - AppAccessToken:
+        - pos.products:write
+    - UserAccessToken:
+        - pos.products:write
+
+delete:
+  summary: 予約項目ラベルの削除
+  description: 指定した番号の予約項目ラベルを削除します。商品の予約項目での使用があると削除できません。
+  operationId: deleteProductReserveItemLabel
+  tags:
+    - 商品
+  responses:
+    '204':
+      description: 予約項目ラベルの削除に成功
+    '400':
+      description: リクエストパラメータが不正
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    '401':
+      description: 認証エラー
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    '403':
+      description: 権限エラー
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    '404':
+      description: 予約項目ラベルが存在しない
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    '409':
+      description: 削除できない状態（他のデータから参照されているなど）
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+  security:
+    - AppAccessToken:
+        - pos.products:write
+    - UserAccessToken:
+        - pos.products:write

@@ -1,0 +1,29 @@
+type: object
+description: 商品在庫引当情報
+properties:
+  productId:
+    type: string
+    description: 商品ID
+    example: "1"
+  reservationProductId:
+    type: string
+    description: 引当商品ID
+    example: "2"
+  reservationAmount:
+    type: string
+    description: 引当個数
+    example: "1"
+  insDateTime:
+    type: string
+    format: date-time
+    description: 登録日時
+    example: "2023-01-01T00:00:00+09:00"
+  updDateTime:
+    type: string
+    format: date-time
+    description: 更新日時
+    example: "2023-01-01T00:00:00+09:00"
+required:
+  - productId
+  - reservationProductId
+  - reservationAmount

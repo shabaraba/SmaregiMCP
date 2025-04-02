@@ -1,0 +1,20 @@
+type: object
+description: ページネーション情報
+properties:
+  limit:
+    type: integer
+    description: 1ページあたりの最大件数 (1-1000)
+    minimum: 1
+    maximum: 1000
+    default: 100
+    example: 100
+  page:
+    type: integer
+    description: ページ番号 (1始まり)
+    minimum: 1
+    default: 1
+    example: 1
+  sort:
+    type: string
+    description: 並び順の指定 (カンマ区切りで複数指定可能。降順は「:desc」を付加)
+    example: 'updDateTime:desc'

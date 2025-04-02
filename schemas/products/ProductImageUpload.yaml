@@ -1,0 +1,24 @@
+type: object
+description: 商品画像アップロード情報
+properties:
+  productId:
+    type: string
+    description: 商品ID
+    example: "1"
+  imageType:
+    type: string
+    description: 画像タイプ (1:メイン画像、2:アイコン画像、3:詳細画像)
+    enum: ["1", "2", "3"]
+    example: "1"
+  displaySequence:
+    type: string
+    description: 表示順序
+    example: "1"
+  image:
+    type: string
+    format: binary
+    description: 画像ファイル（JPEG、PNG形式）
+required:
+  - productId
+  - imageType
+  - image

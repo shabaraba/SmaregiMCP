@@ -1,0 +1,37 @@
+type: object
+description: セール情報
+properties:
+  bargainId:
+    type: string
+    description: セールID
+    example: "1"
+  bargainName:
+    type: string
+    description: セール名
+    maxLength: 85
+    example: "夏物商品セール"
+  termStart:
+    type: string
+    description: セール開始日 [YYYY-MM-DD]
+    format: date
+    example: "2025-07-01"
+  termEnd:
+    type: string
+    description: セール終了日 [YYYY-MM-DD]
+    format: date
+    example: "2025-07-31"
+  insDateTime:
+    type: string
+    description: 登録日時
+    format: date-time
+    example: "2025-06-15T10:00:00+09:00"
+  updDateTime:
+    type: string
+    description: 更新日時
+    format: date-time
+    example: "2025-06-15T10:00:00+09:00"
+required:
+  - bargainId
+  - bargainName
+  - termStart
+  - termEnd

@@ -1,0 +1,107 @@
+get:
+  tags:
+    - ロス
+  summary: ロス一覧取得
+  description: ロス情報一覧を取得します。
+  parameters:
+    - name: fields
+      in: query
+      description: 検索パラメータ（カンマ区切りで指定可）
+      schema:
+        type: array
+        items:
+          type: string
+    - name: sort
+      in: query
+      description: 並び順（カンマ区切りで指定可）
+      schema:
+        type: string
+    - name: limit
+      in: query
+      description: 上限数
+      schema:
+        type: integer
+    - name: page
+      in: query
+      description: ページ
+      schema:
+        type: integer
+    - name: loss_id
+      in: query
+      description: ロスID
+      schema:
+        type: string
+    - name: store_id
+      in: query
+      description: 店舗ID
+      schema:
+        type: string
+    - name: loss_date-from
+      in: query
+      description: ロス日(From)
+      schema:
+        type: string
+    - name: loss_date-to
+      in: query
+      description: ロス日(To)
+      schema:
+        type: string
+    - name: loss_division_id
+      in: query
+      description: ロス区分ID
+      schema:
+        type: string
+    - name: upd_date_time-from
+      in: query
+      description: 更新日時(From)
+      schema:
+        type: string
+    - name: upd_date_time-to
+      in: query
+      description: 更新日時(To)
+      schema:
+        type: string
+  responses:
+    '200':
+      description: 取得成功
+      content:
+        application/json:
+          schema:
+            type: array
+            items:
+              $ref: '../../schemas/losses/Loss.yaml'
+  security:
+    - AppAccessToken:
+        - pos.losses:read
+    - UserAccessToken:
+        - pos.losses:read
+
+post:
+  tags:
+    - ロス
+  summary: ロス登録
+  description: ロス情報を登録します。
+  requestBody:
+    required: true
+    content:
+      application/json:
+        schema:
+          $ref: '../../schemas/losses/LossCreate.yaml'
+  responses:
+    '200':
+      description: 登録成功
+      content:
+        application/json:
+          schema:
+            $ref: '../../schemas/losses/Loss.yaml'
+    '400':
+      description: 入力チェックエラーの場合
+      content:
+        application/json:
+          schema:
+            $ref: '../../schemas/common/Error.yaml'
+  security:
+    - AppAccessToken:
+        - pos.losses:write
+    - UserAccessToken:
+        - pos.losses:write

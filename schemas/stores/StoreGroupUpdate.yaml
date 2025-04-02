@@ -1,0 +1,8 @@
+type: object
+description: 店舗分類更新情報
+properties:
+  storeGroupName:
+    type: string
+    description: 店舗分類名
+    maxLength: 85
+    example: "首都圏エリア"
