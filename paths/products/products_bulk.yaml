@@ -11,7 +11,7 @@ post:
     content:
       application/json:
         schema:
-          $ref: '#/components/schemas/ProductBulkCreate'
+          $ref: '../../schemas/products/ProductBulkCreate.yaml'
   responses:
     '201':
       description: 商品の一括登録に成功
@@ -67,7 +67,7 @@ put:
     content:
       application/json:
         schema:
-          $ref: '#/components/schemas/ProductBulkUpdate'
+          $ref: '../../schemas/products/ProductBulkUpdate.yaml'
   responses:
     '200':
       description: 商品の一括更新に成功
