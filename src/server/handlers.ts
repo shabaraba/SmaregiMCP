@@ -33,24 +33,60 @@ function loadYamlSpec(filePath: string): any {
 function getOpenApiSpecPath(): string {
   // プロジェクトのルートディレクトリを特定（現在の作業ディレクトリを利用）
   const rootDir = process.cwd();
-  const specPath = path.resolve(rootDir, 'openapi.yaml');
   
-  // ファイルが存在するか確認
-  if (!fs.existsSync(specPath)) {
-    log(`Warning: OpenAPI spec not found at ${specPath}`);
-    log(`Current working directory: ${rootDir}`);
-    log(`Listing files in directory:`);
+  // 候補となるパスを設定
+  const possiblePaths = [
+    path.resolve(rootDir, 'openapi.yaml'),
+    path.resolve(rootDir, 'openapi/pos/openapi.yaml'),
+    path.resolve(rootDir, 'openapi/common/openapi.yaml')
+  ];
+  
+  // 存在する最初のパスを使用
+  for (const candidatePath of possiblePaths) {
+    if (fs.existsSync(candidatePath)) {
+      log(`OpenAPI spec found at ${candidatePath}`);
+      return candidatePath;
+    }
+  }
+  
+  // 見つからない場合はデフォルトを返す前にデバッグ情報を出力
+  log(`Warning: OpenAPI spec not found at expected locations`);
+  log(`Current working directory: ${rootDir}`);
+  
+  // openapi ディレクトリがある場合はその内容を確認
+  const openapiDir = path.resolve(rootDir, 'openapi');
+  if (fs.existsSync(openapiDir)) {
+    log(`Listing files in openapi directory:`);
+    try {
+      const listDir = (dir: string, prefix = '') => {
+        const files = fs.readdirSync(dir);
+        files.forEach(file => {
+          const filePath = path.join(dir, file);
+          if (fs.statSync(filePath).isDirectory()) {
+            log(`${prefix}/${file}/`);
+            listDir(filePath, `${prefix}/${file}`);
+          } else {
+            log(`${prefix}/${file}`);
+          }
+        });
+      };
+      listDir(openapiDir, 'openapi');
+    } catch (e) {
+      log(`Error listing openapi directory: ${e instanceof Error ? e.message : String(e)}`);
+    }
+  } else {
+    log(`openapi directory not found`);
+    log(`Listing files in project root:`);
     try {
       const files = fs.readdirSync(rootDir);
       log(files.join(', '));
     } catch (e) {
       log(`Error listing directory: ${e instanceof Error ? e.message : String(e)}`);
     }
-  } else {
-    log(`OpenAPI spec found at ${specPath}`);
   }
   
-  return specPath;
+  // デフォルトのパス（最初の候補）を返す
+  return possiblePaths[0];
 }
 
 /**
