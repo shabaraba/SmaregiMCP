@@ -1,5 +1,6 @@
 import * as fs from 'node:fs';
 import * as path from 'node:path';
+// @ts-ignore - 型定義の問題を回避
 import * as yaml from 'js-yaml';
 import { log } from '../utils/index.js';
 
