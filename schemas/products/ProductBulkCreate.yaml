@@ -5,6 +5,6 @@ properties:
     type: array
     description: 登録する商品の配列
     items:
-      $ref: '../../schemas/#/components/schemas/ProductCreate.yaml'
+      $ref: './ProductCreate.yaml'
 required:
   - items
