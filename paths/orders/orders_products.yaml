@@ -64,7 +64,7 @@ get:
           schema:
             type: array
             items:
-              $ref: './../../schemas/orders/OrderProduct.yaml'
+              $ref: '../../schemas/orders/OrderProduct.yaml'
   security:
     - AppAccessToken:
         - pos.orders:read

@@ -73,7 +73,7 @@ get:
           schema:
             type: array
             items:
-              $ref: './../../schemas/sales/BargainProduct.yaml'
+              $ref: '../../schemas/sales/BargainProduct.yaml'
 
 post:
   summary: セール商品登録
@@ -105,17 +105,17 @@ post:
     content:
       application/json:
         schema:
-          $ref: './../../schemas/sales/BargainProductCreate.yaml'
+          $ref: '../../schemas/sales/BargainProductCreate.yaml'
   responses:
     '200':
       description: 取得成功
       content:
         application/json:
           schema:
-            $ref: './../../schemas/sales/BargainProduct.yaml'
+            $ref: '../../schemas/sales/BargainProduct.yaml'
     '400':
       description: 入力チェックエラーの場合
       content:
         application/json:
           schema:
-            $ref: './../../schemas/common/Error.yaml'
+            $ref: '../../schemas/common/Error.yaml'

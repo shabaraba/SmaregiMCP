@@ -17,13 +17,13 @@ get:
       content:
         application/json:
           schema:
-            $ref: "#/components/schemas/Layaway"
+            $ref: "../../schemas/transactions/Layaway.yaml"
     "404":
       description: 指定された預かり取引が見つからない
       content:
         application/json:
           schema:
-            $ref: "#/components/schemas/Error"
+            $ref: "../../schemas/common/Error.yaml"
   security:
     - AppAccessToken:
         - pos.transactions:read
@@ -51,13 +51,13 @@ delete:
       content:
         application/json:
           schema:
-            $ref: "#/components/schemas/Error"
+            $ref: "../../schemas/common/Error.yaml"
     "409":
       description: 預かり取引が既に処理済みなど、削除できない状態である
       content:
         application/json:
           schema:
-            $ref: "#/components/schemas/Error"
+            $ref: "../../schemas/common/Error.yaml"
   security:
     - AppAccessToken:
         - pos.transactions:write

@@ -134,7 +134,7 @@ get:
               items:
                 type: array
                 items:
-                  $ref: './../../schemas/products/Product.yaml'
+                  $ref: '../../schemas/products/Product.yaml'
               total:
                 type: integer
                 description: 総件数
@@ -149,19 +149,19 @@ get:
       content:
         application/json:
           schema:
-            $ref: './../../schemas/common/Error.yaml'
+            $ref: '../../schemas/common/Error.yaml'
     '401':
       description: 認証エラー
       content:
         application/json:
           schema:
-            $ref: './../../schemas/common/Error.yaml'
+            $ref: '../../schemas/common/Error.yaml'
     '403':
       description: 権限エラー
       content:
         application/json:
           schema:
-            $ref: './../../schemas/common/Error.yaml'
+            $ref: '../../schemas/common/Error.yaml'
   security:
     - AppAccessToken:
         - pos.products:read
@@ -179,38 +179,38 @@ post:
     content:
       application/json:
         schema:
-          $ref: './../../schemas/products/ProductCreate.yaml'
+          $ref: '../../schemas/products/ProductCreate.yaml'
   responses:
     '201':
       description: 商品の登録に成功
       content:
         application/json:
           schema:
-            $ref: './../../schemas/products/Product.yaml'
+            $ref: '../../schemas/products/Product.yaml'
     '400':
       description: リクエストパラメータが不正
       content:
         application/json:
           schema:
-            $ref: './../../schemas/common/Error.yaml'
+            $ref: '../../schemas/common/Error.yaml'
     '401':
       description: 認証エラー
       content:
         application/json:
           schema:
-            $ref: './../../schemas/common/Error.yaml'
+            $ref: '../../schemas/common/Error.yaml'
     '403':
       description: 権限エラー
       content:
         application/json:
           schema:
-            $ref: './../../schemas/common/Error.yaml'
+            $ref: '../../schemas/common/Error.yaml'
     '409':
       description: 既存データとの競合エラー
       content:
         application/json:
           schema:
-            $ref: './../../schemas/common/Error.yaml'
+            $ref: '../../schemas/common/Error.yaml'
   security:
     - AppAccessToken:
         - pos.products:write

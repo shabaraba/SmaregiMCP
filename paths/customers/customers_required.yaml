@@ -9,7 +9,7 @@ get:
       content:
         application/json:
           schema:
-            $ref: './../../schemas/customers/CustomerRequired.yaml'
+            $ref: '../../schemas/customers/CustomerRequired.yaml'
   security:
     - AppAccessToken:
         - pos.customers:read

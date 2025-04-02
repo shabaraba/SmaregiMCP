@@ -18,19 +18,19 @@ get:
       content:
         application/json:
           schema:
-            $ref: './../../schemas/stocks/IncomingStock.yaml'
+            $ref: '../../schemas/stocks/IncomingStock.yaml'
     '401':
       description: 認証エラー
       content:
         application/json:
           schema:
-            $ref: './../../schemas/common/Error.yaml'
+            $ref: '../../schemas/common/Error.yaml'
     '404':
       description: 指定されたIDの入庫情報が存在しない
       content:
         application/json:
           schema:
-            $ref: './../../schemas/common/Error.yaml'
+            $ref: '../../schemas/common/Error.yaml'
   security:
     - AppAccessToken:
         - pos.transfers:read
@@ -47,7 +47,7 @@ patch:
     content:
       application/json:
         schema:
-          $ref: './../../schemas/stocks/IncomingStockUpdate.yaml'
+          $ref: '../../schemas/stocks/IncomingStockUpdate.yaml'
     required: true
   responses:
     '200':
@@ -57,19 +57,19 @@ patch:
       content:
         application/json:
           schema:
-            $ref: './../../schemas/common/Error.yaml'
+            $ref: '../../schemas/common/Error.yaml'
     '401':
       description: 認証エラー
       content:
         application/json:
           schema:
-            $ref: './../../schemas/common/Error.yaml'
+            $ref: '../../schemas/common/Error.yaml'
     '404':
       description: 指定されたIDの入庫情報が存在しない
       content:
         application/json:
           schema:
-            $ref: './../../schemas/common/Error.yaml'
+            $ref: '../../schemas/common/Error.yaml'
   security:
     - AppAccessToken:
         - pos.transfers:write
@@ -90,13 +90,13 @@ delete:
       content:
         application/json:
           schema:
-            $ref: './../../schemas/common/Error.yaml'
+            $ref: '../../schemas/common/Error.yaml'
     '404':
       description: 指定されたIDの入庫情報が存在しない
       content:
         application/json:
           schema:
-            $ref: './../../schemas/common/Error.yaml'
+            $ref: '../../schemas/common/Error.yaml'
   security:
     - AppAccessToken:
         - pos.transfers:write

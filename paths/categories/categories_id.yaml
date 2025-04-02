@@ -39,7 +39,7 @@ get:
       content:
         application/json:
           schema:
-            $ref: './../../schemas/categories/Category.yaml'
+            $ref: '../../schemas/categories/Category.yaml'
 patch:
   summary: 部門更新
   description: |
@@ -70,14 +70,14 @@ patch:
     content:
       application/json:
         schema:
-          $ref: './../../schemas/categories/CategoryUpdate.yaml'
+          $ref: '../../schemas/categories/CategoryUpdate.yaml'
   responses:
     '200':
       description: 更新成功
       content:
         application/json:
           schema:
-            $ref: './../../schemas/categories/Category.yaml'
+            $ref: '../../schemas/categories/Category.yaml'
     '400':
       description: |
         入力チェックエラーの場合

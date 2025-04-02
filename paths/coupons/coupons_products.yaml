@@ -36,21 +36,21 @@ get:
               couponProducts:
                 type: array
                 items:
-                  $ref: './../../schemas/coupons/CouponProduct.yaml'
+                  $ref: '../../schemas/coupons/CouponProduct.yaml'
               pagination:
-                $ref: './../../schemas/common/Pagination.yaml'
+                $ref: '../../schemas/common/Pagination.yaml'
     '401':
       description: 認証エラー
       content:
         application/json:
           schema:
-            $ref: './../../schemas/common/Error.yaml'
+            $ref: '../../schemas/common/Error.yaml'
     '404':
       description: 指定されたIDのクーポンが存在しない
       content:
         application/json:
           schema:
-            $ref: './../../schemas/common/Error.yaml'
+            $ref: '../../schemas/common/Error.yaml'
   security:
     - AppAccessToken:
         - pos.products:read
@@ -67,7 +67,7 @@ post:
     content:
       application/json:
         schema:
-          $ref: './../../schemas/coupons/CouponProductCreate.yaml'
+          $ref: '../../schemas/coupons/CouponProductCreate.yaml'
     required: true
   responses:
     '201':
@@ -85,19 +85,19 @@ post:
       content:
         application/json:
           schema:
-            $ref: './../../schemas/common/Error.yaml'
+            $ref: '../../schemas/common/Error.yaml'
     '401':
       description: 認証エラー
       content:
         application/json:
           schema:
-            $ref: './../../schemas/common/Error.yaml'
+            $ref: '../../schemas/common/Error.yaml'
     '404':
       description: 指定されたIDのクーポンが存在しない
       content:
         application/json:
           schema:
-            $ref: './../../schemas/common/Error.yaml'
+            $ref: '../../schemas/common/Error.yaml'
   security:
     - AppAccessToken:
         - pos.products:write

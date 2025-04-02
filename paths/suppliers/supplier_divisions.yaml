@@ -72,7 +72,7 @@ get:
           schema:
             type: array
             items:
-              $ref: './../../schemas/suppliers/SupplierDivision.yaml'
+              $ref: '../../schemas/suppliers/SupplierDivision.yaml'
   security:
     - AppAccessToken:
         - pos.suppliers:read
@@ -89,20 +89,20 @@ post:
     content:
       application/json:
         schema:
-          $ref: './../../schemas/suppliers/SupplierDivisionCreate.yaml'
+          $ref: '../../schemas/suppliers/SupplierDivisionCreate.yaml'
   responses:
     '200':
       description: 登録成功
       content:
         application/json:
           schema:
-            $ref: './../../schemas/suppliers/SupplierDivision.yaml'
+            $ref: '../../schemas/suppliers/SupplierDivision.yaml'
     '400':
       description: 入力チェックエラーの場合
       content:
         application/json:
           schema:
-            $ref: './../../schemas/common/Error.yaml'
+            $ref: '../../schemas/common/Error.yaml'
   security:
     - AppAccessToken:
         - pos.suppliers:write

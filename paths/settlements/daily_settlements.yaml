@@ -119,7 +119,7 @@ get:
           schema:
             type: array
             items:
-              $ref: './../../schemas/settlements/DailySettlement.yaml'
+              $ref: '../../schemas/settlements/DailySettlement.yaml'
   security:
     - AppAccessToken:
         - pos.transactions:read
@@ -136,20 +136,20 @@ post:
     content:
       application/json:
         schema:
-          $ref: './../../schemas/settlements/DailySettlementCreate.yaml'
+          $ref: '../../schemas/settlements/DailySettlementCreate.yaml'
   responses:
     '200':
       description: 登録成功
       content:
         application/json:
           schema:
-            $ref: './../../schemas/settlements/DailySettlement.yaml'
+            $ref: '../../schemas/settlements/DailySettlement.yaml'
     '400':
       description: 入力チェックエラーの場合
       content:
         application/json:
           schema:
-            $ref: './../../schemas/common/Error.yaml'
+            $ref: '../../schemas/common/Error.yaml'
   security:
     - AppAccessToken:
         - pos.transactions:write

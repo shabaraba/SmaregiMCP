@@ -17,13 +17,13 @@ get:
       content:
         application/json:
           schema:
-            $ref: "#/components/schemas/PreSale"
+            $ref: "../../schemas/transactions/PreSale.yaml"
     "404":
       description: 指定された事前会計が見つからない
       content:
         application/json:
           schema:
-            $ref: "#/components/schemas/Error"
+            $ref: "../../schemas/common/Error.yaml"
   security:
     - AppAccessToken:
         - pos.transactions:read
@@ -51,7 +51,7 @@ put:
     content:
       application/json:
         schema:
-          $ref: "#/components/schemas/PreSaleUpdate"
+          $ref: "../../schemas/transactions/PreSaleUpdate.yaml"
   responses:
     "200":
       description: 成功時のレスポンス
@@ -69,13 +69,13 @@ put:
       content:
         application/json:
           schema:
-            $ref: "#/components/schemas/Error"
+            $ref: "../../schemas/common/Error.yaml"
     "404":
       description: 指定された事前会計が見つからない
       content:
         application/json:
           schema:
-            $ref: "#/components/schemas/Error"
+            $ref: "../../schemas/common/Error.yaml"
   security:
     - AppAccessToken:
         - pos.transactions:write
@@ -103,13 +103,13 @@ delete:
       content:
         application/json:
           schema:
-            $ref: "#/components/schemas/Error"
+            $ref: "../../schemas/common/Error.yaml"
     "409":
       description: 事前会計が既に処理済みなど、削除できない状態である
       content:
         application/json:
           schema:
-            $ref: "#/components/schemas/Error"
+            $ref: "../../schemas/common/Error.yaml"
   security:
     - AppAccessToken:
         - pos.transactions:write

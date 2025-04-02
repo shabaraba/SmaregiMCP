@@ -67,15 +67,15 @@ get:
               ticketTransactions:
                 type: array
                 items:
-                  $ref: "#/components/schemas/TicketTransaction"
+                  $ref: "../../schemas/transactions/TicketTransaction.yaml"
               pagination:
-                $ref: "#/components/schemas/Pagination"
+                $ref: "../../schemas/common/Pagination.yaml"
     "400":
       description: バリデーションエラー
       content:
         application/json:
           schema:
-            $ref: "#/components/schemas/Error"
+            $ref: "../../schemas/common/Error.yaml"
   security:
     - AppAccessToken:
         - pos.transactions:read

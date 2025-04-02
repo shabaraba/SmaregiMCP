@@ -52,7 +52,7 @@ get:
               items:
                 type: array
                 items:
-                  $ref: '#/components/schemas/ProductReserveItemLabel'
+                  $ref: '../../schemas/products/ProductReserveItemLabel.yaml'
               total:
                 type: integer
                 description: 総件数
@@ -67,19 +67,19 @@ get:
       content:
         application/json:
           schema:
-            $ref: './../../schemas/common/Error.yaml'
+            $ref: '../../schemas/common/Error.yaml'
     '401':
       description: 認証エラー
       content:
         application/json:
           schema:
-            $ref: './../../schemas/common/Error.yaml'
+            $ref: '../../schemas/common/Error.yaml'
     '403':
       description: 権限エラー
       content:
         application/json:
           schema:
-            $ref: './../../schemas/common/Error.yaml'
+            $ref: '../../schemas/common/Error.yaml'
   security:
     - AppAccessToken:
         - pos.products:read
@@ -97,38 +97,38 @@ post:
     content:
       application/json:
         schema:
-          $ref: '#/components/schemas/ProductReserveItemLabel'
+          $ref: '../../schemas/products/ProductReserveItemLabel.yaml'
   responses:
     '201':
       description: 予約項目ラベルの登録に成功
       content:
         application/json:
           schema:
-            $ref: '#/components/schemas/ProductReserveItemLabel'
+            $ref: '../../schemas/products/ProductReserveItemLabel.yaml'
     '400':
       description: リクエストパラメータが不正
       content:
         application/json:
           schema:
-            $ref: './../../schemas/common/Error.yaml'
+            $ref: '../../schemas/common/Error.yaml'
     '401':
       description: 認証エラー
       content:
         application/json:
           schema:
-            $ref: './../../schemas/common/Error.yaml'
+            $ref: '../../schemas/common/Error.yaml'
     '403':
       description: 権限エラー
       content:
         application/json:
           schema:
-            $ref: './../../schemas/common/Error.yaml'
+            $ref: '../../schemas/common/Error.yaml'
     '409':
       description: 既存データとの競合エラー
       content:
         application/json:
           schema:
-            $ref: './../../schemas/common/Error.yaml'
+            $ref: '../../schemas/common/Error.yaml'
   security:
     - AppAccessToken:
         - pos.products:write

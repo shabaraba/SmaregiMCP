@@ -8,7 +8,7 @@ post:
     content:
       application/json:
         schema:
-          $ref: './../../schemas/customers/CustomerBulkCreate.yaml'
+          $ref: '../../schemas/customers/CustomerBulkCreate.yaml'
   responses:
     '200':
       description: 一括登録成功
@@ -17,13 +17,13 @@ post:
           schema:
             type: array
             items:
-              $ref: './../../schemas/customers/Customer.yaml'
+              $ref: '../../schemas/customers/Customer.yaml'
     '400':
       description: 入力チェックエラーの場合
       content:
         application/json:
           schema:
-            $ref: './../../schemas/common/Error.yaml'
+            $ref: '../../schemas/common/Error.yaml'
   security:
     - AppAccessToken:
         - pos.customers:write
@@ -40,7 +40,7 @@ put:
     content:
       application/json:
         schema:
-          $ref: './../../schemas/customers/CustomerBulkUpdate.yaml'
+          $ref: '../../schemas/customers/CustomerBulkUpdate.yaml'
   responses:
     '200':
       description: 一括更新成功
@@ -49,19 +49,19 @@ put:
           schema:
             type: array
             items:
-              $ref: './../../schemas/customers/Customer.yaml'
+              $ref: '../../schemas/customers/Customer.yaml'
     '400':
       description: 入力チェックエラーの場合
       content:
         application/json:
           schema:
-            $ref: './../../schemas/common/Error.yaml'
+            $ref: '../../schemas/common/Error.yaml'
     '404':
       description: 対象リソースが存在しない場合
       content:
         application/json:
           schema:
-            $ref: './../../schemas/common/Error.yaml'
+            $ref: '../../schemas/common/Error.yaml'
   security:
     - AppAccessToken:
         - pos.customers:write

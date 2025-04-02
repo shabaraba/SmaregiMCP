@@ -242,7 +242,7 @@ get:
           schema:
             type: array
             items:
-              $ref: './../../schemas/customers/Customer.yaml'
+              $ref: '../../schemas/customers/Customer.yaml'
   security:
     - AppAccessToken:
         - pos.customers:read
@@ -259,20 +259,20 @@ post:
     content:
       application/json:
         schema:
-          $ref: './../../schemas/customers/CustomerCreate.yaml'
+          $ref: '../../schemas/customers/CustomerCreate.yaml'
   responses:
     '200':
       description: 登録成功
       content:
         application/json:
           schema:
-            $ref: './../../schemas/customers/Customer.yaml'
+            $ref: '../../schemas/customers/Customer.yaml'
     '400':
       description: 入力チェックエラーの場合
       content:
         application/json:
           schema:
-            $ref: './../../schemas/common/Error.yaml'
+            $ref: '../../schemas/common/Error.yaml'
   security:
     - AppAccessToken:
         - pos.customers:write

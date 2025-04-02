@@ -58,21 +58,21 @@ get:
               stocks:
                 type: array
                 items:
-                  $ref: './../../schemas/stocks/Stock.yaml'
+                  $ref: '../../schemas/stocks/Stock.yaml'
               pagination:
-                $ref: './../../schemas/common/Pagination.yaml'
+                $ref: '../../schemas/common/Pagination.yaml'
     '400':
       description: バリデーションエラー
       content:
         application/json:
           schema:
-            $ref: './../../schemas/common/Error.yaml'
+            $ref: '../../schemas/common/Error.yaml'
     '401':
       description: 認証エラー
       content:
         application/json:
           schema:
-            $ref: './../../schemas/common/Error.yaml'
+            $ref: '../../schemas/common/Error.yaml'
   security:
     - AppAccessToken:
         - pos.stock:read
@@ -89,7 +89,7 @@ patch:
     content:
       application/json:
         schema:
-          $ref: './../../schemas/stocks/StockUpdate.yaml'
+          $ref: '../../schemas/stocks/StockUpdate.yaml'
     required: true
   responses:
     '200':
@@ -99,19 +99,19 @@ patch:
       content:
         application/json:
           schema:
-            $ref: './../../schemas/common/Error.yaml'
+            $ref: '../../schemas/common/Error.yaml'
     '401':
       description: 認証エラー
       content:
         application/json:
           schema:
-            $ref: './../../schemas/common/Error.yaml'
+            $ref: '../../schemas/common/Error.yaml'
     '404':
       description: 指定された在庫情報が存在しない
       content:
         application/json:
           schema:
-            $ref: './../../schemas/common/Error.yaml'
+            $ref: '../../schemas/common/Error.yaml'
   security:
     - AppAccessToken:
         - pos.stock:write

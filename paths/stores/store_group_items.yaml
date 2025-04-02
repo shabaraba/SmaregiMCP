@@ -73,7 +73,7 @@ get:
           schema:
             type: array
             items:
-              $ref: './../../schemas/stores/StoreGroupItem.yaml'
+              $ref: '../../schemas/stores/StoreGroupItem.yaml'
 
 post:
   summary: 店舗分類項目登録
@@ -99,17 +99,17 @@ post:
     content:
       application/json:
         schema:
-          $ref: './../../schemas/stores/StoreGroupItemCreate.yaml'
+          $ref: '../../schemas/stores/StoreGroupItemCreate.yaml'
   responses:
     '200':
       description: 登録成功
       content:
         application/json:
           schema:
-            $ref: './../../schemas/stores/StoreGroupItem.yaml'
+            $ref: '../../schemas/stores/StoreGroupItem.yaml'
     '400':
       description: 入力チェックエラーの場合
       content:
         application/json:
           schema:
-            $ref: './../../schemas/common/Error.yaml'
+            $ref: '../../schemas/common/Error.yaml'

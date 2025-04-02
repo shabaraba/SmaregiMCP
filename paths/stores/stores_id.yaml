@@ -39,13 +39,13 @@ get:
       content:
         application/json:
           schema:
-            $ref: './../../schemas/stores/Store.yaml'
+            $ref: '../../schemas/stores/Store.yaml'
     '404':
       description: 指定されたIDが存在しない場合
       content:
         application/json:
           schema:
-            $ref: './../../schemas/common/Error.yaml'
+            $ref: '../../schemas/common/Error.yaml'
 
 patch:
   summary: 店舗更新
@@ -77,26 +77,26 @@ patch:
     content:
       application/json:
         schema:
-          $ref: './../../schemas/stores/StoreUpdate.yaml'
+          $ref: '../../schemas/stores/StoreUpdate.yaml'
   responses:
     '200':
       description: 更新成功
       content:
         application/json:
           schema:
-            $ref: './../../schemas/stores/Store.yaml'
+            $ref: '../../schemas/stores/Store.yaml'
     '400':
       description: 入力チェックエラーの場合
       content:
         application/json:
           schema:
-            $ref: './../../schemas/common/Error.yaml'
+            $ref: '../../schemas/common/Error.yaml'
     '404':
       description: 指定されたIDが存在しない場合
       content:
         application/json:
           schema:
-            $ref: './../../schemas/common/Error.yaml'
+            $ref: '../../schemas/common/Error.yaml'
 
 delete:
   summary: 店舗削除
@@ -131,10 +131,10 @@ delete:
       content:
         application/json:
           schema:
-            $ref: './../../schemas/common/Error.yaml'
+            $ref: '../../schemas/common/Error.yaml'
     '404':
       description: 指定されたIDが存在しない場合
       content:
         application/json:
           schema:
-            $ref: './../../schemas/common/Error.yaml'
+            $ref: '../../schemas/common/Error.yaml'

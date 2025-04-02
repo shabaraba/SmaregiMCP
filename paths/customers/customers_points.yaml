@@ -16,13 +16,13 @@ get:
       content:
         application/json:
           schema:
-            $ref: './../../schemas/customers/CustomerPoint.yaml'
+            $ref: '../../schemas/customers/CustomerPoint.yaml'
     '404':
       description: 対象リソースが存在しない場合
       content:
         application/json:
           schema:
-            $ref: './../../schemas/common/Error.yaml'
+            $ref: '../../schemas/common/Error.yaml'
   security:
     - AppAccessToken:
         - pos.customers:read
@@ -46,26 +46,26 @@ put:
     content:
       application/json:
         schema:
-          $ref: './../../schemas/customers/CustomerPointUpdate.yaml'
+          $ref: '../../schemas/customers/CustomerPointUpdate.yaml'
   responses:
     '200':
       description: 更新成功
       content:
         application/json:
           schema:
-            $ref: './../../schemas/customers/CustomerPoint.yaml'
+            $ref: '../../schemas/customers/CustomerPoint.yaml'
     '400':
       description: 入力チェックエラーの場合
       content:
         application/json:
           schema:
-            $ref: './../../schemas/common/Error.yaml'
+            $ref: '../../schemas/common/Error.yaml'
     '404':
       description: 対象リソースが存在しない場合
       content:
         application/json:
           schema:
-            $ref: './../../schemas/common/Error.yaml'
+            $ref: '../../schemas/common/Error.yaml'
   security:
     - AppAccessToken:
         - pos.customers:write
@@ -89,26 +89,26 @@ patch:
     content:
       application/json:
         schema:
-          $ref: './../../schemas/customers/CustomerPointRelativeUpdate.yaml'
+          $ref: '../../schemas/customers/CustomerPointRelativeUpdate.yaml'
   responses:
     '200':
       description: 更新成功
       content:
         application/json:
           schema:
-            $ref: './../../schemas/customers/CustomerPoint.yaml'
+            $ref: '../../schemas/customers/CustomerPoint.yaml'
     '400':
       description: 入力チェックエラーの場合
       content:
         application/json:
           schema:
-            $ref: './../../schemas/common/Error.yaml'
+            $ref: '../../schemas/common/Error.yaml'
     '404':
       description: 対象リソースが存在しない場合
       content:
         application/json:
           schema:
-            $ref: './../../schemas/common/Error.yaml'
+            $ref: '../../schemas/common/Error.yaml'
   security:
     - AppAccessToken:
         - pos.customers:write

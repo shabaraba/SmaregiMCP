@@ -66,7 +66,7 @@ get:
           schema:
             type: array
             items:
-              $ref: './../../schemas/sales/BargainStore.yaml'
+              $ref: '../../schemas/sales/BargainStore.yaml'
 
 post:
   summary: セール店舗登録
@@ -98,17 +98,17 @@ post:
     content:
       application/json:
         schema:
-          $ref: './../../schemas/sales/BargainStoreCreate.yaml'
+          $ref: '../../schemas/sales/BargainStoreCreate.yaml'
   responses:
     '200':
       description: 取得成功
       content:
         application/json:
           schema:
-            $ref: './../../schemas/sales/BargainStore.yaml'
+            $ref: '../../schemas/sales/BargainStore.yaml'
     '400':
       description: 指定された店舗が登録済みの場合
       content:
         application/json:
           schema:
-            $ref: './../../schemas/common/Error.yaml'
+            $ref: '../../schemas/common/Error.yaml'

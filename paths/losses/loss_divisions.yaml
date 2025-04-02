@@ -39,7 +39,7 @@ get:
           schema:
             type: array
             items:
-              $ref: './../../schemas/losses/LossDivision.yaml'
+              $ref: '../../schemas/losses/LossDivision.yaml'
   security:
     - AppAccessToken:
         - pos.losses:read
@@ -56,20 +56,20 @@ post:
     content:
       application/json:
         schema:
-          $ref: './../../schemas/losses/LossDivisionCreate.yaml'
+          $ref: '../../schemas/losses/LossDivisionCreate.yaml'
   responses:
     '200':
       description: 登録成功
       content:
         application/json:
           schema:
-            $ref: './../../schemas/losses/LossDivision.yaml'
+            $ref: '../../schemas/losses/LossDivision.yaml'
     '400':
       description: 入力チェックエラーの場合
       content:
         application/json:
           schema:
-            $ref: './../../schemas/common/Error.yaml'
+            $ref: '../../schemas/common/Error.yaml'
   security:
     - AppAccessToken:
         - pos.losses:write

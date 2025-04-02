@@ -74,7 +74,7 @@ get:
           schema:
             type: array
             items:
-              $ref: './../../schemas/stores/Store.yaml'
+              $ref: '../../schemas/stores/Store.yaml'
 
 post:
   summary: 店舗登録
@@ -100,17 +100,17 @@ post:
     content:
       application/json:
         schema:
-          $ref: './../../schemas/stores/StoreCreate.yaml'
+          $ref: '../../schemas/stores/StoreCreate.yaml'
   responses:
     '200':
       description: 登録成功
       content:
         application/json:
           schema:
-            $ref: './../../schemas/stores/Store.yaml'
+            $ref: '../../schemas/stores/Store.yaml'
     '400':
       description: 入力チェックエラーの場合
       content:
         application/json:
           schema:
-            $ref: './../../schemas/common/Error.yaml'
+            $ref: '../../schemas/common/Error.yaml'

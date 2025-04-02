@@ -104,13 +104,13 @@ get:
           schema:
             type: array
             items:
-              $ref: './../../schemas/suppliers/SupplierProduct.yaml'
+              $ref: '../../schemas/suppliers/SupplierProduct.yaml'
     '404':
       description: 対象仕入先が存在しない場合
       content:
         application/json:
           schema:
-            $ref: './../../schemas/common/Error.yaml'
+            $ref: '../../schemas/common/Error.yaml'
   security:
     - AppAccessToken:
         - pos.suppliers:read
@@ -134,26 +134,26 @@ post:
     content:
       application/json:
         schema:
-          $ref: './../../schemas/suppliers/SupplierProductCreate.yaml'
+          $ref: '../../schemas/suppliers/SupplierProductCreate.yaml'
   responses:
     '200':
       description: 登録成功
       content:
         application/json:
           schema:
-            $ref: './../../schemas/suppliers/SupplierProduct.yaml'
+            $ref: '../../schemas/suppliers/SupplierProduct.yaml'
     '400':
       description: 入力チェックエラーの場合
       content:
         application/json:
           schema:
-            $ref: './../../schemas/common/Error.yaml'
+            $ref: '../../schemas/common/Error.yaml'
     '404':
       description: 対象仕入先が存在しない場合
       content:
         application/json:
           schema:
-            $ref: './../../schemas/common/Error.yaml'
+            $ref: '../../schemas/common/Error.yaml'
   security:
     - AppAccessToken:
         - pos.suppliers:write

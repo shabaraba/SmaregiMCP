@@ -43,15 +43,15 @@ get:
               customerTypeSections:
                 type: array
                 items:
-                  $ref: './../../schemas/customer_classification/CustomerTypeSection.yaml'
+                  $ref: '../../schemas/customer_classification/CustomerTypeSection.yaml'
               pagination:
-                $ref: './../../schemas/common/Pagination.yaml'
+                $ref: '../../schemas/common/Pagination.yaml'
     '401':
       description: 認証エラー
       content:
         application/json:
           schema:
-            $ref: './../../schemas/common/Error.yaml'
+            $ref: '../../schemas/common/Error.yaml'
   security:
     - AppAccessToken:
         - pos.customers:read
@@ -68,7 +68,7 @@ patch:
     content:
       application/json:
         schema:
-          $ref: './../../schemas/customer_classification/CustomerTypeSectionUpdate.yaml'
+          $ref: '../../schemas/customer_classification/CustomerTypeSectionUpdate.yaml'
     required: true
   responses:
     '200':
@@ -78,19 +78,19 @@ patch:
       content:
         application/json:
           schema:
-            $ref: './../../schemas/common/Error.yaml'
+            $ref: '../../schemas/common/Error.yaml'
     '401':
       description: 認証エラー
       content:
         application/json:
           schema:
-            $ref: './../../schemas/common/Error.yaml'
+            $ref: '../../schemas/common/Error.yaml'
     '404':
       description: 指定されたセクションが存在しない
       content:
         application/json:
           schema:
-            $ref: './../../schemas/common/Error.yaml'
+            $ref: '../../schemas/common/Error.yaml'
   security:
     - AppAccessToken:
         - pos.customers:write

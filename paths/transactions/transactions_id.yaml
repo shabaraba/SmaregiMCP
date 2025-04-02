@@ -17,13 +17,13 @@ get:
       content:
         application/json:
           schema:
-            $ref: "#/components/schemas/Transaction"
+            $ref: "../../schemas/transactions/Transaction.yaml"
     "404":
       description: 指定された取引が見つからない
       content:
         application/json:
           schema:
-            $ref: "#/components/schemas/Error"
+            $ref: "../../schemas/common/Error.yaml"
   security:
     - AppAccessToken:
         - pos.transactions:read
@@ -69,13 +69,13 @@ put:
       content:
         application/json:
           schema:
-            $ref: "#/components/schemas/Error"
+            $ref: "../../schemas/common/Error.yaml"
     "404":
       description: 指定された取引が見つからない
       content:
         application/json:
           schema:
-            $ref: "#/components/schemas/Error"
+            $ref: "../../schemas/common/Error.yaml"
   security:
     - AppAccessToken:
         - pos.transactions:write
@@ -103,13 +103,13 @@ delete:
       content:
         application/json:
           schema:
-            $ref: "#/components/schemas/Error"
+            $ref: "../../schemas/common/Error.yaml"
     "409":
       description: 取引が既に処理済みなど、削除できない状態である
       content:
         application/json:
           schema:
-            $ref: "#/components/schemas/Error"
+            $ref: "../../schemas/common/Error.yaml"
   security:
     - AppAccessToken:
         - pos.transactions:write

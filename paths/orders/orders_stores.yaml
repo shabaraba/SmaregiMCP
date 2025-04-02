@@ -34,7 +34,7 @@ get:
           schema:
             type: array
             items:
-              $ref: './../../schemas/orders/OrderStore.yaml'
+              $ref: '../../schemas/orders/OrderStore.yaml'
   security:
     - AppAccessToken:
         - pos.orders:read
