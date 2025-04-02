@@ -1,0 +1,38 @@
+type: object
+description: ユーザー情報
+properties:
+  sub:
+    type: string
+    description: 契約またはユーザーの識別子
+    example: "smaregi:abc123"
+  contract:
+    type: object
+    description: 契約情報
+    properties:
+      id:
+        type: string
+        description: 契約ID
+        example: "smaregi"
+      user_id:
+        type: string
+        description: 契約ID内においてのユーザー識別子
+        example: "user_123456"
+      is_owner:
+        type: boolean
+        description: ユーザーが契約のオーナーであるか
+        example: true
+  name:
+    type: string
+    description: ログインユーザーのアカウントに登録されている表示用フルネーム
+    example: "スマレジ 太郎"
+  email:
+    type: string
+    description: ログインユーザーのアカウントに登録されているメールアドレス
+    example: "taro@example.com"
+  email_verified:
+    type: boolean
+    description: メールアドレスが検証済みか
+    example: true
+required:
+  - sub
+  - contract

@@ -1,0 +1,28 @@
+post:
+  summary: ユーザー情報を取得
+  description: UserInfoエンドポイントからログインユーザー情報を取得します。アクセストークンにopenidスコープが必要です。
+  operationId: getUserInfo
+  tags:
+    - 認証
+  security:
+    - UserAccessToken:
+      - openid
+  responses:
+    '200':
+      description: 正常レスポンス
+      content:
+        application/json:
+          schema:
+            $ref: '../../schemas/auth/UserInfo.yaml'
+    '400':
+      description: Bad Request
+      content:
+        application/json:
+          schema:
+            $ref: '../../schemas/common/Error.yaml'
+    '401':
+      description: Unauthorized
+      content:
+        application/json:
+          schema:
+            $ref: '../../schemas/common/Error.yaml'

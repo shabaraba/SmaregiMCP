@@ -1,0 +1,54 @@
+post:
+  summary: アプリアクセストークンを取得
+  description: |
+    アプリとしてアプリユーザーのデータにAPIアクセスするためのアプリアクセストークンを取得します。
+    クライアントIDとクライアントシークレットは、スマレジ・デベロッパーズでアプリの「環境設定」ページから確認できます。
+  operationId: getAppAccessToken
+  tags:
+    - 認証
+  parameters:
+    - name: contractId
+      in: path
+      description: アプリユーザーの契約ID
+      required: true
+      schema:
+        type: string
+  security:
+    - BasicAuth: []
+  requestBody:
+    required: true
+    content:
+      application/x-www-form-urlencoded:
+        schema:
+          type: object
+          properties:
+            grant_type:
+              type: string
+              description: 認証フロータイプ（クライアントクレデンシャルフロー）
+              enum: [client_credentials]
+            scope:
+              type: string
+              description: 要求するAPIスコープ。複数の場合は半角スペースで結合して指定。
+              example: "pos.products:read pos.products:write"
+          required:
+            - grant_type
+            - scope
+  responses:
+    '200':
+      description: 正常レスポンス
+      content:
+        application/json:
+          schema:
+            $ref: '../../schemas/auth/AccessTokenResponse.yaml'
+    '400':
+      description: Bad Request
+      content:
+        application/json:
+          schema:
+            $ref: '../../schemas/common/Error.yaml'
+    '401':
+      description: Unauthorized
+      content:
+        application/json:
+          schema:
+            $ref: '../../schemas/common/Error.yaml'
