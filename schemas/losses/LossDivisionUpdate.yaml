@@ -1,0 +1,6 @@
+type: object
+properties:
+  lossDivisionName:
+    type: string
+    description: ロス区分名
+    maxLength: 85

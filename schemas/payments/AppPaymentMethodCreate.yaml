@@ -1,0 +1,15 @@
+type: object
+required:
+  - paymentMethodId
+  - appPaymentCode
+properties:
+  paymentMethodId:
+    type: string
+    description: 支払方法ID
+  appPaymentCode:
+    type: string
+    description: アプリ連携用支払コード
+  status:
+    type: string
+    enum: ['0', '1']
+    description: ステータス(0:無効, 1:有効)

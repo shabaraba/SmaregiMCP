@@ -1,0 +1,97 @@
+parameters:
+  - name: id
+    in: path
+    description: 入庫ID
+    required: true
+    schema:
+      type: integer
+
+get:
+  tags:
+    - 入出庫
+  summary: 入庫詳細一覧取得
+  description: 入庫詳細情報の一覧を取得します。
+  operationId: getIncomingStockDetails
+  parameters:
+    - name: limit
+      in: query
+      description: 取得件数
+      schema:
+        type: integer
+        default: 20
+    - name: page
+      in: query
+      description: ページ番号
+      schema:
+        type: integer
+        default: 1
+  responses:
+    '200':
+      description: 成功
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              incomingStockDetails:
+                type: array
+                items:
+                  $ref: '../../schemas/stocks/IncomingStockDetail.yaml'
+              pagination:
+                $ref: '../../schemas/common/Pagination.yaml'
+    '401':
+      description: 認証エラー
+      content:
+        application/json:
+          schema:
+            $ref: '../../schemas/common/Error.yaml'
+    '404':
+      description: 指定されたIDの入庫情報が存在しない
+      content:
+        application/json:
+          schema:
+            $ref: '../../schemas/common/Error.yaml'
+  security:
+    - AppAccessToken:
+        - pos.transfers:read
+    - UserAccessToken:
+        - pos.transfers:read
+
+patch:
+  tags:
+    - 入出庫
+  summary: 入庫詳細更新
+  description: 入庫詳細情報を更新します。
+  operationId: updateIncomingStockDetails
+  requestBody:
+    content:
+      application/json:
+        schema:
+          $ref: '../../schemas/stocks/IncomingStockDetailUpdate.yaml'
+    required: true
+  responses:
+    '200':
+      description: 成功
+    '400':
+      description: バリデーションエラー
+      content:
+        application/json:
+          schema:
+            $ref: '../../schemas/common/Error.yaml'
+    '401':
+      description: 認証エラー
+      content:
+        application/json:
+          schema:
+            $ref: '../../schemas/common/Error.yaml'
+    '404':
+      description: 指定されたIDの入庫情報が存在しない
+      content:
+        application/json:
+          schema:
+            $ref: '../../schemas/common/Error.yaml'
+  security:
+    - AppAccessToken:
+        - pos.transfers:write
+    - UserAccessToken:
+        - pos.transfers:write

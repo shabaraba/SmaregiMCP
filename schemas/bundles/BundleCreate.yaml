@@ -1,0 +1,98 @@
+type: object
+description: バンドル販売登録情報
+properties:
+  productBundleGroupName:
+    type: string
+    description: 商品バンドルグループ名
+    maxLength: 85
+    example: "春の特別セット"
+  type:
+    type: string
+    description: 種類 (1:バンドル売り+販売金額指定、2:バンドル売り+値引金額指定、3:バンドル売り+割引率指定、4:セット売り+販売金額指定)
+    enum: ["1", "2", "3", "4"]
+    example: "1"
+  taxDivision:
+    type: string
+    description: 税区分 (0:税込、1:税抜、2:非課税)
+    enum: ["0", "1", "2"]
+    example: "1"
+  reduceTaxId:
+    type: string
+    description: |
+      軽減税率ID
+      標準:null（または未設定）
+      軽減:10000001（特定商品の軽減税率適用）
+      選択[標準]:10000002（状態による適用[適用しない]）
+      選択[軽減]:10000003（状態による適用[適用する]）
+      選択[選択]:10000004（状態による適用[都度選択する]）
+    example: "10000001"
+  quantity:
+    type: string
+    description: 数量
+    example: "2"
+  value:
+    type: string
+    description: 種類=1,4の時は販売金額、種類=2の時は値引金額、種類=3の時は割引率
+    example: "1000"
+  reduceTaxValue:
+    type: string
+    description: 軽減税率適用時の値
+    example: "900"
+  priority:
+    type: string
+    description: 優先順位
+    example: "1"
+  termFrom:
+    type: string
+    description: 適用開始日 [YYYY-MM-DD]
+    format: date
+    example: "2025-04-01"
+  termTo:
+    type: string
+    description: 適用終了日 [YYYY-MM-DD]
+    format: date
+    example: "2025-04-30"
+  pointNotApplicable:
+    type: string
+    description: ポイント対象区分 (0:ポイント対象、1:ポイント対象外)
+    enum: ["0", "1"]
+    example: "0"
+  taxFreeDivision:
+    type: string
+    description: 免税区分 (0:対象外、1:一般品、2:消耗品)
+    enum: ["0", "1", "2"]
+    example: "0"
+  calcDiscount:
+    type: string
+    description: 値引割引計算対象区分 (0:対象外、1:対象)
+    enum: ["0", "1"]
+    example: "1"
+  products:
+    type: array
+    description: 対象商品
+    items:
+      type: object
+      required:
+        - categoryId
+        - productId
+        - productGroupCode
+      properties:
+        categoryId:
+          type: string
+          description: 部門ID
+          example: "101"
+        productId:
+          type: string
+          description: 商品ID
+          example: "10001"
+        productGroupCode:
+          type: string
+          description: 商品グループコード
+          example: "SPR2024"
+required:
+  - productBundleGroupName
+  - type
+  - termFrom
+  - termTo
+  - value
+  - products

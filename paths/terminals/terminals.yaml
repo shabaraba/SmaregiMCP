@@ -1,0 +1,132 @@
+get:
+  tags:
+    - レジ端末
+  summary: レジ端末一覧取得
+  description: レジ端末情報一覧を取得します。
+  parameters:
+    - name: fields
+      in: query
+      description: 取得したいフィールド名（カンマ区切りで指定可）
+      schema:
+        type: array
+        items:
+          type: string
+        example: [terminalId, terminalCode, terminalName]
+    - name: sort
+      in: query
+      description: 並び順（カンマ区切りで指定可）
+      schema:
+        type: string
+        example: terminalCode,ASC
+    - name: limit
+      in: query
+      description: 取得上限数
+      schema:
+        type: integer
+        example: 50
+    - name: page
+      in: query
+      description: ページ番号
+      schema:
+        type: integer
+        example: 1
+    - name: terminal_id
+      in: query
+      description: レジ端末ID
+      schema:
+        type: string
+    - name: terminal_code
+      in: query
+      description: レジ端末コード
+      schema:
+        type: string
+    - name: terminal_name
+      in: query
+      description: レジ端末名（部分一致）
+      schema:
+        type: string
+    - name: store_id
+      in: query
+      description: 店舗ID
+      schema:
+        type: string
+    - name: terminal_type
+      in: query
+      description: レジ端末種別(1:PC, 2:iPad, 3:ハンディ)
+      schema:
+        type: string
+        enum: ['1', '2', '3']
+    - name: status
+      in: query
+      description: ステータス(0:無効, 1:有効)
+      schema:
+        type: string
+        enum: ['0', '1']
+    - name: ins_date_time-from
+      in: query
+      description: 登録日時(From)
+      schema:
+        type: string
+        format: date-time
+    - name: ins_date_time-to
+      in: query
+      description: 登録日時(To)
+      schema:
+        type: string
+        format: date-time
+    - name: upd_date_time-from
+      in: query
+      description: 更新日時(From)
+      schema:
+        type: string
+        format: date-time
+    - name: upd_date_time-to
+      in: query
+      description: 更新日時(To)
+      schema:
+        type: string
+        format: date-time
+  responses:
+    '200':
+      description: 取得成功
+      content:
+        application/json:
+          schema:
+            type: array
+            items:
+              $ref: '../../schemas/terminals/Terminal.yaml'
+  security:
+    - AppAccessToken:
+        - pos.staffs:read
+    - UserAccessToken:
+        - pos.staffs:read
+
+post:
+  tags:
+    - レジ端末
+  summary: レジ端末登録
+  description: レジ端末情報を登録します。
+  requestBody:
+    required: true
+    content:
+      application/json:
+        schema:
+          $ref: '../../schemas/terminals/TerminalCreate.yaml'
+  responses:
+    '200':
+      description: 登録成功
+      content:
+        application/json:
+          schema:
+            $ref: '../../schemas/terminals/Terminal.yaml'
+    '400':
+      description: 入力チェックエラーの場合
+      content:
+        application/json:
+          schema:
+            $ref: '../../schemas/common/Error.yaml'
+  security:
+    - AppAccessToken:
+        - pos.staffs:write
+    - UserAccessToken:
+        - pos.staffs:write

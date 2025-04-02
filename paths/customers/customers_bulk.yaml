@@ -1,0 +1,69 @@
+post:
+  tags:
+    - 会員
+  summary: 会員一括登録
+  description: 会員情報を一括で登録します。
+  requestBody:
+    required: true
+    content:
+      application/json:
+        schema:
+          $ref: '../../schemas/customers/CustomerBulkCreate.yaml'
+  responses:
+    '200':
+      description: 一括登録成功
+      content:
+        application/json:
+          schema:
+            type: array
+            items:
+              $ref: '../../schemas/customers/Customer.yaml'
+    '400':
+      description: 入力チェックエラーの場合
+      content:
+        application/json:
+          schema:
+            $ref: '../../schemas/common/Error.yaml'
+  security:
+    - AppAccessToken:
+        - pos.customers:write
+    - UserAccessToken:
+        - pos.customers:write
+
+put:
+  tags:
+    - 会員
+  summary: 会員一括更新
+  description: 会員情報を一括で更新します。
+  requestBody:
+    required: true
+    content:
+      application/json:
+        schema:
+          $ref: '../../schemas/customers/CustomerBulkUpdate.yaml'
+  responses:
+    '200':
+      description: 一括更新成功
+      content:
+        application/json:
+          schema:
+            type: array
+            items:
+              $ref: '../../schemas/customers/Customer.yaml'
+    '400':
+      description: 入力チェックエラーの場合
+      content:
+        application/json:
+          schema:
+            $ref: '../../schemas/common/Error.yaml'
+    '404':
+      description: 対象リソースが存在しない場合
+      content:
+        application/json:
+          schema:
+            $ref: '../../schemas/common/Error.yaml'
+  security:
+    - AppAccessToken:
+        - pos.customers:write
+    - UserAccessToken:
+        - pos.customers:write

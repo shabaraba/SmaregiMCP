@@ -1,0 +1,78 @@
+type: object
+description: 部門登録情報
+properties:
+  categoryCode:
+    type: string
+    description: 部門コード (20文字以内)
+    maxLength: 20
+    pattern: ^[ -~]+$
+    example: 'FOOD'
+  categoryName:
+    type: string
+    description: 部門名 (85文字以内)
+    maxLength: 85
+    example: '食品'
+  categoryAbbr:
+    type: string
+    description: 部門名略称 (85文字以内)
+    maxLength: 85
+    example: '食'
+  displaySequence:
+    type: string
+    description: 表示順序 (0-999999999)
+    pattern: ^[0-9]{1,9}$
+    example: '1'
+  displayFlag:
+    type: string
+    description: 端末表示フラグ (0:表示しない、1:表示する)
+    enum: ['0', '1']
+    default: '1'
+    example: '1'
+  taxDivision:
+    type: string
+    description: 税区分 (0:税込、1:税抜、2:非課税)
+    enum: ['0', '1', '2']
+    example: '1'
+  pointNotApplicable:
+    type: string
+    description: ポイント対象区分 (0:ポイント対象、1:ポイント対象外)
+    enum: ['0', '1']
+    default: '0'
+    example: '0'
+  taxFreeDivision:
+    type: string
+    description: 免税区分 (0:対象外、1:一般品、2:消耗品)
+    enum: ['0', '1', '2']
+    default: '0'
+    example: '0'
+  reduceTaxId:
+    type: string
+    description: |
+      軽減税率ID
+      標準:null（または未設定）
+      軽減:10000001（特定商品の軽減税率適用）
+      選択[標準]:10000002（状態による適用[適用しない]）
+      選択[軽減]:10000003（状態による適用[適用する]）
+      選択[選択]:10000004（状態による適用[都度選択する]）
+    example: '10000001'
+  color:
+    type: string
+    description: 端末表示カラー (#000000形式)
+    maxLength: 7
+    pattern: #([0-9a-fA-F]{1,6})$
+    example: '#FF0000'
+  categoryGroupId:
+    type: string
+    description: 部門グループID
+    example: '1'
+  parentCategoryId:
+    type: string
+    description: 親部門ID
+    example: '1'
+  tag:
+    type: string
+    description: タグ (85文字以内)
+    maxLength: 85
+    example: '季節商品'
+required:
+  - categoryName

@@ -1,0 +1,16 @@
+type: object
+properties:
+  lossDivisionId:
+    type: string
+    description: ロス区分ID
+  lossDivisionName:
+    type: string
+    description: ロス区分名
+  insDateTime:
+    type: string
+    format: date-time
+    description: 登録日時
+  updDateTime:
+    type: string
+    format: date-time
+    description: 更新日時

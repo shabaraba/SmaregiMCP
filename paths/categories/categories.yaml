@@ -1,0 +1,107 @@
+get:
+  summary: 部門一覧取得
+  description: |
+    部門情報一覧を取得します。
+    
+    Plans:
+    スタンダード・プレミアム・プレミアムプラス・フードビジネス・リテールビジネス
+    
+    sortで使用可能なパラメータ
+    - categoryId：部門ID
+    - categoryCode：部門コード
+    - level：階層レベル
+    - displaySequence：表示順
+    - updDateTime：更新日時
+  tags:
+    - 部門
+  security:
+    - AppAccessToken: [pos.products:read]
+    - UserAccessToken: [pos.products:read]
+  parameters:
+    - name: contract_id
+      in: path
+      required: true
+      schema:
+        type: string
+      description: 契約ID
+    - name: fields
+      in: query
+      schema:
+        type: array
+        items:
+          type: string
+      description: |
+        検索パラメータ（カンマ区切りで指定可）
+        Response項目を指定可能
+        ※一部項目(withで指定する項目、2階層目以降の項目)については指定不可
+    - name: sort
+      in: query
+      schema:
+        type: string
+      description: |
+        並び順（カンマ区切りで指定可）
+        指定可能な項目については上記参照
+    - name: limit
+      in: query
+      schema:
+        type: integer
+      description: 上限数
+    - name: page
+      in: query
+      schema:
+        type: integer
+      description: ページ
+    - name: category_code
+      in: query
+      schema:
+        type: string
+      description: 部門コード
+    - name: level
+      in: query
+      schema:
+        type: string
+        enum: ['1', '2', '3']
+      description: 階層レベル
+  responses:
+    '200':
+      description: 取得成功
+      content:
+        application/json:
+          schema:
+            type: array
+            items:
+              $ref: '../../schemas/categories/Category.yaml'
+post:
+  summary: 部門登録
+  description: |
+    部門情報を登録します。
+    
+    Plans:
+    スタンダード・プレミアム・プレミアムプラス・フードビジネス・リテールビジネス
+  tags:
+    - 部門
+  security:
+    - AppAccessToken: [pos.products:write]
+    - UserAccessToken: [pos.products:write]
+  parameters:
+    - name: contract_id
+      in: path
+      required: true
+      schema:
+        type: string
+      description: 契約ID
+  requestBody:
+    required: true
+    content:
+      application/json:
+        schema:
+          $ref: '../../schemas/categories/CategoryCreate.yaml'
+  responses:
+    '200':
+      description: 更新成功
+      content:
+        application/json:
+          schema:
+            $ref: '../../schemas/categories/Category.yaml'
+    '400':
+      description: 入力チェックエラーの場合

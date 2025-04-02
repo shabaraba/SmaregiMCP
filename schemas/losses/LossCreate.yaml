@@ -1,0 +1,43 @@
+type: object
+required:
+  - storeId
+  - lossDivisionId
+  - lossDate
+  - details
+properties:
+  storeId:
+    type: string
+    description: 店舗ID
+  lossDivisionId:
+    type: string
+    description: ロス区分ID
+  lossDate:
+    type: string
+    format: date
+    description: ロス日
+  memo:
+    type: string
+    description: メモ
+    maxLength: 255
+  details:
+    type: array
+    description: ロス明細
+    items:
+      type: object
+      required:
+        - productId
+        - quantity
+      properties:
+        productId:
+          type: string
+          description: 商品ID
+        quantity:
+          type: string
+          description: 数量
+        unitCost:
+          type: string
+          description: 単価
+        memo:
+          type: string
+          description: メモ
+          maxLength: 255

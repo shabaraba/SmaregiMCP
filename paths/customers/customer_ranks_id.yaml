@@ -1,0 +1,100 @@
+get:
+  tags:
+    - 会員
+  summary: 会員ランク情報取得
+  description: 指定したIDの会員ランク情報を取得します。
+  parameters:
+    - name: id
+      in: path
+      required: true
+      description: 会員ランクID
+      schema:
+        type: string
+  responses:
+    '200':
+      description: 取得成功
+      content:
+        application/json:
+          schema:
+            $ref: '../../schemas/customers/CustomerRank.yaml'
+    '404':
+      description: 対象リソースが存在しない場合
+      content:
+        application/json:
+          schema:
+            $ref: '../../schemas/common/Error.yaml'
+  security:
+    - AppAccessToken:
+        - pos.customers:read
+    - UserAccessToken:
+        - pos.customers:read
+
+put:
+  tags:
+    - 会員
+  summary: 会員ランク情報更新
+  description: 指定したIDの会員ランク情報を更新します。
+  parameters:
+    - name: id
+      in: path
+      required: true
+      description: 会員ランクID
+      schema:
+        type: string
+  requestBody:
+    required: true
+    content:
+      application/json:
+        schema:
+          $ref: '../../schemas/customers/CustomerRankUpdate.yaml'
+  responses:
+    '200':
+      description: 更新成功
+      content:
+        application/json:
+          schema:
+            $ref: '../../schemas/customers/CustomerRank.yaml'
+    '400':
+      description: 入力チェックエラーの場合
+      content:
+        application/json:
+          schema:
+            $ref: '../../schemas/common/Error.yaml'
+    '404':
+      description: 対象リソースが存在しない場合
+      content:
+        application/json:
+          schema:
+            $ref: '../../schemas/common/Error.yaml'
+  security:
+    - AppAccessToken:
+        - pos.customers:write
+    - UserAccessToken:
+        - pos.customers:write
+
+delete:
+  tags:
+    - 会員
+  summary: 会員ランク情報削除
+  description: 指定したIDの会員ランク情報を削除します。
+  parameters:
+    - name: id
+      in: path
+      required: true
+      description: 会員ランクID
+      schema:
+        type: string
+  responses:
+    '204':
+      description: 削除成功
+    '404':
+      description: 対象リソースが存在しない場合
+      content:
+        application/json:
+          schema:
+            $ref: '../../schemas/common/Error.yaml'
+  security:
+    - AppAccessToken:
+        - pos.customers:write
+    - UserAccessToken:
+        - pos.customers:write

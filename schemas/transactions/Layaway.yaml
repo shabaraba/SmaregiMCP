@@ -1,0 +1,149 @@
+type: object
+description: 預かり取引情報
+properties:
+  id:
+    type: integer
+    format: int64
+    description: 預かり取引ID
+  storeId:
+    type: integer
+    format: int64
+    description: 店舗ID
+  terminalId:
+    type: integer
+    format: int64
+    description: 端末ID
+  customerId:
+    type: integer
+    format: int64
+    description: 会員ID
+    nullable: true
+  customerCode:
+    type: string
+    description: 会員コード
+    nullable: true
+  customerName:
+    type: string
+    description: 会員名
+    nullable: true
+  staffId:
+    type: integer
+    format: int64
+    description: スタッフID
+    nullable: true
+  staffCode:
+    type: string
+    description: スタッフコード
+    nullable: true
+  staffName:
+    type: string
+    description: スタッフ名
+    nullable: true
+  layawayDateTime:
+    type: string
+    format: date-time
+    description: 預かり日時
+  totalAmount:
+    type: number
+    format: double
+    description: 合計金額
+  taxIncludedAmount:
+    type: number
+    format: double
+    description: 内税額
+  taxExcludedAmount:
+    type: number
+    format: double
+    description: 外税額
+  status:
+    type: integer
+    description: |-
+      ステータス
+      * 1: 預かり
+      * 2: 終了
+  memo:
+    type: string
+    description: メモ
+    nullable: true
+  transactionId:
+    type: integer
+    format: int64
+    description: 取引ID
+    nullable: true
+  items:
+    type: array
+    description: 預かり商品
+    items:
+      type: object
+      properties:
+        productId:
+          type: integer
+          format: int64
+          description: 商品ID
+          nullable: true
+        productCode:
+          type: string
+          description: 商品コード
+          nullable: true
+        productName:
+          type: string
+          description: 商品名
+        categoryId:
+          type: integer
+          format: int64
+          description: 部門ID
+          nullable: true
+        categoryName:
+          type: string
+          description: 部門名
+          nullable: true
+        price:
+          type: number
+          format: double
+          description: 単価
+        quantity:
+          type: number
+          format: double
+          description: 数量
+        subtotalAmount:
+          type: number
+          format: double
+          description: 小計金額
+        taxRate:
+          type: number
+          format: double
+          description: 税率
+        taxType:
+          type: integer
+          description: |-
+            税種別
+            * 1: 内税
+            * 2: 外税
+        taxIncludedAmount:
+          type: number
+          format: double
+          description: 内税額
+        taxExcludedAmount:
+          type: number
+          format: double
+          description: 外税額
+  createdDateTime:
+    type: string
+    format: date-time
+    description: 作成日時
+  updatedDateTime:
+    type: string
+    format: date-time
+    description: 更新日時
+required:
+  - id
+  - storeId
+  - terminalId
+  - layawayDateTime
+  - totalAmount
+  - taxIncludedAmount
+  - taxExcludedAmount
+  - status
+  - items
+  - createdDateTime
+  - updatedDateTime

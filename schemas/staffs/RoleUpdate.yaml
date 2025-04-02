@@ -1,0 +1,24 @@
+type: object
+properties:
+  roleName:
+    type: string
+    description: 役割名
+  permissions:
+    type: array
+    items:
+      type: object
+      required:
+        - permissionId
+        - value
+      properties:
+        permissionId:
+          type: string
+          description: 権限ID
+        value:
+          type: integer
+          enum: [0, 1]
+          description: 権限値(0:無効, 1:有効)
+    description: 権限リスト
+  note:
+    type: string
+    description: 備考

@@ -1,0 +1,125 @@
+get:
+  tags:
+    - セール
+  summary: クーポン一覧取得
+  description: 条件を指定して、クーポン情報の一覧を取得します。
+  operationId: getCoupons
+  parameters:
+    - name: coupon_id
+      in: query
+      description: クーポンID
+      schema:
+        type: integer
+    - name: coupon_name
+      in: query
+      description: クーポン名
+      schema:
+        type: string
+    - name: start_date_from
+      in: query
+      description: 開始日（FROM）（YYYY-MM-DD）
+      schema:
+        type: string
+        format: date
+    - name: start_date_to
+      in: query
+      description: 開始日（TO）（YYYY-MM-DD）
+      schema:
+        type: string
+        format: date
+    - name: end_date_from
+      in: query
+      description: 終了日（FROM）（YYYY-MM-DD）
+      schema:
+        type: string
+        format: date
+    - name: end_date_to
+      in: query
+      description: 終了日（TO）（YYYY-MM-DD）
+      schema:
+        type: string
+        format: date
+    - name: limit
+      in: query
+      description: 取得件数
+      schema:
+        type: integer
+        default: 20
+    - name: page
+      in: query
+      description: ページ番号
+      schema:
+        type: integer
+        default: 1
+  responses:
+    '200':
+      description: 成功
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              couponInfos:
+                type: array
+                items:
+                  $ref: '../../schemas/coupons/Coupon.yaml'
+              pagination:
+                $ref: '../../schemas/common/Pagination.yaml'
+    '400':
+      description: バリデーションエラー
+      content:
+        application/json:
+          schema:
+            $ref: '../../schemas/common/Error.yaml'
+    '401':
+      description: 認証エラー
+      content:
+        application/json:
+          schema:
+            $ref: '../../schemas/common/Error.yaml'
+  security:
+    - AppAccessToken:
+        - pos.products:read
+    - UserAccessToken:
+        - pos.products:read
+
+post:
+  tags:
+    - セール
+  summary: クーポン登録
+  description: クーポン情報を登録します。
+  operationId: createCoupon
+  requestBody:
+    content:
+      application/json:
+        schema:
+          $ref: '../../schemas/coupons/CouponCreate.yaml'
+    required: true
+  responses:
+    '201':
+      description: 成功
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              id:
+                type: integer
+                description: クーポンID
+    '400':
+      description: バリデーションエラー
+      content:
+        application/json:
+          schema:
+            $ref: '../../schemas/common/Error.yaml'
+    '401':
+      description: 認証エラー
+      content:
+        application/json:
+          schema:
+            $ref: '../../schemas/common/Error.yaml'
+  security:
+    - AppAccessToken:
+        - pos.products:write
+    - UserAccessToken:
+        - pos.products:write

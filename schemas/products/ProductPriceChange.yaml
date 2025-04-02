@@ -1,0 +1,55 @@
+type: object
+description: 商品価格変更履歴情報
+properties:
+  productId:
+    type: string
+    description: 商品ID
+    example: "1"
+  storeId:
+    type: string
+    description: 店舗ID
+    example: "1"
+  priceDivision:
+    type: string
+    description: 価格区分 (1:商品単価、2:会員単価)
+    enum: ["1", "2"]
+    example: "1"
+  startDate:
+    type: string
+    format: date
+    description: 適用開始日
+    example: "2023-01-01"
+  endDate:
+    type: string
+    format: date
+    description: 適用終了日
+    example: "2023-12-31"
+  price:
+    type: string
+    description: 価格
+    example: "500"
+  oldPrice:
+    type: string
+    description: 変更前価格
+    example: "450"
+  staffId:
+    type: string
+    description: 変更スタッフID
+    example: "1"
+  staffName:
+    type: string
+    description: 変更スタッフ名
+    example: "山田太郎"
+  insDateTime:
+    type: string
+    format: date-time
+    description: 登録日時
+    example: "2023-01-01T00:00:00+09:00"
+required:
+  - productId
+  - storeId
+  - priceDivision
+  - startDate
+  - price
+  - oldPrice
+  - insDateTime

@@ -1,0 +1,29 @@
+type: object
+description: 店舗分類項目情報
+properties:
+  storeGroupItemId:
+    type: string
+    description: 店舗分類項目ID
+    example: "1"
+  storeGroupId:
+    type: string
+    description: 店舗分類ID
+    example: "1"
+  storeId:
+    type: string
+    description: 店舗ID
+    example: "101"
+  insDateTime:
+    type: string
+    description: 登録日時
+    format: date-time
+    example: "2025-01-01T10:00:00+09:00"
+  updDateTime:
+    type: string
+    description: 更新日時
+    format: date-time
+    example: "2025-01-01T10:00:00+09:00"
+required:
+  - storeGroupItemId
+  - storeGroupId
+  - storeId

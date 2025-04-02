@@ -1,0 +1,26 @@
+type: object
+properties:
+  paymentMethodCode:
+    type: string
+    description: 支払方法コード
+  paymentMethodName:
+    type: string
+    description: 支払方法名
+  paymentMethodDivisionId:
+    type: string
+    description: 支払方法区分ID
+  amountInputType:
+    type: string
+    enum: ['0', '1', '2']
+    description: 金額入力タイプ(0:不要, 1:任意, 2:必須)
+  changeType:
+    type: string
+    enum: ['0', '1', '2']
+    description: お釣り対応タイプ(0:不可, 1:可, 2:自動計算)
+  sortNo:
+    type: integer
+    description: 表示順
+  status:
+    type: string
+    enum: ['0', '1']
+    description: ステータス(0:無効, 1:有効)

@@ -1,0 +1,70 @@
+get:
+  tags:
+    - レシート
+  summary: レシート備考一覧取得
+  description: レシート備考情報の一覧を取得します。
+  operationId: getReceiptRemarks
+  responses:
+    '200':
+      description: 成功
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              receiptRemarks:
+                type: array
+                items:
+                  $ref: '../../schemas/receipt/ReceiptRemark.yaml'
+    '401':
+      description: 認証エラー
+      content:
+        application/json:
+          schema:
+            $ref: '../../schemas/common/Error.yaml'
+  security:
+    - AppAccessToken:
+        - pos.products:read
+    - UserAccessToken:
+        - pos.products:read
+
+post:
+  tags:
+    - レシート
+  summary: レシート備考登録
+  description: レシート備考情報を登録します。
+  operationId: createReceiptRemark
+  requestBody:
+    content:
+      application/json:
+        schema:
+          $ref: '../../schemas/receipt/ReceiptRemarkCreate.yaml'
+    required: true
+  responses:
+    '201':
+      description: 成功
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              id:
+                type: integer
+                description: レシート備考ID
+    '400':
+      description: バリデーションエラー
+      content:
+        application/json:
+          schema:
+            $ref: '../../schemas/common/Error.yaml'
+    '401':
+      description: 認証エラー
+      content:
+        application/json:
+          schema:
+            $ref: '../../schemas/common/Error.yaml'
+  security:
+    - AppAccessToken:
+        - pos.products:write
+    - UserAccessToken:
+        - pos.products:write

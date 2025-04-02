@@ -1,0 +1,14 @@
+type: object
+description: レシート備考登録情報
+properties:
+  text:
+    type: string
+    description: 備考文
+  displayOrder:
+    type: integer
+    description: 表示順
+  isDefault:
+    type: boolean
+    description: デフォルト設定（true:デフォルト、false:デフォルトでない）
+required:
+  - text

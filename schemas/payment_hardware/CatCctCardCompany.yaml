@@ -1,0 +1,31 @@
+type: object
+description: CAT/CCTカード会社情報
+properties:
+  id:
+    type: integer
+    description: カード会社ID
+  cardCompanyName:
+    type: string
+    description: カード会社名
+  cardCompanyCode:
+    type: string
+    description: カード会社コード
+  inputMode:
+    type: integer
+    description: 入力モード（1:カード情報必須、2:カード情報任意、3:カード情報なし）
+  displayOrder:
+    type: integer
+    description: 表示順
+  createDate:
+    type: string
+    format: date-time
+    description: 作成日時
+  updateDate:
+    type: string
+    format: date-time
+    description: 更新日時
+required:
+  - id
+  - cardCompanyName
+  - cardCompanyCode
+  - inputMode

@@ -1,0 +1,16 @@
+type: object
+description: クーポン適用商品登録情報
+properties:
+  productId:
+    type: integer
+    description: 商品ID
+  discountType:
+    type: integer
+    description: 値引き種別（1:値引き額、2:割引率、3:ポイント加算）
+  discountValue:
+    type: integer
+    description: 値引き値（値引き額、割引率、加算ポイント）
+required:
+  - productId
+  - discountType
+  - discountValue

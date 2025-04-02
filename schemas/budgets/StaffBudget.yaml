@@ -1,0 +1,41 @@
+type: object
+properties:
+  budgetId:
+    type: string
+    description: 予算ID
+  storeId:
+    type: string
+    description: 店舗ID
+  storeName:
+    type: string
+    description: 店舗名
+  staffId:
+    type: string
+    description: スタッフID
+  staffName:
+    type: string
+    description: スタッフ名
+  yearMonth:
+    type: string
+    format: date
+    description: 年月（YYYY-MM形式）
+  salesBudget:
+    type: number
+    format: float
+    description: 売上予算
+  customerCountBudget:
+    type: number
+    format: float
+    description: 客数予算
+  averageCustomerPriceBudget:
+    type: number
+    format: float
+    description: 客単価予算
+  insDateTime:
+    type: string
+    format: date-time
+    description: 登録日時
+  updDateTime:
+    type: string
+    format: date-time
+    description: 更新日時

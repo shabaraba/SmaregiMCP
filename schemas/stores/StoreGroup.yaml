@@ -1,0 +1,25 @@
+type: object
+description: 店舗分類情報
+properties:
+  storeGroupId:
+    type: string
+    description: 店舗分類ID
+    example: "1"
+  storeGroupName:
+    type: string
+    description: 店舗分類名
+    maxLength: 85
+    example: "首都圏エリア"
+  insDateTime:
+    type: string
+    description: 登録日時
+    format: date-time
+    example: "2025-01-01T10:00:00+09:00"
+  updDateTime:
+    type: string
+    description: 更新日時
+    format: date-time
+    example: "2025-01-01T10:00:00+09:00"
+required:
+  - storeGroupId
+  - storeGroupName

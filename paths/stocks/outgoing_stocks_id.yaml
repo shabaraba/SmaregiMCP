@@ -1,0 +1,104 @@
+parameters:
+  - name: id
+    in: path
+    description: 出庫ID
+    required: true
+    schema:
+      type: integer
+
+get:
+  tags:
+    - 入出庫
+  summary: 出庫取得
+  description: 出庫情報を取得します。
+  operationId: getOutgoingStock
+  responses:
+    '200':
+      description: 成功
+      content:
+        application/json:
+          schema:
+            $ref: '../../schemas/stocks/OutgoingStock.yaml'
+    '401':
+      description: 認証エラー
+      content:
+        application/json:
+          schema:
+            $ref: '../../schemas/common/Error.yaml'
+    '404':
+      description: 指定されたIDの出庫情報が存在しない
+      content:
+        application/json:
+          schema:
+            $ref: '../../schemas/common/Error.yaml'
+  security:
+    - AppAccessToken:
+        - pos.transfers:read
+    - UserAccessToken:
+        - pos.transfers:read
+
+patch:
+  tags:
+    - 入出庫
+  summary: 出庫更新
+  description: 出庫情報を更新します。
+  operationId: updateOutgoingStock
+  requestBody:
+    content:
+      application/json:
+        schema:
+          $ref: '../../schemas/stocks/OutgoingStockUpdate.yaml'
+    required: true
+  responses:
+    '200':
+      description: 成功
+    '400':
+      description: バリデーションエラー
+      content:
+        application/json:
+          schema:
+            $ref: '../../schemas/common/Error.yaml'
+    '401':
+      description: 認証エラー
+      content:
+        application/json:
+          schema:
+            $ref: '../../schemas/common/Error.yaml'
+    '404':
+      description: 指定されたIDの出庫情報が存在しない
+      content:
+        application/json:
+          schema:
+            $ref: '../../schemas/common/Error.yaml'
+  security:
+    - AppAccessToken:
+        - pos.transfers:write
+    - UserAccessToken:
+        - pos.transfers:write
+
+delete:
+  tags:
+    - 入出庫
+  summary: 出庫削除
+  description: 出庫情報を削除します。
+  operationId: deleteOutgoingStock
+  responses:
+    '204':
+      description: 成功
+    '401':
+      description: 認証エラー
+      content:
+        application/json:
+          schema:
+            $ref: '../../schemas/common/Error.yaml'
+    '404':
+      description: 指定されたIDの出庫情報が存在しない
+      content:
+        application/json:
+          schema:
+            $ref: '../../schemas/common/Error.yaml'
+  security:
+    - AppAccessToken:
+        - pos.transfers:write
+    - UserAccessToken:
+        - pos.transfers:write

@@ -1,0 +1,23 @@
+type: object
+description: 顧客タイプセクション更新情報
+properties:
+  id:
+    type: integer
+    description: 顧客タイプセクションID
+  name:
+    type: string
+    description: セクション名
+  fieldType:
+    type: integer
+    description: フィールドタイプ（1:テキスト、2:数値、3:日付、4:選択肢、5:テキストエリア）
+  isRequired:
+    type: boolean
+    description: 必須フラグ（true:必須、false:任意）
+  choices:
+    type: string
+    description: 選択肢（カンマ区切り）
+  displayOrder:
+    type: integer
+    description: 表示順
+required:
+  - id

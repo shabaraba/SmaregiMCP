@@ -1,0 +1,73 @@
+type: object
+description: 在庫変動履歴情報
+properties:
+  stockChangeId:
+    type: integer
+    description: 在庫変動ID
+  storeId:
+    type: integer
+    description: 店舗ID
+  storeName:
+    type: string
+    description: 店舗名
+  productId:
+    type: integer
+    description: 商品ID
+  productCode:
+    type: string
+    description: 商品コード
+  productName:
+    type: string
+    description: 商品名
+  barcode:
+    type: string
+    description: バーコード
+  categoryId:
+    type: integer
+    description: 部門ID
+  categoryName:
+    type: string
+    description: 部門名
+  division:
+    type: integer
+    description: 区分（1:取引、2:入庫、3:出庫、4:棚卸、5:発注、6:受注、7:ロス、8:その他）
+  divisionName:
+    type: string
+    description: 区分名
+  beforeQuantity:
+    type: number
+    format: float
+    description: 変動前在庫数
+  changeQuantity:
+    type: number
+    format: float
+    description: 変動数
+  afterQuantity:
+    type: number
+    format: float
+    description: 変動後在庫数
+  targetDate:
+    type: string
+    format: date
+    description: 変動日
+  staffId:
+    type: integer
+    description: 担当スタッフID
+  staffName:
+    type: string
+    description: 担当スタッフ名
+  refId:
+    type: integer
+    description: 関連ID（取引ID、入庫ID、出庫ID等）
+  memo:
+    type: string
+    description: メモ
+required:
+  - stockChangeId
+  - storeId
+  - productId
+  - division
+  - beforeQuantity
+  - changeQuantity
+  - afterQuantity
+  - targetDate

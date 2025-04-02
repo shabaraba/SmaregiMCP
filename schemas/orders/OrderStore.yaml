@@ -1,0 +1,11 @@
+type: object
+properties:
+  storeId:
+    type: string
+    description: 店舗ID
+  storeName:
+    type: string
+    description: 店舗名
+  storeCode:
+    type: string
+    description: 店舗コード

@@ -1,0 +1,19 @@
+type: object
+description: 出庫修正申請更新情報（承認・却下）
+properties:
+  status:
+    type: integer
+    description: 申請ステータス（2:承認済、3:却下）
+  approvalDate:
+    type: string
+    format: date
+    description: 承認/却下日
+  approvalReason:
+    type: string
+    description: 承認/却下理由
+  approvalStaffId:
+    type: integer
+    description: 承認/却下スタッフID
+required:
+  - status
+  - approvalDate

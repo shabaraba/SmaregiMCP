@@ -1,0 +1,16 @@
+type: object
+properties:
+  supplierDivisionId:
+    type: string
+    description: 仕入先区分ID
+  supplierDivisionName:
+    type: string
+    description: 仕入先区分名
+  insDateTime:
+    type: string
+    format: date-time
+    description: 登録日時
+  updDateTime:
+    type: string
+    format: date-time
+    description: 更新日時

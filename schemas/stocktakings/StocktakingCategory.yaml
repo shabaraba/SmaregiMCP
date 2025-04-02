@@ -1,0 +1,48 @@
+type: object
+description: 棚卸部門情報
+properties:
+  id:
+    type: integer
+    description: 棚卸部門ID
+  stocktakingId:
+    type: integer
+    description: 棚卸ID
+  storeId:
+    type: integer
+    description: 店舗ID
+  categoryId:
+    type: integer
+    description: 部門ID
+  categoryCode:
+    type: string
+    description: 部門コード
+  categoryName:
+    type: string
+    description: 部門名
+  isComplete:
+    type: boolean
+    description: 棚卸実施済みフラグ（true:実施済み、false:未実施）
+  productCount:
+    type: integer
+    description: 商品件数
+  countedProductCount:
+    type: integer
+    description: カウント済み商品件数
+  countedRatio:
+    type: number
+    format: float
+    description: カウント済み割合
+  createDate:
+    type: string
+    format: date-time
+    description: 作成日時
+  updateDate:
+    type: string
+    format: date-time
+    description: 更新日時
+required:
+  - id
+  - stocktakingId
+  - storeId
+  - categoryId
+  - isComplete

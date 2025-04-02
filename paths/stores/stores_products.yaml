@@ -1,0 +1,157 @@
+get:
+  summary: 商品発注点一覧取得
+  description: |
+    商品発注点情報一覧を取得します。
+    
+    Plans:
+    スタンダード・プレミアム・プレミアムプラス・フードビジネス・リテールビジネス
+  tags:
+    - 店舗
+  security:
+    - AppAccessToken: [pos.stores:read]
+    - UserAccessToken: [pos.stores:read]
+  parameters:
+    - name: contract_id
+      in: path
+      required: true
+      schema:
+        type: string
+      description: 契約ID
+    - name: store_id
+      in: path
+      required: true
+      schema:
+        type: string
+      description: 店舗ID
+    - name: fields
+      in: query
+      schema:
+        type: array
+        items:
+          type: string
+      description: |
+        検索パラメータ（カンマ区切りで指定可）
+        Response項目を指定可能
+        ※一部項目(withで指定する項目、2階層目以降の項目)については指定不可
+    - name: limit
+      in: query
+      schema:
+        type: integer
+      description: 上限数
+    - name: page
+      in: query
+      schema:
+        type: integer
+      description: ページ
+  responses:
+    '200':
+      description: 取得成功
+      content:
+        application/json:
+          schema:
+            type: array
+            items:
+              type: object
+              properties:
+                storeId:
+                  type: string
+                  description: 店舗ID
+                  example: "1"
+                productId:
+                  type: string
+                  description: 商品ID
+                  example: "101"
+                orderPoint:
+                  type: string
+                  description: 発注点
+                  example: "5"
+              required:
+                - storeId
+                - productId
+                - orderPoint
+    '404':
+      description: 指定された店舗IDが存在しない場合
+      content:
+        application/json:
+          schema:
+            $ref: '../../schemas/common/Error.yaml'
+
+post:
+  summary: 商品発注点設定
+  description: |
+    商品発注点を設定します。
+    
+    Plans:
+    スタンダード・プレミアム・プレミアムプラス・フードビジネス・リテールビジネス
+  tags:
+    - 店舗
+  security:
+    - AppAccessToken: [pos.stores:write]
+    - UserAccessToken: [pos.stores:write]
+  parameters:
+    - name: contract_id
+      in: path
+      required: true
+      schema:
+        type: string
+      description: 契約ID
+    - name: store_id
+      in: path
+      required: true
+      schema:
+        type: string
+      description: 店舗ID
+  requestBody:
+    required: true
+    content:
+      application/json:
+        schema:
+          type: object
+          properties:
+            productId:
+              type: string
+              description: 商品ID
+              example: "101"
+            orderPoint:
+              type: string
+              description: 発注点
+              example: "5"
+          required:
+            - productId
+            - orderPoint
+  responses:
+    '200':
+      description: 登録成功
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              storeId:
+                type: string
+                description: 店舗ID
+                example: "1"
+              productId:
+                type: string
+                description: 商品ID
+                example: "101"
+              orderPoint:
+                type: string
+                description: 発注点
+                example: "5"
+            required:
+              - storeId
+              - productId
+              - orderPoint
+    '400':
+      description: 入力チェックエラーの場合
+      content:
+        application/json:
+          schema:
+            $ref: '../../schemas/common/Error.yaml'
+    '404':
+      description: 指定された店舗IDが存在しない場合
+      content:
+        application/json:
+          schema:
+            $ref: '../../schemas/common/Error.yaml'

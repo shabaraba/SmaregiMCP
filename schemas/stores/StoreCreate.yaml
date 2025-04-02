@@ -1,0 +1,71 @@
+type: object
+description: 店舗登録情報
+properties:
+  storeName:
+    type: string
+    description: 店舗名
+    maxLength: 85
+    example: "東京本店"
+  storeAbbr:
+    type: string
+    description: 店舗名略称
+    maxLength: 85
+    example: "東京"
+  storeCode:
+    type: string
+    description: 店舗コード
+    maxLength: 20
+    example: "TOKYO01"
+  storeDivision:
+    type: string
+    description: 店舗区分 (0:通常店舗、1:倉庫)
+    enum: ["0", "1"]
+    default: "0"
+    example: "0"
+  postalCode:
+    type: string
+    description: 郵便番号
+    maxLength: 8
+    example: "100-0001"
+  address:
+    type: string
+    description: 住所
+    maxLength: 255
+    example: "東京都千代田区丸の内1-1-1"
+  phoneNumber:
+    type: string
+    description: 電話番号
+    maxLength: 20
+    example: "03-1234-5678"
+  faxNumber:
+    type: string
+    description: FAX番号
+    maxLength: 20
+    example: "03-1234-5679"
+  mailAddress:
+    type: string
+    description: メールアドレス
+    maxLength: 255
+    example: "tokyo@example.com"
+  openingTime:
+    type: string
+    description: 営業開始時間
+    maxLength: 5
+    example: "10:00"
+  closingTime:
+    type: string
+    description: 営業終了時間
+    maxLength: 5
+    example: "20:00"
+  regularHoliday:
+    type: string
+    description: 定休日
+    maxLength: 85
+    example: "日曜日"
+  url:
+    type: string
+    description: URL
+    maxLength: 255
+    example: "https://example.com/store/tokyo"
+required:
+  - storeName

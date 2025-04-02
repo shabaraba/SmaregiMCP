@@ -1,0 +1,46 @@
+type: object
+description: セール商品情報
+properties:
+  bargainProductId:
+    type: string
+    description: セール商品ID
+    example: "1"
+  bargainId:
+    type: string
+    description: セールID
+    example: "1"
+  targetDivision:
+    type: string
+    description: 対象区分 (1:部門、2:商品、3:グループコード)
+    enum: ["1", "2", "3"]
+    example: "2"
+  targetId:
+    type: string
+    description: 対象ID (部門ID、商品ID、グループコードのいずれか)
+    example: "10001"
+  division:
+    type: string
+    description: 割引区分 (1:割引、2:値引、3:価格指定)
+    enum: ["1", "2", "3"]
+    example: "1"
+  value:
+    type: string
+    description: 値 (割引率、値引額、または価格)
+    example: "20"
+  insDateTime:
+    type: string
+    description: 登録日時
+    format: date-time
+    example: "2025-06-15T10:00:00+09:00"
+  updDateTime:
+    type: string
+    description: 更新日時
+    format: date-time
+    example: "2025-06-15T10:00:00+09:00"
+required:
+  - bargainProductId
+  - bargainId
+  - targetDivision
+  - targetId
+  - division
+  - value

@@ -1,0 +1,100 @@
+get:
+  tags:
+    - レジ端末
+  summary: レジ端末情報取得
+  description: 指定したIDのレジ端末情報を取得します。
+  parameters:
+    - name: id
+      in: path
+      required: true
+      description: レジ端末ID
+      schema:
+        type: string
+  responses:
+    '200':
+      description: 取得成功
+      content:
+        application/json:
+          schema:
+            $ref: '../../schemas/terminals/Terminal.yaml'
+    '404':
+      description: 対象リソースが存在しない場合
+      content:
+        application/json:
+          schema:
+            $ref: '../../schemas/common/Error.yaml'
+  security:
+    - AppAccessToken:
+        - pos.staffs:read
+    - UserAccessToken:
+        - pos.staffs:read
+
+put:
+  tags:
+    - レジ端末
+  summary: レジ端末情報更新
+  description: 指定したIDのレジ端末情報を更新します。
+  parameters:
+    - name: id
+      in: path
+      required: true
+      description: レジ端末ID
+      schema:
+        type: string
+  requestBody:
+    required: true
+    content:
+      application/json:
+        schema:
+          $ref: '../../schemas/terminals/TerminalUpdate.yaml'
+  responses:
+    '200':
+      description: 更新成功
+      content:
+        application/json:
+          schema:
+            $ref: '../../schemas/terminals/Terminal.yaml'
+    '400':
+      description: 入力チェックエラーの場合
+      content:
+        application/json:
+          schema:
+            $ref: '../../schemas/common/Error.yaml'
+    '404':
+      description: 対象リソースが存在しない場合
+      content:
+        application/json:
+          schema:
+            $ref: '../../schemas/common/Error.yaml'
+  security:
+    - AppAccessToken:
+        - pos.staffs:write
+    - UserAccessToken:
+        - pos.staffs:write
+
+delete:
+  tags:
+    - レジ端末
+  summary: レジ端末情報削除
+  description: 指定したIDのレジ端末情報を削除します。
+  parameters:
+    - name: id
+      in: path
+      required: true
+      description: レジ端末ID
+      schema:
+        type: string
+  responses:
+    '204':
+      description: 削除成功
+    '404':
+      description: 対象リソースが存在しない場合
+      content:
+        application/json:
+          schema:
+            $ref: '../../schemas/common/Error.yaml'
+  security:
+    - AppAccessToken:
+        - pos.staffs:write
+    - UserAccessToken:
+        - pos.staffs:write

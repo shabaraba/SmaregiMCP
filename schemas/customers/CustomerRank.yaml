@@ -1,0 +1,36 @@
+type: object
+properties:
+  rankId:
+    type: string
+    description: 会員ランクID
+  rankName:
+    type: string
+    description: 会員ランク名
+  pointRate:
+    type: number
+    format: float
+    description: ポイント付与率
+  pointExpirationType:
+    type: string
+    enum: ['0', '1', '2']
+    description: ポイント有効期限タイプ（0:なし, 1:年月設定, 2:付与から一定期間）
+  pointExpirationMonth:
+    type: integer
+    description: ポイント有効期限月
+  pointExpirationDay:
+    type: integer
+    description: ポイント有効期限日
+  pointExpirationPeriod:
+    type: integer
+    description: ポイント有効期間（日）
+  note:
+    type: string
+    description: 備考
+  insDateTime:
+    type: string
+    format: date-time
+    description: 登録日時
+  updDateTime:
+    type: string
+    format: date-time
+    description: 更新日時

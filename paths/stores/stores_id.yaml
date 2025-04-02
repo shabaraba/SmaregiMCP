@@ -1,0 +1,140 @@
+get:
+  summary: 店舗取得
+  description: |
+    店舗情報を取得します。
+    
+    Plans:
+    スタンダード・プレミアム・プレミアムプラス・フードビジネス・リテールビジネス
+  tags:
+    - 店舗
+  security:
+    - AppAccessToken: [pos.stores:read]
+    - UserAccessToken: [pos.stores:read]
+  parameters:
+    - name: contract_id
+      in: path
+      required: true
+      schema:
+        type: string
+      description: 契約ID
+    - name: id
+      in: path
+      required: true
+      schema:
+        type: string
+      description: 店舗ID
+    - name: fields
+      in: query
+      schema:
+        type: array
+        items:
+          type: string
+      description: |
+        検索パラメータ（カンマ区切りで指定可）
+        Response項目を指定可能
+        ※一部項目(withで指定する項目、2階層目以降の項目)については指定不可
+  responses:
+    '200':
+      description: 取得成功
+      content:
+        application/json:
+          schema:
+            $ref: '../../schemas/stores/Store.yaml'
+    '404':
+      description: 指定されたIDが存在しない場合
+      content:
+        application/json:
+          schema:
+            $ref: '../../schemas/common/Error.yaml'
+
+patch:
+  summary: 店舗更新
+  description: |
+    店舗情報を更新します。
+    
+    Plans:
+    スタンダード・プレミアム・プレミアムプラス・フードビジネス・リテールビジネス
+  tags:
+    - 店舗
+  security:
+    - AppAccessToken: [pos.stores:write]
+    - UserAccessToken: [pos.stores:write]
+  parameters:
+    - name: contract_id
+      in: path
+      required: true
+      schema:
+        type: string
+      description: 契約ID
+    - name: id
+      in: path
+      required: true
+      schema:
+        type: string
+      description: 店舗ID
+  requestBody:
+    required: true
+    content:
+      application/json:
+        schema:
+          $ref: '../../schemas/stores/StoreUpdate.yaml'
+  responses:
+    '200':
+      description: 更新成功
+      content:
+        application/json:
+          schema:
+            $ref: '../../schemas/stores/Store.yaml'
+    '400':
+      description: 入力チェックエラーの場合
+      content:
+        application/json:
+          schema:
+            $ref: '../../schemas/common/Error.yaml'
+    '404':
+      description: 指定されたIDが存在しない場合
+      content:
+        application/json:
+          schema:
+            $ref: '../../schemas/common/Error.yaml'
+
+delete:
+  summary: 店舗削除
+  description: |
+    店舗を削除します。
+    
+    Plans:
+    スタンダード・プレミアム・プレミアムプラス・フードビジネス・リテールビジネス
+  tags:
+    - 店舗
+  security:
+    - AppAccessToken: [pos.stores:write]
+    - UserAccessToken: [pos.stores:write]
+  parameters:
+    - name: contract_id
+      in: path
+      required: true
+      schema:
+        type: string
+      description: 契約ID
+    - name: id
+      in: path
+      required: true
+      schema:
+        type: string
+      description: 店舗ID
+  responses:
+    '200':
+      description: 削除成功
+    '400':
+      description: 削除できない店舗の場合
+      content:
+        application/json:
+          schema:
+            $ref: '../../schemas/common/Error.yaml'
+    '404':
+      description: 指定されたIDが存在しない場合
+      content:
+        application/json:
+          schema:
+            $ref: '../../schemas/common/Error.yaml'

@@ -1,0 +1,53 @@
+type: object
+description: 入庫詳細情報
+properties:
+  id:
+    type: integer
+    description: 入庫詳細ID
+  incomingStockId:
+    type: integer
+    description: 入庫ID
+  productId:
+    type: integer
+    description: 商品ID
+  productCode:
+    type: string
+    description: 商品コード
+  productName:
+    type: string
+    description: 商品名
+  barcode:
+    type: string
+    description: バーコード
+  categoryId:
+    type: integer
+    description: 部門ID
+  categoryName:
+    type: string
+    description: 部門名
+  quantity:
+    type: number
+    format: float
+    description: 数量
+  costPrice:
+    type: integer
+    description: 仕入単価
+  price:
+    type: integer
+    description: 販売単価
+  memo:
+    type: string
+    description: メモ
+  createDate:
+    type: string
+    format: date-time
+    description: 作成日時
+  updateDate:
+    type: string
+    format: date-time
+    description: 更新日時
+required:
+  - id
+  - incomingStockId
+  - productId
+  - quantity

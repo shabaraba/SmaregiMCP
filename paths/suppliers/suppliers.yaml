@@ -1,0 +1,136 @@
+get:
+  tags:
+    - 仕入先
+  summary: 仕入先一覧取得
+  description: 仕入先情報一覧を取得します。
+  parameters:
+    - name: fields
+      in: query
+      description: 取得したいフィールド名（カンマ区切りで指定可）
+      schema:
+        type: array
+        items:
+          type: string
+        example: [supplierId, supplierCode, supplierName]
+    - name: sort
+      in: query
+      description: 並び順（カンマ区切りで指定可）
+      schema:
+        type: string
+        example: supplierCode,ASC
+    - name: limit
+      in: query
+      description: 取得上限数
+      schema:
+        type: integer
+        example: 50
+    - name: page
+      in: query
+      description: ページ番号
+      schema:
+        type: integer
+        example: 1
+    - name: supplier_id
+      in: query
+      description: 仕入先ID
+      schema:
+        type: string
+    - name: supplier_code
+      in: query
+      description: 仕入先コード
+      schema:
+        type: string
+    - name: supplier_name
+      in: query
+      description: 仕入先名（部分一致）
+      schema:
+        type: string
+    - name: supplier_abbr
+      in: query
+      description: 仕入先略称（部分一致）
+      schema:
+        type: string
+    - name: supplier_division_id
+      in: query
+      description: 仕入先区分ID
+      schema:
+        type: string
+    - name: phone_number
+      in: query
+      description: 電話番号（部分一致）
+      schema:
+        type: string
+    - name: status
+      in: query
+      description: ステータス(0:無効, 1:有効)
+      schema:
+        type: string
+        enum: ['0', '1']
+    - name: ins_date_time-from
+      in: query
+      description: 登録日時(From)
+      schema:
+        type: string
+        format: date-time
+    - name: ins_date_time-to
+      in: query
+      description: 登録日時(To)
+      schema:
+        type: string
+        format: date-time
+    - name: upd_date_time-from
+      in: query
+      description: 更新日時(From)
+      schema:
+        type: string
+        format: date-time
+    - name: upd_date_time-to
+      in: query
+      description: 更新日時(To)
+      schema:
+        type: string
+        format: date-time
+  responses:
+    '200':
+      description: 取得成功
+      content:
+        application/json:
+          schema:
+            type: array
+            items:
+              $ref: '../../schemas/suppliers/Supplier.yaml'
+  security:
+    - AppAccessToken:
+        - pos.suppliers:read
+    - UserAccessToken:
+        - pos.suppliers:read
+
+post:
+  tags:
+    - 仕入先
+  summary: 仕入先登録
+  description: 仕入先情報を登録します。
+  requestBody:
+    required: true
+    content:
+      application/json:
+        schema:
+          $ref: '../../schemas/suppliers/SupplierCreate.yaml'
+  responses:
+    '200':
+      description: 登録成功
+      content:
+        application/json:
+          schema:
+            $ref: '../../schemas/suppliers/Supplier.yaml'
+    '400':
+      description: 入力チェックエラーの場合
+      content:
+        application/json:
+          schema:
+            $ref: '../../schemas/common/Error.yaml'
+  security:
+    - AppAccessToken:
+        - pos.suppliers:write
+    - UserAccessToken:
+        - pos.suppliers:write

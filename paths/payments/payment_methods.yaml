@@ -1,0 +1,138 @@
+get:
+  tags:
+    - 支払方法
+  summary: 支払方法一覧取得
+  description: 支払方法情報一覧を取得します。
+  parameters:
+    - name: fields
+      in: query
+      description: 取得したいフィールド名（カンマ区切りで指定可）
+      schema:
+        type: array
+        items:
+          type: string
+        example: [paymentMethodId, paymentMethodCode, paymentMethodName]
+    - name: sort
+      in: query
+      description: 並び順（カンマ区切りで指定可）
+      schema:
+        type: string
+        example: sortNo,ASC
+    - name: limit
+      in: query
+      description: 取得上限数
+      schema:
+        type: integer
+        example: 50
+    - name: page
+      in: query
+      description: ページ番号
+      schema:
+        type: integer
+        example: 1
+    - name: payment_method_id
+      in: query
+      description: 支払方法ID
+      schema:
+        type: string
+    - name: payment_method_code
+      in: query
+      description: 支払方法コード
+      schema:
+        type: string
+    - name: payment_method_name
+      in: query
+      description: 支払方法名（部分一致）
+      schema:
+        type: string
+    - name: payment_method_division_id
+      in: query
+      description: 支払方法区分ID
+      schema:
+        type: string
+    - name: amount_input_type
+      in: query
+      description: 金額入力タイプ(0:不要, 1:任意, 2:必須)
+      schema:
+        type: string
+        enum: ['0', '1', '2']
+    - name: change_type
+      in: query
+      description: お釣り対応タイプ(0:不可, 1:可, 2:自動計算)
+      schema:
+        type: string
+        enum: ['0', '1', '2']
+    - name: status
+      in: query
+      description: ステータス(0:無効, 1:有効)
+      schema:
+        type: string
+        enum: ['0', '1']
+    - name: ins_date_time-from
+      in: query
+      description: 登録日時(From)
+      schema:
+        type: string
+        format: date-time
+    - name: ins_date_time-to
+      in: query
+      description: 登録日時(To)
+      schema:
+        type: string
+        format: date-time
+    - name: upd_date_time-from
+      in: query
+      description: 更新日時(From)
+      schema:
+        type: string
+        format: date-time
+    - name: upd_date_time-to
+      in: query
+      description: 更新日時(To)
+      schema:
+        type: string
+        format: date-time
+  responses:
+    '200':
+      description: 取得成功
+      content:
+        application/json:
+          schema:
+            type: array
+            items:
+              $ref: '../../schemas/payments/PaymentMethod.yaml'
+  security:
+    - AppAccessToken:
+        - pos.transactions:read
+    - UserAccessToken:
+        - pos.transactions:read
+
+post:
+  tags:
+    - 支払方法
+  summary: 支払方法登録
+  description: 支払方法情報を登録します。
+  requestBody:
+    required: true
+    content:
+      application/json:
+        schema:
+          $ref: '../../schemas/payments/PaymentMethodCreate.yaml'
+  responses:
+    '200':
+      description: 登録成功
+      content:
+        application/json:
+          schema:
+            $ref: '../../schemas/payments/PaymentMethod.yaml'
+    '400':
+      description: 入力チェックエラーの場合
+      content:
+        application/json:
+          schema:
+            $ref: '../../schemas/common/Error.yaml'
+  security:
+    - AppAccessToken:
+        - pos.transactions:write
+    - UserAccessToken:
+        - pos.transactions:write

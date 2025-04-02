@@ -1,0 +1,119 @@
+get:
+  tags:
+    - 棚卸
+  summary: 棚卸部門一覧取得
+  description: 棚卸に登録されている部門情報の一覧を取得します。
+  operationId: getStocktakingCategories
+  parameters:
+    - name: stocktaking_id
+      in: query
+      description: 棚卸ID
+      schema:
+        type: integer
+    - name: store_id
+      in: query
+      description: 店舗ID
+      schema:
+        type: integer
+    - name: category_id
+      in: query
+      description: 部門ID
+      schema:
+        type: integer
+    - name: category_code
+      in: query
+      description: 部門コード
+      schema:
+        type: string
+    - name: category_name
+      in: query
+      description: 部門名
+      schema:
+        type: string
+    - name: is_complete
+      in: query
+      description: 棚卸実施済みフラグ（0:未実施、1:実施済み）
+      schema:
+        type: integer
+    - name: limit
+      in: query
+      description: 取得件数
+      schema:
+        type: integer
+        default: 20
+    - name: page
+      in: query
+      description: ページ番号
+      schema:
+        type: integer
+        default: 1
+  responses:
+    '200':
+      description: 成功
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              stocktakingCategories:
+                type: array
+                items:
+                  $ref: '../../schemas/stocktakings/StocktakingCategory.yaml'
+              pagination:
+                $ref: '../../schemas/common/Pagination.yaml'
+    '400':
+      description: バリデーションエラー
+      content:
+        application/json:
+          schema:
+            $ref: '../../schemas/common/Error.yaml'
+    '401':
+      description: 認証エラー
+      content:
+        application/json:
+          schema:
+            $ref: '../../schemas/common/Error.yaml'
+  security:
+    - AppAccessToken:
+        - pos.stocktaking:read
+    - UserAccessToken:
+        - pos.stocktaking:read
+
+patch:
+  tags:
+    - 棚卸
+  summary: 棚卸部門更新
+  description: 棚卸に登録されている部門情報を更新します。
+  operationId: updateStocktakingCategory
+  requestBody:
+    content:
+      application/json:
+        schema:
+          $ref: '../../schemas/stocktakings/StocktakingCategoryUpdate.yaml'
+    required: true
+  responses:
+    '200':
+      description: 成功
+    '400':
+      description: バリデーションエラー
+      content:
+        application/json:
+          schema:
+            $ref: '../../schemas/common/Error.yaml'
+    '401':
+      description: 認証エラー
+      content:
+        application/json:
+          schema:
+            $ref: '../../schemas/common/Error.yaml'
+    '404':
+      description: 指定された棚卸部門が存在しない
+      content:
+        application/json:
+          schema:
+            $ref: '../../schemas/common/Error.yaml'
+  security:
+    - AppAccessToken:
+        - pos.stocktaking:write
+    - UserAccessToken:
+        - pos.stocktaking:write

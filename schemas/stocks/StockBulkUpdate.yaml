@@ -1,0 +1,10 @@
+type: object
+description: 在庫一括更新情報
+properties:
+  stocks:
+    type: array
+    description: 在庫更新情報の配列
+    items:
+      $ref: './StockUpdate.yaml'
+required:
+  - stocks

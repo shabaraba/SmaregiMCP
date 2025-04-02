@@ -1,0 +1,5 @@
+type: object
+properties:
+  paymentMethodDivisionName:
+    type: string
+    description: 支払方法区分名

@@ -1,0 +1,65 @@
+get:
+  summary: 預かり取引取得
+  description: 預かり取引情報を取得します。
+  tags:
+    - 取引
+  parameters:
+    - name: id
+      in: path
+      required: true
+      description: 預かり取引ID
+      schema:
+        type: integer
+        format: int64
+  responses:
+    "200":
+      description: 成功時のレスポンス
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/Layaway"
+    "404":
+      description: 指定された預かり取引が見つからない
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/Error"
+  security:
+    - AppAccessToken:
+        - pos.transactions:read
+    - UserAccessToken:
+        - pos.transactions:read
+
+delete:
+  summary: 預かり取引削除
+  description: 預かり取引情報を削除します。
+  tags:
+    - 取引
+  parameters:
+    - name: id
+      in: path
+      required: true
+      description: 預かり取引ID
+      schema:
+        type: integer
+        format: int64
+  responses:
+    "204":
+      description: 成功時のレスポンス（コンテンツなし）
+    "404":
+      description: 指定された預かり取引が見つからない
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/Error"
+    "409":
+      description: 預かり取引が既に処理済みなど、削除できない状態である
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/Error"
+  security:
+    - AppAccessToken:
+        - pos.transactions:write
+    - UserAccessToken:
+        - pos.transactions:write

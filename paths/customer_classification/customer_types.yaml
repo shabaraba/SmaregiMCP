@@ -1,0 +1,100 @@
+get:
+  tags:
+    - 会員
+  summary: 顧客タイプ一覧取得
+  description: 顧客タイプ情報の一覧を取得します。
+  operationId: getCustomerTypes
+  parameters:
+    - name: customer_type_id
+      in: query
+      description: 顧客タイプID
+      schema:
+        type: integer
+    - name: code
+      in: query
+      description: 顧客タイプコード
+      schema:
+        type: string
+    - name: name
+      in: query
+      description: 顧客タイプ名
+      schema:
+        type: string
+    - name: limit
+      in: query
+      description: 取得件数
+      schema:
+        type: integer
+        default: 20
+    - name: page
+      in: query
+      description: ページ番号
+      schema:
+        type: integer
+        default: 1
+  responses:
+    '200':
+      description: 成功
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              customerTypes:
+                type: array
+                items:
+                  $ref: '../../schemas/customer_classification/CustomerType.yaml'
+              pagination:
+                $ref: '../../schemas/common/Pagination.yaml'
+    '401':
+      description: 認証エラー
+      content:
+        application/json:
+          schema:
+            $ref: '../../schemas/common/Error.yaml'
+  security:
+    - AppAccessToken:
+        - pos.customers:read
+    - UserAccessToken:
+        - pos.customers:read
+
+post:
+  tags:
+    - 会員
+  summary: 顧客タイプ登録
+  description: 顧客タイプ情報を登録します。
+  operationId: createCustomerType
+  requestBody:
+    content:
+      application/json:
+        schema:
+          $ref: '../../schemas/customer_classification/CustomerTypeCreate.yaml'
+    required: true
+  responses:
+    '201':
+      description: 成功
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              id:
+                type: integer
+                description: 顧客タイプID
+    '400':
+      description: バリデーションエラー
+      content:
+        application/json:
+          schema:
+            $ref: '../../schemas/common/Error.yaml'
+    '401':
+      description: 認証エラー
+      content:
+        application/json:
+          schema:
+            $ref: '../../schemas/common/Error.yaml'
+  security:
+    - AppAccessToken:
+        - pos.customers:write
+    - UserAccessToken:
+        - pos.customers:write

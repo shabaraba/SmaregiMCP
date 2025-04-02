@@ -1,0 +1,16 @@
+type: object
+properties:
+  storeId:
+    type: string
+    description: 店舗ID
+  lossDivisionId:
+    type: string
+    description: ロス区分ID
+  lossDate:
+    type: string
+    format: date
+    description: ロス日
+  memo:
+    type: string
+    description: メモ
+    maxLength: 255

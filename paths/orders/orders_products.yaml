@@ -1,0 +1,72 @@
+get:
+  tags:
+    - 発注
+  summary: 発注対象商品取得
+  description: 発注対象商品情報を取得します。
+  parameters:
+    - name: fields
+      in: query
+      description: 検索パラメータ（カンマ区切りで指定可）
+      schema:
+        type: array
+        items:
+          type: string
+    - name: sort
+      in: query
+      description: 並び順（カンマ区切りで指定可）
+      schema:
+        type: string
+    - name: limit
+      in: query
+      description: 上限数
+      schema:
+        type: integer
+    - name: page
+      in: query
+      description: ページ
+      schema:
+        type: integer
+    - name: product_id
+      in: query
+      description: 商品ID
+      schema:
+        type: string
+    - name: product_code
+      in: query
+      description: 商品コード
+      schema:
+        type: string
+    - name: supplier_id
+      in: query
+      description: 仕入先ID
+      schema:
+        type: string
+    - name: category_id
+      in: query
+      description: 部門ID
+      schema:
+        type: string
+    - name: min_remains_inventories
+      in: query
+      description: 発注点以下の在庫商品のみ
+      schema:
+        type: boolean
+    - name: store_id
+      in: query
+      description: 店舗ID
+      schema:
+        type: string
+  responses:
+    '200':
+      description: 取得成功
+      content:
+        application/json:
+          schema:
+            type: array
+            items:
+              $ref: '../../schemas/orders/OrderProduct.yaml'
+  security:
+    - AppAccessToken:
+        - pos.orders:read
+    - UserAccessToken:
+        - pos.orders:read

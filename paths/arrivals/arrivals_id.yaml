@@ -1,0 +1,80 @@
+get:
+  tags:
+    - 入荷
+  summary: 入荷取得
+  description: 入荷情報を取得します。
+  parameters:
+    - name: id
+      in: path
+      required: true
+      description: 入荷ID
+      schema:
+        type: string
+    - name: fields
+      in: query
+      description: 検索パラメータ（カンマ区切りで指定可）
+      schema:
+        type: array
+        items:
+          type: string
+  responses:
+    '200':
+      description: 取得成功
+      content:
+        application/json:
+          schema:
+            $ref: '../../schemas/arrivals/Arrival.yaml'
+    '404':
+      description: 指定された入荷IDが存在しない場合
+      content:
+        application/json:
+          schema:
+            $ref: '../../schemas/common/Error.yaml'
+  security:
+    - AppAccessToken:
+        - pos.orders:read
+    - UserAccessToken:
+        - pos.orders:read
+
+patch:
+  tags:
+    - 入荷
+  summary: 入荷更新
+  description: 入荷情報を更新します。
+  parameters:
+    - name: id
+      in: path
+      required: true
+      description: 入荷ID
+      schema:
+        type: string
+  requestBody:
+    required: true
+    content:
+      application/json:
+        schema:
+          $ref: '../../schemas/arrivals/ArrivalUpdate.yaml'
+  responses:
+    '200':
+      description: 更新成功
+      content:
+        application/json:
+          schema:
+            $ref: '../../schemas/arrivals/Arrival.yaml'
+    '400':
+      description: 入力チェックエラーの場合
+      content:
+        application/json:
+          schema:
+            $ref: '../../schemas/common/Error.yaml'
+    '404':
+      description: 指定された入荷IDが存在しない場合
+      content:
+        application/json:
+          schema:
+            $ref: '../../schemas/common/Error.yaml'
+  security:
+    - AppAccessToken:
+        - pos.orders:write
+    - UserAccessToken:
+        - pos.orders:write

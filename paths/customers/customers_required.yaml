@@ -1,0 +1,17 @@
+get:
+  tags:
+    - 会員
+  summary: 会員必須項目取得
+  description: 会員情報登録・更新時の必須項目設定を取得します。
+  responses:
+    '200':
+      description: 取得成功
+      content:
+        application/json:
+          schema:
+            $ref: '../../schemas/customers/CustomerRequired.yaml'
+  security:
+    - AppAccessToken:
+        - pos.customers:read
+    - UserAccessToken:
+        - pos.customers:read

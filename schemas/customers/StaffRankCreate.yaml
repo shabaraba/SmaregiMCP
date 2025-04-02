@@ -1,0 +1,18 @@
+type: object
+required:
+  - staffRankName
+properties:
+  staffRankName:
+    type: string
+    description: スタッフランク名
+  discountRate:
+    type: number
+    format: float
+    description: 社員割引率
+  pointRate:
+    type: number
+    format: float
+    description: ポイント付与率
+  note:
+    type: string
+    description: 備考

@@ -1,0 +1,17 @@
+type: object
+required:
+  - customers
+properties:
+  customers:
+    type: array
+    items:
+      allOf:
+        - type: object
+          required:
+            - customerId
+          properties:
+            customerId:
+              type: string
+              description: 会員ID
+        - $ref: './CustomerUpdate.yaml'
+    description: 会員情報リスト

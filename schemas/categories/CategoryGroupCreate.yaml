@@ -1,0 +1,21 @@
+type: object
+description: 部門グループ登録情報
+properties:
+  categoryGroupCode:
+    type: string
+    description: 部門グループコード (10文字以内)
+    maxLength: 10
+    pattern: ^[ -~]+$
+    example: 'GROUP1'
+  categoryGroupName:
+    type: string
+    description: 部門グループ名 (85文字以内)
+    maxLength: 85
+    example: '食品グループ'
+  displaySequence:
+    type: string
+    description: 表示順序 (0-999999999)
+    pattern: ^[0-9]{1,9}$
+    example: '1'
+required:
+  - categoryGroupName

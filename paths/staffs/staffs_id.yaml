@@ -1,0 +1,100 @@
+get:
+  tags:
+    - スタッフ
+  summary: スタッフ情報取得
+  description: 指定したIDのスタッフ情報を取得します。
+  parameters:
+    - name: id
+      in: path
+      required: true
+      description: スタッフID
+      schema:
+        type: string
+  responses:
+    '200':
+      description: 取得成功
+      content:
+        application/json:
+          schema:
+            $ref: '../../schemas/staffs/Staff.yaml'
+    '404':
+      description: 対象リソースが存在しない場合
+      content:
+        application/json:
+          schema:
+            $ref: '../../schemas/common/Error.yaml'
+  security:
+    - AppAccessToken:
+        - pos.staffs:read
+    - UserAccessToken:
+        - pos.staffs:read
+
+put:
+  tags:
+    - スタッフ
+  summary: スタッフ情報更新
+  description: 指定したIDのスタッフ情報を更新します。
+  parameters:
+    - name: id
+      in: path
+      required: true
+      description: スタッフID
+      schema:
+        type: string
+  requestBody:
+    required: true
+    content:
+      application/json:
+        schema:
+          $ref: '../../schemas/staffs/StaffUpdate.yaml'
+  responses:
+    '200':
+      description: 更新成功
+      content:
+        application/json:
+          schema:
+            $ref: '../../schemas/staffs/Staff.yaml'
+    '400':
+      description: 入力チェックエラーの場合
+      content:
+        application/json:
+          schema:
+            $ref: '../../schemas/common/Error.yaml'
+    '404':
+      description: 対象リソースが存在しない場合
+      content:
+        application/json:
+          schema:
+            $ref: '../../schemas/common/Error.yaml'
+  security:
+    - AppAccessToken:
+        - pos.staffs:write
+    - UserAccessToken:
+        - pos.staffs:write
+
+delete:
+  tags:
+    - スタッフ
+  summary: スタッフ情報削除
+  description: 指定したIDのスタッフ情報を削除します。
+  parameters:
+    - name: id
+      in: path
+      required: true
+      description: スタッフID
+      schema:
+        type: string
+  responses:
+    '204':
+      description: 削除成功
+    '404':
+      description: 対象リソースが存在しない場合
+      content:
+        application/json:
+          schema:
+            $ref: '../../schemas/common/Error.yaml'
+  security:
+    - AppAccessToken:
+        - pos.staffs:write
+    - UserAccessToken:
+        - pos.staffs:write

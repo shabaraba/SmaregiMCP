@@ -1,0 +1,100 @@
+get:
+  tags:
+    - 支払方法
+  summary: 支払方法情報取得
+  description: 指定したIDの支払方法情報を取得します。
+  parameters:
+    - name: id
+      in: path
+      required: true
+      description: 支払方法ID
+      schema:
+        type: string
+  responses:
+    '200':
+      description: 取得成功
+      content:
+        application/json:
+          schema:
+            $ref: '../../schemas/payments/PaymentMethod.yaml'
+    '404':
+      description: 対象リソースが存在しない場合
+      content:
+        application/json:
+          schema:
+            $ref: '../../schemas/common/Error.yaml'
+  security:
+    - AppAccessToken:
+        - pos.transactions:read
+    - UserAccessToken:
+        - pos.transactions:read
+
+put:
+  tags:
+    - 支払方法
+  summary: 支払方法情報更新
+  description: 指定したIDの支払方法情報を更新します。
+  parameters:
+    - name: id
+      in: path
+      required: true
+      description: 支払方法ID
+      schema:
+        type: string
+  requestBody:
+    required: true
+    content:
+      application/json:
+        schema:
+          $ref: '../../schemas/payments/PaymentMethodUpdate.yaml'
+  responses:
+    '200':
+      description: 更新成功
+      content:
+        application/json:
+          schema:
+            $ref: '../../schemas/payments/PaymentMethod.yaml'
+    '400':
+      description: 入力チェックエラーの場合
+      content:
+        application/json:
+          schema:
+            $ref: '../../schemas/common/Error.yaml'
+    '404':
+      description: 対象リソースが存在しない場合
+      content:
+        application/json:
+          schema:
+            $ref: '../../schemas/common/Error.yaml'
+  security:
+    - AppAccessToken:
+        - pos.transactions:write
+    - UserAccessToken:
+        - pos.transactions:write
+
+delete:
+  tags:
+    - 支払方法
+  summary: 支払方法情報削除
+  description: 指定したIDの支払方法情報を削除します。
+  parameters:
+    - name: id
+      in: path
+      required: true
+      description: 支払方法ID
+      schema:
+        type: string
+  responses:
+    '204':
+      description: 削除成功
+    '404':
+      description: 対象リソースが存在しない場合
+      content:
+        application/json:
+          schema:
+            $ref: '../../schemas/common/Error.yaml'
+  security:
+    - AppAccessToken:
+        - pos.transactions:write
+    - UserAccessToken:
+        - pos.transactions:write

@@ -1,0 +1,280 @@
+get:
+  tags:
+    - 会員
+  summary: 会員一覧取得
+  description: 会員情報一覧を取得します。
+  parameters:
+    - name: fields
+      in: query
+      description: 取得したいフィールド名（カンマ区切りで指定可）
+      schema:
+        type: array
+        items:
+          type: string
+        example: [customerId, customerCode, firstName, lastName]
+    - name: sort
+      in: query
+      description: 並び順（カンマ区切りで指定可）
+      schema:
+        type: string
+        example: customerId,DESC
+    - name: limit
+      in: query
+      description: 取得上限数
+      schema:
+        type: integer
+        example: 50
+    - name: page
+      in: query
+      description: ページ番号
+      schema:
+        type: integer
+        example: 1
+    - name: customer_id
+      in: query
+      description: 会員ID
+      schema:
+        type: string
+    - name: customer_code
+      in: query
+      description: 会員コード
+      schema:
+        type: string
+    - name: customer_no
+      in: query
+      description: 会員番号
+      schema:
+        type: string
+    - name: rank
+      in: query
+      description: 会員ランク
+      schema:
+        type: string
+    - name: staff_rank
+      in: query
+      description: スタッフランク
+      schema:
+        type: string
+    - name: first_name
+      in: query
+      description: 名前（部分一致）
+      schema:
+        type: string
+    - name: last_name
+      in: query
+      description: 苗字（部分一致）
+      schema:
+        type: string
+    - name: first_name_kana
+      in: query
+      description: 名前カナ（部分一致）
+      schema:
+        type: string
+    - name: last_name_kana
+      in: query
+      description: 苗字カナ（部分一致）
+      schema:
+        type: string
+    - name: sex
+      in: query
+      description: 性別(0:不明, 1:男性, 2:女性)
+      schema:
+        type: string
+        enum: ['0', '1', '2']
+    - name: barcode
+      in: query
+      description: バーコード
+      schema:
+        type: string
+    - name: birth_date-from
+      in: query
+      description: 生年月日(From)
+      schema:
+        type: string
+        format: date
+    - name: birth_date-to
+      in: query
+      description: 生年月日(To)
+      schema:
+        type: string
+        format: date
+    - name: zip_code
+      in: query
+      description: 郵便番号（部分一致）
+      schema:
+        type: string
+    - name: address
+      in: query
+      description: 住所（部分一致）
+      schema:
+        type: string
+    - name: phone_number
+      in: query
+      description: 電話番号（部分一致）
+      schema:
+        type: string
+    - name: fax_number
+      in: query
+      description: FAX番号（部分一致）
+      schema:
+        type: string
+    - name: mobile_number
+      in: query
+      description: 携帯電話番号（部分一致）
+      schema:
+        type: string
+    - name: mail_address
+      in: query
+      description: メールアドレス（部分一致）
+      schema:
+        type: string
+    - name: company_name
+      in: query
+      description: 会社名（部分一致）
+      schema:
+        type: string
+    - name: department_name
+      in: query
+      description: 部署名（部分一致）
+      schema:
+        type: string
+    - name: manager_flag
+      in: query
+      description: 担当者フラグ
+      schema:
+        type: boolean
+    - name: is_staff
+      in: query
+      description: スタッフフラグ
+      schema:
+        type: boolean
+    - name: points-from
+      in: query
+      description: ポイント(From)
+      schema:
+        type: integer
+    - name: points-to
+      in: query
+      description: ポイント(To)
+      schema:
+        type: integer
+    - name: store_id
+      in: query
+      description: 店舗ID
+      schema:
+        type: string
+    - name: note
+      in: query
+      description: 備考（部分一致）
+      schema:
+        type: string
+    - name: status_id
+      in: query
+      description: 状態(1:利用, 2:停止)
+      schema:
+        type: integer
+        enum: [1, 2]
+    - name: enter_date-from
+      in: query
+      description: 入会日(From)
+      schema:
+        type: string
+        format: date
+    - name: enter_date-to
+      in: query
+      description: 入会日(To)
+      schema:
+        type: string
+        format: date
+    - name: suspend_date-from
+      in: query
+      description: 退会日(From)
+      schema:
+        type: string
+        format: date
+    - name: suspend_date-to
+      in: query
+      description: 退会日(To)
+      schema:
+        type: string
+        format: date
+    - name: point_expire_date-from
+      in: query
+      description: ポイント有効期限(From)
+      schema:
+        type: string
+        format: date
+    - name: point_expire_date-to
+      in: query
+      description: ポイント有効期限(To)
+      schema:
+        type: string
+        format: date
+    - name: ins_date_time-from
+      in: query
+      description: 登録日時(From)
+      schema:
+        type: string
+        format: date-time
+    - name: ins_date_time-to
+      in: query
+      description: 登録日時(To)
+      schema:
+        type: string
+        format: date-time
+    - name: upd_date_time-from
+      in: query
+      description: 更新日時(From)
+      schema:
+        type: string
+        format: date-time
+    - name: upd_date_time-to
+      in: query
+      description: 更新日時(To)
+      schema:
+        type: string
+        format: date-time
+  responses:
+    '200':
+      description: 取得成功
+      content:
+        application/json:
+          schema:
+            type: array
+            items:
+              $ref: '../../schemas/customers/Customer.yaml'
+  security:
+    - AppAccessToken:
+        - pos.customers:read
+    - UserAccessToken:
+        - pos.customers:read
+        
+post:
+  tags:
+    - 会員
+  summary: 会員登録
+  description: 会員情報を登録します。
+  requestBody:
+    required: true
+    content:
+      application/json:
+        schema:
+          $ref: '../../schemas/customers/CustomerCreate.yaml'
+  responses:
+    '200':
+      description: 登録成功
+      content:
+        application/json:
+          schema:
+            $ref: '../../schemas/customers/Customer.yaml'
+    '400':
+      description: 入力チェックエラーの場合
+      content:
+        application/json:
+          schema:
+            $ref: '../../schemas/common/Error.yaml'
+  security:
+    - AppAccessToken:
+        - pos.customers:write
+    - UserAccessToken:
+        - pos.customers:write

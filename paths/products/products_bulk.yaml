@@ -1,0 +1,117 @@
+post:
+  summary: 商品の一括登録
+  description: |
+    複数の商品を一括で登録します。
+    一括登録では、1リクエストで最大100件まで処理することができます。
+  operationId: bulkCreateProducts
+  tags:
+    - 商品
+  requestBody:
+    required: true
+    content:
+      application/json:
+        schema:
+          $ref: '#/components/schemas/ProductBulkCreate'
+  responses:
+    '201':
+      description: 商品の一括登録に成功
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              items:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Product'
+    '400':
+      description: リクエストパラメータが不正
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    '401':
+      description: 認証エラー
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    '403':
+      description: 権限エラー
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    '409':
+      description: 既存データとの競合エラー
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+  security:
+    - AppAccessToken:
+        - pos.products:write
+    - UserAccessToken:
+        - pos.products:write
+
+put:
+  summary: 商品の一括更新
+  description: |
+    複数の商品を一括で更新します。
+    一括更新では、1リクエストで最大100件まで処理することができます。
+  operationId: bulkUpdateProducts
+  tags:
+    - 商品
+  requestBody:
+    required: true
+    content:
+      application/json:
+        schema:
+          $ref: '#/components/schemas/ProductBulkUpdate'
+  responses:
+    '200':
+      description: 商品の一括更新に成功
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              items:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Product'
+    '400':
+      description: リクエストパラメータが不正
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    '401':
+      description: 認証エラー
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    '403':
+      description: 権限エラー
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    '404':
+      description: 商品が存在しない
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    '409':
+      description: 既存データとの競合エラー
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+  security:
+    - AppAccessToken:
+        - pos.products:write
+    - UserAccessToken:
+        - pos.products:write

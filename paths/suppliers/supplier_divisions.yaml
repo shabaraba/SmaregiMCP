@@ -1,0 +1,110 @@
+get:
+  tags:
+    - 仕入先
+  summary: 仕入先区分一覧取得
+  description: 仕入先区分情報一覧を取得します。
+  parameters:
+    - name: fields
+      in: query
+      description: 取得したいフィールド名（カンマ区切りで指定可）
+      schema:
+        type: array
+        items:
+          type: string
+        example: [supplierDivisionId, supplierDivisionName]
+    - name: sort
+      in: query
+      description: 並び順（カンマ区切りで指定可）
+      schema:
+        type: string
+        example: supplierDivisionId,ASC
+    - name: limit
+      in: query
+      description: 取得上限数
+      schema:
+        type: integer
+        example: 50
+    - name: page
+      in: query
+      description: ページ番号
+      schema:
+        type: integer
+        example: 1
+    - name: supplier_division_id
+      in: query
+      description: 仕入先区分ID
+      schema:
+        type: string
+    - name: supplier_division_name
+      in: query
+      description: 仕入先区分名（部分一致）
+      schema:
+        type: string
+    - name: ins_date_time-from
+      in: query
+      description: 登録日時(From)
+      schema:
+        type: string
+        format: date-time
+    - name: ins_date_time-to
+      in: query
+      description: 登録日時(To)
+      schema:
+        type: string
+        format: date-time
+    - name: upd_date_time-from
+      in: query
+      description: 更新日時(From)
+      schema:
+        type: string
+        format: date-time
+    - name: upd_date_time-to
+      in: query
+      description: 更新日時(To)
+      schema:
+        type: string
+        format: date-time
+  responses:
+    '200':
+      description: 取得成功
+      content:
+        application/json:
+          schema:
+            type: array
+            items:
+              $ref: '../../schemas/suppliers/SupplierDivision.yaml'
+  security:
+    - AppAccessToken:
+        - pos.suppliers:read
+    - UserAccessToken:
+        - pos.suppliers:read
+
+post:
+  tags:
+    - 仕入先
+  summary: 仕入先区分登録
+  description: 仕入先区分情報を登録します。
+  requestBody:
+    required: true
+    content:
+      application/json:
+        schema:
+          $ref: '../../schemas/suppliers/SupplierDivisionCreate.yaml'
+  responses:
+    '200':
+      description: 登録成功
+      content:
+        application/json:
+          schema:
+            $ref: '../../schemas/suppliers/SupplierDivision.yaml'
+    '400':
+      description: 入力チェックエラーの場合
+      content:
+        application/json:
+          schema:
+            $ref: '../../schemas/common/Error.yaml'
+  security:
+    - AppAccessToken:
+        - pos.suppliers:write
+    - UserAccessToken:
+        - pos.suppliers:write

@@ -1,0 +1,121 @@
+get:
+  summary: セール商品一覧取得
+  description: |
+    セール商品情報一覧を取得します。
+    
+    Plans:
+    スタンダード・プレミアム・プレミアムプラス・フードビジネス・リテールビジネス
+    
+    sortで使用可能なパラメータ
+    - targetDivision：対象区分
+    - targetId：対象ID
+  tags:
+    - セール
+  security:
+    - AppAccessToken: [pos.products:read]
+    - UserAccessToken: [pos.products:read]
+  parameters:
+    - name: contract_id
+      in: path
+      required: true
+      schema:
+        type: string
+      description: 契約ID
+    - name: id
+      in: path
+      required: true
+      schema:
+        type: string
+      description: セールID
+    - name: fields
+      in: query
+      schema:
+        type: array
+        items:
+          type: string
+      description: |
+        検索パラメータ（カンマ区切りで指定可）
+        Response項目を指定可能
+        ※一部項目(withで指定する項目、2階層目以降の項目)については指定不可
+    - name: sort
+      in: query
+      schema:
+        type: string
+      description: |
+        並び順（カンマ区切りで指定可）
+        指定可能な項目については上記参照
+    - name: limit
+      in: query
+      schema:
+        type: integer
+      description: 上限数
+    - name: page
+      in: query
+      schema:
+        type: integer
+      description: ページ
+    - name: target_division
+      in: query
+      schema:
+        type: string
+        enum: ['1', '2', '3']
+      description: 対象区分 (1:部門、2:商品、3:グループコード)
+    - name: target_id
+      in: query
+      schema:
+        type: string
+      description: 対象ID (部門ID, 商品ID, グループコードのいずれか)
+  responses:
+    '200':
+      description: 取得成功
+      content:
+        application/json:
+          schema:
+            type: array
+            items:
+              $ref: '../../schemas/sales/BargainProduct.yaml'
+
+post:
+  summary: セール商品登録
+  description: |
+    セール商品情報を登録します。
+    
+    Plans:
+    スタンダード・プレミアム・プレミアムプラス・フードビジネス・リテールビジネス
+  tags:
+    - セール
+  security:
+    - AppAccessToken: [pos.products:write]
+    - UserAccessToken: [pos.products:write]
+  parameters:
+    - name: contract_id
+      in: path
+      required: true
+      schema:
+        type: string
+      description: 契約ID
+    - name: id
+      in: path
+      required: true
+      schema:
+        type: string
+      description: セールID
+  requestBody:
+    required: true
+    content:
+      application/json:
+        schema:
+          $ref: '../../schemas/sales/BargainProductCreate.yaml'
+  responses:
+    '200':
+      description: 取得成功
+      content:
+        application/json:
+          schema:
+            $ref: '../../schemas/sales/BargainProduct.yaml'
+    '400':
+      description: 入力チェックエラーの場合
+      content:
+        application/json:
+          schema:
+            $ref: '../../schemas/common/Error.yaml'

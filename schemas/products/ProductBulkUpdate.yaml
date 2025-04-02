@@ -1,0 +1,10 @@
+type: object
+description: 商品一括更新情報
+properties:
+  items:
+    type: array
+    description: 更新する商品の配列
+    items:
+      $ref: '#/components/schemas/ProductUpdate'
+required:
+  - items

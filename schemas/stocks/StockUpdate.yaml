@@ -1,0 +1,17 @@
+type: object
+description: 在庫更新情報
+properties:
+  storeId:
+    type: integer
+    description: 店舗ID
+  productId:
+    type: integer
+    description: 商品ID
+  quantity:
+    type: number
+    format: float
+    description: 在庫数
+required:
+  - storeId
+  - productId
+  - quantity

@@ -1,0 +1,57 @@
+get:
+  tags:
+    - 支払方法
+  summary: アプリ連携支払方法情報取得
+  description: 指定したIDのアプリ連携支払方法情報を取得します。
+  parameters:
+    - name: id
+      in: path
+      required: true
+      description: アプリ連携支払方法ID
+      schema:
+        type: string
+  responses:
+    '200':
+      description: 取得成功
+      content:
+        application/json:
+          schema:
+            $ref: '../../schemas/payments/AppPaymentMethod.yaml'
+    '404':
+      description: 対象リソースが存在しない場合
+      content:
+        application/json:
+          schema:
+            $ref: '../../schemas/common/Error.yaml'
+  security:
+    - AppAccessToken:
+        - pos.transactions:read
+    - UserAccessToken:
+        - pos.transactions:read
+
+delete:
+  tags:
+    - 支払方法
+  summary: アプリ連携支払方法情報削除
+  description: 指定したIDのアプリ連携支払方法情報を削除します。
+  parameters:
+    - name: id
+      in: path
+      required: true
+      description: アプリ連携支払方法ID
+      schema:
+        type: string
+  responses:
+    '204':
+      description: 削除成功
+    '404':
+      description: 対象リソースが存在しない場合
+      content:
+        application/json:
+          schema:
+            $ref: '../../schemas/common/Error.yaml'
+  security:
+    - AppAccessToken:
+        - pos.transactions:write
+    - UserAccessToken:
+        - pos.transactions:write

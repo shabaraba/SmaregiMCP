@@ -1,0 +1,108 @@
+type: object
+properties:
+  customerId:
+    type: string
+    description: 会員ID
+  customerCode:
+    type: string
+    description: 会員コード
+  customerNo:
+    type: string
+    description: 会員番号
+  rank:
+    type: string
+    description: 会員ランク
+  staffRank:
+    type: string
+    description: スタッフランク
+  firstName:
+    type: string
+    description: 名前
+  lastName:
+    type: string
+    description: 苗字
+  firstNameKana:
+    type: string
+    description: 名前カナ
+  lastNameKana:
+    type: string
+    description: 苗字カナ
+  sex:
+    type: string
+    enum: ['0', '1', '2']
+    description: 性別(0:不明, 1:男性, 2:女性)
+  barcode:
+    type: string
+    description: バーコード
+  birthDate:
+    type: string
+    format: date
+    description: 生年月日
+  zipCode:
+    type: string
+    description: 郵便番号
+  address:
+    type: string
+    description: 住所
+  phoneNumber:
+    type: string
+    description: 電話番号
+  faxNumber:
+    type: string
+    description: FAX番号
+  mobileNumber:
+    type: string
+    description: 携帯電話番号
+  mailAddress:
+    type: string
+    description: メールアドレス
+  mailAddress2:
+    type: string
+    description: メールアドレス2
+  mailAddress3:
+    type: string
+    description: メールアドレス3
+  companyName:
+    type: string
+    description: 会社名
+  departmentName:
+    type: string
+    description: 部署名
+  managerFlag:
+    type: boolean
+    description: 担当者フラグ
+  isStaff:
+    type: boolean
+    description: スタッフフラグ
+  points:
+    type: integer
+    description: ポイント
+  storeId:
+    type: string
+    description: 店舗ID
+  note:
+    type: string
+    description: 備考
+  statusId:
+    type: integer
+    description: 状態(1:利用, 2:停止)
+  enterDate:
+    type: string
+    format: date
+    description: 入会日
+  suspendDate:
+    type: string
+    format: date
+    description: 退会日
+  pointExpireDate:
+    type: string
+    format: date
+    description: ポイント有効期限
+  insDateTime:
+    type: string
+    format: date-time
+    description: 登録日時
+  updDateTime:
+    type: string
+    format: date-time
+    description: 更新日時

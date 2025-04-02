@@ -1,0 +1,81 @@
+type: object
+properties:
+  dailySettlementId:
+    type: string
+    description: 日次締めID
+  storeId:
+    type: string
+    description: 店舗ID
+  storeName:
+    type: string
+    description: 店舗名
+  businessDate:
+    type: string
+    format: date
+    description: 営業日
+  closingDate:
+    type: string
+    format: date
+    description: 締め日
+  closingDateTime:
+    type: string
+    format: date-time
+    description: 締め日時
+  staffId:
+    type: string
+    description: スタッフID
+  staffName:
+    type: string
+    description: スタッフ名
+  summary:
+    type: object
+    properties:
+      salesTotal:
+        type: number
+        format: float
+        description: 売上合計
+      returnTotal:
+        type: number
+        format: float
+        description: 返品合計
+      discountTotal:
+        type: number
+        format: float
+        description: 値引合計
+      transactionCount:
+        type: integer
+        description: 取引件数
+      customerCount:
+        type: integer
+        description: 客数
+  payments:
+    type: array
+    items:
+      type: object
+      properties:
+        paymentMethodId:
+          type: string
+          description: 支払方法ID
+        paymentMethodName:
+          type: string
+          description: 支払方法名
+        amount:
+          type: number
+          format: float
+          description: 金額
+        count:
+          type: integer
+          description: 件数
+    description: 支払方法別集計
+  status:
+    type: string
+    enum: ['0', '1']
+    description: ステータス(0:未確定, 1:確定)
+  insDateTime:
+    type: string
+    format: date-time
+    description: 登録日時
+  updDateTime:
+    type: string
+    format: date-time
+    description: 更新日時

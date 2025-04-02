@@ -1,0 +1,29 @@
+type: object
+description: セール店舗情報
+properties:
+  bargainStoreId:
+    type: string
+    description: セール店舗ID
+    example: "1"
+  bargainId:
+    type: string
+    description: セールID
+    example: "1"
+  storeId:
+    type: string
+    description: 店舗ID
+    example: "1"
+  insDateTime:
+    type: string
+    description: 登録日時
+    format: date-time
+    example: "2025-06-15T10:00:00+09:00"
+  updDateTime:
+    type: string
+    description: 更新日時
+    format: date-time
+    example: "2025-06-15T10:00:00+09:00"
+required:
+  - bargainStoreId
+  - bargainId
+  - storeId

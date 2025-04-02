@@ -1,0 +1,41 @@
+type: object
+description: 商品属性情報
+properties:
+  attributeNo:
+    type: string
+    description: 属性番号
+    example: "1"
+  attributeName:
+    type: string
+    description: 属性名称
+    example: "カラー"
+  selectedDivision:
+    type: string
+    description: 選択区分 (0:任意選択、1:必須選択)
+    enum: ["0", "1"]
+    default: "0"
+    example: "0"
+  selectedType:
+    type: string
+    description: 選択タイプ (0:一つ選択、1:複数選択)
+    enum: ["0", "1"]
+    default: "0"
+    example: "0"
+  displayFlag:
+    type: string
+    description: 表示フラグ (0:表示しない、1:表示する)
+    enum: ["0", "1"]
+    default: "1"
+    example: "1"
+  insDateTime:
+    type: string
+    format: date-time
+    description: 登録日時
+    example: "2023-01-01T00:00:00+09:00"
+  updDateTime:
+    type: string
+    format: date-time
+    description: 更新日時
+    example: "2023-01-01T00:00:00+09:00"
+required:
+  - attributeName

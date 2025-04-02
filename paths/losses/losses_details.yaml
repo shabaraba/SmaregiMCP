@@ -1,0 +1,54 @@
+get:
+  tags:
+    - ロス
+  summary: ロス明細取得
+  description: ロス明細情報を取得します。
+  parameters:
+    - name: id
+      in: path
+      required: true
+      description: ロスID
+      schema:
+        type: string
+    - name: fields
+      in: query
+      description: 検索パラメータ（カンマ区切りで指定可）
+      schema:
+        type: array
+        items:
+          type: string
+    - name: sort
+      in: query
+      description: 並び順（カンマ区切りで指定可）
+      schema:
+        type: string
+    - name: limit
+      in: query
+      description: 上限数
+      schema:
+        type: integer
+    - name: page
+      in: query
+      description: ページ
+      schema:
+        type: integer
+  responses:
+    '200':
+      description: 取得成功
+      content:
+        application/json:
+          schema:
+            type: array
+            items:
+              $ref: '../../schemas/losses/LossDetail.yaml'
+    '404':
+      description: 指定されたロスIDが存在しない場合
+      content:
+        application/json:
+          schema:
+            $ref: '../../schemas/common/Error.yaml'
+  security:
+    - AppAccessToken:
+        - pos.losses:read
+    - UserAccessToken:
+        - pos.losses:read

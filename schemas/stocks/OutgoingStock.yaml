@@ -1,0 +1,80 @@
+type: object
+description: 出庫情報
+properties:
+  id:
+    type: integer
+    description: 出庫ID
+  division:
+    type: integer
+    description: 出庫区分（1:店舗間移動、2:返品、3:その他）
+  divisionName:
+    type: string
+    description: 出庫区分名
+  status:
+    type: integer
+    description: 出庫ステータス（1:計画中、2:確定済）
+  statusName:
+    type: string
+    description: 出庫ステータス名
+  storeId:
+    type: integer
+    description: 店舗ID
+  storeName:
+    type: string
+    description: 店舗名
+  destinationStoreId:
+    type: integer
+    description: 入庫先店舗ID
+  destinationStoreName:
+    type: string
+    description: 入庫先店舗名
+  supplierId:
+    type: integer
+    description: 仕入先ID（返品時）
+  supplierName:
+    type: string
+    description: 仕入先名（返品時）
+  shipmentId:
+    type: integer
+    description: 出荷ID
+  shipmentDate:
+    type: string
+    format: date
+    description: 出荷日
+  targetDate:
+    type: string
+    format: date
+    description: 出庫日
+  estimatedDate:
+    type: string
+    format: date
+    description: 出庫予定日
+  staffId:
+    type: integer
+    description: 担当スタッフID
+  staffName:
+    type: string
+    description: 担当スタッフ名
+  memo:
+    type: string
+    description: メモ
+  totalAmount:
+    type: integer
+    description: 合計金額
+  productCount:
+    type: integer
+    description: 商品件数
+  createDate:
+    type: string
+    format: date-time
+    description: 作成日時
+  updateDate:
+    type: string
+    format: date-time
+    description: 更新日時
+required:
+  - id
+  - division
+  - status
+  - storeId
+  - targetDate

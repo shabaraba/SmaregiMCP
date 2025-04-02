@@ -1,0 +1,31 @@
+type: object
+properties:
+  arrivalId:
+    type: string
+    description: 入荷ID
+  arrivalDetailId:
+    type: string
+    description: 入荷明細ID
+  productId:
+    type: string
+    description: 商品ID
+  orderDetailId:
+    type: string
+    description: 発注明細ID
+  quantity:
+    type: string
+    description: 数量
+  cost:
+    type: string
+    description: 原価
+  memo:
+    type: string
+    description: メモ
+  insDateTime:
+    type: string
+    format: date-time
+    description: 登録日時
+  updDateTime:
+    type: string
+    format: date-time
+    description: 更新日時

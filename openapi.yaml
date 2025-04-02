@@ -1,7 +1,9 @@
 openapi: 3.0.3
 info:
   title: スマレジ・プラットフォームAPI POS仕様
-  description: スマレジ・プラットフォームAPIのPOS機能を利用するためのAPI仕様書です。POSシステムの基本機能である商品管理、在庫管理、取引管理などの機能を提供します。
+  description: |
+    スマレジ・プラットフォームAPIのPOS機能を利用するためのAPI仕様書です。
+    POSシステムの基本機能である商品管理、在庫管理、取引管理などの機能を提供します。
   version: 1.0.0
   contact:
     name: スマレジサポート
@@ -19,14 +21,11 @@ servers:
       contractId:
         description: 契約ID
         default: dummy
+
 paths:
-  $ref: ./paths/_index.yaml
+  $ref: './paths/_index.yaml'
+
 components:
-  schemas:
-    Error:
-      $ref: './schemas/Error.yaml'
-    Pagination:
-      $ref: './schemas/Pagination.yaml'
   securitySchemes:
     AppAccessToken:
       type: oauth2
@@ -60,7 +59,9 @@ components:
             pos.stocktaking:read: 棚卸の参照ができます。
     UserAccessToken:
       type: oauth2
-      description: ユーザーアクセストークン。管理画面における制御と同等の、ユーザー（＝スタッフ）の所属店舗による制御や、属する役割・役職に設定された各種権限に基づく実行制御が適用されます。
+      description: |
+        ユーザーアクセストークン。
+        管理画面における制御と同等の、ユーザー（＝スタッフ）の所属店舗による制御や、属する役割・役職に設定された各種権限に基づく実行制御が適用されます。
       flows:
         authorizationCode:
           authorizationUrl: https://id.smaregi.dev/authorize
@@ -82,6 +83,10 @@ components:
             pos.stores:write: 店舗の更新ができます。
             pos.staffs:read: スタッフの参照ができます。
             pos.staffs:write: スタッフの更新ができます。
+  
+  schemas:
+    $ref: './schemas/_index.yaml'
+
 tags:
   - name: 部門
     description: 部門に関する操作
@@ -109,9 +114,3 @@ tags:
     description: 棚卸に関する操作
   - name: 支払方法
     description: 支払方法に関する操作
-  - name: オプショングループ
-    description: オプショングループに関する操作
-  - name: バンドル販売
-    description: バンドル販売に関する操作
-  - name: クーポン
-    description: クーポンに関する操作

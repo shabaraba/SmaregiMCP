@@ -1,0 +1,54 @@
+get:
+  tags:
+    - 入荷
+  summary: 入荷明細取得
+  description: 入荷明細情報を取得します。
+  parameters:
+    - name: id
+      in: path
+      required: true
+      description: 入荷ID
+      schema:
+        type: string
+    - name: fields
+      in: query
+      description: 検索パラメータ（カンマ区切りで指定可）
+      schema:
+        type: array
+        items:
+          type: string
+    - name: sort
+      in: query
+      description: 並び順（カンマ区切りで指定可）
+      schema:
+        type: string
+    - name: limit
+      in: query
+      description: 上限数
+      schema:
+        type: integer
+    - name: page
+      in: query
+      description: ページ
+      schema:
+        type: integer
+  responses:
+    '200':
+      description: 取得成功
+      content:
+        application/json:
+          schema:
+            type: array
+            items:
+              $ref: '../../schemas/arrivals/ArrivalDetail.yaml'
+    '404':
+      description: 指定された入荷IDが存在しない場合
+      content:
+        application/json:
+          schema:
+            $ref: '../../schemas/common/Error.yaml'
+  security:
+    - AppAccessToken:
+        - pos.orders:read
+    - UserAccessToken:
+        - pos.orders:read
