@@ -9,21 +9,22 @@ info:
     name: スマレジサポート
     url: https://www.smaregi.jp/support/
 servers:
-  - url: https://api.smaregi.dev/{contractId}/pos
+  - url: https://api.smaregi.dev
     description: サンドボックス環境
-    variables:
-      contractId:
-        description: 契約ID
-        default: dummy
-  - url: https://api.smaregi.jp/{contractId}/pos
+  - url: https://api.smaregi.jp
     description: 本番環境
-    variables:
-      contractId:
-        description: 契約ID
-        default: dummy
 
 paths:
-  $ref: './paths/_index.yaml'
+  /{contractId}/pos:
+    parameters:
+      - name: contractId
+        in: path
+        required: true
+        description: 契約ID
+        schema:
+          type: string
+          default: dummy
+    $ref: './paths/_index.yaml'
 
 components:
   securitySchemes:
