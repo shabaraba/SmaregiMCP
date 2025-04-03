@@ -23,3 +23,6 @@ yarn-error.log*
 # テスト結果
 coverage/
 dist_test/
+
+# AIとの会話やテスト用スクリプト
+ai/
