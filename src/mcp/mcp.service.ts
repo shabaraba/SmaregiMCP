@@ -1,7 +1,7 @@
 import { Injectable, OnModuleInit } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
-import { Server } from '@modelcontextprotocol/sdk/server';
-import { StdioServerTransport } from '@modelcontextprotocol/sdk/server/stdio';
+import { Server } from '@modelcontextprotocol/sdk/dist/esm/server';
+import { StdioServerTransport } from '@modelcontextprotocol/sdk/dist/esm/server/stdio';
 import { ToolsService } from './tools/tools.service';
 import { ToolHandlerService } from './tools/tool-handler.service';
 
