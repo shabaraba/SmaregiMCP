@@ -1,5 +1,4 @@
 import { Entity, Column, CreateDateColumn, UpdateDateColumn, OneToOne, JoinColumn, PrimaryColumn } from 'typeorm';
-import { SessionEntity } from './session.entity.js';
 
 @Entity('tokens')
 export class TokenEntity {
@@ -24,7 +23,7 @@ export class TokenEntity {
   @UpdateDateColumn({ name: 'updated_at' })
   updatedAt: Date;
 
-  @OneToOne(() => SessionEntity, session => session.token)
+  @OneToOne('SessionEntity', 'token')
   @JoinColumn({ name: 'session_id' })
-  session: SessionEntity;
+  session: any;
 }

@@ -42,7 +42,7 @@ async function init() {
   
   // 実行ファイルの絶対パスを取得
   const projectRoot = process.cwd();
-  const distPath = path.join(projectRoot, 'dist', 'main.js');
+  const distPath = path.join(projectRoot, 'dist', 'src', 'main.js');
   
   // 設定オブジェクト
   const config = {

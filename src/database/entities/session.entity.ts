@@ -1,5 +1,4 @@
 import { Entity, Column, PrimaryColumn, CreateDateColumn, OneToOne } from 'typeorm';
-import { TokenEntity } from './token.entity.js';
 
 @Entity('sessions')
 export class SessionEntity {
@@ -18,6 +17,6 @@ export class SessionEntity {
   @Column({ name: 'expires_at' })
   expiresAt: Date;
 
-  @OneToOne(() => TokenEntity, token => token.session, { cascade: true })
-  token: TokenEntity;
+  @OneToOne('TokenEntity', 'session', { cascade: true })
+  token: any;
 }
