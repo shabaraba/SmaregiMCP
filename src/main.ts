@@ -92,11 +92,20 @@ async function bootstrap() {
   const portInUse = await isPortInUse(configPort);
   
   if (portInUse) {
-    // ポートが既に使用中の場合、エラーとしない
+    // ポートが既に使用中の場合は、HTTPサーバーをスキップし、
+    // MCPサーバーの初期化は続行する（McpServiceのonModuleInitで行われる）
     process.stderr.write(`[INFO] ポート${configPort}は既に使用中です。別のプロセスが実行中と思われます。\n`);
-    process.stderr.write(`[INFO] 既存のプロセスにMCPリクエストは転送されます。このプロセスは終了します。\n`);
-    // エラーとせずに正常終了（エラーコード0）
-    process.exit(0);
+    process.stderr.write(`[INFO] HTTPサーバーの起動をスキップします。MCPサーバーのみ初期化します。\n`);
+    
+    // HTTPサーバーのみスキップし、アプリケーションの初期化は行う
+    // そのまま実行を続けてMcpServiceのonModuleInitでMCPサーバーを初期化させる
+    const app = await NestFactory.create(AppModule, {
+      logger: new McpCompatibleLogger('NestApplication'),
+      cors: true,
+    });
+    
+    process.stderr.write(`[INFO] MCPサーバーを初期化しています。HTTPサーバーは起動しません。\n`);
+    return; // app.listen()はスキップ
   }
   
   // MCP互換のカスタムロガーを使用
@@ -204,14 +213,14 @@ if (cmd === 'init') {
     });
 } else if (cmd === 'run') {
   process.stderr.write('[INFO] Claude Desktopからの実行モードで起動します\n');
-  process.stderr.write('[INFO] MCPサーバーはClaude Desktopの設定から起動されます\n');
-  process.stderr.write('[INFO] ポートが既に使用中の場合は、既存のプロセスにリクエストが転送されます\n');
+  process.stderr.write('[INFO] MCPサーバーが初期化されます\n');
+  process.stderr.write('[INFO] ポートが既に使用中の場合は、HTTPサーバーの起動をスキップしてMCPサーバーのみ初期化します\n');
   bootstrap().catch((error) => {
     // EADDRINUSEエラーは特別に処理
     if (error.code === 'EADDRINUSE') {
-      process.stderr.write(`[INFO] ポートが既に使用中です。既存のサーバーを利用します。\n`);
-      // エラーとしない
-      process.exit(0);
+      process.stderr.write(`[INFO] ポートが既に使用中です。MCPサーバーのみ初期化します。\n`);
+      // HTTPサーバー初期化スキップ、MCPサーバーは継続
+      return;
     } else {
       console.error('Error starting server:', error);
       process.exit(1);
