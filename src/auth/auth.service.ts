@@ -49,7 +49,7 @@ export class AuthService {
     authUrl.searchParams.append('client_id', this.configService.get('CLIENT_ID', ''));
     authUrl.searchParams.append('scope', scopes.join(' '));
     authUrl.searchParams.append('state', state);
-    authUrl.searchParams.append('redirect_uri', this.configService.get('REDIRECT_URI', 'http://localhost:3000/auth/callback'));
+    authUrl.searchParams.append('redirect_uri', this.configService.get('REDIRECT_URI', 'http://127.0.0.1:3000/auth/callback'));
     authUrl.searchParams.append('code_challenge', codeChallenge);
     authUrl.searchParams.append('code_challenge_method', 'S256');
 

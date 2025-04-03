@@ -121,17 +121,27 @@ npm install
 cp .env.example .env
 ```
 
-3. MCPサーバーをClaude Desktopに登録
+3. アプリケーションをビルド
+
+```bash
+npm run build
+```
+
+4. MCPサーバーをClaude Desktopに登録
 
 ```bash
 npm run mcp:init
 ```
 
-この操作により、MCPサーバーがClaude Desktopの設定に登録されます。
+この操作により、MCPサーバーがClaude Desktopの設定に登録されます。**このステップだけで完了です**。
+MCPサーバーはClaude Desktopにより必要なときに自動的に起動されます。
 
 ### 使用方法
 
-MCPサーバーを起動：
+**注意**: `npm run mcp:init` を実行した後は、通常、手動でサーバーを起動する必要はありません。
+Claude Desktopはスマレジの機能にアクセスするときに自動的にMCPサーバーを起動します。
+
+開発やテスト目的で手動でサーバーを起動する場合：
 
 ```bash
 npm run mcp:run
@@ -142,6 +152,34 @@ npm run mcp:run
 ```bash
 npm run mcp:dev
 ```
+
+ヘルプを表示：
+
+```bash
+npm run mcp:help
+```
+
+### 既知の問題: サーバーの二重起動
+
+もし `npm run mcp:init` を実行した後、手動で `npm run mcp:run` を実行すると、次のようなエラーが発生することがあります：
+
+```
+[ERROR] [NestApplication] Error: listen EADDRINUSE: address already in use :::3000
+```
+
+これは、Claude Desktopによって起動されたMCPサーバーと手動で起動したサーバーが同じポートを使用しようとするために発生します。
+
+**解決方法**:
+1. 既存のMCPサーバープロセスを終了する
+   ```bash
+   # サーバープロセスを見つける
+   ps aux | grep 'node.*SmaregiMCP.*main.js'
+   
+   # 見つかったプロセスIDを使って終了
+   kill <プロセスID>
+   ```
+2. 通常はMCPサーバーを手動で起動する必要はありません。Claude Desktopが自動的に管理します。
+
 
 ### Claudeでの使用例
 
