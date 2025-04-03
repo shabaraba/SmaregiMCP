@@ -7,8 +7,38 @@ import * as path from 'path';
 import * as fs from 'node:fs';
 import { promisify } from 'util';
 import { exec as execCallback } from 'child_process';
+import * as net from 'net';
 
 const execAsync = promisify(execCallback);
+
+/**
+ * 指定されたポートが使用中かどうかをチェックする
+ * @param port チェックするポート番号
+ * @returns ポートが使用中の場合はtrue、そうでなければfalse
+ */
+async function isPortInUse(port: number): Promise<boolean> {
+  return new Promise((resolve) => {
+    const server = net.createServer();
+    
+    server.once('error', (err: NodeJS.ErrnoException) => {
+      if (err.code === 'EADDRINUSE') {
+        // ポートは既に使用中
+        resolve(true);
+      } else {
+        // その他のエラー
+        resolve(false);
+      }
+    });
+    
+    server.once('listening', () => {
+      // ポートは利用可能
+      server.close();
+      resolve(false);
+    });
+    
+    server.listen(port);
+  });
+}
 
 /**
  * MCPと互換性のあるカスタムロガー
@@ -55,6 +85,20 @@ class McpCompatibleLogger implements LoggerService {
 }
 
 async function bootstrap() {
+  const defaultPort = 3000;
+  
+  // アプリケーション作成前にポートをチェック
+  const configPort = process.env.PORT ? parseInt(process.env.PORT, 10) : defaultPort;
+  const portInUse = await isPortInUse(configPort);
+  
+  if (portInUse) {
+    // ポートが既に使用中の場合、エラーとしない
+    process.stderr.write(`[INFO] ポート${configPort}は既に使用中です。別のプロセスが実行中と思われます。\n`);
+    process.stderr.write(`[INFO] 既存のプロセスにMCPリクエストは転送されます。このプロセスは終了します。\n`);
+    // エラーとせずに正常終了（エラーコード0）
+    process.exit(0);
+  }
+  
   // MCP互換のカスタムロガーを使用
   const app = await NestFactory.create(AppModule, {
     logger: new McpCompatibleLogger('NestApplication'),
@@ -63,7 +107,7 @@ async function bootstrap() {
   });
   
   const configService = app.get(ConfigService);
-  const port = configService.get('PORT', 3000);
+  const port = configService.get('PORT', defaultPort);
   
   await app.listen(port);
   // 標準エラー出力にログを出力
@@ -161,9 +205,17 @@ if (cmd === 'init') {
 } else if (cmd === 'run') {
   process.stderr.write('[INFO] Claude Desktopからの実行モードで起動します\n');
   process.stderr.write('[INFO] MCPサーバーはClaude Desktopの設定から起動されます\n');
+  process.stderr.write('[INFO] ポートが既に使用中の場合は、既存のプロセスにリクエストが転送されます\n');
   bootstrap().catch((error) => {
-    console.error('Error starting server:', error);
-    process.exit(1);
+    // EADDRINUSEエラーは特別に処理
+    if (error.code === 'EADDRINUSE') {
+      process.stderr.write(`[INFO] ポートが既に使用中です。既存のサーバーを利用します。\n`);
+      // エラーとしない
+      process.exit(0);
+    } else {
+      console.error('Error starting server:', error);
+      process.exit(1);
+    }
   });
 } else {
   // コマンドが指定されていない場合はヘルプを表示
