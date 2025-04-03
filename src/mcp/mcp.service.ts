@@ -7,7 +7,7 @@ import { z } from 'zod';
 import * as fs from 'node:fs';
 import * as path from 'node:path';
 import * as yaml from 'js-yaml';
-import { ListResourcesRequestSchema, ListPromptsRequestSchema } from '@modelcontextprotocol/sdk/types.js';
+import { ListResourcesRequestSchema, ListPromptsRequestSchema, GetPromptRequestSchema } from '@modelcontextprotocol/sdk/types.js';
 
 @Injectable()
 export class McpService implements OnModuleInit, OnModuleDestroy {
@@ -255,6 +255,81 @@ export class McpService implements OnModuleInit, OnModuleDestroy {
           
           return {
             prompts
+          };
+        }
+      );
+      
+      // プロンプト取得のハンドラーを設定
+      this.mcpServer.server.setRequestHandler(
+        GetPromptRequestSchema,
+        async (request) => {
+          const { name, arguments: promptArgs } = request.params;
+          
+          process.stderr.write(`[INFO] [McpService] prompts/get リクエスト: ${name}\n`);
+          
+          // OpenAPI定義からプロンプトを生成（一覧から名前で検索）
+          const allPrompts = this.generatePromptsFromOpenApi();
+          const promptDef = allPrompts.find(p => p.name === name);
+          
+          if (!promptDef) {
+            throw new Error(`プロンプト "${name}" が見つかりません`);
+          }
+          
+          // プロンプトテンプレートに応じてメッセージを生成
+          let messages = [];
+          
+          switch (name) {
+            case 'search-products':
+              messages = [
+                {
+                  role: 'user',
+                  content: {
+                    type: 'text',
+                    text: `スマレジに登録されている商品を検索してください。\n\n検索キーワード: ${promptArgs?.keyword || '指定なし'}\nカテゴリ: ${promptArgs?.category || '指定なし'}`
+                  }
+                }
+              ];
+              break;
+            
+            case 'analyze-sales':
+              messages = [
+                {
+                  role: 'user',
+                  content: {
+                    type: 'text',
+                    text: `以下の条件で売上データを分析してください。\n\n期間: ${promptArgs?.period || '先週'}\n店舗ID: ${promptArgs?.storeId || '全店舗'}`
+                  }
+                }
+              ];
+              break;
+              
+            case 'inventory-status':
+              messages = [
+                {
+                  role: 'user',
+                  content: {
+                    type: 'text',
+                    text: `在庫状況を確認してください。\n\n商品ID: ${promptArgs?.productId || '全商品'}\n店舗ID: ${promptArgs?.storeId || '全店舗'}`
+                  }
+                }
+              ];
+              break;
+              
+            default:
+              messages = [
+                {
+                  role: 'user',
+                  content: {
+                    type: 'text',
+                    text: `${promptDef.description || 'リクエストされたプロンプト'}についての情報を表示します。`
+                  }
+                }
+              ];
+          }
+          
+          return {
+            description: promptDef.description,
+            messages
           };
         }
       );
