@@ -13,6 +13,84 @@ import { McpService } from './mcp/mcp.service.js';
 const execAsync = promisify(execCallback);
 
 /**
+ * 単一のインスタンスのみを実行するためのロックファイル
+ * Claude Desktopからの重複起動を防止する
+ */
+const LOCK_FILE_PATH = path.join(os.tmpdir(), 'smaregi-mcp-server.lock');
+
+/**
+ * サーバーがすでに実行中かどうかをチェックする
+ * ロックファイルを使用して単一インスタンスを保証する
+ * @returns 実行中の場合はtrue、そうでなければfalse
+ */
+function checkIfServerAlreadyRunning(): boolean {
+  try {
+    // ロックファイルがあるかチェック
+    if (fs.existsSync(LOCK_FILE_PATH)) {
+      // ロックファイルからPIDを読み取る
+      const pidStr = fs.readFileSync(LOCK_FILE_PATH, 'utf8');
+      const pid = parseInt(pidStr, 10);
+      
+      // PIDが有効かつプロセスが実行中かチェック
+      if (pid && isProcessRunning(pid)) {
+        process.stderr.write(`[INFO] サーバーはすでにPID ${pid}で実行中です\n`);
+        return true;
+      } else {
+        // 古いロックファイルを削除
+        fs.unlinkSync(LOCK_FILE_PATH);
+      }
+    }
+    
+    // ロックファイルを作成し、現在のPIDを書き込む
+    fs.writeFileSync(LOCK_FILE_PATH, process.pid.toString(), 'utf8');
+    
+    // プロセス終了時にロックファイルを削除するハンドラーを登録
+    process.on('exit', () => {
+      if (fs.existsSync(LOCK_FILE_PATH)) {
+        try {
+          fs.unlinkSync(LOCK_FILE_PATH);
+        } catch (err) {
+          // 終了時のエラーは無視
+        }
+      }
+    });
+    
+    // 例外が発生した場合もロックファイルを削除
+    process.on('uncaughtException', (err) => {
+      process.stderr.write(`[ERROR] 未処理の例外: ${err}\n`);
+      if (fs.existsSync(LOCK_FILE_PATH)) {
+        try {
+          fs.unlinkSync(LOCK_FILE_PATH);
+        } catch (err) {
+          // 終了時のエラーは無視
+        }
+      }
+      process.exit(1);
+    });
+    
+    return false;
+  } catch (err) {
+    process.stderr.write(`[ERROR] ロックファイル操作中のエラー: ${err}\n`);
+    return false; // エラーが発生した場合は、サーバーを起動させる
+  }
+}
+
+/**
+ * 指定されたPIDのプロセスが実行中かどうかをチェックする
+ * @param pid プロセスID
+ * @returns プロセスが実行中の場合はtrue、そうでなければfalse
+ */
+function isProcessRunning(pid: number): boolean {
+  try {
+    // Node.jsでプロセスの存在チェック (0はシグナルを送信せずに存在確認のみ)
+    process.kill(pid, 0);
+    return true;
+  } catch (e) {
+    return false;
+  }
+}
+
+/**
  * 指定されたポートが使用中かどうかをチェックする
  * @param port チェックするポート番号
  * @returns ポートが使用中の場合はtrue、そうでなければfalse
@@ -216,6 +294,15 @@ if (cmd === 'init') {
     });
 } else if (cmd === 'run') {
   process.stderr.write('[INFO] Claude Desktopからの実行モードで起動します\n');
+  
+  // 同じサーバーが既に実行中かどうかをチェック
+  if (checkIfServerAlreadyRunning()) {
+    process.stderr.write('[INFO] 別のSmaregiMCPサーバープロセスが既に実行中です。このインスタンスは終了します。\n');
+    process.exit(0);
+    // process.exitがすぐに有効にならない場合に備えて、ここでプロセスを終了
+    throw new Error('プロセスは終了しました');
+  }
+  
   process.stderr.write('[INFO] MCPサーバーが初期化されます\n');
   process.stderr.write('[INFO] ポートが既に使用中の場合は、HTTPサーバーの起動をスキップしてMCPサーバーのみ初期化します\n');
   
@@ -249,10 +336,23 @@ if (cmd === 'init') {
           await app.close();
         }
         
+        // ロックファイルを削除
+        if (fs.existsSync(LOCK_FILE_PATH)) {
+          fs.unlinkSync(LOCK_FILE_PATH);
+        }
+        
         process.stderr.write('[INFO] クリーンアップが完了しました。アプリケーションを終了します。\n');
         process.exit(0);
       } catch (error) {
         process.stderr.write(`[ERROR] 終了処理中にエラーが発生しました: ${error}\n`);
+        // エラーが発生しても終了を試みる
+        if (fs.existsSync(LOCK_FILE_PATH)) {
+          try {
+            fs.unlinkSync(LOCK_FILE_PATH);
+          } catch (_) {
+            // エラーは無視
+          }
+        }
         process.exit(1);
       }
     };
@@ -303,6 +403,14 @@ if (cmd === 'init') {
         return;
       } else {
         console.error('Error starting server:', error);
+        // ロックファイルを削除
+        if (fs.existsSync(LOCK_FILE_PATH)) {
+          try {
+            fs.unlinkSync(LOCK_FILE_PATH);
+          } catch (_) {
+            // エラーは無視
+          }
+        }
         process.exit(1);
       }
     });
