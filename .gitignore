@@ -22,3 +22,4 @@ yarn-error.log*
 
 # テスト結果
 coverage/
+dist_test/

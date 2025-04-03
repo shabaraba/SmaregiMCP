@@ -1,5 +1,5 @@
 import createClient from "openapi-fetch";
-import {type paths} from "../generated/schema";
+import {type paths} from "../src/schema/pos.js";
 
 const client = createClient<paths>(
   {
