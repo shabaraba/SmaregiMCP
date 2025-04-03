@@ -8,6 +8,7 @@ import * as fs from 'node:fs';
 import { promisify } from 'util';
 import { exec as execCallback } from 'child_process';
 import * as net from 'net';
+import { McpService } from './mcp/mcp.service.js';
 
 const execAsync = promisify(execCallback);
 
@@ -84,7 +85,7 @@ class McpCompatibleLogger implements LoggerService {
   }
 }
 
-async function bootstrap() {
+async function bootstrap(): Promise<any> {
   const defaultPort = 3000;
   
   // アプリケーション作成前にポートをチェック
@@ -105,7 +106,7 @@ async function bootstrap() {
     });
     
     process.stderr.write(`[INFO] MCPサーバーを初期化しています。HTTPサーバーは起動しません。\n`);
-    return; // app.listen()はスキップ
+    return app; // アプリケーションインスタンスを返す（app.listen()はスキップ）
   }
   
   // MCP互換のカスタムロガーを使用
@@ -121,6 +122,8 @@ async function bootstrap() {
   await app.listen(port);
   // 標準エラー出力にログを出力
   process.stderr.write(`[INFO] Application running on: http://localhost:${port}\n`);
+  
+  return app; // アプリケーションインスタンスを返す
 }
 
 // Claude Desktopの設定にMCPを追加するinitコマンド
@@ -215,17 +218,94 @@ if (cmd === 'init') {
   process.stderr.write('[INFO] Claude Desktopからの実行モードで起動します\n');
   process.stderr.write('[INFO] MCPサーバーが初期化されます\n');
   process.stderr.write('[INFO] ポートが既に使用中の場合は、HTTPサーバーの起動をスキップしてMCPサーバーのみ初期化します\n');
-  bootstrap().catch((error) => {
-    // EADDRINUSEエラーは特別に処理
-    if (error.code === 'EADDRINUSE') {
-      process.stderr.write(`[INFO] ポートが既に使用中です。MCPサーバーのみ初期化します。\n`);
-      // HTTPサーバー初期化スキップ、MCPサーバーは継続
-      return;
-    } else {
-      console.error('Error starting server:', error);
-      process.exit(1);
+  
+  // 親プロセスの終了を検知するハンドラー
+  let app: any = null;
+  let mcpService: McpService | null = null;
+
+  // 各種終了シグナルのハンドラーを設定
+  const setupSignalHandlers = (nestApp: any) => {
+    process.stderr.write('[INFO] 終了シグナルハンドラーを設定しています\n');
+    
+    // MCPサービスの取得
+    try {
+      mcpService = nestApp.get(McpService);
+    } catch (e) {
+      process.stderr.write(`[WARN] MCPサービスの取得に失敗しました: ${e}\n`);
     }
-  });
+    
+    // 正常終了時のクリーンアップ処理
+    const cleanup = async (signal: string) => {
+      process.stderr.write(`[INFO] シグナル${signal}を受信しました。適切に終了します...\n`);
+      
+      try {
+        // MCPサービスのクリーンアップ
+        if (mcpService) {
+          await mcpService.cleanup();
+        }
+        
+        // NestJSアプリケーションの終了
+        if (app && typeof app.close === 'function') {
+          await app.close();
+        }
+        
+        process.stderr.write('[INFO] クリーンアップが完了しました。アプリケーションを終了します。\n');
+        process.exit(0);
+      } catch (error) {
+        process.stderr.write(`[ERROR] 終了処理中にエラーが発生しました: ${error}\n`);
+        process.exit(1);
+      }
+    };
+    
+    // シグナルハンドラーを登録
+    process.on('SIGINT', () => cleanup('SIGINT'));
+    process.on('SIGTERM', () => cleanup('SIGTERM'));
+    process.on('SIGHUP', () => cleanup('SIGHUP'));
+    
+    // 親プロセスの終了検知（stdin/stdoutのクローズ）
+    process.stdin.on('end', () => {
+      process.stderr.write('[INFO] 標準入力が閉じられました。親プロセスが終了した可能性があります。\n');
+      cleanup('STDIN_CLOSE');
+    });
+    
+    process.stderr.write('[INFO] 終了シグナルハンドラーの設定が完了しました\n');
+  };
+  
+  bootstrap()
+    .then((nestApp) => {
+      if (nestApp) {
+        app = nestApp;
+        setupSignalHandlers(app);
+      } else {
+        // app.listenをスキップした場合（ポートが使用中の場合）
+        process.stderr.write('[INFO] HTTPサーバーなしでMCPサーバーが初期化されました\n');
+        
+        // NestJSのアプリケーションコンテキストを取得
+        NestFactory.createApplicationContext(AppModule, {
+          logger: new McpCompatibleLogger('NestApplication'),
+        }).then((appContext) => {
+          setupSignalHandlers(appContext);
+        });
+      }
+    })
+    .catch((error) => {
+      // EADDRINUSEエラーは特別に処理
+      if (error.code === 'EADDRINUSE') {
+        process.stderr.write(`[INFO] ポートが既に使用中です。MCPサーバーのみ初期化します。\n`);
+        
+        // NestJSのアプリケーションコンテキストを取得
+        NestFactory.createApplicationContext(AppModule, {
+          logger: new McpCompatibleLogger('NestApplication'),
+        }).then((appContext) => {
+          setupSignalHandlers(appContext);
+        });
+        
+        return;
+      } else {
+        console.error('Error starting server:', error);
+        process.exit(1);
+      }
+    });
 } else {
   // コマンドが指定されていない場合はヘルプを表示
   console.log('Usage: node dist/main.js <command>');

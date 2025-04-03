@@ -1,4 +1,4 @@
-import { Injectable, OnModuleInit } from '@nestjs/common';
+import { Injectable, OnModuleInit, OnModuleDestroy } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { McpServer } from '@modelcontextprotocol/sdk/server/mcp.js';
 import { StdioServerTransport } from '@modelcontextprotocol/sdk/server/stdio.js';
@@ -6,8 +6,9 @@ import { ToolHandlerService } from './tools/tool-handler.service.js';
 import { z } from 'zod';
 
 @Injectable()
-export class McpService implements OnModuleInit {
+export class McpService implements OnModuleInit, OnModuleDestroy {
   private mcpServer: McpServer;
+  private transport: StdioServerTransport | null = null;
 
   constructor(
     private configService: ConfigService,
@@ -113,12 +114,42 @@ export class McpService implements OnModuleInit {
       );
       
       // MCPトランスポート接続
-      const transport = new StdioServerTransport();
-      await this.mcpServer.connect(transport);
+      this.transport = new StdioServerTransport();
+      await this.mcpServer.connect(this.transport);
       process.stderr.write('[INFO] [McpService] MCPサーバーが接続され、実行中です\n');
     } catch (error) {
       process.stderr.write(`[ERROR] [McpService] MCPサーバー初期化エラー: ${error}\n`);
       throw error;
     }
+  }
+
+  /**
+   * モジュール破棄時にMCPサーバーを適切に終了
+   */
+  async onModuleDestroy() {
+    try {
+      if (this.mcpServer) {
+        process.stderr.write('[INFO] [McpService] MCPサーバーを終了しています...\n');
+        // トランスポートの切断
+        if (this.transport) {
+          try {
+            await this.transport.close();
+          } catch (e) {
+            process.stderr.write(`[WARN] [McpService] トランスポート切断中にエラーが発生しました: ${e}\n`);
+          }
+        }
+        process.stderr.write('[INFO] [McpService] MCPサーバーが正常に終了しました\n');
+      }
+    } catch (error) {
+      process.stderr.write(`[ERROR] [McpService] MCPサーバー終了エラー: ${error}\n`);
+    }
+  }
+
+  /**
+   * アプリケーション終了時の後処理を行う
+   * シグナルハンドラーなどから呼び出される
+   */
+  async cleanup() {
+    await this.onModuleDestroy();
   }
 }
