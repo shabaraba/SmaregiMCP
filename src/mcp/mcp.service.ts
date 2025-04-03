@@ -19,7 +19,8 @@ export class McpService implements OnModuleInit {
    */
   async onModuleInit() {
     try {
-      console.log('MCPサーバーを初期化中...');
+      // 標準エラー出力にログを出力
+      process.stderr.write('[INFO] [McpService] MCPサーバーを初期化中...\n');
       
       // MCPサーバー作成（高レベルAPIを使用）
       this.mcpServer = new McpServer(
@@ -113,9 +114,9 @@ export class McpService implements OnModuleInit {
       // MCPトランスポート接続
       const transport = new StdioServerTransport();
       await this.mcpServer.connect(transport);
-      console.log('MCPサーバーが接続され、実行中です');
+      process.stderr.write('[INFO] [McpService] MCPサーバーが接続され、実行中です\n');
     } catch (error) {
-      console.error('MCPサーバー初期化エラー:', error);
+      process.stderr.write(`[ERROR] [McpService] MCPサーバー初期化エラー: ${error}\n`);
       throw error;
     }
   }
