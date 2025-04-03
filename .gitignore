@@ -26,3 +26,4 @@ dist_test/
 
 # AIとの会話やテスト用スクリプト
 ai/
+smaregi-mcp.sqlite
