@@ -36,8 +36,13 @@ export class AuthController {
           </body>
         </html>
       `);
-    } catch (error) {
+    } catch (error: unknown) {
       console.error('認証エラー:', error);
+      // エラーメッセージを安全に取得
+      const errorMessage = error instanceof Error 
+        ? error.message 
+        : '認証処理中にエラーが発生しました';
+      
       res.status(500).send(`
         <html>
           <head>
@@ -49,7 +54,7 @@ export class AuthController {
           </head>
           <body>
             <h1>認証エラー</h1>
-            <p>${error.message || '認証処理中にエラーが発生しました'}</p>
+            <p>${errorMessage}</p>
           </body>
         </html>
       `);
