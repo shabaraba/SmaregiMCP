@@ -130,14 +130,25 @@ export class McpService implements OnModuleInit, OnModuleDestroy {
     try {
       if (this.mcpServer) {
         process.stderr.write('[INFO] [McpService] MCPサーバーを終了しています...\n');
-        // トランスポートの切断
+        
+        // まずMCPサーバーを終了
+        try {
+          await this.mcpServer.close();
+          process.stderr.write('[INFO] [McpService] MCPサーバー接続を閉じました\n');
+        } catch (e) {
+          process.stderr.write(`[WARN] [McpService] MCPサーバー終了中にエラーが発生しました: ${e}\n`);
+        }
+        
+        // その後トランスポートの切断
         if (this.transport) {
           try {
             await this.transport.close();
+            process.stderr.write('[INFO] [McpService] トランスポート接続を閉じました\n');
           } catch (e) {
             process.stderr.write(`[WARN] [McpService] トランスポート切断中にエラーが発生しました: ${e}\n`);
           }
         }
+        
         process.stderr.write('[INFO] [McpService] MCPサーバーが正常に終了しました\n');
       }
     } catch (error) {
