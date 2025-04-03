@@ -1,7 +1,7 @@
 import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { SessionEntity } from './entities/session.entity';
-import { TokenEntity } from './entities/token.entity';
+import { SessionEntity } from './entities/session.entity.js';
+import { TokenEntity } from './entities/token.entity.js';
 
 @Module({
   imports: [

@@ -36,8 +36,8 @@ export class McpService implements OnModuleInit {
         {
           scopes: z.array(z.string()).describe('要求するスコープのリスト（例：["pos.products:read", "pos.transactions:read"]）'),
         },
-        async (args) => {
-          return await this.toolHandlerService.handleGetAuthorizationUrl(args);
+        async ({ scopes }) => {
+          return await this.toolHandlerService.handleGetAuthorizationUrl({ scopes });
         }
       );
       
@@ -48,8 +48,8 @@ export class McpService implements OnModuleInit {
         {
           sessionId: z.string().describe('getAuthorizationUrlで取得したセッションID'),
         },
-        async (args) => {
-          return await this.toolHandlerService.handleCheckAuthStatus(args);
+        async ({ sessionId }) => {
+          return await this.toolHandlerService.handleCheckAuthStatus({ sessionId });
         }
       );
       
@@ -63,8 +63,13 @@ export class McpService implements OnModuleInit {
           method: z.enum(['GET', 'POST', 'PUT', 'DELETE']).describe('HTTPメソッド'),
           data: z.object({}).passthrough().optional().describe('リクエストボディ（POSTまたはPUTリクエスト用）'),
         },
-        async (args) => {
-          return await this.toolHandlerService.handleExecuteApiRequest(args);
+        async ({ sessionId, endpoint, method, data }) => {
+          return await this.toolHandlerService.handleExecuteApiRequest({
+            sessionId,
+            endpoint,
+            method,
+            data,
+          });
         }
       );
       
@@ -88,8 +93,8 @@ export class McpService implements OnModuleInit {
           path: z.string().describe('APIエンドポイントのパス'),
           method: z.enum(['GET', 'POST', 'PUT', 'DELETE']).describe('HTTPメソッド'),
         },
-        async (args) => {
-          return this.toolHandlerService.handleGetSmaregiApiOperation(args);
+        async ({ path, method }) => {
+          return this.toolHandlerService.handleGetSmaregiApiOperation({ path, method });
         }
       );
       

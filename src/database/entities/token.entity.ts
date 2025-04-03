@@ -1,5 +1,5 @@
 import { Entity, Column, CreateDateColumn, UpdateDateColumn, OneToOne, JoinColumn, PrimaryColumn } from 'typeorm';
-import { SessionEntity } from './session.entity';
+import { SessionEntity } from './session.entity.js';
 
 @Entity('tokens')
 export class TokenEntity {

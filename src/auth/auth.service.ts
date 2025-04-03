@@ -6,10 +6,10 @@ import { ConfigService } from '@nestjs/config';
 import { v4 as uuidv4 } from 'uuid';
 import * as crypto from 'crypto';
 import { lastValueFrom } from 'rxjs';
-import { SessionEntity } from '../database/entities/session.entity';
-import { TokenEntity } from '../database/entities/token.entity';
-import { AuthUrlDto } from './dto/auth-url.dto';
-import { TokenResponseDto } from './dto/token-response.dto';
+import { SessionEntity } from '../database/entities/session.entity.js';
+import { TokenEntity } from '../database/entities/token.entity.js';
+import { AuthUrlDto } from './dto/auth-url.dto.js';
+import { TokenResponseDto } from './dto/token-response.dto.js';
 
 @Injectable()
 export class AuthService {

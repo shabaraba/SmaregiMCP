@@ -2,10 +2,10 @@ import { Module } from '@nestjs/common';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { join } from 'path';
-import { McpModule } from './mcp/mcp.module';
-import { AuthModule } from './auth/auth.module';
-import { ApiModule } from './api/api.module';
-import { DatabaseModule } from './database/database.module';
+import { McpModule } from './mcp/mcp.module.js';
+import { AuthModule } from './auth/auth.module.js';
+import { ApiModule } from './api/api.module.js';
+import { DatabaseModule } from './database/database.module.js';
 
 @Module({
   imports: [

@@ -1,10 +1,10 @@
 import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { HttpModule } from '@nestjs/axios';
-import { AuthService } from './auth.service';
-import { AuthController } from './auth.controller';
-import { SessionEntity } from '../database/entities/session.entity';
-import { TokenEntity } from '../database/entities/token.entity';
+import { AuthService } from './auth.service.js';
+import { AuthController } from './auth.controller.js';
+import { SessionEntity } from '../database/entities/session.entity.js';
+import { TokenEntity } from '../database/entities/token.entity.js';
 
 @Module({
   imports: [

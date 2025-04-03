@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
-import { AuthService } from '../../auth/auth.service';
-import { ApiService } from '../../api/api.service';
+import { AuthService } from '../../auth/auth.service.js';
+import { ApiService } from '../../api/api.service.js';
 import * as yaml from 'js-yaml';
 import * as fs from 'fs';
 import * as path from 'path';

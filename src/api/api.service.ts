@@ -2,8 +2,8 @@ import { Injectable } from '@nestjs/common';
 import { HttpService } from '@nestjs/axios';
 import { ConfigService } from '@nestjs/config';
 import { lastValueFrom } from 'rxjs';
-import { AuthService } from '../auth/auth.service';
-import { ApiRequestInterface } from './interfaces/api-request.interface';
+import { AuthService } from '../auth/auth.service.js';
+import { ApiRequestInterface } from './interfaces/api-request.interface.js';
 
 @Injectable()
 export class ApiService {
