@@ -1,6 +1,7 @@
 import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module.js';
 import { ConfigService } from '@nestjs/config';
+import { Logger, LoggerService } from '@nestjs/common';
 import * as os from 'node:os';
 import * as path from 'path';
 import * as fs from 'node:fs';
@@ -9,18 +10,69 @@ import { exec as execCallback } from 'child_process';
 
 const execAsync = promisify(execCallback);
 
+/**
+ * MCPと互換性のあるカスタムロガー
+ * 
+ * NestJSのログ出力とMCPのJSON通信が競合するのを防ぐため、
+ * 標準エラー出力にログを出力し、カラー出力も無効化します
+ */
+class McpCompatibleLogger implements LoggerService {
+  private readonly logger = new Logger();
+  private readonly context?: string;
+
+  constructor(context?: string) {
+    this.context = context;
+  }
+
+  log(message: string, context?: string): void {
+    const ctx = context || this.context;
+    // 標準エラー出力に出力
+    process.stderr.write(`[INFO] ${ctx ? `[${ctx}] ` : ''}${message}\n`);
+  }
+
+  error(message: string, trace?: string, context?: string): void {
+    const ctx = context || this.context;
+    process.stderr.write(`[ERROR] ${ctx ? `[${ctx}] ` : ''}${message}\n`);
+    if (trace) {
+      process.stderr.write(`${trace}\n`);
+    }
+  }
+
+  warn(message: string, context?: string): void {
+    const ctx = context || this.context;
+    process.stderr.write(`[WARN] ${ctx ? `[${ctx}] ` : ''}${message}\n`);
+  }
+
+  debug(message: string, context?: string): void {
+    const ctx = context || this.context;
+    process.stderr.write(`[DEBUG] ${ctx ? `[${ctx}] ` : ''}${message}\n`);
+  }
+
+  verbose(message: string, context?: string): void {
+    const ctx = context || this.context;
+    process.stderr.write(`[VERBOSE] ${ctx ? `[${ctx}] ` : ''}${message}\n`);
+  }
+}
+
 async function bootstrap() {
-  const app = await NestFactory.create(AppModule);
+  // MCP互換のカスタムロガーを使用
+  const app = await NestFactory.create(AppModule, {
+    logger: new McpCompatibleLogger('NestApplication'),
+    // NestJSのカラーログを無効化
+    cors: true,
+  });
   
   const configService = app.get(ConfigService);
   const port = configService.get('PORT', 3000);
   
   await app.listen(port);
-  console.log(`Application running on: http://localhost:${port}`);
+  // 標準エラー出力にログを出力
+  process.stderr.write(`[INFO] Application running on: http://localhost:${port}\n`);
 }
 
 // Claude Desktopの設定にMCPを追加するinitコマンド
 async function init() {
+  // init関数では標準出力に出力しても問題ないのでconsole.logのまま
   console.log('👋 Welcome to Smaregi MCP Server!');
   console.log('💁‍♀️ This initialization process will install the Smaregi MCP Server into Claude Desktop');
   console.log('   enabling Claude to interact with the Smaregi API.');
