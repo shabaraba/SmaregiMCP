@@ -19,6 +19,36 @@ const projectRoot = resolve(dirname(dirname(__filename)));
   imports: [
     ConfigModule.forRoot({
       isGlobal: true,
+      envFilePath: join(projectRoot, ".env"),
+      // .envファイルの絶対パスを出力
+      ignoreEnvFile: false,
+      ignoreEnvVars: false,
+      validate: (config) => {
+        process.stderr.write(`[DEBUG] .envファイルパス: ${join(projectRoot, ".env")}\n`);
+        return config;
+      },
+      // デバッグのために環境変数の読み込み状況をログ出力
+      load: [() => {
+        const config = {};
+        // 重要な環境変数をチェック
+        const keysToCheck = [
+          'CLIENT_ID', 
+          'CLIENT_SECRET', 
+          'DATABASE_PATH', 
+          'CONTRACT_ID',
+          'REDIRECT_URI'
+        ];
+        
+        keysToCheck.forEach(key => {
+          config[key] = process.env[key];
+          process.stderr.write(`[DEBUG] 環境変数 ${key}: ${process.env[key] || '未設定'}\n`);
+        });
+        
+        // プロセスが実行されているディレクトリを出力
+        process.stderr.write(`[DEBUG] 実行ディレクトリ: ${process.cwd()}\n`);
+        
+        return config;
+      }],
     }),
     TypeOrmModule.forRootAsync({
       imports: [ConfigModule],

@@ -9,7 +9,7 @@
     "start": "nest start",
     "start:dev": "nest start --watch",
     "start:debug": "nest start --debug --watch",
-    "start:prod": "node dist/src/main.js",
+    "start:prod": "node dist/main.js",
     "lint": "eslint \"{src,apps,libs,test}/**/*.ts\" --fix",
     "test": "jest",
     "test:watch": "jest --watch",
@@ -17,8 +17,9 @@
     "test:debug": "node --inspect-brk -r tsconfig-paths/register -r ts-node/register node_modules/.bin/jest --runInBand",
     "test:e2e": "jest --config ./test/jest-e2e.json",
     "generate-api": "node ai/generate_openapi.js",
-    "mcp:init": "node dist/src/main.js init",
-    "mcp:run": "node dist/src/main.js run",
+    "mcp:init": "node dist/main.js init",
+    "mcp:run": "node dist/main.js run",
+    "mcp:help": "node dist/main.js",
     "mcp:dev": "nest start --watch"
   },
   "keywords": [

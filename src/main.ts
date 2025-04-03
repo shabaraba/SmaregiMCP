@@ -94,7 +94,7 @@ async function init() {
   
   // 実行ファイルの絶対パスを取得
   const projectRoot = process.cwd();
-  const distPath = path.join(projectRoot, 'dist', 'src', 'main.js');
+  const distPath = path.join(projectRoot, 'dist', 'main.js');
   
   // 設定オブジェクト
   const config = {
@@ -130,6 +130,9 @@ async function init() {
     
     console.log('Smaregi MCP Server configured & added to Claude Desktop!');
     console.log(`Wrote config to ${claudeConfigPath}`);
+    console.log('Important: This command only configured the MCP server. The server will be');
+    console.log('          automatically started by Claude Desktop when needed.');
+    console.log('          You do NOT need to run "npm run mcp:run" manually.');
     console.log('Try asking Claude about the Smaregi API to get started!');
   } else {
     const fullConfig = { mcpServers: { smaregi: config } };
@@ -161,9 +164,10 @@ if (cmd === 'init') {
     process.exit(1);
   });
 } else {
-  // デフォルトでブートストラップを実行
-  bootstrap().catch((error) => {
-    console.error('Error starting server:', error);
-    process.exit(1);
-  });
+  // コマンドが指定されていない場合はヘルプを表示
+  console.log('Usage: node dist/main.js <command>');
+  console.log('Available commands:');
+  console.log('  init - Configure the MCP server in Claude Desktop');
+  console.log('  run  - Run the MCP server');
+  process.exit(0);
 }
