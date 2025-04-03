@@ -1,4 +1,5 @@
-import { Transport, TransportCallback } from '@modelcontextprotocol/sdk/shared/transport.js';
+import { Transport } from '@modelcontextprotocol/sdk/shared/transport.js';
+import { JSONRPCMessage } from '@modelcontextprotocol/sdk/types.js';
 import { Duplex } from 'stream';
 import { createInterface } from 'readline';
 import { spawn, ChildProcess } from 'child_process';
@@ -9,8 +10,9 @@ import { spawn, ChildProcess } from 'child_process';
  * 標準出力とMCPメッセージングを分離します。
  */
 export class CustomChildProcessTransport implements Transport {
-  private onCloseCallback: TransportCallback | null = null;
-  private onMessageCallback: TransportCallback | null = null;
+  private onCloseHandler: (() => void) | undefined;
+  private onErrorHandler: ((error: Error) => void) | undefined;
+  private onMessageHandler: ((message: JSONRPCMessage) => void) | undefined;
   private childProcess: ChildProcess | null = null;
   private readline: any;
 
@@ -26,7 +28,7 @@ export class CustomChildProcessTransport implements Transport {
    * この実装では、MCPサーバーと通信するための専用プロセスを生成することはありません。
    * 代わりに、サーバープロセス自体を使用しますが、出力ストリームを適切に処理します。
    */
-  start(): void {
+  async start(): Promise<void> {
     // 現在のプロセスのstdinとstdoutを使用
     this.setupStreamHandlers(process.stdin, process.stdout);
   }
@@ -35,26 +37,26 @@ export class CustomChildProcessTransport implements Transport {
    * トランスポートを閉じます。
    * この実装では実際のプロセスは終了しません。
    */
-  close(): void {
+  async close(): Promise<void> {
     if (this.childProcess && !this.childProcess.killed) {
       this.childProcess.kill();
       this.childProcess = null;
     }
     
-    if (this.onCloseCallback) {
-      this.onCloseCallback(null);
+    if (this.onCloseHandler) {
+      this.onCloseHandler();
     }
   }
 
   /**
    * メッセージを送信します。
-   * @param message 送信するメッセージ
+   * @param message 送信するJSONRPCメッセージ
    */
-  sendMessage(message: string): void {
+  async send(message: JSONRPCMessage): Promise<void> {
     try {
       // JSONをパースしてから再度文字列化します
       // これにより、メッセージがJSON形式であることが保証されます
-      const jsonMessage = JSON.stringify(JSON.parse(message));
+      const jsonMessage = JSON.stringify(message);
       
       // 子プロセスにメッセージを送信
       if (this.childProcess) {
@@ -63,10 +65,14 @@ export class CustomChildProcessTransport implements Transport {
         // 子プロセスがない場合は標準出力に直接書き込み
         process.stdout.write(jsonMessage + '\n');
       }
-    } catch (error) {
+    } catch (error: unknown) {
       console.error('メッセージ送信エラー:', error);
-      if (this.onCloseCallback) {
-        this.onCloseCallback(new Error(`メッセージ送信エラー: ${error.message}`));
+      const errorMessage = error instanceof Error 
+        ? error.message 
+        : '不明なエラー';
+      
+      if (this.onErrorHandler) {
+        this.onErrorHandler(new Error(`メッセージ送信エラー: ${errorMessage}`));
       }
     }
   }
@@ -75,17 +81,30 @@ export class CustomChildProcessTransport implements Transport {
    * メッセージ受信時のコールバックを設定します。
    * @param callback メッセージ受信時に呼び出されるコールバック関数
    */
-  onMessage(callback: TransportCallback): void {
-    this.onMessageCallback = callback;
+  set onmessage(callback: (message: JSONRPCMessage) => void) {
+    this.onMessageHandler = callback;
   }
 
   /**
    * トランスポートが閉じられた時のコールバックを設定します。
    * @param callback トランスポートが閉じられた時に呼び出されるコールバック関数
    */
-  onClose(callback: TransportCallback): void {
-    this.onCloseCallback = callback;
+  set onclose(callback: () => void) {
+    this.onCloseHandler = callback;
   }
+
+  /**
+   * エラー発生時のコールバックを設定します。
+   * @param callback エラー発生時に呼び出されるコールバック関数
+   */
+  set onerror(callback: (error: Error) => void) {
+    this.onErrorHandler = callback;
+  }
+
+  /**
+   * セッションID プロパティ（インターフェースを満たすため）
+   */
+  sessionId?: string;
 
   /**
    * ストリームハンドラをセットアップします。
@@ -104,38 +123,42 @@ export class CustomChildProcessTransport implements Transport {
       try {
         // 受信したラインがJSON形式かどうかをチェック
         const trimmedLine = line.trim();
-        if (trimmedLine && trimmedLine.startsWith('{') && this.onMessageCallback) {
+        if (trimmedLine && trimmedLine.startsWith('{') && this.onMessageHandler) {
           // JSONパースを試みる
-          JSON.parse(trimmedLine);
+          const jsonMessage = JSON.parse(trimmedLine) as JSONRPCMessage;
           // パースが成功したらコールバックを呼び出す
-          this.onMessageCallback(null, trimmedLine);
+          this.onMessageHandler(jsonMessage);
         }
-      } catch (error) {
+      } catch (error: unknown) {
         // JSONパースに失敗した場合は標準エラー出力に書き込む
         // これによりMCPプロトコルの外でエラーを報告する
-        console.error(`JSON解析エラー: ${error.message}, 受信ライン: ${line}`);
+        const errorMessage = error instanceof Error 
+          ? error.message 
+          : '不明なエラー';
+        
+        console.error(`JSON解析エラー: ${errorMessage}, 受信ライン: ${line}`);
       }
     });
 
     // ストリームが閉じられた際のハンドラ
     inputStream.on('close', () => {
-      if (this.onCloseCallback) {
-        this.onCloseCallback(null);
+      if (this.onCloseHandler) {
+        this.onCloseHandler();
       }
     });
 
     // エラーハンドラ
     inputStream.on('error', (error) => {
       console.error('入力ストリームエラー:', error);
-      if (this.onCloseCallback) {
-        this.onCloseCallback(error);
+      if (this.onErrorHandler) {
+        this.onErrorHandler(error);
       }
     });
 
     outputStream.on('error', (error) => {
       console.error('出力ストリームエラー:', error);
-      if (this.onCloseCallback) {
-        this.onCloseCallback(error);
+      if (this.onErrorHandler) {
+        this.onErrorHandler(error);
       }
     });
   }

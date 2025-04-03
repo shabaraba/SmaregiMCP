@@ -56,10 +56,19 @@ export class ApiService {
       }
       
       return response.data;
-    } catch (error) {
+    } catch (error: unknown) {
       console.error('API実行エラー:', error);
+      // エラーオブジェクトの型を適切に処理
+      const errorMessage = error instanceof Error 
+        ? error.message 
+        : '不明なエラー';
+      
+      // response プロパティへのアクセスを型安全に行う
+      const responseError = error as { response?: { data?: { title?: string } } };
+      const errorTitle = responseError.response?.data?.title;
+      
       throw new Error(
-        `APIリクエスト失敗: ${error.response?.data?.title || error.message}`,
+        `APIリクエスト失敗: ${errorTitle || errorMessage}`,
       );
     }
   }
