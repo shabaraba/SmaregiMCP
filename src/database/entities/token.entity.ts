@@ -8,8 +8,8 @@ export class TokenEntity {
   @Column({ name: 'access_token' })
   accessToken: string;
 
-  @Column({ name: 'refresh_token' })
-  refreshToken: string;
+  @Column({ name: 'refresh_token', nullable: true })
+  refreshToken: string | null;
 
   @Column()
   scope: string;
