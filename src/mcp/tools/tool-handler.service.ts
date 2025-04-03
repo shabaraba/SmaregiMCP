@@ -58,47 +58,9 @@ export class ToolHandlerService {
   }
 
   /**
-   * ツール呼び出しを処理
-   */
-  async handleToolCall(request: any): Promise<any> {
-    const toolName = request.params.name;
-    const args = request.params.arguments || {};
-    
-    console.log(`ツール '${toolName}' を呼び出します。引数:`, args);
-    
-    try {
-      switch (toolName) {
-        case 'getAuthorizationUrl':
-          return this.handleGetAuthorizationUrl(args);
-        
-        case 'checkAuthStatus':
-          return this.handleCheckAuthStatus(args);
-        
-        case 'executeApiRequest':
-          return this.handleExecuteApiRequest(args);
-        
-        case 'getSmaregiApiOverview':
-          return this.handleGetSmaregiApiOverview(args);
-        
-        case 'getSmaregiApiOperation':
-          return this.handleGetSmaregiApiOperation(args);
-        
-        case 'listSmaregiApiEndpoints':
-          return this.handleListSmaregiApiEndpoints(args);
-        
-        default:
-          throw new Error(`未知のツール: ${toolName}`);
-      }
-    } catch (error) {
-      console.error(`ツール '${toolName}' の処理中にエラーが発生しました:`, error);
-      throw error;
-    }
-  }
-
-  /**
    * 認証URL生成を処理
    */
-  private async handleGetAuthorizationUrl(args: any): Promise<any> {
+  async handleGetAuthorizationUrl(args: { scopes: string[] }): Promise<any> {
     const { scopes } = args;
     
     if (!Array.isArray(scopes) || scopes.length === 0) {
@@ -116,7 +78,7 @@ export class ToolHandlerService {
   /**
    * 認証状態確認を処理
    */
-  private async handleCheckAuthStatus(args: any): Promise<any> {
+  async handleCheckAuthStatus(args: { sessionId: string }): Promise<any> {
     const { sessionId } = args;
     
     if (!sessionId) {
@@ -134,7 +96,12 @@ export class ToolHandlerService {
   /**
    * API実行リクエストを処理
    */
-  private async handleExecuteApiRequest(args: any): Promise<any> {
+  async handleExecuteApiRequest(args: { 
+    sessionId: string; 
+    endpoint: string; 
+    method: string; 
+    data?: any;
+  }): Promise<any> {
     const { sessionId, endpoint, method, data } = args;
     
     if (!sessionId || !endpoint || !method) {
@@ -157,7 +124,7 @@ export class ToolHandlerService {
   /**
    * スマレジAPI概要取得を処理
    */
-  private handleGetSmaregiApiOverview(args: any): any {
+  handleGetSmaregiApiOverview(args: { category?: string }): any {
     const { category } = args;
     
     let responseContent;
@@ -215,7 +182,7 @@ export class ToolHandlerService {
   /**
    * 特定のAPIエンドポイント情報を取得
    */
-  private handleGetSmaregiApiOperation(args: any): any {
+  handleGetSmaregiApiOperation(args: { path: string; method: string }): any {
     const { path, method } = args;
     
     if (!path || !method) {
@@ -244,7 +211,7 @@ export class ToolHandlerService {
   /**
    * エンドポイント一覧を取得
    */
-  private handleListSmaregiApiEndpoints(args: any): any {
+  handleListSmaregiApiEndpoints(args: { category?: string }): any {
     const { category } = args;
     
     const endpoints: any[] = [];
@@ -272,5 +239,43 @@ export class ToolHandlerService {
       content: [{ type: 'text', text: JSON.stringify(endpoints, null, 2) }],
       metadata: {},
     };
+  }
+
+  /**
+   * 従来のツールコール処理（後方互換性のため）
+   */
+  async handleToolCall(request: any): Promise<any> {
+    const toolName = request.params.name;
+    const args = request.params.arguments || {};
+    
+    console.log(`ツール '${toolName}' を呼び出します。引数:`, args);
+    
+    try {
+      switch (toolName) {
+        case 'getAuthorizationUrl':
+          return this.handleGetAuthorizationUrl(args);
+        
+        case 'checkAuthStatus':
+          return this.handleCheckAuthStatus(args);
+        
+        case 'executeApiRequest':
+          return this.handleExecuteApiRequest(args);
+        
+        case 'getSmaregiApiOverview':
+          return this.handleGetSmaregiApiOverview(args);
+        
+        case 'getSmaregiApiOperation':
+          return this.handleGetSmaregiApiOperation(args);
+        
+        case 'listSmaregiApiEndpoints':
+          return this.handleListSmaregiApiEndpoints(args);
+        
+        default:
+          throw new Error(`未知のツール: ${toolName}`);
+      }
+    } catch (error) {
+      console.error(`ツール '${toolName}' の処理中にエラーが発生しました:`, error);
+      throw error;
+    }
   }
 }

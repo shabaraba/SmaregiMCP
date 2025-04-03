@@ -1,17 +1,16 @@
 import { Injectable, OnModuleInit } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
-import { Server } from '@modelcontextprotocol/sdk/server';
-import { StdioServerTransport } from '@modelcontextprotocol/sdk/server/stdio';
-import { ToolsService } from './tools/tools.service';
-import { ToolHandlerService } from './tools/tool-handler.service';
+import { McpServer } from '@modelcontextprotocol/sdk/server/mcp.js';
+import { StdioServerTransport } from '@modelcontextprotocol/sdk/server/stdio.js';
+import { ToolHandlerService } from './tools/tool-handler.service.js';
+import { z } from 'zod';
 
 @Injectable()
 export class McpService implements OnModuleInit {
-  private server: Server;
+  private mcpServer: McpServer;
 
   constructor(
     private configService: ConfigService,
-    private toolsService: ToolsService,
     private toolHandlerService: ToolHandlerService,
   ) {}
 
@@ -22,43 +21,93 @@ export class McpService implements OnModuleInit {
     try {
       console.log('MCPサーバーを初期化中...');
       
-      // MCPサーバー作成
-      this.server = new Server(
+      // MCPサーバー作成（高レベルAPIを使用）
+      this.mcpServer = new McpServer(
         { 
           name: 'smaregi', 
           version: this.configService.get('npm_package_version', '1.0.0'),
+        }
+      );
+
+      // 認証URLを取得するツール
+      this.mcpServer.tool(
+        'getAuthorizationUrl',
+        'スマレジAPIにアクセスするための認証URLを生成します。ユーザーはこのURLでブラウザにアクセスして認証を完了する必要があります。',
+        {
+          scopes: z.array(z.string()).describe('要求するスコープのリスト（例：["pos.products:read", "pos.transactions:read"]）'),
         },
-        { capabilities: { tools: {} } },
+        async (args) => {
+          return await this.toolHandlerService.handleGetAuthorizationUrl(args);
+        }
       );
       
-      // ツール一覧ハンドラー
-      this.server.setRequestHandler('listTools', async () => {
-        console.log('ツール一覧リクエストを受信しました');
-        return { tools: this.toolsService.getTools() };
-      });
-      
-      // ツール呼び出しハンドラー
-      this.server.setRequestHandler('callTool', async (request) => {
-        console.log('ツール呼び出しリクエストを受信しました:', request);
-        try {
-          return await this.toolHandlerService.handleToolCall(request);
-        } catch (error) {
-          console.error('ツール呼び出しエラー:', error);
-          return {
-            content: [
-              {
-                type: 'text',
-                text: `エラー: ${error instanceof Error ? error.message : String(error)}`,
-              },
-            ],
-            isError: true,
-          };
+      // 認証状態を確認するツール
+      this.mcpServer.tool(
+        'checkAuthStatus',
+        '認証状態を確認します。ユーザーが認証URLで認証を完了したかどうかを確認できます。',
+        {
+          sessionId: z.string().describe('getAuthorizationUrlで取得したセッションID'),
+        },
+        async (args) => {
+          return await this.toolHandlerService.handleCheckAuthStatus(args);
         }
-      });
+      );
+      
+      // APIリクエストを実行するツール
+      this.mcpServer.tool(
+        'executeApiRequest',
+        'スマレジAPIにリクエストを送信します。認証済みのセッションが必要です。',
+        {
+          sessionId: z.string().describe('認証済みのセッションID'),
+          endpoint: z.string().describe('APIエンドポイント（例："/pos/products"）'),
+          method: z.enum(['GET', 'POST', 'PUT', 'DELETE']).describe('HTTPメソッド'),
+          data: z.object({}).passthrough().optional().describe('リクエストボディ（POSTまたはPUTリクエスト用）'),
+        },
+        async (args) => {
+          return await this.toolHandlerService.handleExecuteApiRequest(args);
+        }
+      );
+      
+      // APIの概要情報を取得するツール
+      this.mcpServer.tool(
+        'getSmaregiApiOverview',
+        'スマレジAPIの概要情報を取得します。',
+        {
+          category: z.string().optional().describe('情報を取得したいカテゴリ'),
+        },
+        async (args) => {
+          return this.toolHandlerService.handleGetSmaregiApiOverview(args);
+        }
+      );
+      
+      // API操作の詳細を取得するツール
+      this.mcpServer.tool(
+        'getSmaregiApiOperation',
+        'スマレジAPIの特定のエンドポイントに関する詳細情報を取得します。',
+        {
+          path: z.string().describe('APIエンドポイントのパス'),
+          method: z.enum(['GET', 'POST', 'PUT', 'DELETE']).describe('HTTPメソッド'),
+        },
+        async (args) => {
+          return this.toolHandlerService.handleGetSmaregiApiOperation(args);
+        }
+      );
+      
+      // API一覧を取得するツール
+      this.mcpServer.tool(
+        'listSmaregiApiEndpoints',
+        'スマレジAPIで利用可能なエンドポイントの一覧を取得します。',
+        {
+          category: z.string().optional().describe('エンドポイントのカテゴリ'),
+        },
+        async (args) => {
+          return this.toolHandlerService.handleListSmaregiApiEndpoints(args);
+        }
+      );
       
       // MCPトランスポート接続
       const transport = new StdioServerTransport();
-      await this.server.connect(transport);
+      await this.mcpServer.connect(transport);
       console.log('MCPサーバーが接続され、実行中です');
     } catch (error) {
       console.error('MCPサーバー初期化エラー:', error);
