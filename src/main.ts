@@ -159,6 +159,8 @@ if (cmd === 'init') {
       process.exit(1);
     });
 } else if (cmd === 'run') {
+  process.stderr.write('[INFO] Claude Desktopからの実行モードで起動します\n');
+  process.stderr.write('[INFO] MCPサーバーはClaude Desktopの設定から起動されます\n');
   bootstrap().catch((error) => {
     console.error('Error starting server:', error);
     process.exit(1);

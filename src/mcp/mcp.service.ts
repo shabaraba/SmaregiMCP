@@ -16,8 +16,20 @@ export class McpService implements OnModuleInit {
 
   /**
    * モジュール初期化時にMCPサーバーを起動
+   * Claude Desktopからの起動時はMCPサーバーの初期化をスキップ
    */
   async onModuleInit() {
+    // プロセス起動引数を確認して、Claude Desktopからの実行かどうか判断
+    const args = process.argv.slice(2);
+    const isRunningDirectly = args.includes('run');
+    
+    // Claude Desktop経由で起動された場合はMCPサーバーの初期化をスキップ
+    if (isRunningDirectly) {
+      process.stderr.write('[INFO] [McpService] Claude Desktopからの起動と思われるため、MCPサーバーの初期化をスキップします。\n');
+      process.stderr.write('[INFO] [McpService] Claude Desktopの設定に登録されたMCPサーバーが使用されます。\n');
+      return;
+    }
+    
     try {
       // 標準エラー出力にログを出力
       process.stderr.write('[INFO] [McpService] MCPサーバーを初期化中...\n');
