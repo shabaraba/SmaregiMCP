@@ -83,7 +83,7 @@ export class AuthService {
     const token = this.tokenRepository.create({
       sessionId: session.id,
       accessToken: tokenResponse.access_token,
-      refreshToken: tokenResponse.refresh_token,
+      refreshToken: tokenResponse.refresh_token || null, // refresh_tokenがない場合はnullを設定
       scope: tokenResponse.scope,
       expiresAt: new Date(Date.now() + tokenResponse.expires_in * 1000),
       createdAt: new Date(),
@@ -143,6 +143,11 @@ export class AuthService {
 
     // トークン更新
     try {
+      // リフレッシュトークンがなければ再認証が必要
+      if (!token.refreshToken) {
+        throw new BadRequestException('リフレッシュトークンがありません。再認証が必要です。');
+      }
+      
       const refreshedToken = await this.refreshAccessToken(token.refreshToken);
       
       // 更新されたトークンを保存
@@ -203,7 +208,7 @@ export class AuthService {
   /**
    * リフレッシュトークンを使ってアクセストークンを更新
    */
-  private async refreshAccessToken(refreshToken: string): Promise<TokenResponseDto> {
+  private async refreshAccessToken(refreshToken: string | null): Promise<TokenResponseDto> {
     const tokenEndpoint = this.configService.get('SMAREGI_TOKEN_ENDPOINT', 'https://id.smaregi.dev/authorize/token');
     const clientId = this.configService.get('CLIENT_ID', '');
     const clientSecret = this.configService.get('CLIENT_SECRET', '');
