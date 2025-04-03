@@ -1,4 +1,4 @@
-# スマレジ・プラットフォームAPI OpenAPI仕様
+# スマレジ・プラットフォームAPI OpenAPI仕様 & MCP サーバー
 
 ## 概要
 
@@ -100,3 +100,56 @@ Unexpected token '', "[32m[Nest"... is not valid JSON
 ```bash
 NO_COLOR=1 npm run mcp:run
 ```
+
+## MCP サーバー
+
+このリポジトリには、スマレジAPIをClaude AIから利用するためのMCP（Model Context Protocol）サーバーも含まれています。MCPを使用することで、ClaudeはスマレジAPIの仕様を理解し、より効果的な支援を提供できます。
+
+### MCPサーバーのセットアップ
+
+1. 必要なパッケージをインストール
+
+```bash
+npm install
+```
+
+2. 環境設定
+
+`.env.example`ファイルを`.env`にコピーして、必要に応じて設定を変更します。
+
+```bash
+cp .env.example .env
+```
+
+3. MCPサーバーをClaude Desktopに登録
+
+```bash
+npm run mcp:init
+```
+
+この操作により、MCPサーバーがClaude Desktopの設定に登録されます。
+
+### 使用方法
+
+MCPサーバーを起動：
+
+```bash
+npm run mcp:run
+```
+
+開発モードで起動（ファイル変更の監視）：
+
+```bash
+npm run mcp:dev
+```
+
+### Claudeでの使用例
+
+Claude Desktopを起動し、以下のような質問ができます：
+
+- 「スマレジAPIの概要を教えて」
+- 「商品管理のAPIエンドポイントを教えて」
+- 「商品登録のAPIリクエスト例を示して」
+
+MCPサーバーが正しく設定されていれば、ClaudeはスマレジAPIの詳細情報にアクセスして回答します。
+
