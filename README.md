@@ -80,3 +80,23 @@ APIはOAuth 2.0認証を使用しています。APIを呼び出すには、以�
 ```
 DATABASE_PATH=/Users/yourusername/path/to/SmaregiMCP/smaregi-mcp.sqlite
 ```
+
+### JSON解析エラー
+
+MCPサーバー実行時に次のようなエラーが表示される場合：
+
+```
+Unexpected token '', "[32m[Nest"... is not valid JSON
+```
+
+これはNestJSが出力するカラーログとMCP通信プロトコルが競合していることが原因です。このプロジェクトでは、次の対策を実装済みです：
+
+1. NestJSのロギングを標準エラー出力（stderr）に変更
+2. カラー出力を無効化
+3. MCPプロトコル通信と標準ログ出力を分離
+
+もし同様のエラーが発生する場合は、サーバー起動時に環境変数 `NO_COLOR=1` を設定することで、カラー出力を完全に無効化できます：
+
+```bash
+NO_COLOR=1 npm run mcp:run
+```
