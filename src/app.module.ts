@@ -7,6 +7,7 @@ import { McpModule } from './mcp/mcp.module.js';
 import { AuthModule } from './auth/auth.module.js';
 import { ApiModule } from './api/api.module.js';
 import { DatabaseModule } from './database/database.module.js';
+import { TypeOrmCustomLogger } from './database/typeorm-custom-logger.js';
 
 // ESM環境で__dirnameを再現
 const __filename = fileURLToPath(import.meta.url);
@@ -31,14 +32,20 @@ const projectRoot = resolve(dirname(dirname(__filename)));
           ? dbPath 
           : resolve(projectRoot, dbPath.replace(/^\.\//, ''));
         
-        console.log(`Database path resolved to: ${absoluteDbPath}`);
+        // 標準エラー出力に出力（MCPと競合しない）
+        process.stderr.write(`[INFO] [Database] Database path resolved to: ${absoluteDbPath}\n`);
+        
+        // 環境に基づいてデバッグモードを設定
+        const debugMode = configService.get('NODE_ENV') !== 'production';
         
         return {
           type: 'sqlite',
           database: absoluteDbPath,
           entities: [join(__dirname, '**', '*.entity.{ts,js}')],
-          synchronize: configService.get('NODE_ENV') !== 'production',
-          logging: configService.get('NODE_ENV') !== 'production',
+          synchronize: debugMode,
+          // カスタムロガーを設定してSQLiteのログをstderrに出力
+          logging: debugMode,
+          logger: new TypeOrmCustomLogger(debugMode),
         };
       },
     }),
