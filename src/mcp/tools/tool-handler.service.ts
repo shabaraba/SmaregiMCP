@@ -18,7 +18,7 @@ export class ToolHandlerService {
       const projectRoot = process.cwd();
       const possiblePaths = [
         path.resolve(projectRoot, 'openapi', 'pos', 'openapi.yaml'),
-        path.resolve(projectRoot, 'openapi-simple.yaml'),
+        path.resolve(projectRoot, 'openapi', 'common', 'openapi.yaml'),
       ];
 
       for (const specPath of possiblePaths) {
