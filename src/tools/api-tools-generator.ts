@@ -1,6 +1,5 @@
 import { Injectable, Logger } from '@nestjs/common';
 import { ApiTool, ApiToolParameter } from './interfaces/api-tool.interface.js';
-import { exec } from 'child_process';
 import { z } from 'zod';
 import * as fs from 'node:fs';
 import * as path from 'node:path';
@@ -12,8 +11,12 @@ import * as path from 'node:path';
 export class ApiToolsGenerator {
   private readonly logger = new Logger(ApiToolsGenerator.name);
   private mockApiDefinition: any = null;
+  private preGeneratedApiTools: ApiTool[] | null = null;
 
-  constructor() {}
+  constructor() {
+    // インスタンス化時に事前生成されたツールの読み込みを試みる
+    this.loadPreGeneratedTools();
+  }
   
   /**
    * テスト用にモックAPIデータを設定
@@ -21,6 +24,77 @@ export class ApiToolsGenerator {
    */
   setMockApiDefinition(mockData: any): void {
     this.mockApiDefinition = mockData;
+  }
+  
+  /**
+   * 事前生成されたAPIツールJSONファイルからツールリストを読み込む
+   * 読み込みに失敗した場合はnullを返す
+   */
+  private loadPreGeneratedTools(): ApiTool[] | null {
+    try {
+      const projectRoot = process.cwd();
+      const filePath = path.resolve(projectRoot, 'src', 'tools', 'generated', 'api-tools.json');
+      
+      if (fs.existsSync(filePath)) {
+        const content = fs.readFileSync(filePath, 'utf8');
+        const tools = JSON.parse(content);
+        
+        // JSONからロードしたツールのスキーマを再生成
+        const toolsWithSchema = this.rebuildZodSchemas(tools);
+        
+        this.logger.log(`事前生成されたAPIツールを読み込みました: ${toolsWithSchema.length}件`);
+        this.preGeneratedApiTools = toolsWithSchema;
+        return toolsWithSchema;
+      }
+      
+      this.logger.warn('事前生成されたAPIツールが見つかりません。動的生成が必要です。');
+      return null;
+    } catch (error) {
+      this.logger.error(`事前生成されたAPIツールの読み込みに失敗しました: ${error}`);
+      return null;
+    }
+  }
+  
+  /**
+   * JSON形式のツールからZodスキーマを再構築する
+   */
+  private rebuildZodSchemas(tools: any[]): ApiTool[] {
+    return tools.map(tool => ({
+      ...tool,
+      parameters: tool.parameters.map((param: any) => ({
+        ...param,
+        schema: this.recreateZodSchema(param.schema)
+      }))
+    }));
+  }
+  
+  /**
+   * シリアライズされたスキーマ情報からZodスキーマを再生成する
+   */
+  private recreateZodSchema(schemaInfo: any): z.ZodTypeAny {
+    if (!schemaInfo) return z.any();
+    
+    try {
+      switch (schemaInfo.type) {
+        case 'string':
+          return z.string();
+        case 'number':
+          return z.number();
+        case 'boolean':
+          return z.boolean();
+        case 'array':
+          return z.array(
+            schemaInfo.items ? this.recreateZodSchema(schemaInfo.items) : z.any()
+          );
+        case 'object':
+          return z.record(z.any());
+        default:
+          return z.string();
+      }
+    } catch (error) {
+      this.logger.error(`Zodスキーマの再生成に失敗しました: ${error}`);
+      return z.any();
+    }
   }
   
   /**
@@ -34,11 +108,19 @@ export class ApiToolsGenerator {
     
     try {
       const projectRoot = process.cwd();
+      // 変更: 正しいディレクトリパスを指定
       const filePath = path.resolve(projectRoot, 'src', 'schema', 'converted', filename);
       
       if (fs.existsSync(filePath)) {
         const content = fs.readFileSync(filePath, 'utf8');
-        return JSON.parse(content);
+        const jsonData = JSON.parse(content);
+        
+        // openapi-typescriptが生成するJSONファイルの構造に対応
+        if (jsonData.properties) {
+          return { paths: jsonData.properties };
+        }
+        
+        return jsonData;
       }
       
       // モックデータを返す
@@ -314,20 +396,22 @@ export class ApiToolsGenerator {
    * OpenAPI定義からツールリストを生成する
    */
   generateTools(): ApiTool[] {
+    // 事前生成されたツールがあればそれを使用する
+    if (this.preGeneratedApiTools && this.preGeneratedApiTools.length > 0) {
+      this.logger.log(`事前生成された${this.preGeneratedApiTools.length}件のAPIツールを使用します`);
+      return this.preGeneratedApiTools;
+    }
+    
     const tools: ApiTool[] = [];
     
     try {
-      const projectRoot = process.cwd();
       // POS API定義の読み込み
-      exec('npm run convert:pos');
-      const posDefinition = require(path.resolve(projectRoot, 'src', 'schema', 'converted', 'pos.json')).properites;
-      console.log(posDefinition);
+      const posDefinition = this.loadOpenApiDefinition('pos.json');
       if (posDefinition && posDefinition.paths) {
         this.processPathsDefinition(posDefinition.paths, tools);
       }
       
       // Common API定義の読み込み
-      exec('npm run convert:common');
       const commonDefinition = this.loadOpenApiDefinition('common.json');
       if (commonDefinition && commonDefinition.paths) {
         this.processPathsDefinition(commonDefinition.paths, tools);
@@ -441,7 +525,7 @@ export class ApiToolsGenerator {
         // ツール名を生成
         const operationId = 
           actualOperation.operationId || 
-          (typeof operation === 'string' ? operation.replace(/^operations\["(.+)"\]$/, '$1') : undefined);
+          (typeof operation === 'string' ? operation.replace(/^operations\[\"(.+)\"\]$/, '$1') : undefined);
         
         const toolName = this.generateToolName(path, method, operationId);
         
