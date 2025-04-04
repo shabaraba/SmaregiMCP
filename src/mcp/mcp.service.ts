@@ -1,18 +1,20 @@
 import { Injectable, Logger, OnModuleDestroy, OnModuleInit } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
-import { MCP, MCPClient, MCPServer } from '@modelcontextprotocol/sdk';
-import { StdioServerTransport } from './transports/stdio-transport';
-import { ToolHandlerService } from '../tool-handler/tool-handler.service';
+import { MCP } from '@modelcontextprotocol/sdk/core';
+import { MCPClient } from '@modelcontextprotocol/sdk/client';
+import { MCPServer } from '@modelcontextprotocol/sdk/server';
+import { StdioServerTransport } from './transports/stdio-transport.js';
+import { ToolHandlerService } from '../tool-handler/tool-handler.service.js';
 import { z } from 'zod';
 import * as fs from 'node:fs';
 import * as path from 'node:path';
-import { ApiToolsGenerator } from '../tools/api-tools-generator';
-import { ApiTool } from '../tools/interfaces/api-tool.interface';
+import { ApiToolsGenerator } from '../tools/api-tools-generator.js';
+import { ApiTool } from '../tools/interfaces/api-tool.interface.js';
 import { 
   ListResourcesRequestSchema, 
   ListPromptsRequestSchema, 
   GetPromptRequestSchema 
-} from './mcp.schema';
+} from './mcp.schema.js';
 
 /**
  * MCPサービスクラス
