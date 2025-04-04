@@ -101,18 +101,23 @@ export class ToolHandlerService {
     endpoint: string; 
     method: string; 
     data?: any;
+    query?: Record<string, any>;  // クエリパラメータ追加
+    path?: Record<string, any>;   // パスパラメータ追加
   }): Promise<any> {
-    const { sessionId, endpoint, method, data } = args;
+    const { sessionId, endpoint, method, data, query, path } = args;
     
     if (!sessionId || !endpoint || !method) {
       throw new Error('sessionId, endpoint, methodは必須です');
     }
     
+    // パスパラメータとクエリパラメータを追加してAPIリクエストを実行
     const result = await this.apiService.executeRequest({
       sessionId,
       endpoint,
       method,
       data,
+      query,
+      path,
     });
     
     return {

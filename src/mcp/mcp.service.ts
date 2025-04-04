@@ -367,13 +367,17 @@ export class McpService implements OnModuleInit, OnModuleDestroy {
           endpoint: z.string().describe('APIエンドポイント（例："/pos/products"）'),
           method: z.enum(['GET', 'POST', 'PUT', 'DELETE']).describe('HTTPメソッド'),
           data: z.object({}).passthrough().optional().describe('リクエストボディ（POSTまたはPUTリクエスト用）'),
+          query: z.record(z.any()).optional().describe('クエリパラメータ（例：{ limit: 10, offset: 0 }）'),
+          path: z.record(z.any()).optional().describe('パスパラメータ（例：{ product_id: "123" }）'),
         },
-        async ({ sessionId, endpoint, method, data }) => {
+        async ({ sessionId, endpoint, method, data, query, path }) => {
           return await this.toolHandlerService.handleExecuteApiRequest({
             sessionId,
             endpoint,
             method,
             data,
+            query,
+            path,
           });
         }
       );
