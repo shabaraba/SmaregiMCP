@@ -1,5 +1,6 @@
 import { Injectable, Logger } from '@nestjs/common';
 import { ApiTool, ApiToolParameter } from './interfaces/api-tool.interface.js';
+import { exec } from 'child_process';
 import { z } from 'zod';
 import * as fs from 'node:fs';
 import * as path from 'node:path';
@@ -33,7 +34,7 @@ export class ApiToolsGenerator {
     
     try {
       const projectRoot = process.cwd();
-      const filePath = path.resolve(projectRoot, 'openapi', filename);
+      const filePath = path.resolve(projectRoot, 'src', 'schema', 'converted', filename);
       
       if (fs.existsSync(filePath)) {
         const content = fs.readFileSync(filePath, 'utf8');
@@ -316,13 +317,17 @@ export class ApiToolsGenerator {
     const tools: ApiTool[] = [];
     
     try {
+      const projectRoot = process.cwd();
       // POS API定義の読み込み
-      const posDefinition = this.loadOpenApiDefinition('pos.json');
+      exec('npm run convert:pos');
+      const posDefinition = require(path.resolve(projectRoot, 'src', 'schema', 'converted', 'pos.json')).properites;
+      console.log(posDefinition);
       if (posDefinition && posDefinition.paths) {
         this.processPathsDefinition(posDefinition.paths, tools);
       }
       
       // Common API定義の読み込み
+      exec('npm run convert:common');
       const commonDefinition = this.loadOpenApiDefinition('common.json');
       if (commonDefinition && commonDefinition.paths) {
         this.processPathsDefinition(commonDefinition.paths, tools);

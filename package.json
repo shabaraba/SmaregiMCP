@@ -18,7 +18,9 @@
     "test:debug": "node --inspect-brk -r tsconfig-paths/register -r ts-node/register node_modules/.bin/jest --runInBand",
     "test:e2e": "jest --config ./test/jest-e2e.json",
     "test:exit": "node tests/process-exit.test.js",
-    "generate-api": "node ai/generate_openapi.js",
+    "generate:api:common": " npx openapi-typescript ./openapi/common/openapi.yaml -o ./src/schema/common.d.ts",
+    "generate:api:pos": " npx openapi-typescript ./openapi/pos/openapi.yaml -o ./src/schema/pos.d.ts",
+    "convert": "npx tsx ./scripts/generate-api-schema-json.ts",
     "generate:tools": "node scripts/generate-api-tools.js",
     "mcp:init": "node dist/main.js init",
     "mcp:run": "node dist/main.js run",
@@ -80,7 +82,8 @@
     "ts-node": "^10.9.2",
     "tsconfig-paths": "^4.2.0",
     "typescript": "^5.0.0",
-    "typescript-eslint": "^8.26.1"
+    "typescript-eslint": "^8.26.1",
+    "typescript-json-schema": "^0.65.1"
   },
   "jest": {
     "moduleFileExtensions": [
