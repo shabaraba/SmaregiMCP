@@ -4,7 +4,7 @@
   "description": "Microservice Connection Point for integrating Smaregi POS data with Claude AI",
   "type": "module",
   "scripts": {
-    "prebuild": "npm run generate:tools",
+    "prebuild": "echo 'Skipping prebuild...'",
     "build": "nest build",
     "format": "prettier --write \"src/**/*.ts\" \"test/**/*.ts\"",
     "start": "nest start",
