@@ -3,27 +3,33 @@
  * このスクリプトはビルド時にOpenAPI定義からAPIツールを生成し、JSONファイルに保存します
  */
 
-const fs = require('fs');
-const path = require('path');
-const { exec } = require('child_process');
+import * as fs from 'node:fs';
+import * as path from 'node:path';
+import { exec } from 'node:child_process';
+import { fileURLToPath } from 'node:url';
+
+// ESモジュールで__dirnameを使用するための設定
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+const projectRoot = path.resolve(__dirname, '..');
 
 // ビルドディレクトリを確認
-const distDir = path.resolve(process.cwd(), 'dist');
+const distDir = path.resolve(projectRoot, 'dist');
 if (!fs.existsSync(distDir)) {
   console.error('ビルドディレクトリが見つかりません。先にビルドを実行してください。');
   process.exit(1);
 }
 
 // 生成先ディレクトリを作成
-const generatedDir = path.resolve(process.cwd(), 'src', 'tools', 'generated');
+const generatedDir = path.resolve(projectRoot, 'src', 'tools', 'generated');
 if (!fs.existsSync(generatedDir)) {
   fs.mkdirSync(generatedDir, { recursive: true });
 }
 
 // ApiToolsGeneratorをインスタンス化するための一時的なスクリプトを作成
-const tempScriptPath = path.resolve(process.cwd(), 'dist', 'temp-generate-tools.js');
+const tempScriptPath = path.resolve(projectRoot, 'dist', 'temp-generate-tools.js');
 const tempScriptContent = `
-const { ApiToolsGenerator } = require('./tools/api-tools-generator.js');
+import { ApiToolsGenerator } from './tools/api-tools-generator.js';
 
 // ジェネレーターをインスタンス化
 const generator = new ApiToolsGenerator();
