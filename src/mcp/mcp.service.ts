@@ -1,8 +1,6 @@
 import { Injectable, Logger, OnModuleDestroy, OnModuleInit } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
-import { MCP } from '@modelcontextprotocol/sdk/core';
-import { MCPClient } from '@modelcontextprotocol/sdk/client';
-import { MCPServer } from '@modelcontextprotocol/sdk/server';
+import { McpServer } from '@modelcontextprotocol/sdk/server/mcp.js';
 import { StdioServerTransport } from './transports/stdio-transport.js';
 import { ToolHandlerService } from '../tool-handler/tool-handler.service.js';
 import { z } from 'zod';
@@ -23,7 +21,7 @@ import {
 @Injectable()
 export class McpService implements OnModuleInit, OnModuleDestroy {
   private readonly logger = new Logger(McpService.name);
-  private mcpServer: MCPClient;
+  private mcpServer: McpServer;
   private transport: any = null; // MCPトランスポート
   private readonly debugMode: boolean;
 
@@ -280,7 +278,7 @@ export class McpService implements OnModuleInit, OnModuleDestroy {
       this.log('INFO', 'MCPサーバーを初期化しています...');
       
       // MCPクライアントを作成
-      this.mcpServer = new MCPClient(
+      this.mcpServer = new McpServer(
         {
           name: 'smaregi', 
           version: this.configService.get('npm_package_version', '1.0.0'),

@@ -44,7 +44,7 @@ console.log(JSON.stringify(tools, null, 2));
 fs.writeFileSync(tempScriptPath, tempScriptContent);
 
 // 一時スクリプトを実行してツールを生成
-exec(`node ${tempScriptPath}`, (error, stdout, stderr) => {
+exec(`node ${tempScriptPath} 2> /dev/null`, (error, stdout, stderr) => {
   // 一時スクリプトを削除
   try {
     fs.unlinkSync(tempScriptPath);
