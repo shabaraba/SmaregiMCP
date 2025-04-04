@@ -152,7 +152,7 @@ describe('ToolHandlerService', () => {
 
       await expect(toolHandlerService.handleExecuteApiRequest({
         sessionId: 'test-session',
-        endpoint: '/test-endpoint'
+        endpoint: '/test-endpoint',
         // methodを省略
       })).rejects.toThrow('sessionId, endpoint, methodは必須です');
     });
