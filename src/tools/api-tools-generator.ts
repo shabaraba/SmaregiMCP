@@ -10,13 +10,27 @@ import * as path from 'node:path';
 @Injectable()
 export class ApiToolsGenerator {
   private readonly logger = new Logger(ApiToolsGenerator.name);
+  private mockApiDefinition: any = null;
 
   constructor() {}
+  
+  /**
+   * テスト用にモックAPIデータを設定
+   * この関数はテストでのみ使用されます
+   */
+  setMockApiDefinition(mockData: any): void {
+    this.mockApiDefinition = mockData;
+  }
   
   /**
    * OpenAPI定義ファイルを読み込む
    */
   private loadOpenApiDefinition(filename: string): any {
+    // テスト用のモックデータが設定されている場合はそれを使用
+    if (this.mockApiDefinition) {
+      return this.mockApiDefinition;
+    }
+    
     try {
       const projectRoot = process.cwd();
       const filePath = path.resolve(projectRoot, 'openapi', filename);

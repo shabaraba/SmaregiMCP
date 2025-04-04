@@ -3,9 +3,139 @@ import { ApiTool } from './interfaces/api-tool.interface.js';
 
 describe('ApiToolsGenerator', () => {
   let service: ApiToolsGenerator;
+  // テスト用の統合モックデータ
+  const mockApiData = {
+    paths: {
+      '/products': {
+        get: {
+          summary: '商品一覧を取得',
+          parameters: [
+            {
+              name: 'limit',
+              in: 'query',
+              description: '取得する件数',
+              required: false,
+              type: 'integer'
+            },
+            {
+              name: 'sort',
+              in: 'query',
+              description: 'ソート順',
+              required: false,
+              type: 'string'
+            }
+          ]
+        },
+        post: {
+          summary: '商品を登録',
+          requestBody: {
+            content: {
+              'application/json': {
+                schema: {
+                  properties: {
+                    product_name: {
+                      type: 'string',
+                      description: '商品名'
+                    },
+                    price: {
+                      type: 'integer',
+                      description: '価格'
+                    }
+                  },
+                  required: ['product_name']
+                }
+              }
+            }
+          }
+        }
+      },
+      '/products/{productId}': {
+        get: {
+          summary: '商品詳細を取得',
+          parameters: [
+            {
+              name: 'productId',
+              in: 'path',
+              description: '商品ID',
+              required: true,
+              type: 'string'
+            }
+          ]
+        },
+        put: {
+          summary: '商品を更新',
+          parameters: [
+            {
+              name: 'productId',
+              in: 'path',
+              description: '商品ID',
+              required: true,
+              type: 'string'
+            }
+          ],
+          requestBody: {
+            content: {
+              'application/json': {
+                schema: {
+                  properties: {
+                    product_name: {
+                      type: 'string',
+                      description: '商品名'
+                    },
+                    price: {
+                      type: 'integer',
+                      description: '価格'
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        delete: {
+          summary: '商品を削除',
+          parameters: [
+            {
+              name: 'productId',
+              in: 'path',
+              description: '商品ID',
+              required: true,
+              type: 'string'
+            }
+          ]
+        }
+      },
+      '/categories': {
+        get: {
+          summary: '部門一覧取得',
+          parameters: [
+            {
+              name: 'fields',
+              in: 'query',
+              description: '検索パラメータ（カンマ区切りで指定可）',
+              required: false,
+              type: 'array',
+              items: {
+                type: 'string'
+              }
+            },
+            {
+              name: 'category_code',
+              in: 'query',
+              description: '部門コード',
+              required: false,
+              type: 'string'
+            }
+          ]
+        }
+      }
+    }
+  };
 
   beforeEach(() => {
     service = new ApiToolsGenerator();
+    // モックデータを設定
+    service.setMockApiDefinition(mockApiData);
   });
 
   it('should be defined', () => {
@@ -92,38 +222,46 @@ describe('ApiToolsGenerator', () => {
     });
 
     it('should detect path parameters correctly', () => {
-      // パスパラメータを持つツールを検索
+      // モックデータには /products/{productId} のパスが含まれているため、
+      // パスパラメータを持つツールは必ず存在するはず
       const toolWithPathParams = tools.find(
         tool => tool.parameters.some(param => param.type === 'path')
       );
       
-      // すべてのツールにパスパラメータがない場合はテストをスキップ
-      if (!toolWithPathParams) {
-        console.warn('No tools with path parameters found. Skipping test.');
-        return;
-      }
+      // パスパラメータを持つツールが存在することを確認
+      expect(toolWithPathParams).toBeDefined();
+      expect(toolWithPathParams!.path).toContain('{');
       
       // パスパラメータの構造を確認
-      const pathParam = toolWithPathParams.parameters.find(param => param.type === 'path');
+      const pathParam = toolWithPathParams!.parameters.find(param => param.type === 'path');
+      expect(pathParam).toBeDefined();
       expect(pathParam).toHaveProperty('name');
       expect(pathParam).toHaveProperty('description');
       expect(pathParam).toHaveProperty('required');
       expect(pathParam).toHaveProperty('schema');
+      
+      // パスパラメータの名前と必須フラグを検証
+      expect(pathParam!.name).toBe('productId');
+      expect(pathParam!.required).toBe(true);
     });
 
     it('should include POST tools with body parameters', () => {
-      // POSTメソッドのツールを検索
+      // モックデータには POST /products が含まれているため、
+      // POSTメソッドのツールは必ず存在するはず
       const postTool = tools.find(tool => tool.method === 'POST');
       
-      // POSTツールがない場合はテストをスキップ
-      if (!postTool) {
-        console.warn('No POST tools found. Skipping test.');
-        return;
-      }
+      // POSTツールが存在することを確認
+      expect(postTool).toBeDefined();
+      expect(postTool!.path).toBe('/products');
       
-      // ボディパラメータが含まれるか確認
-      const hasBodyParam = postTool.parameters.some(param => param.type === 'body');
-      expect(hasBodyParam).toBe(true);
+      // ボディパラメータが含まれていることを確認
+      const bodyParams = postTool!.parameters.filter(param => param.type === 'body');
+      expect(bodyParams.length).toBeGreaterThan(0);
+      
+      // product_name パラメータが存在し、必須であることを確認
+      const productNameParam = bodyParams.find(param => param.name === 'product_name');
+      expect(productNameParam).toBeDefined();
+      expect(productNameParam!.required).toBe(true);
     });
   });
 });
