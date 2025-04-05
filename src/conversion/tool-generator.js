@@ -4,38 +4,16 @@ import * as path from 'path';
 import { SchemaConverter } from './schema-converter.js';
 
 /**
- * API Tool Parameter structure aligned with MCP TypeScript SDK
- */
-export interface ApiToolParameter {
-  name: string;
-  description: string;
-  required: boolean;
-  type: string; // 'path', 'query', or 'body'
-  schema?: z.ZodTypeAny;
-}
-
-/**
- * API Tool structure aligned with MCP TypeScript SDK
- */
-export interface ApiTool {
-  name: string;
-  description: string;
-  parameters: ApiToolParameter[];
-  path: string;
-  method: string;
-  operationId?: string;
-  category?: string;
-  version?: string;
-}
-
-/**
  * Generates API tools from OpenAPI schemas, aligned with MCP TypeScript SDK
  */
 export class ApiToolGenerator {
-  private mockApiDefinition = null;
-  private preGeneratedApiTools = null;
+  // Private properties
+  #mockApiDefinition = null;
+  #preGeneratedApiTools = null;
+  #schemaConverter;
   
-  constructor(private readonly schemaConverter: SchemaConverter) {
+  constructor(schemaConverter) {
+    this.#schemaConverter = schemaConverter;
     // Try to load pre-generated tools on instantiation
     this.loadPreGeneratedTools();
   }
@@ -44,7 +22,7 @@ export class ApiToolGenerator {
    * For testing only - set mock API definition
    */
   setMockApiDefinition(mockData) {
-    this.mockApiDefinition = mockData;
+    this.#mockApiDefinition = mockData;
   }
   
   /**
@@ -63,7 +41,7 @@ export class ApiToolGenerator {
         const toolsWithSchema = this.rebuildZodSchemas(tools);
         
         console.error(`[INFO] Loaded pre-generated API tools: ${toolsWithSchema.length} tools`);
-        this.preGeneratedApiTools = toolsWithSchema;
+        this.#preGeneratedApiTools = toolsWithSchema;
         return toolsWithSchema;
       }
       
@@ -373,22 +351,22 @@ export class ApiToolGenerator {
    */
   generateTools() {
     // Use pre-generated tools if available
-    if (this.preGeneratedApiTools && this.preGeneratedApiTools.length > 0) {
-      console.error(`[INFO] Using ${this.preGeneratedApiTools.length} pre-generated API tools`);
-      return this.preGeneratedApiTools;
+    if (this.#preGeneratedApiTools && this.#preGeneratedApiTools.length > 0) {
+      console.error(`[INFO] Using ${this.#preGeneratedApiTools.length} pre-generated API tools`);
+      return this.#preGeneratedApiTools;
     }
     
     const tools = [];
     
     try {
       // Load POS API schema
-      const posDefinition = this.mockApiDefinition || this.schemaConverter.convertTypeScriptToJson('pos');
+      const posDefinition = this.#mockApiDefinition || this.#schemaConverter.convertTypeScriptToJson('pos');
       if (posDefinition && posDefinition.paths) {
         this.processPathsDefinition(posDefinition.paths, tools, 'pos');
       }
       
       // Load Common API schema
-      const commonDefinition = this.mockApiDefinition || this.schemaConverter.convertTypeScriptToJson('common');
+      const commonDefinition = this.#mockApiDefinition || this.#schemaConverter.convertTypeScriptToJson('common');
       if (commonDefinition && commonDefinition.paths) {
         this.processPathsDefinition(commonDefinition.paths, tools, 'common');
       }
