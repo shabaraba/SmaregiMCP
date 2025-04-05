@@ -1,6 +1,6 @@
 import { Injectable, Logger } from '@nestjs/common';
-import { ApiService } from '../api/api.service';
-import { AuthService } from '../auth/auth.service';
+import { ApiService } from '../api/api.service.js';
+import { AuthService } from '../auth/auth.service.js';
 
 /**
  * MCPツールから呼び出されるリクエストを処理するサービス
@@ -15,15 +15,28 @@ export class ToolHandlerService {
   ) {}
 
   /**
+   * エラーメッセージを安全に取得する
+   */
+  private getErrorMessage(error: unknown): string {
+    if (error instanceof Error) {
+      return error.message;
+    } else if (typeof error === 'object' && error !== null && 'message' in error) {
+      return String((error as { message: unknown }).message);
+    } else {
+      return String(error);
+    }
+  }
+
+  /**
    * 認証URLを取得する
    */
   async handleGetAuthorizationUrl(params: { scopes: string[] }): Promise<any> {
     try {
       const { scopes } = params;
-      return await this.authService.generateAuthorizationUrl(scopes);
-    } catch (error) {
+      return await this.authService.generateAuthUrl(scopes);
+    } catch (error: unknown) {
       this.logger.error(`認証URL生成エラー: ${error}`);
-      throw new Error(`認証URLの生成に失敗しました: ${error.message || error}`);
+      throw new Error(`認証URLの生成に失敗しました: ${this.getErrorMessage(error)}`);
     }
   }
 
@@ -33,10 +46,10 @@ export class ToolHandlerService {
   async handleCheckAuthStatus(params: { sessionId: string }): Promise<any> {
     try {
       const { sessionId } = params;
-      return await this.authService.checkAuthorizationStatus(sessionId);
-    } catch (error) {
+      return await this.authService.checkAuthStatus(sessionId);
+    } catch (error: unknown) {
       this.logger.error(`認証状態確認エラー: ${error}`);
-      throw new Error(`認証状態の確認に失敗しました: ${error.message || error}`);
+      throw new Error(`認証状態の確認に失敗しました: ${this.getErrorMessage(error)}`);
     }
   }
 
@@ -55,7 +68,7 @@ export class ToolHandlerService {
       const { sessionId, endpoint, method, data, query, path } = params;
       
       // セッションIDからアクセストークンを取得
-      const token = await this.authService.getAccessToken(sessionId);
+      const token = await this.authService.getValidAccessToken(sessionId);
       
       if (!token) {
         throw new Error('有効なアクセストークンが見つかりません。再認証が必要です。');
@@ -73,23 +86,16 @@ export class ToolHandlerService {
       
       // APIリクエストを実行
       return await this.apiService.executeRequest({
-        token,
+        sessionId,
         endpoint: processedEndpoint,
         method,
         data,
         query,
+        path
       });
-    } catch (error) {
+    } catch (error: unknown) {
       this.logger.error(`APIリクエスト実行エラー: ${error}`);
-      
-      // エラーオブジェクト型を安全に処理
-      const errorMessage = error instanceof Error 
-        ? error.message 
-        : (typeof error === 'object' && error !== null && 'message' in error)
-          ? String(error.message)
-          : String(error);
-          
-      throw new Error(`APIリクエストの実行に失敗しました: ${errorMessage}`);
+      throw new Error(`APIリクエストの実行に失敗しました: ${this.getErrorMessage(error)}`);
     }
   }
 
@@ -124,9 +130,9 @@ export class ToolHandlerService {
           }
         } : {}
       };
-    } catch (error) {
+    } catch (error: unknown) {
       this.logger.error(`API概要情報取得エラー: ${error}`);
-      throw new Error(`API概要情報の取得に失敗しました: ${error.message || error}`);
+      throw new Error(`API概要情報の取得に失敗しました: ${this.getErrorMessage(error)}`);
     }
   }
 
@@ -161,9 +167,9 @@ export class ToolHandlerService {
           account: accountEndpoints
         }
       };
-    } catch (error) {
+    } catch (error: unknown) {
       this.logger.error(`APIエンドポイント一覧取得エラー: ${error}`);
-      throw new Error(`APIエンドポイント一覧の取得に失敗しました: ${error.message || error}`);
+      throw new Error(`APIエンドポイント一覧の取得に失敗しました: ${this.getErrorMessage(error)}`);
     }
   }
 
@@ -244,9 +250,9 @@ export class ToolHandlerService {
         method: method.toUpperCase(),
         ...operation
       };
-    } catch (error) {
+    } catch (error: unknown) {
       this.logger.error(`API操作詳細取得エラー: ${error}`);
-      throw new Error(`API操作詳細の取得に失敗しました: ${error.message || error}`);
+      throw new Error(`API操作詳細の取得に失敗しました: ${this.getErrorMessage(error)}`);
     }
   }
 }

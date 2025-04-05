@@ -4,7 +4,7 @@
   "description": "Microservice Connection Point for integrating Smaregi POS data with Claude AI",
   "type": "module",
   "scripts": {
-    "prebuild": "npm run convert && npm run generate:api:tools",
+    "pre_build": "npm run convert && npm run generate:api:tools",
     "build": "nest build",
     "format": "prettier --write \"src/**/*.ts\" \"test/**/*.ts\"",
     "start": "nest start",
@@ -23,7 +23,7 @@
     "convert": "npx tsx ./scripts/generate-api-schema-json.ts",
     "generate:api:tools": "npx tsx ./scripts/generate-api-tools-json.js",
     "generate:tools": "node scripts/generate-api-tools.js",
-    "mcp:init": "node dist/main.js init",
+    "mcp:init": "cp -r ./src/tools/generated ./dist/tools/ && node dist/main.js init",
     "mcp:run": "node dist/main.js run",
     "mcp:help": "node dist/main.js",
     "mcp:dev": "nest start --watch"
