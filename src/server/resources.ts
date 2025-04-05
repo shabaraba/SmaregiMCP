@@ -96,24 +96,18 @@ function registerApiPathResource(
   mcpServer.resource(
     'api-path',
     new ResourceTemplate('smaregi://api/{category}/{path}', {
-      list: async (_req: any, resource: any, variables: any, complete: any) => {
-        const { category } = variables;
-        // カテゴリが文字列配列の場合は最初の要素を使用
-        const categoryStr = Array.isArray(category) ? category[0] : category;
-        
-        try {
-          const paths = apiService.getApiPaths(categoryStr);
-          
-          return {
-            resources: paths.map(path => ({
-              uri: `smaregi://api/${categoryStr}/${path.name}`,
-              description: path.description || `${path.name} API`
-            }))
-          };
-        } catch (error) {
-          console.error(`[ERROR] Error listing API paths: ${error}`);
-          return { resources: [] };
-        }
+      list: async () => {
+        // 固定のリソースリストを返す
+        // 実際のクエリ時にはgetメソッドで動的にリソースを返す
+        return {
+          resources: [
+            { uri: 'smaregi://api/pos/products', description: '商品API' },
+            { uri: 'smaregi://api/pos/transactions', description: '取引API' },
+            { uri: 'smaregi://api/pos/stocks', description: '在庫API' },
+            { uri: 'smaregi://api/pos/stores', description: '店舗API' },
+            { uri: 'smaregi://api/pos/customers', description: '顧客API' }
+          ]
+        };
       }
     }),
     async (uri, variables) => {

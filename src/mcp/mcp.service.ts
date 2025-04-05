@@ -2,7 +2,7 @@ import { Injectable, OnModuleDestroy, OnModuleInit } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { McpServer } from '@modelcontextprotocol/sdk/server/mcp.js';
 import * as z from 'zod';
-import { StdioServerTransport } from '@modelcontextprotocol/sdk/dist/esm/server/stdio.js';
+import { StdioServerTransport } from '@modelcontextprotocol/sdk/server/stdio.js';
 import { ToolHandlerService } from '../tool-handler/tool-handler.service.js';
 
 @Injectable()
@@ -153,17 +153,8 @@ export class McpService implements OnModuleInit, OnModuleDestroy {
         'search-products',
         '商品を検索',
         {
-          type: 'object',
-          properties: {
-            keyword: {
-              type: 'string',
-              description: '検索キーワード'
-            },
-            category: {
-              type: 'string',
-              description: '商品カテゴリ'
-            }
-          }
+          keyword: z.string().optional().describe('検索キーワード'),
+          category: z.string().optional().describe('商品カテゴリ')
         },
         async ({ keyword, category }) => {
           this.log('INFO', `商品検索プロンプト実行: キーワード=${keyword}, カテゴリ=${category}`);
