@@ -5,7 +5,7 @@
   "type": "module",
   "scripts": {
     "pre_build": "npm run convert && npm run generate:api:tools",
-    "build": "nest build",
+    "build": "tsc",
     "format": "prettier --write \"src/**/*.ts\" \"test/**/*.ts\"",
     "start": "nest start",
     "start:dev": "nest start --watch",
