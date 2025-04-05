@@ -38,10 +38,14 @@ function registerProductSearchPrompt(mcpServer: McpServer): void {
     {
       keyword: z.string().optional().describe('検索キーワード'),
       category: z.string().optional().describe('商品カテゴリ'),
-      inStock: z.boolean().optional().describe('在庫がある商品のみを検索するか'),
-      limit: z.number().optional().describe('取得する商品の最大数'),
+      inStock: z.string().optional().describe('在庫がある商品のみを検索するか (「true」または「false」)'),
+      limit: z.string().optional().describe('取得する商品の最大数'),
     },
     async ({ keyword, category, inStock, limit }) => {
+      // Convert string parameters to appropriate types
+      const boolInStock = inStock === 'true' ? true : inStock === 'false' ? false : undefined;
+      const numLimit = limit ? parseInt(limit, 10) : undefined;
+      
       return {
         description: '商品を検索するためのプロンプト',
         isUserPromptTemplate: true,
@@ -56,7 +60,12 @@ function registerProductSearchPrompt(mcpServer: McpServer): void {
             role: 'user',
             content: {
               type: 'text',
-              text: formatProductSearchPrompt({ keyword, category, inStock, limit })
+              text: formatProductSearchPrompt({ 
+                keyword, 
+                category, 
+                inStock: boolInStock, 
+                limit: numLimit 
+              })
             }
           }
         ]
@@ -125,9 +134,12 @@ function registerSalesAnalysisPrompt(mcpServer: McpServer): void {
       period: z.string().optional().describe('分析期間（例: 今週、先月、過去3ヶ月）'),
       storeId: z.string().optional().describe('店舗ID'),
       groupBy: z.string().optional().describe('グループ化の基準（例: 日別、週別、月別）'),
-      includeChart: z.boolean().optional().describe('グラフを含めるか'),
+      includeChart: z.string().optional().describe('グラフを含めるか (「true」または「false」)'),
     },
     async ({ period, storeId, groupBy, includeChart }) => {
+      // Convert string parameter to appropriate type
+      const boolIncludeChart = includeChart === 'true' ? true : includeChart === 'false' ? false : undefined;
+      
       return {
         description: '売上データを分析するためのプロンプト',
         isUserPromptTemplate: true,
@@ -142,7 +154,12 @@ function registerSalesAnalysisPrompt(mcpServer: McpServer): void {
             role: 'user',
             content: {
               type: 'text',
-              text: formatSalesAnalysisPrompt({ period, storeId, groupBy, includeChart })
+              text: formatSalesAnalysisPrompt({ 
+                period, 
+                storeId, 
+                groupBy, 
+                includeChart: boolIncludeChart 
+              })
             }
           }
         ]
@@ -216,11 +233,15 @@ function registerInventoryManagementPrompt(mcpServer: McpServer): void {
     '在庫管理',
     {
       storeId: z.string().optional().describe('店舗ID'),
-      lowStock: z.boolean().optional().describe('在庫不足の商品のみを表示するか'),
-      threshold: z.number().optional().describe('在庫不足と判断する閾値'),
+      lowStock: z.string().optional().describe('在庫不足の商品のみを表示するか (「true」または「false」)'),
+      threshold: z.string().optional().describe('在庫不足と判断する閾値'),
       category: z.string().optional().describe('商品カテゴリ'),
     },
     async ({ storeId, lowStock, threshold, category }) => {
+      // Convert string parameters to appropriate types
+      const boolLowStock = lowStock === 'true' ? true : lowStock === 'false' ? false : undefined;
+      const numThreshold = threshold ? parseInt(threshold, 10) : undefined;
+      
       return {
         description: '在庫管理を行うためのプロンプト',
         isUserPromptTemplate: true,
@@ -235,7 +256,12 @@ function registerInventoryManagementPrompt(mcpServer: McpServer): void {
             role: 'user',
             content: {
               type: 'text',
-              text: formatInventoryManagementPrompt({ storeId, lowStock, threshold, category })
+              text: formatInventoryManagementPrompt({ 
+                storeId, 
+                lowStock: boolLowStock, 
+                threshold: numThreshold, 
+                category 
+              })
             }
           }
         ]
@@ -310,9 +336,12 @@ function registerCustomerAnalysisPrompt(mcpServer: McpServer): void {
     {
       period: z.string().optional().describe('分析期間（例: 今年、過去6ヶ月）'),
       segment: z.string().optional().describe('顧客セグメント（例: 新規、リピーター、VIP）'),
-      includeChart: z.boolean().optional().describe('グラフを含めるか'),
+      includeChart: z.string().optional().describe('グラフを含めるか (「true」または「false」)'),
     },
     async ({ period, segment, includeChart }) => {
+      // Convert string parameter to appropriate type
+      const boolIncludeChart = includeChart === 'true' ? true : includeChart === 'false' ? false : undefined;
+      
       return {
         description: '顧客データを分析するためのプロンプト',
         isUserPromptTemplate: true,
@@ -327,7 +356,11 @@ function registerCustomerAnalysisPrompt(mcpServer: McpServer): void {
             role: 'user',
             content: {
               type: 'text',
-              text: formatCustomerAnalysisPrompt({ period, segment, includeChart })
+              text: formatCustomerAnalysisPrompt({ 
+                period, 
+                segment, 
+                includeChart: boolIncludeChart 
+              })
             }
           }
         ]
