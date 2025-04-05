@@ -1,222 +1,81 @@
-import { Injectable, OnModuleInit, OnModuleDestroy } from '@nestjs/common';
-import { ConfigService } from '@nestjs/config';
-import { McpServer } from '@modelcontextprotocol/sdk/server/mcp.js';
-import { StdioServerTransport } from '@modelcontextprotocol/sdk/server/stdio.js';
-import { ToolHandlerService } from './tools/tool-handler.service.js';
-import { z } from 'zod';
-import * as fs from 'node:fs';
-import * as path from 'node:path';
-import * as yaml from 'js-yaml';
-import { ListResourcesRequestSchema, ListPromptsRequestSchema, GetPromptRequestSchema } from '@modelcontextprotocol/sdk/types.js';
-
-@Injectable()
-export class McpService implements OnModuleInit, OnModuleDestroy {
-  private mcpServer: McpServer;
-  private transport: StdioServerTransport | null = null;
-  private openApiSpec: any;
-
-  constructor(
-    private configService: ConfigService,
-    private toolHandlerService: ToolHandlerService,
-  ) {
-    // OpenAPI仕様を読み込み
-    this.loadOpenApiSpec();
-  }
-
-  /**
-   * OpenAPI仕様を読み込む
-   */
-  private loadOpenApiSpec() {
-    try {
-      const projectRoot = process.cwd();
-      const possiblePaths = [
-        path.resolve(projectRoot, 'openapi-simple.yaml'),
-        path.resolve(projectRoot, 'openapi.yaml'),
-        path.resolve(projectRoot, 'openapi', 'pos', 'openapi.yaml'),
-      ];
-
-      for (const specPath of possiblePaths) {
-        if (fs.existsSync(specPath)) {
-          const content = fs.readFileSync(specPath, 'utf8');
-          this.openApiSpec = yaml.load(content);
-          process.stderr.write(`[INFO] [McpService] OpenAPI仕様を読み込みました: ${specPath}\n`);
-          break;
-        }
-      }
-
-      // 仕様が見つからない場合は簡易版を用意
-      if (!this.openApiSpec) {
-        this.openApiSpec = {
-          info: {
-            title: "スマレジAPI (Fallback)",
-            description: "スマレジAPIの簡易モード",
-            version: "1.0.0"
-          },
-          paths: {},
-          tags: [
-            { name: "商品", description: "商品に関する操作" },
-            { name: "取引", description: "取引に関する操作" },
-            { name: "在庫", description: "在庫に関する操作" }
-          ]
-        };
-        process.stderr.write(`[WARN] [McpService] OpenAPI仕様が見つからないため、デフォルト定義を使用します\n`);
-      }
-    } catch (error) {
-      process.stderr.write(`[ERROR] [McpService] OpenAPI仕様の読み込みに失敗しました: ${error}\n`);
-      this.openApiSpec = {
-        info: {
-          title: "スマレジAPI (Error)",
-          description: "スマレジAPIの定義読み込みに失敗しました",
-          version: "1.0.0"
-        },
-        paths: {},
-        tags: []
-      };
-    }
-  }
-
-  /**
-   * OpenAPI定義からリソースを生成
-   */
-  private generateResourcesFromOpenApi() {
-    try {
-      // リソーステンプレートのリスト（カテゴリごと）
-      const resourceTemplates = [];
-      
-      // タグ（カテゴリ）を処理
-      const tags = this.openApiSpec.tags || [];
-      for (const tag of tags) {
-        resourceTemplates.push({
-          uriTemplate: `smaregi://api/${tag.name}/{path}`,
-          name: `スマレジ ${tag.name}`,
-          description: tag.description || `スマレジの${tag.name}に関するリソース`
-        });
-      }
-      
-      // 具体的なリソースのリスト
-      const resources = [];
-      
-      // 特定のよく使われるエンドポイントを固定リソースとして追加
-      if (this.openApiSpec.paths) {
-        const paths = Object.keys(this.openApiSpec.paths);
-        
-        // 例: /products エンドポイントがあれば商品一覧リソースとして追加
-        if (paths.includes('/products')) {
-          resources.push({
-            uri: 'smaregi://api/products/list',
-            name: '商品一覧',
-            description: '登録されている商品の一覧',
-            mimeType: 'application/json'
-          });
-        }
-        
-        // 例: /transactions エンドポイントがあれば取引履歴リソースとして追加
-        if (paths.includes('/transactions')) {
-          resources.push({
-            uri: 'smaregi://api/transactions/list',
-            name: '取引履歴',
-            description: '記録されている取引の履歴',
-            mimeType: 'application/json'
-          });
-        }
-      }
-      
-      return { resourceTemplates, resources };
-    } catch (error) {
-      process.stderr.write(`[ERROR] [McpService] リソース生成中にエラーが発生しました: ${error}\n`);
-      return { resourceTemplates: [], resources: [] };
-    }
-  }
-
-  /**
-   * プロンプトの定義を生成
-   */
   private generatePromptsFromOpenApi() {
     try {
-      const prompts = [];
-      
-      // タグ（カテゴリ）を処理してプロンプトを生成
-      const tags = this.openApiSpec.tags || [];
-      
-      // 商品検索プロンプト
-      if (tags.some(tag => tag.name === '商品')) {
-        prompts.push({
+      // プロンプト定義
+      return [
+        {
           name: 'search-products',
           description: '商品を検索',
-          arguments: [
-            {
-              name: 'keyword',
-              description: '検索キーワード',
-              required: true
-            },
-            {
-              name: 'category',
-              description: 'カテゴリ',
-              required: false
+          is_user_prompt_template: true,
+          sample_user_prompts: ['商品を検索して', '在庫のある商品を教えて'],
+          parameters: {
+            type: 'object',
+            properties: {
+              keyword: {
+                type: 'string',
+                description: '検索キーワード'
+              },
+              category: {
+                type: 'string',
+                description: '商品カテゴリ'
+              }
             }
-          ]
-        });
-      }
-      
-      // 売上分析プロンプト
-      if (tags.some(tag => tag.name === '取引')) {
-        prompts.push({
+          }
+        },
+        {
           name: 'analyze-sales',
           description: '売上データを分析',
-          arguments: [
-            {
-              name: 'period',
-              description: '分析期間（例：last7days, thisMonth, lastMonth）',
-              required: true
-            },
-            {
-              name: 'storeId',
-              description: '店舗ID（指定しない場合は全店舗）',
-              required: false
+          is_user_prompt_template: true,
+          sample_user_prompts: ['売上分析をして', '今週の売上を見せて'],
+          parameters: {
+            type: 'object',
+            properties: {
+              period: {
+                type: 'string',
+                description: '分析期間（例: 今週、先月、過去3ヶ月）'
+              },
+              storeId: {
+                type: 'string',
+                description: '店舗ID'
+              }
             }
-          ]
-        });
-      }
-      
-      // 在庫確認プロンプト
-      if (tags.some(tag => tag.name === '在庫')) {
-        prompts.push({
+          }
+        },
+        {
           name: 'inventory-status',
           description: '在庫状況を確認',
-          arguments: [
-            {
-              name: 'productId',
-              description: '商品ID',
-              required: false
-            },
-            {
-              name: 'storeId',
-              description: '店舗ID',
-              required: false
+          is_user_prompt_template: true,
+          sample_user_prompts: ['在庫状況を教えて', '商品の在庫を確認して'],
+          parameters: {
+            type: 'object',
+            properties: {
+              productId: {
+                type: 'string',
+                description: '商品ID'
+              },
+              storeId: {
+                type: 'string',
+                description: '店舗ID'
+              }
             }
-          ]
-        });
-      }
-      
-      return prompts;
+          }
+        }
+      ];
     } catch (error) {
-      process.stderr.write(`[ERROR] [McpService] プロンプト生成中にエラーが発生しました: ${error}\n`);
+      this.log('ERROR', `プロンプト生成エラー: ${error}`);
       return [];
     }
   }
 
   /**
    * モジュール初期化時にMCPサーバーを起動
-   * 常にMCPサーバーを初期化し、Claude Desktopとの通信を可能にする
    */
   async onModuleInit() {
     try {
-      // 標準エラー出力にログを出力
-      process.stderr.write('[INFO] [McpService] MCPサーバーを初期化中...\n');
+      this.log('INFO', 'MCPサーバーを初期化しています...');
       
-      // MCPサーバー作成（高レベルAPIを使用）
+      // MCPクライアントを作成
       this.mcpServer = new McpServer(
-        { 
+        {
           name: 'smaregi', 
           version: this.configService.get('npm_package_version', '1.0.0'),
         },
@@ -235,7 +94,7 @@ export class McpService implements OnModuleInit, OnModuleDestroy {
           // OpenAPI定義からリソースを生成
           const { resourceTemplates, resources } = this.generateResourcesFromOpenApi();
           
-          process.stderr.write(`[INFO] [McpService] resources/list レスポンス: ${resourceTemplates.length}テンプレート, ${resources.length}リソース\n`);
+          this.log('INFO', `resources/list レスポンス: ${resourceTemplates.length}テンプレート, ${resources.length}リソース`);
           
           return {
             resourceTemplates,
@@ -251,7 +110,7 @@ export class McpService implements OnModuleInit, OnModuleDestroy {
           // OpenAPI定義からプロンプトを生成
           const prompts = this.generatePromptsFromOpenApi();
           
-          process.stderr.write(`[INFO] [McpService] prompts/list レスポンス: ${prompts.length}プロンプト\n`);
+          this.log('INFO', `prompts/list レスポンス: ${prompts.length}プロンプト`);
           
           return {
             prompts
@@ -265,7 +124,7 @@ export class McpService implements OnModuleInit, OnModuleDestroy {
         async (request) => {
           const { name, arguments: promptArgs } = request.params;
           
-          process.stderr.write(`[INFO] [McpService] prompts/get リクエスト: ${name}\n`);
+          this.log('INFO', `prompts/get リクエスト: ${name}`);
           
           // OpenAPI定義からプロンプトを生成（一覧から名前で検索）
           const allPrompts = this.generatePromptsFromOpenApi();
@@ -419,12 +278,18 @@ export class McpService implements OnModuleInit, OnModuleDestroy {
         }
       );
       
+      // 動的ツールの登録
+      // 環境変数で事前生成/動的生成を切り替え可能に
+      const usePregeneratedTools = process.env.USE_PREGENERATED_TOOLS !== 'false';
+      const registeredTools = this.registerApiTools(usePregeneratedTools);
+      this.log('INFO', `動的ツール登録完了: ${registeredTools}個のツールが登録されました`);
+      
       // MCPトランスポート接続
       this.transport = new StdioServerTransport();
       await this.mcpServer.connect(this.transport);
-      process.stderr.write('[INFO] [McpService] MCPサーバーが接続され、実行中です\n');
+      this.log('INFO', 'MCPサーバーが接続され、実行中です');
     } catch (error) {
-      process.stderr.write(`[ERROR] [McpService] MCPサーバー初期化エラー: ${error}\n`);
+      this.log('ERROR', `MCPサーバー初期化エラー: ${error}`);
       throw error;
     }
   }
@@ -435,30 +300,30 @@ export class McpService implements OnModuleInit, OnModuleDestroy {
   async onModuleDestroy() {
     try {
       if (this.mcpServer) {
-        process.stderr.write('[INFO] [McpService] MCPサーバーを終了しています...\n');
+        this.log('INFO', 'MCPサーバーを終了しています...');
         
         // まずMCPサーバーを終了
         try {
           await this.mcpServer.close();
-          process.stderr.write('[INFO] [McpService] MCPサーバー接続を閉じました\n');
+          this.log('INFO', 'MCPサーバー接続を閉じました');
         } catch (e) {
-          process.stderr.write(`[WARN] [McpService] MCPサーバー終了中にエラーが発生しました: ${e}\n`);
+          this.log('WARN', `MCPサーバー終了中にエラーが発生しました: ${e}`);
         }
         
         // その後トランスポートの切断
         if (this.transport) {
           try {
             await this.transport.close();
-            process.stderr.write('[INFO] [McpService] トランスポート接続を閉じました\n');
+            this.log('INFO', 'トランスポート接続を閉じました');
           } catch (e) {
-            process.stderr.write(`[WARN] [McpService] トランスポート切断中にエラーが発生しました: ${e}\n`);
+            this.log('WARN', `トランスポート切断中にエラーが発生しました: ${e}`);
           }
         }
         
-        process.stderr.write('[INFO] [McpService] MCPサーバーが正常に終了しました\n');
+        this.log('INFO', 'MCPサーバーが正常に終了しました');
       }
     } catch (error) {
-      process.stderr.write(`[ERROR] [McpService] MCPサーバー終了エラー: ${error}\n`);
+      this.log('ERROR', `MCPサーバー終了エラー: ${error}`);
     }
   }
 

@@ -24,6 +24,7 @@ yarn-error.log*
 coverage/
 dist_test/
 
-# AIとの会話やテスト用スクリプト
+# AI関連ファイル
 ai/
+src/tools/generated/
 smaregi-mcp.sqlite
