@@ -28,7 +28,7 @@ export class ApiService {
     
     // Get access token
     const accessToken = await this.authService.getAccessToken(sessionId);
-    if (\!accessToken) {
+    if (!accessToken) {
       throw new Error('Not authenticated. Please complete authentication first.');
     }
     

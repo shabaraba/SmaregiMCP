@@ -119,7 +119,7 @@ export class AuthService {
   async checkAuthStatus(sessionId: string): Promise<{ isAuthenticated: boolean; sessionId: string }> {
     const session = this.sessions.get(sessionId);
     
-    if (\!session) {
+    if (!session) {
       return {
         isAuthenticated: false,
         sessionId
@@ -138,7 +138,7 @@ export class AuthService {
   async getAccessToken(sessionId: string): Promise<string | null> {
     const session = this.sessions.get(sessionId);
     
-    if (\!session || \!session.isAuthenticated) {
+    if (!session || !session.isAuthenticated) {
       return null;
     }
     
