@@ -41,13 +41,6 @@ export class ApiToolGenerator {
   }
   
   /**
-   * For testing only - set mock API definition
-   */
-  setMockApiDefinition(mockData: any): void {
-    this.mockApiDefinition = mockData;
-  }
-  
-  /**
    * Load pre-generated API tools from JSON file
    */
   private loadPreGeneratedTools(): ApiTool[] | null {
@@ -383,10 +376,10 @@ export class ApiToolGenerator {
    */
   generateTools(): ApiTool[] {
     // Use pre-generated tools if available
-    if (this.preGeneratedApiTools && this.preGeneratedApiTools.length > 0) {
-      console.error(`[INFO] Using ${this.preGeneratedApiTools.length} pre-generated API tools`);
-      return this.preGeneratedApiTools;
-    }
+    // if (this.preGeneratedApiTools && this.preGeneratedApiTools.length > 0) {
+    //   console.error(`[INFO] Using ${this.preGeneratedApiTools.length} pre-generated API tools`);
+    //   return this.preGeneratedApiTools;
+    // }
     
     const tools: ApiTool[] = [];
     
@@ -448,7 +441,8 @@ export class ApiToolGenerator {
         .map(param => param.slice(1, -1));
       
       // Extract category from path
-      const category = this.extractCategoryFromPath(path) || defaultCategory;
+      // const category = this.extractCategoryFromPath(path) || defaultCategory;
+      const category = defaultCategory;
       
       // Process each HTTP method
       for (const [method, operation] of Object.entries<any>(pathItem)) {
