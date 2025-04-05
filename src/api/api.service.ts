@@ -1,21 +1,17 @@
 import { AuthService } from '../auth/auth.service.js';
+import { ApiRequestInterface, ApiServiceInterface } from './interfaces/api-request.interface.js';
 
 /**
  * Interface for request parameters
  */
-interface ApiRequestParams {
+interface ApiRequestParams extends ApiRequestInterface {
   sessionId: string;
-  endpoint: string;
-  method: string;
-  data?: any;
-  query?: Record<string, any>;
-  path?: Record<string, any>;
 }
 
 /**
  * Handles API requests to Smaregi API
  */
-export class ApiService {
+export class ApiService implements ApiServiceInterface {
   private readonly baseUrl = 'https://api.smaregi.jp';
   
   constructor(private readonly authService: AuthService) {}
