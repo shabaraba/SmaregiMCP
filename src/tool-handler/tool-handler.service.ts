@@ -33,7 +33,7 @@ export class ToolHandlerService {
   async handleGetAuthorizationUrl(params: { scopes: string[] }): Promise<any> {
     try {
       const { scopes } = params;
-      return await this.authService.generateAuthUrl(scopes);
+      return await this.authService.getAuthorizationUrl(scopes);
     } catch (error: unknown) {
       this.logger.error(`認証URL生成エラー: ${error}`);
       throw new Error(`認証URLの生成に失敗しました: ${this.getErrorMessage(error)}`);
@@ -68,7 +68,7 @@ export class ToolHandlerService {
       const { sessionId, endpoint, method, data, query, path } = params;
       
       // セッションIDからアクセストークンを取得
-      const token = await this.authService.getValidAccessToken(sessionId);
+      const token = await this.authService.getAccessToken(sessionId);
       
       if (!token) {
         throw new Error('有効なアクセストークンが見つかりません。再認証が必要です。');

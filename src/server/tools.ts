@@ -231,9 +231,7 @@ function registerApiInfoTools(
     async ({ category }) => {
       try {
         // Get API overview from API service
-        const overview = category
-          ? apiService.getApiCategoryOverview(category)
-          : apiService.getApiOverview();
+        const overview = apiService.getApiCategoryOverview(category)
         
         if (!overview) {
           return {

@@ -53,19 +53,21 @@ function registerApiCategoryResource(
       const { category } = variables;
       
       try {
-        const overview = apiService.getApiCategoryOverview(category);
+        // カテゴリが文字列配列の場合は最初の要素を使用
+        const categoryStr = Array.isArray(category) ? category[0] : category;
+        const overview = apiService.getApiCategoryOverview(categoryStr);
         
         if (!overview) {
           return {
             isError: true,
             error: {
-              message: `Unknown API category: ${category}`
+              message: `Unknown API category: ${categoryStr}`
             }
           };
         }
         
         return {
-          content: `# ${category.toUpperCase()} API\n\n${overview}`
+          content: `# ${categoryStr.toUpperCase()} API\n\n${overview}`
         };
       } catch (error) {
         console.error(`[ERROR] Error retrieving category resource: ${error}`);
@@ -94,15 +96,17 @@ function registerApiPathResource(
   mcpServer.resource(
     'api-path',
     new ResourceTemplate('smaregi://api/{category}/{path}', {
-      list: async (_, variables) => {
+      list: async (_req: any, resource: any, variables: any, complete: any) => {
         const { category } = variables;
+        // カテゴリが文字列配列の場合は最初の要素を使用
+        const categoryStr = Array.isArray(category) ? category[0] : category;
         
         try {
-          const paths = apiService.getApiPaths(category);
+          const paths = apiService.getApiPaths(categoryStr);
           
           return {
             resources: paths.map(path => ({
-              uri: `smaregi://api/${category}/${path.name}`,
+              uri: `smaregi://api/${categoryStr}/${path.name}`,
               description: path.description || `${path.name} API`
             }))
           };
@@ -114,15 +118,18 @@ function registerApiPathResource(
     }),
     async (uri, variables) => {
       const { category, path } = variables;
+      // カテゴリとパスが文字列配列の場合は最初の要素を使用
+      const categoryStr = Array.isArray(category) ? category[0] : category;
+      const pathStr = Array.isArray(path) ? path[0] : path;
       
       try {
-        const pathDetails = apiService.getApiPathDetails(category, path);
+        const pathDetails = apiService.getApiPathDetails(categoryStr, pathStr);
         
         if (!pathDetails) {
           return {
             isError: true,
             error: {
-              message: `Unknown API path: ${category}/${path}`
+              message: `Unknown API path: ${categoryStr}/${pathStr}`
             }
           };
         }
@@ -136,7 +143,7 @@ function registerApiPathResource(
         return {
           isError: true,
           error: {
-            message: `Error retrieving API path: ${error}`
+            message: `Error retrieving API path ${categoryStr}/${pathStr}: ${error}`
           }
         };
       }

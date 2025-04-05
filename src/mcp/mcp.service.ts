@@ -1,3 +1,48 @@
+import { Injectable, OnModuleDestroy, OnModuleInit } from '@nestjs/common';
+import { ConfigService } from '@nestjs/config';
+import { McpServer } from '@modelcontextprotocol/sdk/server/mcp.js';
+import * as z from 'zod';
+import { StdioServerTransport } from '@modelcontextprotocol/sdk/dist/esm/server/stdio.js';
+import { ToolHandlerService } from '../tool-handler/tool-handler.service.js';
+
+@Injectable()
+export class McpService implements OnModuleInit, OnModuleDestroy {
+  private mcpServer: McpServer;
+  private transport: StdioServerTransport;
+
+  constructor(
+    private readonly configService: ConfigService,
+    private readonly toolHandlerService: ToolHandlerService,
+  ) {}
+
+  // ログ出力用ユーティリティ関数
+  private log(level: 'INFO' | 'WARN' | 'ERROR', message: string): void {
+    console.error(`[${level}] ${message}`);
+  }
+
+  /**
+   * OpenAPI定義からAPIツールを動的に登録
+   */
+  private registerApiTools(usePregenerated = true): number {
+    // ここでAPIツールを登録する実装
+    // 実際の実装はIssue #34に従って追加
+    return 0; // 登録したツール数
+  }
+
+  /**
+   * リソース生成関数
+   */
+  private generateResourcesFromOpenApi() {
+    // 実際の実装はIssue #34に従って追加
+    return {
+      resourceTemplates: [],
+      resources: []
+    };
+  }
+
+  /**
+   * プロンプト生成関数
+   */
   private generatePromptsFromOpenApi() {
     try {
       // プロンプト定義
@@ -73,122 +118,67 @@
     try {
       this.log('INFO', 'MCPサーバーを初期化しています...');
       
-      // MCPクライアントを作成
+      // リソースとプロンプトの機能を提供
       this.mcpServer = new McpServer(
         {
           name: 'smaregi', 
           version: this.configService.get('npm_package_version', '1.0.0'),
-        },
+        }
+      );
+
+      // resource: 商品情報リソース
+      this.mcpServer.resource(
+        'products',
+        'smaregi://api/products',
+        async () => {
+          return {
+            content: '# 商品情報\n\nスマレジAPIで取得可能な商品情報のサンプルです。'
+          };
+        }
+      );
+
+      // resource: 店舗情報リソース
+      this.mcpServer.resource(
+        'stores',
+        'smaregi://api/stores',
+        async () => {
+          return {
+            content: '# 店舗情報\n\nスマレジAPIで取得可能な店舗情報のサンプルです。'
+          };
+        }
+      );
+
+      // prompt: 商品検索プロンプト
+      this.mcpServer.prompt(
+        'search-products',
+        '商品を検索',
         {
-          capabilities: {
-            resources: {},  // リソース機能を有効化
-            prompts: {}     // プロンプト機能を有効化
+          type: 'object',
+          properties: {
+            keyword: {
+              type: 'string',
+              description: '検索キーワード'
+            },
+            category: {
+              type: 'string',
+              description: '商品カテゴリ'
+            }
           }
-        }
-      );
-
-      // リソースリストのハンドラーを設定
-      this.mcpServer.server.setRequestHandler(
-        ListResourcesRequestSchema,
-        async () => {
-          // OpenAPI定義からリソースを生成
-          const { resourceTemplates, resources } = this.generateResourcesFromOpenApi();
-          
-          this.log('INFO', `resources/list レスポンス: ${resourceTemplates.length}テンプレート, ${resources.length}リソース`);
+        },
+        async ({ keyword, category }) => {
+          this.log('INFO', `商品検索プロンプト実行: キーワード=${keyword}, カテゴリ=${category}`);
           
           return {
-            resourceTemplates,
-            resources
-          };
-        }
-      );
-
-      // プロンプトリストのハンドラーを設定
-      this.mcpServer.server.setRequestHandler(
-        ListPromptsRequestSchema,
-        async () => {
-          // OpenAPI定義からプロンプトを生成
-          const prompts = this.generatePromptsFromOpenApi();
-          
-          this.log('INFO', `prompts/list レスポンス: ${prompts.length}プロンプト`);
-          
-          return {
-            prompts
-          };
-        }
-      );
-      
-      // プロンプト取得のハンドラーを設定
-      this.mcpServer.server.setRequestHandler(
-        GetPromptRequestSchema,
-        async (request) => {
-          const { name, arguments: promptArgs } = request.params;
-          
-          this.log('INFO', `prompts/get リクエスト: ${name}`);
-          
-          // OpenAPI定義からプロンプトを生成（一覧から名前で検索）
-          const allPrompts = this.generatePromptsFromOpenApi();
-          const promptDef = allPrompts.find(p => p.name === name);
-          
-          if (!promptDef) {
-            throw new Error(`プロンプト "${name}" が見つかりません`);
-          }
-          
-          // プロンプトテンプレートに応じてメッセージを生成
-          let messages = [];
-          
-          switch (name) {
-            case 'search-products':
-              messages = [
-                {
-                  role: 'user',
-                  content: {
-                    type: 'text',
-                    text: `スマレジに登録されている商品を検索してください。\n\n検索キーワード: ${promptArgs?.keyword || '指定なし'}\nカテゴリ: ${promptArgs?.category || '指定なし'}`
-                  }
+            description: '商品検索',
+            messages: [
+              {
+                role: 'user',
+                content: {
+                  type: 'text',
+                  text: `スマレジに登録されている商品を検索してください。\n\n検索キーワード: ${keyword || '指定なし'}\nカテゴリ: ${category || '指定なし'}`
                 }
-              ];
-              break;
-            
-            case 'analyze-sales':
-              messages = [
-                {
-                  role: 'user',
-                  content: {
-                    type: 'text',
-                    text: `以下の条件で売上データを分析してください。\n\n期間: ${promptArgs?.period || '先週'}\n店舗ID: ${promptArgs?.storeId || '全店舗'}`
-                  }
-                }
-              ];
-              break;
-              
-            case 'inventory-status':
-              messages = [
-                {
-                  role: 'user',
-                  content: {
-                    type: 'text',
-                    text: `在庫状況を確認してください。\n\n商品ID: ${promptArgs?.productId || '全商品'}\n店舗ID: ${promptArgs?.storeId || '全店舗'}`
-                  }
-                }
-              ];
-              break;
-              
-            default:
-              messages = [
-                {
-                  role: 'user',
-                  content: {
-                    type: 'text',
-                    text: `${promptDef.description || 'リクエストされたプロンプト'}についての情報を表示します。`
-                  }
-                }
-              ];
-          }
-          
-          return {
-            description: promptDef.description,
-            messages
+              }
+            ]
           };
         }
       );

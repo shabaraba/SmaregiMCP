@@ -1,19 +1,19 @@
 import { describe, it, expect, beforeEach, jest } from '@jest/globals';
 import { McpServer } from '@modelcontextprotocol/sdk/server/mcp.js';
-import { registerResources } from './resources';
-import { registerTools } from './tools';
-import { registerPrompts } from './prompts';
-import { ApiService } from '../api/api.service';
-import { AuthService } from '../auth/auth.service';
-import { SchemaConverter } from '../conversion/schema-converter';
-import { ApiToolGenerator } from '../conversion/tool-generator';
+import { registerResources } from './resources.js';
+import { registerTools } from './tools.js';
+import { registerPrompts } from './prompts.js';
+import { ApiService } from '../api/api.service.js';
+import { AuthService } from '../auth/auth.service.js';
+import { SchemaConverter } from '../conversion/schema-converter.js';
+import { ApiToolGenerator } from '../conversion/tool-generator.js';
 
 // Mock dependencies
 jest.mock('@modelcontextprotocol/sdk/server/mcp.js');
-jest.mock('../api/api.service');
-jest.mock('../auth/auth.service');
-jest.mock('../conversion/schema-converter');
-jest.mock('../conversion/tool-generator');
+jest.mock('../api/api.service.js');
+jest.mock('../auth/auth.service.js');
+jest.mock('../conversion/schema-converter.js');
+jest.mock('../conversion/tool-generator.js');
 
 describe('MCP Server Implementation', () => {
   let mockMcpServer: any;
