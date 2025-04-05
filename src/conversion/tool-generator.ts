@@ -4,7 +4,7 @@ import * as path from 'path';
 import { SchemaConverter } from './schema-converter.js';
 
 /**
- * API Tool Parameter structure
+ * API Tool Parameter structure aligned with MCP TypeScript SDK
  */
 export interface ApiToolParameter {
   name: string;
@@ -15,7 +15,7 @@ export interface ApiToolParameter {
 }
 
 /**
- * API Tool structure
+ * API Tool structure aligned with MCP TypeScript SDK
  */
 export interface ApiTool {
   name: string;
@@ -24,10 +24,12 @@ export interface ApiTool {
   path: string;
   method: string;
   operationId?: string;
+  category?: string;
+  version?: string;
 }
 
 /**
- * Generates API tools from OpenAPI schemas
+ * Generates API tools from OpenAPI schemas, aligned with MCP TypeScript SDK
  */
 export class ApiToolGenerator {
   private mockApiDefinition: any = null;
@@ -121,9 +123,31 @@ export class ApiToolGenerator {
    * Example: /products/{productId} -> products
    */
   private extractResourceFromPath(path: string): string {
-    // Extract first segment from path
+    // Extract segments from path
     const segments = path.split('/').filter(Boolean);
+    
+    // Special handling for API paths with namespaces like /pos/products
+    // In this case, we want to extract 'products' not 'pos'
+    if (segments.length > 1 && ['pos', 'common'].includes(segments[0])) {
+      return segments[1];
+    }
+    
     return segments.length > 0 ? segments[0] : 'resource';
+  }
+  
+  /**
+   * Extract category from path
+   * Example: /pos/products/{productId} -> pos
+   */
+  private extractCategoryFromPath(path: string): string {
+    const segments = path.split('/').filter(Boolean);
+    
+    // Check if the path starts with a standard category like 'pos' or 'common'
+    if (segments.length > 0 && ['pos', 'common'].includes(segments[0])) {
+      return segments[0];
+    }
+    
+    return 'api'; // Default category if no specific one is identified
   }
   
   /**
@@ -161,7 +185,7 @@ export class ApiToolGenerator {
   /**
    * Generate human-readable tool name from OpenAPI path and method
    */
-  private generateToolName(path: string, method: string, operationId?: string): string {
+  private generateToolName(path: string, method: string, category: string, operationId?: string): string {
     // Use operationId if provided
     if (operationId) {
       return operationId;
@@ -187,8 +211,8 @@ export class ApiToolGenerator {
     // Capitalize resource name
     const capitalizedResource = resource.charAt(0).toUpperCase() + resource.slice(1);
     
-    // Combine parts to form tool name
-    return `${action}${capitalizedResource}${byId}`;
+    // Format according to MCP SDK standard, including category
+    return `${category}.${action}${capitalizedResource}${byId}`;
   }
   
   /**
@@ -226,6 +250,8 @@ export class ApiToolGenerator {
     
     switch (type.toLowerCase()) {
       case 'integer':
+        schema = z.number().int();
+        break;
       case 'number':
         schema = z.number();
         break;
@@ -240,7 +266,9 @@ export class ApiToolGenerator {
           : z.array(z.string());
         break;
       case 'object':
-        schema = z.record(z.any());
+        schema = param.properties 
+          ? this.buildObjectSchema(param.properties, param.required || [])
+          : z.record(z.any());
         break;
       default:
         // Special handling for date formats
@@ -249,6 +277,9 @@ export class ApiToolGenerator {
             (val) => !Number.isNaN(new Date(val).getTime()),
             { message: `Invalid ${format} format` }
           );
+        } else if (param.enum) {
+          // Handle enum values
+          schema = z.enum(param.enum);
         } else {
           schema = z.string();
         }
@@ -256,6 +287,25 @@ export class ApiToolGenerator {
     
     // Make optional if not required
     return isRequired ? schema : schema.optional();
+  }
+  
+  /**
+   * Build Zod object schema from properties
+   */
+  private buildObjectSchema(properties: any, required: string[]): z.ZodTypeAny {
+    const shape: Record<string, z.ZodTypeAny> = {};
+    
+    for (const [name, prop] of Object.entries<any>(properties)) {
+      const isRequired = required.includes(name);
+      let propSchema = this.getZodSchemaForParameter({
+        ...prop,
+        required: isRequired
+      });
+      
+      shape[name] = propSchema;
+    }
+    
+    return z.object(shape);
   }
   
   /**
@@ -292,22 +342,34 @@ export class ApiToolGenerator {
         operation.requestBody.content['application/json'] ||
         operation.requestBody.content['application/x-www-form-urlencoded'];
       
-      if (jsonContent && jsonContent.schema && jsonContent.schema.properties) {
-        const bodyRequired = jsonContent.schema.required || [];
-        
-        for (const [propName, propSchema] of Object.entries<any>(jsonContent.schema.properties)) {
-          const isRequired = bodyRequired.includes(propName);
-          const schema = this.getZodSchemaForParameter({
-            ...propSchema,
-            required: isRequired
-          });
+      if (jsonContent && jsonContent.schema) {
+        if (jsonContent.schema.properties) {
+          // Process individual body parameters
+          const bodyRequired = jsonContent.schema.required || [];
           
+          for (const [propName, propSchema] of Object.entries<any>(jsonContent.schema.properties)) {
+            const isRequired = bodyRequired.includes(propName);
+            const schema = this.getZodSchemaForParameter({
+              ...propSchema,
+              required: isRequired
+            });
+            
+            parameters.push({
+              name: propName,
+              description: propSchema.description || `${propName} parameter`,
+              required: isRequired,
+              type: 'body',
+              schema
+            });
+          }
+        } else {
+          // If no properties, handle as entire body object
           parameters.push({
-            name: propName,
-            description: propSchema.description || `${propName} parameter`,
-            required: isRequired,
+            name: 'body',
+            description: 'Request body',
+            required: operation.requestBody.required === true,
             type: 'body',
-            schema
+            schema: this.getZodSchemaForParameter(jsonContent.schema)
           });
         }
       }
@@ -332,13 +394,13 @@ export class ApiToolGenerator {
       // Load POS API schema
       const posDefinition = this.mockApiDefinition || this.schemaConverter.convertTypeScriptToJson('pos');
       if (posDefinition && posDefinition.paths) {
-        this.processPathsDefinition(posDefinition.paths, tools);
+        this.processPathsDefinition(posDefinition.paths, tools, 'pos');
       }
       
       // Load Common API schema
       const commonDefinition = this.mockApiDefinition || this.schemaConverter.convertTypeScriptToJson('common');
       if (commonDefinition && commonDefinition.paths) {
-        this.processPathsDefinition(commonDefinition.paths, tools);
+        this.processPathsDefinition(commonDefinition.paths, tools, 'common');
       }
       
       // Generate mock tools if none were generated
@@ -359,7 +421,7 @@ export class ApiToolGenerator {
               ]
             }
           }
-        }, tools);
+        }, tools, 'pos');
       }
       
       console.error(`[INFO] Generated ${tools.length} API tools`);
@@ -373,11 +435,14 @@ export class ApiToolGenerator {
   /**
    * Process OpenAPI paths definition and generate tools
    */
-  private processPathsDefinition(paths: any, tools: ApiTool[]): void {
+  private processPathsDefinition(paths: any, tools: ApiTool[], defaultCategory: string = 'api'): void {
     for (const [path, pathItem] of Object.entries<any>(paths)) {
       // Extract path parameters
       const pathParams = (path.match(/{([^}]+)}/g) || [])
         .map(param => param.slice(1, -1));
+      
+      // Extract category from path
+      const category = this.extractCategoryFromPath(path) || defaultCategory;
       
       // Process each HTTP method
       for (const [method, operation] of Object.entries<any>(pathItem)) {
@@ -400,7 +465,7 @@ export class ApiToolGenerator {
           actualOperation.operationId || 
           (typeof operation === 'string' ? operation.replace(/^operations\[\"(.+)\"\]$/, '$1') : undefined);
         
-        const toolName = this.generateToolName(path, method, operationId);
+        const toolName = this.generateToolName(path, method, category, operationId);
         
         // Generate tool description
         const description = 
@@ -418,7 +483,9 @@ export class ApiToolGenerator {
           parameters,
           path,
           method: method.toUpperCase(),
-          operationId
+          operationId,
+          category,
+          version: '1.0' // Default version if not specified
         });
       }
     }
@@ -464,6 +531,11 @@ export class ApiToolGenerator {
     if (schema instanceof z.ZodBoolean) return 'boolean';
     if (schema instanceof z.ZodArray) return 'array';
     if (schema instanceof z.ZodObject || schema instanceof z.ZodRecord) return 'object';
+    if (schema instanceof z.ZodEnum) return 'enum';
+    if (schema instanceof z.ZodOptional) {
+      const innerSchema = schema._def.innerType;
+      return this.getSchemaType(innerSchema);
+    }
     return 'string';
   }
 }

@@ -20,35 +20,67 @@ if (\!fs.existsSync(outputDir)) {
   fs.mkdirSync(outputDir, { recursive: true });
 }
 
+/**
+ * エラーハンドラー関数
+ */
+function handleError(message: string, error: any): never {
+  console.error(`[ERROR] ${message}:`, error);
+  if (error instanceof Error) {
+    console.error(`[ERROR] ${error.stack}`);
+  }
+  process.exit(1);
+}
+
 // メイン処理
 async function main() {
   try {
-    console.log('OpenAPI TypeScript定義からJSONスキーマを生成します...');
+    console.log('[INFO] OpenAPI TypeScript定義からJSONスキーマを生成します...');
     
     const schemaConverter = new SchemaConverter();
     
     // POSスキーマの変換
-    console.log('POS APIスキーマを変換しています...');
-    const posSchema = schemaConverter.convertTypeScriptToJson('pos');
-    if (posSchema) {
-      schemaConverter.saveSchemaAsJson('pos', posSchema);
-      console.log('POS APIスキーマをJSONに変換して保存しました');
+    try {
+      console.log('[INFO] POS APIスキーマを変換しています...');
+      const posSchema = schemaConverter.convertTypeScriptToJson('pos');
+      if (posSchema) {
+        schemaConverter.saveSchemaAsJson('pos', posSchema);
+        console.log('[SUCCESS] POS APIスキーマをJSONに変換して保存しました');
+      } else {
+        console.warn('[WARN] POSスキーマの変換結果がnullでした');
+      }
+    } catch (posError) {
+      console.error('[ERROR] POSスキーマの変換中にエラーが発生しました:', posError);
     }
     
     // 共通スキーマの変換
-    console.log('共通APIスキーマを変換しています...');
-    const commonSchema = schemaConverter.convertTypeScriptToJson('common');
-    if (commonSchema) {
-      schemaConverter.saveSchemaAsJson('common', commonSchema);
-      console.log('共通APIスキーマをJSONに変換して保存しました');
+    try {
+      console.log('[INFO] 共通APIスキーマを変換しています...');
+      const commonSchema = schemaConverter.convertTypeScriptToJson('common');
+      if (commonSchema) {
+        schemaConverter.saveSchemaAsJson('common', commonSchema);
+        console.log('[SUCCESS] 共通APIスキーマをJSONに変換して保存しました');
+      } else {
+        console.warn('[WARN] 共通スキーマの変換結果がnullでした');
+      }
+    } catch (commonError) {
+      console.error('[ERROR] 共通スキーマの変換中にエラーが発生しました:', commonError);
     }
     
-    console.log('すべてのスキーマの変換が完了しました');
+    // 変換結果の検証
+    const posJsonPath = resolve(outputDir, 'pos.json');
+    const commonJsonPath = resolve(outputDir, 'common.json');
+    
+    if (fs.existsSync(posJsonPath) && fs.existsSync(commonJsonPath)) {
+      console.log('[SUCCESS] すべてのスキーマの変換が完了しました');
+    } else {
+      console.warn('[WARN] 一部のスキーマが生成されていません。生成状況を確認してください。');
+    }
   } catch (error) {
-    console.error('スキーマ変換中にエラーが発生しました:', error);
-    process.exit(1);
+    handleError('スキーマ変換中に予期しないエラーが発生しました', error);
   }
 }
 
 // スクリプト実行
-main();
+main().catch(error => {
+  handleError('スクリプト実行中に予期しないエラーが発生しました', error);
+});
