@@ -1,4 +1,4 @@
-import { createFetch } from 'openapi-fetch';
+import createFetch from 'openapi-fetch';
 import { AuthService } from '../auth/auth.service.js';
 import { ApiRequestInterface, ApiServiceInterface } from './interfaces/api-request.interface.js';
 import { config } from '../utils/config.js';
