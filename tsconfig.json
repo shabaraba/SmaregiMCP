@@ -2,7 +2,7 @@
   "compilerOptions": {
     "module": "NodeNext",
     "declaration": true,
-    "removeComments": true,
+    "removeComments": false,
     "emitDecoratorMetadata": true,
     "experimentalDecorators": true,
     "allowSyntheticDefaultImports": true,
@@ -19,7 +19,7 @@
     "noFallthroughCasesInSwitch": false,
     "esModuleInterop": true,
     "moduleResolution": "NodeNext",
-    "strict": true,
+    "strict": false,
     "forceConsistentCasingInFileNames": true,
     "resolveJsonModule": true
   },

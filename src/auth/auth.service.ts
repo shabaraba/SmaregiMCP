@@ -119,7 +119,7 @@ export class AuthService {
   async checkAuthStatus(sessionId: string): Promise<{ isAuthenticated: boolean; sessionId: string }> {
     const session = this.sessions.get(sessionId);
     
-    if (\!session) {
+    if (!session) {
       return {
         isAuthenticated: false,
         sessionId
@@ -138,10 +138,36 @@ export class AuthService {
   async getAccessToken(sessionId: string): Promise<string | null> {
     const session = this.sessions.get(sessionId);
     
-    if (\!session || \!session.isAuthenticated) {
+    if (!session || !session.isAuthenticated) {
       return null;
     }
     
     return session.accessToken || null;
+  }
+
+  /**
+   * Handle OAuth callback with code and state
+   */
+  async handleCallback(code: string, state: string): Promise<string> {
+    // state is actually our session ID
+    const sessionId = state;
+    const session = this.sessions.get(sessionId);
+    
+    if (!session) {
+      throw new Error('セッションが見つかりません。認証をやり直してください。');
+    }
+    
+    // In a real implementation, we would exchange the code for tokens here
+    // For mock implementation, just consider the authentication successful
+    
+    session.isAuthenticated = true;
+    session.accessToken = `mock_access_token_${this.generateRandomString(16)}`;
+    session.refreshToken = `mock_refresh_token_${this.generateRandomString(16)}`;
+    session.expiresAt = new Date(Date.now() + 3600 * 1000).toISOString(); // Expire in 1 hour
+    
+    this.sessions.set(sessionId, session);
+    this.saveSessions();
+    
+    return sessionId;
   }
 }

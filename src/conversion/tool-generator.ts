@@ -320,7 +320,7 @@ export class ApiToolGenerator {
     const parameters: ApiToolParameter[] = [];
     
     // Process path and query parameters
-    if (operation.parameters) {
+    if (operation.parameters && Array.isArray(operation.parameters)) {
       for (const param of operation.parameters) {
         const paramType = this.detectParameterType(path, param.name, method, pathParams);
         const schema = this.getZodSchemaForParameter(param);
@@ -396,11 +396,17 @@ export class ApiToolGenerator {
       if (posDefinition && posDefinition.paths) {
         this.processPathsDefinition(posDefinition.paths, tools, 'pos');
       }
+      else if (posDefinition && posDefinition.properties) {
+        this.processPathsDefinition(posDefinition.properties, tools, 'pos');
+      }
       
       // Load Common API schema
       const commonDefinition = this.mockApiDefinition || this.schemaConverter.convertTypeScriptToJson('common');
       if (commonDefinition && commonDefinition.paths) {
         this.processPathsDefinition(commonDefinition.paths, tools, 'common');
+      }
+      else if (commonDefinition && commonDefinition.properties) {
+        this.processPathsDefinition(commonDefinition.properties, tools, 'common');
       }
       
       // Generate mock tools if none were generated
@@ -533,7 +539,7 @@ export class ApiToolGenerator {
     if (schema instanceof z.ZodObject || schema instanceof z.ZodRecord) return 'object';
     if (schema instanceof z.ZodEnum) return 'enum';
     if (schema instanceof z.ZodOptional) {
-      const innerSchema = z.unwrap(schema);
+      const innerSchema = schema.unwrap();
       return this.getSchemaType(innerSchema);
     }
     return 'string';

@@ -17,7 +17,7 @@ const projectRoot = resolve(__dirname, '..');
 
 // 出力ディレクトリを作成
 const outputDir = resolve(projectRoot, 'src', 'tools', 'generated');
-if (\!fs.existsSync(outputDir)) {
+if (!fs.existsSync(outputDir)) {
   fs.mkdirSync(outputDir, { recursive: true });
 }
 

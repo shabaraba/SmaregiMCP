@@ -1,21 +1,17 @@
 import { AuthService } from '../auth/auth.service.js';
+import { ApiRequestInterface, ApiServiceInterface } from './interfaces/api-request.interface.js';
 
 /**
  * Interface for request parameters
  */
-interface ApiRequestParams {
+interface ApiRequestParams extends ApiRequestInterface {
   sessionId: string;
-  endpoint: string;
-  method: string;
-  data?: any;
-  query?: Record<string, any>;
-  path?: Record<string, any>;
 }
 
 /**
  * Handles API requests to Smaregi API
  */
-export class ApiService {
+export class ApiService implements ApiServiceInterface {
   private readonly baseUrl = 'https://api.smaregi.jp';
   
   constructor(private readonly authService: AuthService) {}
@@ -28,7 +24,7 @@ export class ApiService {
     
     // Get access token
     const accessToken = await this.authService.getAccessToken(sessionId);
-    if (\!accessToken) {
+    if (!accessToken) {
       throw new Error('Not authenticated. Please complete authentication first.');
     }
     
@@ -55,22 +51,121 @@ export class ApiService {
    */
   getApiOverview(category?: string): string {
     if (category) {
-      switch (category.toLowerCase()) {
-        case 'pos':
-          return 'スマレジPOS APIは、POSシステムのデータにアクセスするためのAPIです。商品管理、在庫管理、取引管理などの機能があります。';
-        case 'common':
-          return 'スマレジ共通APIは、複数のサービスで共通して使用される機能を提供します。店舗管理、スタッフ管理などの機能があります。';
-        default:
-          return `${category}カテゴリに関する情報はありません。`;
-      }
+      return this.getApiCategoryOverview(category);
     }
     
     return 'スマレジAPIは、POSシステムおよび周辺サービスのデータにアクセスするためのAPIです。主なカテゴリとして、POS API（商品管理、在庫管理、取引管理）と共通API（店舗管理、スタッフ管理）があります。';
   }
   
   /**
-   * Mock products data
+   * Get API category overview information
    */
+  getApiCategoryOverview(category: string): string {
+    switch (category.toLowerCase()) {
+      case 'pos':
+        return 'スマレジPOS APIは、POSシステムのデータにアクセスするためのAPIです。商品管理、在庫管理、取引管理などの機能があります。';
+      case 'auth':
+        return 'スマレジ認証APIは、OAuth2.0に基づく認証機能を提供します。認証URLの生成、アクセストークン取得、トークン更新、トークン無効化などの機能があります。';
+      case 'system':
+        return 'スマレジシステム管理APIは、アカウント情報、契約情報、マスタデータなどシステム設定やメタデータ関連の機能を提供します。';
+      case 'common':
+        return 'スマレジ共通APIは、複数のサービスで共通して使用される機能を提供します。店舗管理、スタッフ管理などの機能があります。';
+      default:
+        return `${category}カテゴリに関する情報はありません。`;
+    }
+  }
+  
+  /**
+   * Get API paths for a category
+   */
+  getApiPaths(category: string): Array<{ name: string; description: string; method: string; path: string }> {
+    switch (category.toLowerCase()) {
+      case 'pos':
+        return [
+          { name: 'products', description: '商品情報API', method: 'GET', path: '/pos/products' },
+          { name: 'transactions', description: '取引API', method: 'GET', path: '/pos/transactions' },
+          { name: 'stocks', description: '在庫API', method: 'GET', path: '/pos/stocks' },
+          { name: 'stores', description: '店舗API', method: 'GET', path: '/pos/stores' },
+          { name: 'customers', description: '顧客API', method: 'GET', path: '/pos/customers' }
+        ];
+      case 'auth':
+        return [
+          { name: 'token', description: 'トークン取得API', method: 'POST', path: '/auth/token' },
+          { name: 'revoke', description: 'トークン無効化API', method: 'POST', path: '/auth/revoke' }
+        ];
+      case 'system':
+        return [
+          { name: 'account', description: 'アカウント情報API', method: 'GET', path: '/system/account' },
+          { name: 'contracts', description: '契約情報API', method: 'GET', path: '/system/contracts' },
+          { name: 'masters', description: 'マスタデータAPI', method: 'GET', path: '/system/masters' }
+        ];
+      default:
+        return [];
+    }
+  }
+  
+  /**
+   * Get API path details
+   */
+  getApiPathDetails(category: string, path: string): any {
+    const paths = this.getApiPaths(category);
+    const pathDetail = paths.find(p => p.name === path);
+    
+    if (!pathDetail) {
+      return null;
+    }
+    
+    // Return basic details with mock parameters and responses
+    const details = {
+      ...pathDetail,
+      parameters: [],
+      responses: {
+        '200': {
+          description: '成功レスポンス',
+          example: {}
+        },
+        '400': {
+          description: 'リクエストエラー',
+          example: { error: 'Bad Request', message: 'Invalid parameters' }
+        },
+        '401': {
+          description: '認証エラー',
+          example: { error: 'Unauthorized', message: 'Authentication required' }
+        }
+      }
+    };
+    
+    // Add parameters based on the path type
+    switch (path) {
+      case 'products':
+        details.parameters = [
+          { name: 'limit', in: 'query', description: '取得する件数', required: false },
+          { name: 'offset', in: 'query', description: '開始位置', required: false },
+          { name: 'product_id', in: 'query', description: '商品ID', required: false }
+        ];
+        details.responses['200'].example = this.getMockProducts();
+        break;
+      case 'transactions':
+        details.parameters = [
+          { name: 'limit', in: 'query', description: '取得する件数', required: false },
+          { name: 'offset', in: 'query', description: '開始位置', required: false },
+          { name: 'start_date', in: 'query', description: '開始日時', required: false },
+          { name: 'end_date', in: 'query', description: '終了日時', required: false }
+        ];
+        details.responses['200'].example = this.getMockTransactions();
+        break;
+      case 'stores':
+        details.parameters = [
+          { name: 'limit', in: 'query', description: '取得する件数', required: false },
+          { name: 'offset', in: 'query', description: '開始位置', required: false },
+          { name: 'store_id', in: 'query', description: '店舗ID', required: false }
+        ];
+        details.responses['200'].example = this.getMockStores();
+        break;
+    }
+    
+    return details;
+  }
   private getMockProducts(): any {
     return {
       products: [
