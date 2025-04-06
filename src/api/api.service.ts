@@ -1,5 +1,8 @@
+import { createFetch } from 'openapi-fetch';
 import { AuthService } from '../auth/auth.service.js';
 import { ApiRequestInterface, ApiServiceInterface } from './interfaces/api-request.interface.js';
+import { config } from '../utils/config.js';
+import axios from 'axios';
 
 /**
  * Interface for request parameters
@@ -12,9 +15,44 @@ interface ApiRequestParams extends ApiRequestInterface {
  * Handles API requests to Smaregi API
  */
 export class ApiService implements ApiServiceInterface {
-  private readonly baseUrl = 'https://api.smaregi.jp';
   
   constructor(private readonly authService: AuthService) {}
+  
+  /**
+   * Create API client for TypeScript typed requests
+   * @param sessionId - Session ID
+   */
+  private async createApiClient(sessionId: string) {
+    const accessToken = await this.authService.getAccessToken(sessionId);
+    if (!accessToken) {
+      throw new Error('Not authenticated. Please complete authentication first.');
+    }
+    
+    return createFetch({
+      baseUrl: config.smaregiApiUrl,
+      headers: {
+        Authorization: `Bearer ${accessToken}`,
+        'Content-Type': 'application/json'
+      }
+    });
+  }
+  
+  /**
+   * Process path parameters in URL
+   * @param url - URL with path parameters
+   * @param pathParams - Path parameters
+   */
+  private processPathParams(url: string, pathParams?: Record<string, any>): string {
+    if (!pathParams) return url;
+    
+    let processedUrl = url;
+    for (const [key, value] of Object.entries(pathParams)) {
+      const placeholder = `{${key}}`;
+      processedUrl = processedUrl.replace(placeholder, encodeURIComponent(String(value)));
+    }
+    
+    return processedUrl;
+  }
   
   /**
    * Execute API request
@@ -28,21 +66,62 @@ export class ApiService implements ApiServiceInterface {
       throw new Error('Not authenticated. Please complete authentication first.');
     }
     
-    // For Phase 1, we're just returning mock responses
-    console.error(`[INFO] Would execute API request: ${method} ${endpoint}`);
-    
-    // Return mock response based on endpoint pattern
-    if (endpoint.includes('products')) {
-      return this.getMockProducts();
-    } else if (endpoint.includes('transactions')) {
-      return this.getMockTransactions();
-    } else if (endpoint.includes('stores')) {
-      return this.getMockStores();
-    } else {
-      return {
-        message: `Mock response for ${method} ${endpoint}`,
-        timestamp: new Date().toISOString()
+    try {
+      // Process path parameters if any
+      const url = this.processPathParams(`${config.smaregiApiUrl}${endpoint}`, path);
+      
+      console.error(`[INFO] Executing API request: ${method} ${url}`);
+      
+      // Prepare API request
+      const requestConfig = {
+        headers: {
+          Authorization: `Bearer ${accessToken}`,
+          'Content-Type': 'application/json'
+        },
+        params: query
       };
+      
+      let response;
+      
+      switch (method.toUpperCase()) {
+        case 'GET':
+          response = await axios.get(url, requestConfig);
+          break;
+        case 'POST':
+          response = await axios.post(url, data, requestConfig);
+          break;
+        case 'PUT':
+          response = await axios.put(url, data, requestConfig);
+          break;
+        case 'DELETE':
+          response = await axios.delete(url, requestConfig);
+          break;
+        default:
+          throw new Error(`Unsupported HTTP method: ${method}`);
+      }
+      
+      console.error(`[INFO] API request successful: ${method} ${endpoint}`);
+      return response.data;
+    } catch (error: unknown) {
+      // Handle different types of errors
+      if (axios.isAxiosError(error) && error.response) {
+        const statusCode = error.response.status;
+        
+        // Handle unauthorized error (token may be expired)
+        if (statusCode === 401) {
+          console.error('[ERROR] Unauthorized API request. Token may be expired.');
+          throw new Error('Authentication expired. Please re-authenticate.');
+        }
+        
+        console.error(`[ERROR] API request failed with status ${statusCode}: ${JSON.stringify(error.response.data)}`);
+        throw new Error(`API error (${statusCode}): ${JSON.stringify(error.response.data)}`);
+      } else if (error instanceof Error) {
+        console.error(`[ERROR] API request failed: ${error.message}`);
+        throw error;
+      } else {
+        console.error('[ERROR] Unknown API request error');
+        throw new Error('Unknown API request error');
+      }
     }
   }
   
@@ -115,7 +194,7 @@ export class ApiService implements ApiServiceInterface {
       return null;
     }
     
-    // Return basic details with mock parameters and responses
+    // Return basic details with parameters and responses
     const details = {
       ...pathDetail,
       parameters: [],
@@ -166,6 +245,10 @@ export class ApiService implements ApiServiceInterface {
     
     return details;
   }
+
+  /**
+   * Mock products data
+   */
   private getMockProducts(): any {
     return {
       products: [
