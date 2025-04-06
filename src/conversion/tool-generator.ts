@@ -533,7 +533,7 @@ export class ApiToolGenerator {
     if (schema instanceof z.ZodObject || schema instanceof z.ZodRecord) return 'object';
     if (schema instanceof z.ZodEnum) return 'enum';
     if (schema instanceof z.ZodOptional) {
-      const innerSchema = z.unwrap(schema);
+      const innerSchema = schema.unwrap();
       return this.getSchemaType(innerSchema);
     }
     return 'string';
