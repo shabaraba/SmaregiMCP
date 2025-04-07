@@ -1,5 +1,5 @@
 import * as crypto from 'crypto';
-import * as sqlite3 from 'sqlite3';
+import sqlite3 from 'sqlite3';
 import { promisify } from 'util';
 import { config } from '../utils/config.js';
 import * as fs from 'fs';
@@ -24,7 +24,7 @@ interface SessionData {
  * Session manager for handling OAuth sessions
  */
 export class SessionManager {
-  private db: sqlite3.Database;
+  private db: any;
   private runAsync: (sql: string, params?: any) => Promise<any>;
   private allAsync: (sql: string, params?: any) => Promise<any[]>;
   private getAsync: (sql: string, params?: any) => Promise<any>;

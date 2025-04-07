@@ -38,6 +38,22 @@ function validateDatabasePath(path: string | undefined): string {
     return DEFAULT_DATABASE_PATH;
   }
   
+  // Log the actual path being used
+  console.error(`[DEBUG] Database path from .env: ${path}`);
+  
+  // Ensure directory exists
+  const dirPath = path.split('/').slice(0, -1).join('/');
+  if (!fs.existsSync(dirPath)) {
+    console.error(`[WARN] Database directory does not exist: ${dirPath}`);
+    try {
+      fs.mkdirSync(dirPath, { recursive: true });
+      console.error(`[INFO] Created database directory: ${dirPath}`);
+    } catch (error) {
+      console.error(`[ERROR] Failed to create database directory: ${error}`);
+      return DEFAULT_DATABASE_PATH;
+    }
+  }
+  
   return path;
 }
 

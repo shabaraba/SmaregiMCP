@@ -25,7 +25,8 @@
     "mcp:init": "cp -r ./src/tools/generated ./dist/tools/ && node dist/main.js init",
     "mcp:run": "node dist/main.js run",
     "mcp:help": "node dist/main.js",
-    "mcp:dev": "nest start --watch"
+    "mcp:dev": "nest start --watch",
+    "mcp:inspect": "npx @modelcontextprotocol/inspector node dist/main.js run"
   },
   "keywords": [
     "smaregi",
@@ -52,6 +53,7 @@
     "dotenv": "^16.4.5",
     "js-yaml": "^4.1.0",
     "openapi-fetch": "^0.13.5",
+    "openid-client": "^6.4.1",
     "reflect-metadata": "^0.2.2",
     "sqlite3": "^5.1.7",
     "typeorm": "^0.3.21",
@@ -61,6 +63,7 @@
   "devDependencies": {
     "@apidevtools/swagger-cli": "^4.0.4",
     "@eslint/js": "^9.22.0",
+    "@modelcontextprotocol/inspector": "^0.8.1",
     "@nestjs/cli": "^11.0.5",
     "@nestjs/schematics": "^11.0.2",
     "@redocly/cli": "^1.34.1",

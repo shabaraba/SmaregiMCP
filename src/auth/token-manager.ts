@@ -1,4 +1,4 @@
-import * as sqlite3 from 'sqlite3';
+import sqlite3 from 'sqlite3';
 import { TokenEntity } from './entities/token.entity.js';
 import { promisify } from 'util';
 import { TokenResponseDto } from './dto/token-response.dto.js';
@@ -10,7 +10,7 @@ import * as path from 'path';
  * Token manager for handling token storage and retrieval
  */
 export class TokenManager {
-  private db: sqlite3.Database;
+  private db: any;
   private runAsync: (sql: string, params?: any) => Promise<any>;
   private allAsync: (sql: string, params?: any) => Promise<any[]>;
   private getAsync: (sql: string, params?: any) => Promise<any>;
