@@ -1,4 +1,4 @@
-import { Issuer, Client, generators, TokenSet } from 'openid-client';
+import * as openid from 'openid-client';
 import { TokenManager } from './token-manager.js';
 import { SessionManager } from './session-manager.js';
 import { TokenResponseDto } from './dto/token-response.dto.js';
@@ -10,7 +10,7 @@ import { config } from '../utils/config.js';
 export class OpenIdAuthService {
   private tokenManager: TokenManager;
   private sessionManager: SessionManager;
-  private client: Client | null = null;
+  private client: openid.Client | null = null;
   
   constructor() {
     this.tokenManager = new TokenManager();
@@ -37,7 +37,7 @@ export class OpenIdAuthService {
       }
       
       // Create a custom issuer (since we may not have a discovery endpoint)
-      const issuer = new Issuer({
+      const issuer = new openid.Issuer({
         issuer: new URL(config.smaregiAuthUrl).origin,
         authorization_endpoint: config.smaregiAuthUrl,
         token_endpoint: config.smaregiTokenEndpoint,
@@ -71,9 +71,9 @@ export class OpenIdAuthService {
     }
     
     // Create new session with PKCE
-    const verifier = generators.codeVerifier();
-    const challenge = generators.codeChallenge(verifier);
-    const state = generators.state();
+    const verifier = openid.generators.codeVerifier();
+    const challenge = openid.generators.codeChallenge(verifier);
+    const state = openid.generators.state();
     
     // Store in session
     const session = await this.sessionManager.createOpenIdSession(
