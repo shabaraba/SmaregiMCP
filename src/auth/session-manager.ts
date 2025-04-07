@@ -10,14 +10,17 @@ import * as path from 'path';
  */
 interface SessionData {
   id: string;
-  scopes: string[];
-  created_at: Date;
-  updated_at: Date;
-  redirect_uri: string;
+  state: string;
   verifier: string;
   code_challenge: string;
-  state: string;
+  code_challenge_method: string;
+  scopes: string[];
+  redirect_uri: string;
+  created_at: Date;
+  updated_at: Date;
+  expires_at: Date;
   is_authenticated: boolean;
+  metadata?: any;
 }
 
 /**
@@ -28,6 +31,7 @@ export class SessionManager {
   private runAsync: (sql: string, params?: any) => Promise<any>;
   private allAsync: (sql: string, params?: any) => Promise<any[]>;
   private getAsync: (sql: string, params?: any) => Promise<any>;
+  private isInitialized: boolean = false;
 
   constructor() {
     const dbPath = config.databasePath;
@@ -55,23 +59,45 @@ export class SessionManager {
    */
   private async initializeSchema(): Promise<void> {
     try {
+      // Drop existing sessions table if it exists to ensure clean schema
+      await this.runAsync(`DROP TABLE IF EXISTS sessions`);
+      
+      // Create new sessions table with the optimized schema
       await this.runAsync(`
         CREATE TABLE IF NOT EXISTS sessions (
           id TEXT PRIMARY KEY,
-          scopes TEXT NOT NULL,
-          created_at DATETIME NOT NULL,
-          updated_at DATETIME NOT NULL,
-          redirect_uri TEXT NOT NULL,
-          verifier TEXT NOT NULL,
-          code_challenge TEXT NOT NULL,
           state TEXT NOT NULL,
-          is_authenticated INTEGER NOT NULL DEFAULT 0
+          verifier TEXT NOT NULL,
+          code_challenge TEXT NOT NULL, 
+          code_challenge_method TEXT NOT NULL DEFAULT 'S256',
+          scopes TEXT NOT NULL,
+          redirect_uri TEXT NOT NULL,
+          created_at TIMESTAMP NOT NULL DEFAULT (datetime('now')),
+          updated_at TIMESTAMP NOT NULL DEFAULT (datetime('now')),
+          expires_at TIMESTAMP NOT NULL DEFAULT (datetime('now', '+1 hour')),
+          is_authenticated INTEGER NOT NULL DEFAULT 0,
+          metadata TEXT
         )
       `);
-      console.error('[INFO] Sessions table initialized');
+      
+      // Create indices for improved performance
+      await this.runAsync(`CREATE INDEX IF NOT EXISTS idx_sessions_state ON sessions(state)`);
+      await this.runAsync(`CREATE INDEX IF NOT EXISTS idx_sessions_expires_at ON sessions(expires_at)`);
+      
+      console.error('[INFO] Sessions table initialized with optimized schema');
+      this.isInitialized = true;
     } catch (error) {
       console.error(`[ERROR] Failed to initialize sessions schema: ${error}`);
       throw error;
+    }
+  }
+
+  /**
+   * Ensure the database schema is initialized before performing operations
+   */
+  private async ensureInitialized(): Promise<void> {
+    if (!this.isInitialized) {
+      await this.initializeSchema();
     }
   }
 
@@ -104,7 +130,11 @@ export class SessionManager {
    */
   async createSession(scopes: string[]): Promise<SessionData> {
     try {
+      await this.ensureInitialized();
+      
       const now = new Date();
+      const expiresAt = new Date(now.getTime() + 3600000); // 1 hour from now
+      
       const sessionId = this.generateRandomString(32);
       const verifier = this.generateRandomString(64);
       const codeChallenge = this.createCodeChallenge(verifier);
@@ -112,29 +142,33 @@ export class SessionManager {
       
       const session: SessionData = {
         id: sessionId,
-        scopes,
-        created_at: now,
-        updated_at: now,
-        redirect_uri: config.redirectUri,
+        state,
         verifier,
         code_challenge: codeChallenge,
-        state,
+        code_challenge_method: 'S256',
+        scopes,
+        redirect_uri: config.redirectUri,
+        created_at: now,
+        updated_at: now,
+        expires_at: expiresAt,
         is_authenticated: false
       };
       
       await this.runAsync(`
         INSERT INTO sessions
-        (id, scopes, created_at, updated_at, redirect_uri, verifier, code_challenge, state, is_authenticated)
-        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
+        (id, state, verifier, code_challenge, code_challenge_method, scopes, redirect_uri, created_at, updated_at, expires_at, is_authenticated)
+        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
       `, [
         session.id,
-        JSON.stringify(session.scopes),
-        session.created_at.toISOString(),
-        session.updated_at.toISOString(),
-        session.redirect_uri,
+        session.state,
         session.verifier,
         session.code_challenge,
-        session.state,
+        session.code_challenge_method,
+        JSON.stringify(session.scopes),
+        session.redirect_uri,
+        session.created_at.toISOString(),
+        session.updated_at.toISOString(),
+        session.expires_at.toISOString(),
         session.is_authenticated ? 1 : 0
       ]);
       
@@ -147,51 +181,64 @@ export class SessionManager {
   }
 
   /**
-   * Create a new session for OpenID Client
+   * Create a new session with custom parameters
    * @param scopes - Authorization scopes
    * @param redirectUri - Redirect URI
    * @param verifier - PKCE verifier
    * @param codeChallenge - PKCE code challenge
    * @param state - State parameter
+   * @param metadata - Optional metadata
    */
   async createOpenIdSession(
     scopes: string[],
     redirectUri: string,
     verifier: string,
     codeChallenge: string,
-    state: string
+    state: string,
+    metadata?: any
   ): Promise<SessionData> {
     try {
+      await this.ensureInitialized();
+      
       const now = new Date();
+      const expiresAt = new Date(now.getTime() + 3600000); // 1 hour from now
       const sessionId = this.generateRandomString(32);
       
       const session: SessionData = {
         id: sessionId,
-        scopes,
-        created_at: now,
-        updated_at: now,
-        redirect_uri: redirectUri,
+        state,
         verifier,
         code_challenge: codeChallenge,
-        state,
-        is_authenticated: false
+        code_challenge_method: 'S256',
+        scopes,
+        redirect_uri: redirectUri,
+        created_at: now,
+        updated_at: now,
+        expires_at: expiresAt,
+        is_authenticated: false,
+        metadata: metadata ? JSON.stringify(metadata) : null
       };
+      
+      const params = [
+        session.id,
+        session.state,
+        session.verifier,
+        session.code_challenge,
+        session.code_challenge_method,
+        JSON.stringify(session.scopes),
+        session.redirect_uri,
+        session.created_at.toISOString(),
+        session.updated_at.toISOString(),
+        session.expires_at.toISOString(),
+        session.is_authenticated ? 1 : 0,
+        session.metadata
+      ];
       
       await this.runAsync(`
         INSERT INTO sessions
-        (id, scopes, created_at, updated_at, redirect_uri, verifier, code_challenge, state, is_authenticated)
-        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
-      `, [
-        session.id,
-        JSON.stringify(session.scopes),
-        session.created_at.toISOString(),
-        session.updated_at.toISOString(),
-        session.redirect_uri,
-        session.verifier,
-        session.code_challenge,
-        session.state,
-        session.is_authenticated ? 1 : 0
-      ]);
+        (id, state, verifier, code_challenge, code_challenge_method, scopes, redirect_uri, created_at, updated_at, expires_at, is_authenticated, metadata)
+        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+      `, params);
       
       console.error(`[INFO] OpenID session created: ${sessionId}`);
       return session;
@@ -207,6 +254,8 @@ export class SessionManager {
    */
   async getSession(id: string): Promise<SessionData | null> {
     try {
+      await this.ensureInitialized();
+      
       const session = await this.getAsync(`
         SELECT * FROM sessions WHERE id = ?
       `, [id]);
@@ -215,13 +264,7 @@ export class SessionManager {
         return null;
       }
       
-      return {
-        ...session,
-        scopes: JSON.parse(session.scopes),
-        created_at: new Date(session.created_at),
-        updated_at: new Date(session.updated_at),
-        is_authenticated: session.is_authenticated === 1
-      };
+      return this.mapSessionFromDb(session);
     } catch (error) {
       console.error(`[ERROR] Failed to get session: ${error}`);
       return null;
@@ -234,6 +277,8 @@ export class SessionManager {
    */
   async getSessionByState(state: string): Promise<SessionData | null> {
     try {
+      await this.ensureInitialized();
+      
       const session = await this.getAsync(`
         SELECT * FROM sessions WHERE state = ?
       `, [state]);
@@ -242,17 +287,27 @@ export class SessionManager {
         return null;
       }
       
-      return {
-        ...session,
-        scopes: JSON.parse(session.scopes),
-        created_at: new Date(session.created_at),
-        updated_at: new Date(session.updated_at),
-        is_authenticated: session.is_authenticated === 1
-      };
+      return this.mapSessionFromDb(session);
     } catch (error) {
       console.error(`[ERROR] Failed to get session by state: ${error}`);
       return null;
     }
+  }
+
+  /**
+   * Map database session row to SessionData object
+   * @param session - Database session row
+   */
+  private mapSessionFromDb(session: any): SessionData {
+    return {
+      ...session,
+      scopes: JSON.parse(session.scopes),
+      created_at: new Date(session.created_at),
+      updated_at: new Date(session.updated_at),
+      expires_at: new Date(session.expires_at),
+      is_authenticated: session.is_authenticated === 1,
+      metadata: session.metadata ? JSON.parse(session.metadata) : undefined
+    };
   }
 
   /**
@@ -262,6 +317,8 @@ export class SessionManager {
    */
   async updateSessionAuthStatus(id: string, isAuthenticated: boolean): Promise<void> {
     try {
+      await this.ensureInitialized();
+      
       const now = new Date();
       
       await this.runAsync(`
@@ -290,11 +347,41 @@ export class SessionManager {
   }
 
   /**
+   * Update session metadata
+   * @param id - Session ID
+   * @param metadata - Metadata object
+   */
+  async updateSessionMetadata(id: string, metadata: any): Promise<void> {
+    try {
+      await this.ensureInitialized();
+      
+      const now = new Date();
+      
+      await this.runAsync(`
+        UPDATE sessions
+        SET metadata = ?, updated_at = ?
+        WHERE id = ?
+      `, [
+        JSON.stringify(metadata),
+        now.toISOString(),
+        id
+      ]);
+      
+      console.error(`[INFO] Session metadata updated: ${id}`);
+    } catch (error) {
+      console.error(`[ERROR] Failed to update session metadata: ${error}`);
+      throw error;
+    }
+  }
+
+  /**
    * Delete session
    * @param id - Session ID
    */
   async deleteSession(id: string): Promise<void> {
     try {
+      await this.ensureInitialized();
+      
       await this.runAsync(`
         DELETE FROM sessions WHERE id = ?
       `, [id]);
@@ -308,20 +395,39 @@ export class SessionManager {
 
   /**
    * Clean up expired sessions
-   * @param maxAgeHours - Maximum age in hours
+   * @param maxAgeHours - Optional: override default expiration time
    */
-  async cleanupExpiredSessions(maxAgeHours: number = 24): Promise<number> {
+  async cleanupExpiredSessions(maxAgeHours?: number): Promise<number> {
     try {
-      const expirationDate = new Date();
-      expirationDate.setHours(expirationDate.getHours() - maxAgeHours);
+      await this.ensureInitialized();
       
-      const result = await this.runAsync(`
-        DELETE FROM sessions WHERE created_at < ?
-      `, [expirationDate.toISOString()]);
+      const now = new Date();
+      let query = `DELETE FROM sessions WHERE expires_at < ?`;
+      let params = [now.toISOString()];
       
-      const count = (result as any).changes || 0;
-      console.error(`[INFO] Cleaned up ${count} expired sessions`);
-      return count;
+      // If maxAgeHours is provided, use it instead of the expires_at field
+      if (maxAgeHours !== undefined) {
+        const expirationDate = new Date();
+        expirationDate.setHours(expirationDate.getHours() - maxAgeHours);
+        query = `DELETE FROM sessions WHERE created_at < ?`;
+        params = [expirationDate.toISOString()];
+      }
+      
+      // SQLite特有の処理: runsyncをラップして変更件数を取得
+      // better-sqlite3やnode-sqlite3の挙動の違いに対応
+      return new Promise((resolve, reject) => {
+        this.db.run(query, params, function(err: Error | null) {
+          if (err) {
+            console.error(`[ERROR] Failed to clean up expired sessions: ${err}`);
+            reject(err);
+          } else {
+            // this.changesはコールバック内でのみ利用可能
+            const count = this.changes || 0;
+            console.error(`[INFO] Cleaned up ${count} expired sessions`);
+            resolve(count);
+          }
+        });
+      });
     } catch (error) {
       console.error(`[ERROR] Failed to clean up expired sessions: ${error}`);
       return 0;
