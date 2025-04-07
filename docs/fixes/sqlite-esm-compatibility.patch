@@ -1,0 +1,85 @@
+diff --git a/src/auth/session-manager.ts b/src/auth/session-manager.ts
+index 123456789..987654321 100644
+--- a/src/auth/session-manager.ts
++++ b/src/auth/session-manager.ts
+@@ -1,5 +1,5 @@
+ import * as crypto from 'crypto';
+-import sqlite3 from 'sqlite3';
++import { Database } from 'sqlite3';
+ import { promisify } from 'util';
+ import { config } from '../utils/config.js';
+ import * as fs from 'fs';
+@@ -23,7 +23,7 @@ interface SessionData {
+  * Session manager for handling OAuth sessions
+  */
+ export class SessionManager {
+-  private db: sqlite3.Database;
++  private db: Database;
+   private runAsync: (sql: string, params?: any) => Promise<any>;
+   private allAsync: (sql: string, params?: any) => Promise<any[]>;
+   private getAsync: (sql: string, params?: any) => Promise<any>;
+@@ -38,7 +38,7 @@ export class SessionManager {
+     }
+     
+     // Initialize database
+-    this.db = new sqlite3.Database(dbPath);
++    this.db = new Database(dbPath);
+     
+     // Promisify database methods
+     this.runAsync = promisify(this.db.run.bind(this.db));
+diff --git a/src/auth/token-manager.ts b/src/auth/token-manager.ts
+index 123456789..987654321 100644
+--- a/src/auth/token-manager.ts
++++ b/src/auth/token-manager.ts
+@@ -1,4 +1,4 @@
+-import sqlite3 from 'sqlite3';
++import { Database } from 'sqlite3';
+ import { TokenEntity } from './entities/token.entity.js';
+ import { promisify } from 'util';
+ import { TokenResponseDto } from './dto/token-response.dto.js';
+@@ -10,7 +10,7 @@ import * as path from 'path';
+  * Token manager for handling token storage and retrieval
+  */
+ export class TokenManager {
+-  private db: sqlite3.Database;
++  private db: Database;
+   private runAsync: (sql: string, params?: any) => Promise<any>;
+   private allAsync: (sql: string, params?: any) => Promise<any[]>;
+   private getAsync: (sql: string, params?: any) => Promise<any>;
+@@ -25,7 +25,7 @@ export class TokenManager {
+     }
+     
+     // Initialize database
+-    this.db = new sqlite3.Database(dbPath);
++    this.db = new Database(dbPath);
+     
+     // Promisify database methods
+     this.runAsync = promisify(this.db.run.bind(this.db));
+diff --git a/src/utils/config.ts b/src/utils/config.ts
+index 123456789..987654321 100644
+--- a/src/utils/config.ts
++++ b/src/utils/config.ts
+@@ -38,7 +38,21 @@ function validateDatabasePath(path: string | undefined): string {
+     console.error('[WARN] Using relative database path is not recommended. Please use absolute path.');
+     return DEFAULT_DATABASE_PATH;
+   }
+-  
++
++  // Log the actual path being used
++  console.error(`[DEBUG] Database path from .env: ${path}`);
++
++  // Ensure directory exists
++  const dirPath = path.split('/').slice(0, -1).join('/');
++  if (!fs.existsSync(dirPath)) {
++    console.error(`[WARN] Database directory does not exist: ${dirPath}`);
++    try {
++      fs.mkdirSync(dirPath, { recursive: true });
++      console.error(`[INFO] Created database directory: ${dirPath}`);
++    } catch (error) {
++      console.error(`[ERROR] Failed to create database directory: ${error}`);
++      return DEFAULT_DATABASE_PATH;
++    }
++  }
++
+   return path;
+ }
