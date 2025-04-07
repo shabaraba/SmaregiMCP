@@ -2,24 +2,34 @@ import { TokenManager } from './token-manager.js';
 import { SessionManager } from './session-manager.js';
 import { TokenResponseDto } from './dto/token-response.dto.js';
 import { config } from '../utils/config.js';
-import { Issuer, generators, TokenSet } from 'openid-client';
+import * as crypto from 'crypto';
+import axios from 'axios';
 
 /**
- * Service for handling OAuth authentication using OpenID Connect Client library
+ * Token set interface
+ */
+interface TokenSet {
+  access_token?: string;
+  token_type?: string;
+  id_token?: string;
+  refresh_token?: string;
+  expires_in?: number;
+  expires_at?: number;
+  session_state?: string;
+  scope?: string;
+}
+
+/**
+ * Service for handling OAuth authentication using standard OAuth flow
+ * with support for PKCE extension
  */
 export class OpenIdAuthService {
   private tokenManager: TokenManager;
   private sessionManager: SessionManager;
-  private client: any; // Will be initialized in setupClient
   
   constructor() {
     this.tokenManager = new TokenManager();
     this.sessionManager = new SessionManager();
-    
-    // Initialize OpenID Client
-    this.setupClient().catch(err => {
-      console.error(`[ERROR] Failed to setup OpenID client: ${err}`);
-    });
     
     // Periodically clean up expired sessions
     setInterval(() => {
@@ -30,37 +40,27 @@ export class OpenIdAuthService {
   }
   
   /**
-   * Setup OpenID Connect client
+   * Generate a random string for PKCE and state parameters
    */
-  private async setupClient(): Promise<void> {
-    try {
-      // Discover OIDC provider configuration
-      const issuer = await Issuer.discover(config.authDiscoveryUrl || config.authUrl);
-      
-      // Create client
-      this.client = new issuer.Client({
-        client_id: config.clientId,
-        client_secret: config.clientSecret,
-        redirect_uris: [config.redirectUri],
-        response_types: ['code'],
-      });
-    } catch (error) {
-      console.error(`[ERROR] Failed to discover OIDC configuration: ${error}`);
-      // Fallback to manual configuration if discovery fails
-      const issuer = new Issuer({
-        issuer: config.authUrl,
-        authorization_endpoint: `${config.authUrl}/oauth/authorize`,
-        token_endpoint: `${config.authUrl}/oauth/token`,
-        revocation_endpoint: `${config.authUrl}/oauth/revoke`,
-      });
-      
-      this.client = new issuer.Client({
-        client_id: config.clientId,
-        client_secret: config.clientSecret,
-        redirect_uris: [config.redirectUri],
-        response_types: ['code'],
-      });
-    }
+  private generateRandomString(length: number): string {
+    return crypto.randomBytes(Math.ceil(length * 0.75))
+      .toString('base64')
+      .replace(/[+/]/g, '_')
+      .replace(/=/g, '')
+      .slice(0, length);
+  }
+  
+  /**
+   * Create code challenge from verifier (for PKCE)
+   */
+  private createCodeChallenge(verifier: string): string {
+    return crypto
+      .createHash('sha256')
+      .update(verifier)
+      .digest('base64')
+      .replace(/\+/g, '-')
+      .replace(/\//g, '_')
+      .replace(/=/g, '');
   }
   
   /**
@@ -68,33 +68,33 @@ export class OpenIdAuthService {
    * @param scopes - Authorization scopes
    */
   async getAuthorizationUrl(scopes: string[]): Promise<{ url: string; sessionId: string }> {
-    // Ensure client is initialized
-    if (!this.client) {
-      await this.setupClient();
-    }
-    
     // Generate PKCE parameters
-    const codeVerifier = generators.codeVerifier();
-    const codeChallenge = generators.codeChallenge(codeVerifier);
-    const state = generators.state();
+    const verifier = this.generateRandomString(64);
+    const codeChallenge = this.createCodeChallenge(verifier);
+    const state = this.generateRandomString(32);
     
     // Store in session
     const session = await this.sessionManager.createOpenIdSession(
       scopes,
       config.redirectUri,
-      codeVerifier,
+      verifier,
       codeChallenge,
       state
     );
     
-    // Generate authorization URL using OpenID Client
-    const url = this.client.authorizationUrl({
+    // Build query parameters
+    const params = new URLSearchParams({
+      client_id: config.clientId,
+      redirect_uri: session.redirect_uri,
+      response_type: 'code',
       scope: scopes.join(' '),
-      code_challenge: codeChallenge,
-      code_challenge_method: 'S256',
       state: state,
-      redirect_uri: config.redirectUri,
+      code_challenge: codeChallenge,
+      code_challenge_method: 'S256'
     });
+    
+    // Generate authorization URL
+    const url = `${config.smaregiAuthUrl}?${params.toString()}`;
     
     return {
       url,
@@ -108,11 +108,6 @@ export class OpenIdAuthService {
    * @param state - State parameter
    */
   async handleCallback(code: string, state: string): Promise<string> {
-    // Ensure client is initialized
-    if (!this.client) {
-      await this.setupClient();
-    }
-    
     // Find session by state
     const session = await this.sessionManager.getSessionByState(state);
     if (!session) {
@@ -120,21 +115,37 @@ export class OpenIdAuthService {
     }
     
     try {
-      // Use OpenID Client to exchange code for token
-      const tokenSet = await this.client.callback(
-        session.redirect_uri,
-        { code, state },
-        { 
-          code_verifier: session.verifier,
-          state: state
+      // Exchange code for token
+      const params = new URLSearchParams({
+        grant_type: 'authorization_code',
+        code,
+        redirect_uri: session.redirect_uri,
+        client_id: config.clientId,
+        code_verifier: session.verifier
+      });
+      
+      // Add client_secret if it exists
+      if (config.clientSecret) {
+        params.append('client_secret', config.clientSecret);
+      }
+      
+      const response = await axios.post(
+        config.smaregiTokenEndpoint,
+        params.toString(),
+        {
+          headers: {
+            'Content-Type': 'application/x-www-form-urlencoded',
+          },
         }
       );
+      
+      const tokenSet: TokenSet = response.data;
       
       // Update session
       await this.sessionManager.updateSessionAuthentication(session.id);
       
       // Save token
-      await this.tokenManager.saveToken(session.id, tokenSet);
+      await this.tokenManager.saveToken(session.id, tokenSet, config.contractId);
       
       return session.id;
     } catch (error) {
@@ -148,11 +159,6 @@ export class OpenIdAuthService {
    * @param sessionId - Session ID
    */
   async refreshToken(sessionId: string): Promise<TokenSet> {
-    // Ensure client is initialized
-    if (!this.client) {
-      await this.setupClient();
-    }
-    
     // Get current token
     const currentToken = await this.tokenManager.getToken(sessionId);
     if (!currentToken || !currentToken.refresh_token) {
@@ -160,11 +166,32 @@ export class OpenIdAuthService {
     }
     
     try {
-      // Use OpenID Client to refresh token
-      const tokenSet = await this.client.refresh(currentToken.refresh_token);
+      // Prepare refresh token request
+      const params = new URLSearchParams({
+        grant_type: 'refresh_token',
+        refresh_token: currentToken.refresh_token,
+        client_id: config.clientId
+      });
+      
+      // Add client_secret if it exists
+      if (config.clientSecret) {
+        params.append('client_secret', config.clientSecret);
+      }
+      
+      const response = await axios.post(
+        config.smaregiTokenEndpoint,
+        params.toString(),
+        {
+          headers: {
+            'Content-Type': 'application/x-www-form-urlencoded',
+          },
+        }
+      );
+      
+      const tokenSet: TokenSet = response.data;
       
       // Save refreshed token
-      await this.tokenManager.saveToken(sessionId, tokenSet);
+      await this.tokenManager.saveToken(sessionId, tokenSet, config.contractId);
       
       return tokenSet;
     } catch (error) {
@@ -187,7 +214,7 @@ export class OpenIdAuthService {
     }
     
     return {
-      isAuthenticated: session.is_authenticated === 1,
+      isAuthenticated: Boolean(session.is_authenticated),
       sessionId,
     };
   }
@@ -221,22 +248,12 @@ export class OpenIdAuthService {
    * @param sessionId - Session ID
    */
   async revokeToken(sessionId: string): Promise<boolean> {
-    // Ensure client is initialized
-    if (!this.client) {
-      await this.setupClient();
-    }
-    
     const token = await this.tokenManager.getToken(sessionId);
     if (!token) {
       return false;
     }
     
     try {
-      // Use OpenID Client to revoke token if endpoint available
-      if (this.client.issuer.revocation_endpoint && token.refresh_token) {
-        await this.client.revoke(token.refresh_token);
-      }
-      
       // Delete token and session data
       await this.tokenManager.deleteToken(sessionId);
       await this.sessionManager.deleteSession(sessionId);
