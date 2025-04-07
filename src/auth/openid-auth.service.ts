@@ -2,19 +2,24 @@ import { TokenManager } from './token-manager.js';
 import { SessionManager } from './session-manager.js';
 import { TokenResponseDto } from './dto/token-response.dto.js';
 import { config } from '../utils/config.js';
+import { Issuer, generators, TokenSet } from 'openid-client';
 
 /**
- * Service for handling OAuth authentication using openid-client library
+ * Service for handling OAuth authentication using OpenID Connect Client library
  */
 export class OpenIdAuthService {
   private tokenManager: TokenManager;
   private sessionManager: SessionManager;
-  private client: any = null;
-  private openid: any = null;
+  private client: any; // Will be initialized in setupClient
   
   constructor() {
     this.tokenManager = new TokenManager();
     this.sessionManager = new SessionManager();
+    
+    // Initialize OpenID Client
+    this.setupClient().catch(err => {
+      console.error(`[ERROR] Failed to setup OpenID client: ${err}`);
+    });
     
     // Periodically clean up expired sessions
     setInterval(() => {
@@ -22,46 +27,15 @@ export class OpenIdAuthService {
         console.error(`[ERROR] Failed to clean up expired sessions: ${err}`);
       });
     }, 3600000); // Run every hour
-    
-    // Initialize OpenID client library
-    this.initializeOpenIdLibrary();
   }
   
   /**
-   * Initialize OpenID client library
+   * Setup OpenID Connect client
    */
-  private async initializeOpenIdLibrary(): Promise<void> {
+  private async setupClient(): Promise<void> {
     try {
-      // Dynamic import to handle ESM/CommonJS compatibility
-      this.openid = await import('openid-client');
-      
-      console.error('[INFO] OpenID client library initialized');
-      
-      // Initialize client
-      this.initializeClient();
-    } catch (error) {
-      console.error(`[ERROR] Failed to initialize OpenID client library: ${error}`);
-    }
-  }
-  
-  /**
-   * Initialize OpenID client
-   */
-  private async initializeClient(): Promise<void> {
-    try {
-      if (!this.openid) {
-        await this.initializeOpenIdLibrary();
-        if (!this.openid) {
-          throw new Error('OpenID client library not initialized');
-        }
-      }
-      
-      if (!config.clientId || !config.clientSecret || !config.smaregiAuthUrl || !config.smaregiTokenEndpoint) {
-        throw new Error('Missing required OAuth configuration');
-      }
-      
-      // Create issuer using discovery function
-      const issuer = await this.openid.discovery(config.smaregiAuthUrl);
+      // Discover OIDC provider configuration
+      const issuer = await Issuer.discover(config.authDiscoveryUrl || config.authUrl);
       
       // Create client
       this.client = new issuer.Client({
@@ -70,11 +44,22 @@ export class OpenIdAuthService {
         redirect_uris: [config.redirectUri],
         response_types: ['code'],
       });
-      
-      console.error('[INFO] OpenID client initialized successfully');
     } catch (error) {
-      console.error(`[ERROR] Failed to initialize OpenID client: ${error}`);
-      throw error;
+      console.error(`[ERROR] Failed to discover OIDC configuration: ${error}`);
+      // Fallback to manual configuration if discovery fails
+      const issuer = new Issuer({
+        issuer: config.authUrl,
+        authorization_endpoint: `${config.authUrl}/oauth/authorize`,
+        token_endpoint: `${config.authUrl}/oauth/token`,
+        revocation_endpoint: `${config.authUrl}/oauth/revoke`,
+      });
+      
+      this.client = new issuer.Client({
+        client_id: config.clientId,
+        client_secret: config.clientSecret,
+        redirect_uris: [config.redirectUri],
+        response_types: ['code'],
+      });
     }
   }
   
@@ -83,51 +68,36 @@ export class OpenIdAuthService {
    * @param scopes - Authorization scopes
    */
   async getAuthorizationUrl(scopes: string[]): Promise<{ url: string; sessionId: string }> {
+    // Ensure client is initialized
     if (!this.client) {
-      await this.initializeClient();
-      if (!this.client) {
-        throw new Error('Failed to initialize OpenID client');
-      }
+      await this.setupClient();
     }
     
-    if (!this.openid) {
-      throw new Error('OpenID client library not initialized');
-    }
-    
-    // Create new session with PKCE
-    const verifier = this.openid.randomPKCECodeVerifier();
-    const challenge = await this.openid.calculatePKCECodeChallenge(verifier);
-    const state = this.openid.randomState();
+    // Generate PKCE parameters
+    const codeVerifier = generators.codeVerifier();
+    const codeChallenge = generators.codeChallenge(codeVerifier);
+    const state = generators.state();
     
     // Store in session
     const session = await this.sessionManager.createOpenIdSession(
       scopes,
       config.redirectUri,
-      verifier,
-      challenge,
+      codeVerifier,
+      codeChallenge,
       state
     );
     
-    // Generate authorization URL using buildAuthorizationUrl
-    const authParams = {
-      client_id: config.clientId,
-      redirect_uri: session.redirect_uri,
-      response_type: 'code',
+    // Generate authorization URL using OpenID Client
+    const url = this.client.authorizationUrl({
       scope: scopes.join(' '),
+      code_challenge: codeChallenge,
+      code_challenge_method: 'S256',
       state: state,
-      code_challenge: challenge,
-      code_challenge_method: 'S256'
-    };
-    
-    const url = this.openid.buildAuthorizationUrl(
-      {
-        authorization_endpoint: config.smaregiAuthUrl
-      },
-      authParams
-    );
+      redirect_uri: config.redirectUri,
+    });
     
     return {
-      url: url.href,
+      url,
       sessionId: session.id,
     };
   }
@@ -138,52 +108,34 @@ export class OpenIdAuthService {
    * @param state - State parameter
    */
   async handleCallback(code: string, state: string): Promise<string> {
-    if (!this.openid) {
-      await this.initializeOpenIdLibrary();
-      if (!this.openid) {
-        throw new Error('OpenID client library not initialized');
-      }
+    // Ensure client is initialized
+    if (!this.client) {
+      await this.setupClient();
     }
     
     // Find session by state
     const session = await this.sessionManager.getSessionByState(state);
-    
     if (!session) {
       throw new Error('Invalid state parameter. Session not found.');
     }
     
     try {
-      // Exchange code for token using authorizationCodeGrant
-      const tokenSet = await this.openid.authorizationCodeGrant(
-        {
-          token_endpoint: config.smaregiTokenEndpoint,
-          client_id: config.clientId,
-          client_secret: config.clientSecret
-        },
-        {
-          code,
-          redirect_uri: session.redirect_uri,
-          code_verifier: session.verifier
+      // Use OpenID Client to exchange code for token
+      const tokenSet = await this.client.callback(
+        session.redirect_uri,
+        { code, state },
+        { 
+          code_verifier: session.verifier,
+          state: state
         }
       );
       
-      // Convert TokenSet to our DTO format
-      const tokenResponse: TokenResponseDto = {
-        access_token: tokenSet.access_token,
-        token_type: tokenSet.token_type,
-        expires_in: Math.floor((new Date(tokenSet.expires_at).getTime() - Date.now()) / 1000),
-        refresh_token: tokenSet.refresh_token,
-        scope: tokenSet.scope,
-        id_token: tokenSet.id_token,
-      };
+      // Update session
+      await this.sessionManager.updateSessionAuthentication(session.id);
       
       // Save token
-      await this.tokenManager.saveToken(session.id, tokenResponse, config.contractId);
+      await this.tokenManager.saveToken(session.id, tokenSet);
       
-      // Update session
-      await this.sessionManager.updateSessionAuthStatus(session.id, true);
-      
-      console.error(`[INFO] Authentication successful for session ${session.id}`);
       return session.id;
     } catch (error) {
       console.error(`[ERROR] Token exchange failed: ${error}`);
@@ -195,60 +147,29 @@ export class OpenIdAuthService {
    * Refresh access token
    * @param sessionId - Session ID
    */
-  async refreshToken(sessionId: string): Promise<TokenResponseDto | null> {
-    if (!this.openid) {
-      await this.initializeOpenIdLibrary();
-      if (!this.openid) {
-        throw new Error('OpenID client library not initialized');
-      }
+  async refreshToken(sessionId: string): Promise<TokenSet> {
+    // Ensure client is initialized
+    if (!this.client) {
+      await this.setupClient();
     }
     
-    const token = await this.tokenManager.getToken(sessionId);
-    
-    if (!token || !token.refresh_token) {
-      console.error(`[ERROR] No refresh token available for session ${sessionId}`);
-      return null;
+    // Get current token
+    const currentToken = await this.tokenManager.getToken(sessionId);
+    if (!currentToken || !currentToken.refresh_token) {
+      throw new Error('No refresh token available');
     }
     
     try {
-      console.error(`[INFO] Refreshing token for session ${sessionId}`);
+      // Use OpenID Client to refresh token
+      const tokenSet = await this.client.refresh(currentToken.refresh_token);
       
-      // Use refreshTokenGrant
-      const tokenSet = await this.openid.refreshTokenGrant(
-        {
-          token_endpoint: config.smaregiTokenEndpoint,
-          client_id: config.clientId,
-          client_secret: config.clientSecret
-        },
-        {
-          refresh_token: token.refresh_token
-        }
-      );
+      // Save refreshed token
+      await this.tokenManager.saveToken(sessionId, tokenSet);
       
-      // Convert TokenSet to our DTO format
-      const tokenResponse: TokenResponseDto = {
-        access_token: tokenSet.access_token,
-        token_type: tokenSet.token_type,
-        expires_in: Math.floor((new Date(tokenSet.expires_at).getTime() - Date.now()) / 1000),
-        refresh_token: tokenSet.refresh_token || token.refresh_token, // Keep old refresh token if not returned
-        scope: tokenSet.scope,
-        id_token: tokenSet.id_token,
-      };
-      
-      // Save the new token
-      await this.tokenManager.saveToken(sessionId, tokenResponse, token.contract_id);
-      
-      console.error(`[INFO] Token refreshed successfully for session ${sessionId}`);
-      return tokenResponse;
+      return tokenSet;
     } catch (error) {
-      let errorMessage = 'Unknown error during token refresh';
-      
-      if (error instanceof Error) {
-        errorMessage = error.message;
-      }
-      
-      console.error(`[ERROR] Token refresh failed: ${errorMessage}`);
-      return null;
+      console.error(`[ERROR] Token refresh failed: ${error}`);
+      throw new Error(`Token refresh failed: ${error instanceof Error ? error.message : String(error)}`);
     }
   }
   
@@ -257,44 +178,18 @@ export class OpenIdAuthService {
    * @param sessionId - Session ID
    */
   async checkAuthStatus(sessionId: string): Promise<{ isAuthenticated: boolean; sessionId: string }> {
-    try {
-      const session = await this.sessionManager.getSession(sessionId);
-      
-      if (!session) {
-        return { isAuthenticated: false, sessionId };
-      }
-      
-      // If session is authenticated, check if there's a valid token
-      if (session.is_authenticated) {
-        const token = await this.tokenManager.getToken(sessionId);
-        
-        if (!token) {
-          return { isAuthenticated: false, sessionId };
-        }
-        
-        // Check if token is expired or will expire soon
-        if (this.tokenManager.isTokenNearExpiry(token)) {
-          // Try to refresh the token
-          if (token.refresh_token) {
-            const refreshed = await this.refreshToken(sessionId);
-            
-            if (!refreshed) {
-              return { isAuthenticated: false, sessionId };
-            }
-          } else {
-            // No refresh token, can't refresh
-            return { isAuthenticated: false, sessionId };
-          }
-        }
-        
-        return { isAuthenticated: true, sessionId };
-      }
-      
-      return { isAuthenticated: false, sessionId };
-    } catch (error) {
-      console.error(`[ERROR] Failed to check auth status: ${error}`);
-      return { isAuthenticated: false, sessionId };
+    const session = await this.sessionManager.getSession(sessionId);
+    if (!session) {
+      return {
+        isAuthenticated: false,
+        sessionId,
+      };
     }
+    
+    return {
+      isAuthenticated: session.is_authenticated === 1,
+      sessionId,
+    };
   }
   
   /**
@@ -302,40 +197,23 @@ export class OpenIdAuthService {
    * @param sessionId - Session ID
    */
   async getAccessToken(sessionId: string): Promise<string | null> {
-    try {
-      const token = await this.tokenManager.getToken(sessionId);
-      
-      if (!token) {
-        console.error(`[ERROR] No token found for session ${sessionId}`);
-        return null;
-      }
-      
-      // Check if token is expired or will expire soon
-      if (this.tokenManager.isTokenNearExpiry(token)) {
-        // Try to refresh the token
-        if (token.refresh_token) {
-          const refreshed = await this.refreshToken(sessionId);
-          
-          if (!refreshed) {
-            console.error(`[ERROR] Token refresh failed for session ${sessionId}`);
-            return null;
-          }
-          
-          // Get the new token
-          const newToken = await this.tokenManager.getToken(sessionId);
-          return newToken?.access_token || null;
-        } else {
-          // No refresh token, can't refresh
-          console.error(`[ERROR] Token expired and no refresh token available for session ${sessionId}`);
-          return null;
-        }
-      }
-      
-      return token.access_token;
-    } catch (error) {
-      console.error(`[ERROR] Failed to get access token: ${error}`);
+    const token = await this.tokenManager.getToken(sessionId);
+    if (!token) {
       return null;
     }
+    
+    // Check if token is near expiry and refresh if needed
+    if (this.tokenManager.isTokenNearExpiry(token)) {
+      try {
+        const refreshedToken = await this.refreshToken(sessionId);
+        return refreshedToken.access_token || null;
+      } catch (error) {
+        console.error(`[ERROR] Failed to refresh token: ${error}`);
+        return null;
+      }
+    }
+    
+    return token.access_token || null;
   }
   
   /**
@@ -343,17 +221,29 @@ export class OpenIdAuthService {
    * @param sessionId - Session ID
    */
   async revokeToken(sessionId: string): Promise<boolean> {
+    // Ensure client is initialized
+    if (!this.client) {
+      await this.setupClient();
+    }
+    
+    const token = await this.tokenManager.getToken(sessionId);
+    if (!token) {
+      return false;
+    }
+    
     try {
-      // Delete token from database
-      await this.tokenManager.deleteToken(sessionId);
+      // Use OpenID Client to revoke token if endpoint available
+      if (this.client.issuer.revocation_endpoint && token.refresh_token) {
+        await this.client.revoke(token.refresh_token);
+      }
       
-      // Delete session from database
+      // Delete token and session data
+      await this.tokenManager.deleteToken(sessionId);
       await this.sessionManager.deleteSession(sessionId);
       
-      console.error(`[INFO] Token and session revoked for session ${sessionId}`);
       return true;
     } catch (error) {
-      console.error(`[ERROR] Failed to revoke token: ${error}`);
+      console.error(`[ERROR] Token revocation failed: ${error}`);
       return false;
     }
   }

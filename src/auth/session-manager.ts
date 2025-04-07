@@ -282,6 +282,14 @@ export class SessionManager {
   }
 
   /**
+   * Update session authentication status to authenticated
+   * @param id - Session ID
+   */
+  async updateSessionAuthentication(id: string): Promise<void> {
+    return this.updateSessionAuthStatus(id, true);
+  }
+
+  /**
    * Delete session
    * @param id - Session ID
    */
