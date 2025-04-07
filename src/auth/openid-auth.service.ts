@@ -1,8 +1,12 @@
-import { Issuer, generators } from 'openid-client';
 import { TokenManager } from './token-manager.js';
 import { SessionManager } from './session-manager.js';
 import { TokenResponseDto } from './dto/token-response.dto.js';
 import { config } from '../utils/config.js';
+
+// Dynamic import of openid-client
+// This avoids TypeScript import errors when the module has ESM/CommonJS compatibility issues
+let Issuer: any;
+let generators: any;
 
 /**
  * Service for handling OAuth authentication using openid-client library
@@ -23,8 +27,27 @@ export class OpenIdAuthService {
       });
     }, 3600000); // Run every hour
     
-    // Initialize OpenID client
-    this.initializeClient();
+    // Initialize OpenID client library
+    this.initializeOpenIdLibrary();
+  }
+  
+  /**
+   * Initialize OpenID client library
+   */
+  private async initializeOpenIdLibrary(): Promise<void> {
+    try {
+      // Dynamic import to handle ESM/CommonJS compatibility
+      const openid = await import('openid-client');
+      Issuer = openid.Issuer;
+      generators = openid.generators;
+      
+      console.error('[INFO] OpenID client library initialized');
+      
+      // Initialize client
+      this.initializeClient();
+    } catch (error) {
+      console.error(`[ERROR] Failed to initialize OpenID client library: ${error}`);
+    }
   }
   
   /**
@@ -32,6 +55,13 @@ export class OpenIdAuthService {
    */
   private async initializeClient(): Promise<void> {
     try {
+      if (!Issuer) {
+        await this.initializeOpenIdLibrary();
+        if (!Issuer) {
+          throw new Error('OpenID client library not initialized');
+        }
+      }
+      
       if (!config.clientId || !config.clientSecret || !config.smaregiAuthUrl || !config.smaregiTokenEndpoint) {
         throw new Error('Missing required OAuth configuration');
       }
@@ -68,6 +98,10 @@ export class OpenIdAuthService {
       if (!this.client) {
         throw new Error('Failed to initialize OpenID client');
       }
+    }
+    
+    if (!generators) {
+      throw new Error('OpenID client generators not initialized');
     }
     
     // Create new session with PKCE
