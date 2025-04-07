@@ -3,11 +3,6 @@ import { SessionManager } from './session-manager.js';
 import { TokenResponseDto } from './dto/token-response.dto.js';
 import { config } from '../utils/config.js';
 
-// Dynamic import of openid-client
-// This avoids TypeScript import errors when the module has ESM/CommonJS compatibility issues
-let Issuer: any;
-let generators: any;
-
 /**
  * Service for handling OAuth authentication using openid-client library
  */
@@ -15,6 +10,7 @@ export class OpenIdAuthService {
   private tokenManager: TokenManager;
   private sessionManager: SessionManager;
   private client: any = null;
+  private openid: any = null;
   
   constructor() {
     this.tokenManager = new TokenManager();
@@ -37,9 +33,7 @@ export class OpenIdAuthService {
   private async initializeOpenIdLibrary(): Promise<void> {
     try {
       // Dynamic import to handle ESM/CommonJS compatibility
-      const openid = await import('openid-client');
-      Issuer = openid.Issuer;
-      generators = openid.generators;
+      this.openid = await import('openid-client');
       
       console.error('[INFO] OpenID client library initialized');
       
@@ -55,9 +49,9 @@ export class OpenIdAuthService {
    */
   private async initializeClient(): Promise<void> {
     try {
-      if (!Issuer) {
+      if (!this.openid) {
         await this.initializeOpenIdLibrary();
-        if (!Issuer) {
+        if (!this.openid) {
           throw new Error('OpenID client library not initialized');
         }
       }
@@ -66,12 +60,8 @@ export class OpenIdAuthService {
         throw new Error('Missing required OAuth configuration');
       }
       
-      // Create a custom issuer (since we may not have a discovery endpoint)
-      const issuer = new Issuer({
-        issuer: new URL(config.smaregiAuthUrl).origin,
-        authorization_endpoint: config.smaregiAuthUrl,
-        token_endpoint: config.smaregiTokenEndpoint,
-      });
+      // Create issuer using discovery function
+      const issuer = await this.openid.discovery(config.smaregiAuthUrl);
       
       // Create client
       this.client = new issuer.Client({
@@ -100,14 +90,14 @@ export class OpenIdAuthService {
       }
     }
     
-    if (!generators) {
-      throw new Error('OpenID client generators not initialized');
+    if (!this.openid) {
+      throw new Error('OpenID client library not initialized');
     }
     
     // Create new session with PKCE
-    const verifier = generators.codeVerifier();
-    const challenge = generators.codeChallenge(verifier);
-    const state = generators.state();
+    const verifier = this.openid.randomPKCECodeVerifier();
+    const challenge = await this.openid.calculatePKCECodeChallenge(verifier);
+    const state = this.openid.randomState();
     
     // Store in session
     const session = await this.sessionManager.createOpenIdSession(
@@ -118,17 +108,26 @@ export class OpenIdAuthService {
       state
     );
     
-    // Generate authorization URL
-    const url = this.client.authorizationUrl({
+    // Generate authorization URL using buildAuthorizationUrl
+    const authParams = {
+      client_id: config.clientId,
+      redirect_uri: session.redirect_uri,
+      response_type: 'code',
       scope: scopes.join(' '),
-      code_challenge: challenge,
-      code_challenge_method: 'S256',
       state: state,
-      redirect_uri: config.redirectUri,
-    });
+      code_challenge: challenge,
+      code_challenge_method: 'S256'
+    };
+    
+    const url = this.openid.buildAuthorizationUrl(
+      {
+        authorization_endpoint: config.smaregiAuthUrl
+      },
+      authParams
+    );
     
     return {
-      url,
+      url: url.href,
       sessionId: session.id,
     };
   }
@@ -139,10 +138,10 @@ export class OpenIdAuthService {
    * @param state - State parameter
    */
   async handleCallback(code: string, state: string): Promise<string> {
-    if (!this.client) {
-      await this.initializeClient();
-      if (!this.client) {
-        throw new Error('Failed to initialize OpenID client');
+    if (!this.openid) {
+      await this.initializeOpenIdLibrary();
+      if (!this.openid) {
+        throw new Error('OpenID client library not initialized');
       }
     }
     
@@ -154,20 +153,27 @@ export class OpenIdAuthService {
     }
     
     try {
-      // Exchange code for token using openid-client
-      const tokenSet = await this.client.callback(
-        session.redirect_uri,
-        { code, state },
-        { code_verifier: session.verifier, state: session.state }
+      // Exchange code for token using authorizationCodeGrant
+      const tokenSet = await this.openid.authorizationCodeGrant(
+        {
+          token_endpoint: config.smaregiTokenEndpoint,
+          client_id: config.clientId,
+          client_secret: config.clientSecret
+        },
+        {
+          code,
+          redirect_uri: session.redirect_uri,
+          code_verifier: session.verifier
+        }
       );
       
       // Convert TokenSet to our DTO format
       const tokenResponse: TokenResponseDto = {
-        access_token: tokenSet.access_token!,
-        token_type: tokenSet.token_type!,
-        expires_in: Math.floor((tokenSet.expires_at! * 1000 - Date.now()) / 1000),
+        access_token: tokenSet.access_token,
+        token_type: tokenSet.token_type,
+        expires_in: Math.floor((new Date(tokenSet.expires_at).getTime() - Date.now()) / 1000),
         refresh_token: tokenSet.refresh_token,
-        scope: tokenSet.scope!,
+        scope: tokenSet.scope,
         id_token: tokenSet.id_token,
       };
       
@@ -190,10 +196,10 @@ export class OpenIdAuthService {
    * @param sessionId - Session ID
    */
   async refreshToken(sessionId: string): Promise<TokenResponseDto | null> {
-    if (!this.client) {
-      await this.initializeClient();
-      if (!this.client) {
-        throw new Error('Failed to initialize OpenID client');
+    if (!this.openid) {
+      await this.initializeOpenIdLibrary();
+      if (!this.openid) {
+        throw new Error('OpenID client library not initialized');
       }
     }
     
@@ -207,16 +213,25 @@ export class OpenIdAuthService {
     try {
       console.error(`[INFO] Refreshing token for session ${sessionId}`);
       
-      // Use openid-client to refresh the token
-      const tokenSet = await this.client.refresh(token.refresh_token);
+      // Use refreshTokenGrant
+      const tokenSet = await this.openid.refreshTokenGrant(
+        {
+          token_endpoint: config.smaregiTokenEndpoint,
+          client_id: config.clientId,
+          client_secret: config.clientSecret
+        },
+        {
+          refresh_token: token.refresh_token
+        }
+      );
       
       // Convert TokenSet to our DTO format
       const tokenResponse: TokenResponseDto = {
-        access_token: tokenSet.access_token!,
-        token_type: tokenSet.token_type!,
-        expires_in: Math.floor((tokenSet.expires_at! * 1000 - Date.now()) / 1000),
+        access_token: tokenSet.access_token,
+        token_type: tokenSet.token_type,
+        expires_in: Math.floor((new Date(tokenSet.expires_at).getTime() - Date.now()) / 1000),
         refresh_token: tokenSet.refresh_token || token.refresh_token, // Keep old refresh token if not returned
-        scope: tokenSet.scope!,
+        scope: tokenSet.scope,
         id_token: tokenSet.id_token,
       };
       
