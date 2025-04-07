@@ -79,7 +79,9 @@ export async function createServer() {
  * @param server - The MCP server instance
  */
 function setupDefaultHandlers(server: any) {
-  // Set resource listing handler
+  // Resource listing handler is registered in resources.ts
+  // Commented out to avoid duplicate handler error
+  /*
   server.setRequestHandler(
     ListResourcesRequestSchema,
     async () => {
@@ -107,8 +109,11 @@ function setupDefaultHandlers(server: any) {
       };
     }
   );
+  */
   
-  // Set prompts listing handler
+  // Prompts listing handler is registered in prompts.ts
+  // Commented out to avoid duplicate handler error
+  /*
   server.setRequestHandler(
     ListPromptsRequestSchema,
     async () => {
@@ -199,8 +204,11 @@ function setupDefaultHandlers(server: any) {
       };
     }
   );
+  */
   
-  // Set prompt retrieval handler
+  // Prompt retrieval handler is registered in prompts.ts
+  // Commented out to avoid duplicate handler error
+  /*
   server.setRequestHandler(
     GetPromptRequestSchema,
     async (request) => {
@@ -260,4 +268,5 @@ function setupDefaultHandlers(server: any) {
       };
     }
   );
+  */
 }

@@ -181,13 +181,25 @@ npm run mcp:help
 2. 通常はMCPサーバーを手動で起動する必要はありません。Claude Desktopが自動的に管理します。
 
 
-### Claudeでの使用例
+## MCP Inspector
 
-Claude Desktopを起動し、以下のような質問ができます：
+このプロジェクトには、MCP Inspectorが統合されています。MCP Inspectorは、MCPサーバーとの対話をデバッグするための強力なツールです。
 
-- 「スマレジAPIの概要を教えて」
-- 「商品管理のAPIエンドポイントを教えて」
-- 「商品登録のAPIリクエスト例を示して」
+### MCP Inspectorの起動
 
-MCPサーバーが正しく設定されていれば、ClaudeはスマレジAPIの詳細情報にアクセスして回答します。
+```bash
+npm run mcp:inspect
+```
+
+このコマンドを実行すると、ブラウザが自動的に開き、http://localhost:6274 でインスペクターのUIが表示されます。
+
+### 機能
+
+- MCPサーバーとの接続状態の確認
+- 利用可能なツール、リソース、プロンプトの一覧表示
+- APIリクエストの実行とレスポンスの確認
+- リクエスト/レスポンスの履歴の確認
+- サーバー通知の監視
+
+詳細については、[MCP Inspector ガイド](./docs/mcp-inspector-guide.md)を参照してください。
 
