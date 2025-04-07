@@ -147,6 +147,61 @@ export class SessionManager {
   }
 
   /**
+   * Create a new session for OpenID Client
+   * @param scopes - Authorization scopes
+   * @param redirectUri - Redirect URI
+   * @param verifier - PKCE verifier
+   * @param codeChallenge - PKCE code challenge
+   * @param state - State parameter
+   */
+  async createOpenIdSession(
+    scopes: string[],
+    redirectUri: string,
+    verifier: string,
+    codeChallenge: string,
+    state: string
+  ): Promise<SessionData> {
+    try {
+      const now = new Date();
+      const sessionId = this.generateRandomString(32);
+      
+      const session: SessionData = {
+        id: sessionId,
+        scopes,
+        created_at: now,
+        updated_at: now,
+        redirect_uri: redirectUri,
+        verifier,
+        code_challenge: codeChallenge,
+        state,
+        is_authenticated: false
+      };
+      
+      await this.runAsync(`
+        INSERT INTO sessions
+        (id, scopes, created_at, updated_at, redirect_uri, verifier, code_challenge, state, is_authenticated)
+        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
+      `, [
+        session.id,
+        JSON.stringify(session.scopes),
+        session.created_at.toISOString(),
+        session.updated_at.toISOString(),
+        session.redirect_uri,
+        session.verifier,
+        session.code_challenge,
+        session.state,
+        session.is_authenticated ? 1 : 0
+      ]);
+      
+      console.error(`[INFO] OpenID session created: ${sessionId}`);
+      return session;
+    } catch (error) {
+      console.error(`[ERROR] Failed to create OpenID session: ${error}`);
+      throw error;
+    }
+  }
+
+  /**
    * Get session by ID
    * @param id - Session ID
    */
@@ -224,6 +279,14 @@ export class SessionManager {
       console.error(`[ERROR] Failed to update session authentication status: ${error}`);
       throw error;
     }
+  }
+
+  /**
+   * Update session authentication status to authenticated
+   * @param id - Session ID
+   */
+  async updateSessionAuthentication(id: string): Promise<void> {
+    return this.updateSessionAuthStatus(id, true);
   }
 
   /**

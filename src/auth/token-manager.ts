@@ -65,22 +65,37 @@ export class TokenManager {
   /**
    * Save token to database
    * @param id - Session ID
-   * @param tokenResponse - Token response data
-   * @param contractId - Contract ID
+   * @param tokenSet - Token data from openid-client or TokenResponseDto
+   * @param contractId - Contract ID (optional, defaults to "default")
    */
-  async saveToken(id: string, tokenResponse: TokenResponseDto, contractId: string): Promise<void> {
+  async saveToken(id: string, tokenSet: any, contractId: string = "default"): Promise<void> {
     try {
       const now = new Date();
-      const expiresAt = new Date(now.getTime() + tokenResponse.expires_in * 1000);
+      
+      // Determine expires_at from either expires_at or expires_in
+      let expiresAt: Date;
+      if (tokenSet.expires_at) {
+        // If expires_at is a number (timestamp in seconds), convert to Date
+        // Otherwise, assume it's already a Date
+        expiresAt = typeof tokenSet.expires_at === 'number'
+          ? new Date(tokenSet.expires_at * 1000)
+          : tokenSet.expires_at;
+      } else if (tokenSet.expires_in) {
+        // If only expires_in is available, calculate expires_at
+        expiresAt = new Date(now.getTime() + tokenSet.expires_in * 1000);
+      } else {
+        // Default expiration: 1 hour
+        expiresAt = new Date(now.getTime() + 3600 * 1000);
+      }
       
       const tokenEntity: TokenEntity = {
         id,
-        access_token: tokenResponse.access_token,
-        refresh_token: tokenResponse.refresh_token || null,
-        token_type: tokenResponse.token_type,
+        access_token: tokenSet.access_token,
+        refresh_token: tokenSet.refresh_token || null,
+        token_type: tokenSet.token_type || 'Bearer',
         expires_at: expiresAt,
-        scope: tokenResponse.scope,
-        id_token: tokenResponse.id_token || null,
+        scope: tokenSet.scope || '',
+        id_token: tokenSet.id_token || null,
         contract_id: contractId,
         created_at: now,
         updated_at: now
