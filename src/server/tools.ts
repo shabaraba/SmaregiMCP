@@ -50,7 +50,7 @@ function registerAuthTools(
     'getAuthorizationUrl',
     'スマレジAPIにアクセスするための認証URLを生成します。ユーザーはこのURLでブラウザにアクセスして認証を完了する必要があります。',
     {
-      scopes: z.array(z.string()).describe('要求するスコープのリスト（例：["pos.products:read", "pos.transactions:read"]）'),
+      scopes: z.array(z.string()).default(['pos.products:read', 'pos.transactions:read', 'pos.stores:read']).describe('要求するスコープのリスト（例：["pos.products:read", "pos.transactions:read"]）'),
     },
     async ({ scopes }) => {
       try {
@@ -71,7 +71,7 @@ function registerAuthTools(
           content: [
             {
               type: 'text',
-              text: `認証URL生成エラー: ${error}`
+              text: `認証URL生成エラー: ${error instanceof Error ? error.message : String(error)}`
             }
           ],
           isError: true
@@ -97,7 +97,7 @@ function registerAuthTools(
             content: [
               {
                 type: 'text',
-                text: `# 認証状態: 成功\n\n認証が完了しています。このセッションIDを使用してAPIリクエストを実行できます：\`${sessionId}\`\n\n以下のようにAPIリクエストを実行できます：\n\n\`\`\`json\n{\n  "sessionId": "${sessionId}",\n  "endpoint": "/pos/products",\n  "method": "GET",\n  "query": { "limit": 10 }\n}\n\`\`\``
+                text: `# 認証状態: 成功 ✅\n\n認証が完了しています。このセッションIDを使用してAPIリクエストを実行できます：\`${sessionId}\`\n\n以下のようにAPIリクエストを実行できます：\n\n\`\`\`json\n{\n  "sessionId": "${sessionId}",\n  "endpoint": "/pos/products",\n  "method": "GET",\n  "query": { "limit": 10 }\n}\n\`\`\``
               }
             ]
           };
@@ -106,7 +106,7 @@ function registerAuthTools(
             content: [
               {
                 type: 'text',
-                text: `# 認証状態: 待機中\n\n認証がまだ完了していません。ユーザーはブラウザで認証プロセスを完了する必要があります。\n\n認証URLが期限切れの場合は、\`getAuthorizationUrl\`ツールで新しいURLを生成してください。`
+                text: `# 認証状態: 待機中 ⏳\n\n認証がまだ完了していません。ユーザーはブラウザで認証プロセスを完了する必要があります。\n\n認証URLが期限切れの場合は、\`getAuthorizationUrl\`ツールで新しいURLを生成してください。`
               }
             ]
           };
@@ -117,7 +117,53 @@ function registerAuthTools(
           content: [
             {
               type: 'text',
-              text: `認証状態確認エラー: ${error}`
+              text: `認証状態確認エラー: ${error instanceof Error ? error.message : String(error)}`
+            }
+          ],
+          isError: true
+        };
+      }
+    }
+  );
+  
+  // Authentication tool - Revoke token
+  mcpServer.tool(
+    'revokeToken',
+    '認証トークンを無効化し、セッションを終了します。',
+    {
+      sessionId: z.string().describe('無効化するセッションID'),
+    },
+    async ({ sessionId }) => {
+      try {
+        // Revoke token
+        const result = await authService.revokeToken(sessionId);
+        
+        if (result) {
+          return {
+            content: [
+              {
+                type: 'text',
+                text: `# トークン無効化: 成功 ✅\n\nセッション \`${sessionId}\` のトークンが正常に無効化されました。\n\n新しい認証を開始するには、\`getAuthorizationUrl\`ツールを使用してください。`
+              }
+            ]
+          };
+        } else {
+          return {
+            content: [
+              {
+                type: 'text',
+                text: `# トークン無効化: 失敗 ❌\n\nセッション \`${sessionId}\` のトークン無効化に失敗しました。詳細はサーバーログを確認してください。`
+              }
+            ]
+          };
+        }
+      } catch (error) {
+        console.error(`[ERROR] revokeToken failed: ${error}`);
+        return {
+          content: [
+            {
+              type: 'text',
+              text: `トークン無効化エラー: ${error instanceof Error ? error.message : String(error)}`
             }
           ],
           isError: true
@@ -200,7 +246,7 @@ function registerApiRequestTools(
           content: [
             {
               type: 'text',
-              text: `API リクエスト失敗: ${error}`
+              text: `API リクエスト失敗: ${error instanceof Error ? error.message : String(error)}`
             }
           ],
           isError: true
@@ -231,7 +277,7 @@ function registerApiInfoTools(
     async ({ category }) => {
       try {
         // Get API overview from API service
-        const overview = apiService.getApiCategoryOverview(category)
+        const overview = apiService.getApiCategoryOverview(category);
         
         if (!overview) {
           return {
@@ -265,7 +311,7 @@ function registerApiInfoTools(
           content: [
             {
               type: 'text',
-              text: `API情報取得エラー: ${error}`
+              text: `API情報取得エラー: ${error instanceof Error ? error.message : String(error)}`
             }
           ],
           isError: true
@@ -324,7 +370,7 @@ function registerApiInfoTools(
           content: [
             {
               type: 'text',
-              text: `APIエンドポイント一覧取得エラー: ${error}`
+              text: `APIエンドポイント一覧取得エラー: ${error instanceof Error ? error.message : String(error)}`
             }
           ],
           isError: true
@@ -441,7 +487,7 @@ async function registerGeneratedApiTools(
               content: [
                 {
                   type: 'text',
-                  text: `Error executing ${tool.name}: ${error}`
+                  text: `Error executing ${tool.name}: ${error instanceof Error ? error.message : String(error)}`
                 }
               ],
               isError: true
