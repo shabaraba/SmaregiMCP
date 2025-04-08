@@ -1,17 +1,22 @@
 import { McpServer, ResourceTemplate } from '@modelcontextprotocol/sdk/server/mcp.js';
+import * as fs from 'fs';
+import * as path from 'path';
 import { ApiService } from '../api/api.service.js';
 import { SchemaConverter } from '../conversion/schema-converter.js';
+import { ApiToolGenerator } from '../conversion/tool-generator.js';
 
 /**
  * Register all resources to the MCP server
  * @param mcpServer - The MCP server instance
  * @param apiService - The API service
  * @param schemaConverter - The schema converter
+ * @param apiToolGenerator - The API tool generator
  */
 export async function registerResources(
   mcpServer: McpServer,
   apiService: ApiService,
-  schemaConverter: SchemaConverter
+  schemaConverter: SchemaConverter,
+  apiToolGenerator: ApiToolGenerator
 ): Promise<void> {
   console.error('[INFO] Registering resources...');
   
@@ -23,6 +28,8 @@ export async function registerResources(
   
   // Register document resources
   registerDocumentResources(mcpServer);
+  
+  await registerDynamicApiResources(mcpServer, apiService);
   
   console.error('[INFO] Resources registered successfully');
 }
@@ -345,4 +352,148 @@ function formatPathDetails(pathDetails: any): string {
   }
   
   return content;
+}
+
+/**
+ * APIエンドポイント情報インターフェース
+ */
+interface ApiEndpoint {
+  path: string;
+  method: string;
+  operationId: string;
+  description: string;
+  tag: string;
+  parameters: ApiEndpointParameter[];
+  requestBody: boolean;
+  responseType?: string;
+}
+
+/**
+ * APIエンドポイントパラメータインターフェース
+ */
+interface ApiEndpointParameter {
+  name: string;
+  in: string;
+  required: boolean;
+  description: string;
+  schema: any;
+}
+
+/**
+ * OpenAPI定義から動的にAPIリソースを登録
+ * @param mcpServer - The MCP server instance
+ * @param apiService - The API service
+ */
+async function registerDynamicApiResources(
+  mcpServer: McpServer,
+  apiService: ApiService
+): Promise<void> {
+  try {
+    console.error('[INFO] Registering dynamic API resources...');
+    
+    const endpointsJsonPath = path.resolve(process.cwd(), 'src', 'tools', 'generated', 'api-endpoints.json');
+    
+    if (!fs.existsSync(endpointsJsonPath)) {
+      console.error(`[ERROR] API endpoints JSON file not found: ${endpointsJsonPath}`);
+      console.error('[INFO] Skipping dynamic API resource registration');
+      return;
+    }
+    
+    try {
+      const endpointsJson = fs.readFileSync(endpointsJsonPath, 'utf8');
+      const endpoints = JSON.parse(endpointsJson) as ApiEndpoint[];
+      
+      console.error(`[INFO] Loaded ${endpoints.length} API endpoints from JSON file`);
+      
+      const endpointsByCategory = new Map<string, ApiEndpoint[]>();
+      
+      for (const endpoint of endpoints) {
+        const category = endpoint.tag || 'default';
+        
+        if (!endpointsByCategory.has(category)) {
+          endpointsByCategory.set(category, []);
+        }
+        
+        endpointsByCategory.get(category)!.push(endpoint);
+      }
+      
+      for (const [category, categoryEndpoints] of endpointsByCategory.entries()) {
+        console.error(`[INFO] Registering resources for category: ${category}`);
+        
+        mcpServer.resource(
+          `api-${category}`,
+          `smaregi://api/${category}`,
+          async (uri, extra) => {
+            try {
+              const overview = apiService.getApiCategoryOverview(category);
+              
+              const endpointList = categoryEndpoints.map(endpoint => ({
+                name: endpoint.operationId,
+                path: endpoint.path,
+                method: endpoint.method,
+                description: endpoint.description,
+              }));
+              
+              return {
+                content: {
+                  overview,
+                  endpoints: endpointList,
+                },
+              };
+            } catch (error) {
+              console.error(`[ERROR] Error reading category resource ${category}:`, error);
+              return {
+                content: {
+                  error: `Failed to read ${category} resource: ${error}`,
+                },
+                isError: true,
+              };
+            }
+          }
+        );
+        
+        for (const endpoint of categoryEndpoints) {
+          mcpServer.resource(
+            `api-${category}-${endpoint.operationId}`,
+            `smaregi://api/${category}/${endpoint.operationId}`,
+            async (uri, extra) => {
+              try {
+                const pathParams = endpoint.parameters.filter(p => p.in === 'path');
+                const queryParams = endpoint.parameters.filter(p => p.in === 'query');
+                const bodyParams = endpoint.parameters.filter(p => p.in === 'body');
+                
+                return {
+                  content: {
+                    endpoint: endpoint.path,
+                    method: endpoint.method,
+                    description: endpoint.description,
+                    operationId: endpoint.operationId,
+                    pathParameters: pathParams,
+                    queryParameters: queryParams,
+                    bodyParameters: bodyParams,
+                    toolName: endpoint.operationId,
+                  },
+                };
+              } catch (error) {
+                console.error(`[ERROR] Error reading endpoint resource ${endpoint.operationId}:`, error);
+                return {
+                  content: {
+                    error: `Failed to read ${endpoint.operationId} resource: ${error}`,
+                  },
+                  isError: true,
+                };
+              }
+            }
+          );
+        }
+      }
+      
+      console.error(`[INFO] Registered resources for ${endpointsByCategory.size} categories`);
+    } catch (error) {
+      console.error(`[ERROR] Failed to parse API endpoints JSON: ${error}`);
+      console.error('[INFO] Skipping dynamic API resource registration');
+    }
+  } catch (error) {
+    console.error('[ERROR] Failed to register dynamic API resources:', error);
+  }
 }

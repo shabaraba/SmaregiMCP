@@ -62,7 +62,7 @@ export async function createServer() {
   setupDefaultHandlers(mcpServer.server);
   
   // Register resources, tools, and prompts
-  await registerResources(mcpServer, apiService, schemaConverter);
+  await registerResources(mcpServer, apiService, schemaConverter, apiToolGenerator);
   await registerTools(mcpServer, authService, apiService, apiToolGenerator);
   await registerPrompts(mcpServer);
   

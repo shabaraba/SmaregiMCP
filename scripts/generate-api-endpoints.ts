@@ -1,18 +1,14 @@
 /**
- * APIツールJSON生成スクリプト
- * OpenAPI定義からAPIツールを生成し、ファイルに保存します
- * MCP TypeScript SDKに準拠した形式で出力します
+ * OpenAPIエンドポイント抽出スクリプト
+ * openapi.yamlファイルからAPIエンドポイント情報を抽出し、
+ * 動的なツール生成に使用できる形式で出力します
  */
 
-import { SchemaConverter } from '../src/conversion/schema-converter.js';
-import { ApiToolGenerator } from '../src/conversion/tool-generator.js';
 import { fileURLToPath } from 'url';
 import { dirname, resolve } from 'path';
 import * as fs from 'fs';
 import * as yaml from 'js-yaml';
-import { z } from 'zod';
 
-// ディレクトリパスを取得
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
 const projectRoot = resolve(__dirname, '..');
@@ -20,7 +16,6 @@ const projectRoot = resolve(__dirname, '..');
 const openapiDir = resolve(projectRoot, 'openapi', 'pos');
 const outputDir = resolve(projectRoot, 'src', 'tools', 'generated');
 
-// 出力ディレクトリを作成
 if (!fs.existsSync(outputDir)) {
   fs.mkdirSync(outputDir, { recursive: true });
 }
@@ -173,138 +168,45 @@ function saveEndpointsToFile(endpoints: ApiEndpoint[]): void {
 }
 
 /**
- * APIエンドポイントからAPIツールを生成
+ * カテゴリ別のエンドポイント数を表示
  */
-function generateApiToolsFromEndpoints(endpoints: ApiEndpoint[]): any[] {
-  try {
-    console.log('[INFO] APIエンドポイントからAPIツールを生成しています...');
-    
-    const tools: any[] = [];
-    
-    for (const endpoint of endpoints) {
-      const toolName = endpoint.operationId;
-      
-      const parameters: any[] = [
-        {
-          name: 'sessionId',
-          description: '認証済みのセッションID',
-          type: 'query',
-          required: true,
-          schema: { type: 'string' }
-        }
-      ];
-      
-      for (const param of endpoint.parameters) {
-        parameters.push({
-          name: param.name,
-          description: param.description,
-          type: param.in,
-          required: param.required,
-          schema: param.schema
-        });
-      }
-      
-      const tool = {
-        name: toolName,
-        description: endpoint.description,
-        category: endpoint.tag,
-        path: endpoint.path,
-        method: endpoint.method,
-        parameters,
-        operationId: endpoint.operationId,
-        version: '1.0'
-      };
-      
-      tools.push(tool);
-    }
-    
-    console.log(`[SUCCESS] ${tools.length}個のAPIツールを生成しました`);
-    return tools;
-  } catch (error) {
-    console.error('[ERROR] APIツール生成中にエラーが発生しました:', error);
-    return [];
-  }
-}
-
-/**
- * APIツールをJSONファイルに保存
- */
-function saveToolsToFile(tools: any[]): void {
-  try {
-    const outputPath = resolve(outputDir, 'api-tools.json');
-    fs.writeFileSync(outputPath, JSON.stringify(tools, null, 2), 'utf-8');
-    console.log(`[SUCCESS] APIツールJSONを保存しました: ${outputPath}`);
-  } catch (error) {
-    console.error('[ERROR] APIツールJSONの保存中にエラーが発生しました:', error);
-  }
-}
-
-/**
- * カテゴリ別のAPIツール数を表示
- */
-function logToolStats(tools: any[]): void {
-  const categoryCounts = tools.reduce((acc, tool) => {
-    const category = tool.category || 'unknown';
-    acc[category] = (acc[category] || 0) + 1;
+function logEndpointStats(endpoints: ApiEndpoint[]): void {
+  const tagCounts = endpoints.reduce((acc, endpoint) => {
+    const tag = endpoint.tag || 'default';
+    acc[tag] = (acc[tag] || 0) + 1;
     return acc;
   }, {} as Record<string, number>);
   
-  console.log('[INFO] カテゴリ別APIツール数:');
-  Object.entries(categoryCounts).forEach(([category, count]) => {
-    console.log(`  - ${category}: ${count}`);
+  console.log('[INFO] カテゴリ別APIエンドポイント数:');
+  Object.entries(tagCounts).forEach(([tag, count]) => {
+    console.log(`  - ${tag}: ${count}`);
   });
 }
 
 /**
- * APIツールの生成と検証
+ * メイン処理
  */
-async function generateAndValidateTools() {
+async function main() {
   try {
-    console.log('[INFO] OpenAPI定義からAPIツールを生成しています...');
+    console.log('[INFO] OpenAPI定義からAPIエンドポイント情報を抽出します...');
     
     const endpoints = extractApiEndpoints();
     
     if (endpoints.length === 0) {
-      console.warn('[WARN] APIエンドポイントが抽出できませんでした。OpenAPI定義を確認してください。');
+      console.warn('[WARN] APIエンドポイントが見つかりませんでした');
       return;
     }
+    
+    logEndpointStats(endpoints);
     
     saveEndpointsToFile(endpoints);
     
-    const tools = generateApiToolsFromEndpoints(endpoints);
-    
-    if (tools.length === 0) {
-      console.warn('[WARN] APIツールが生成されませんでした。エンドポイント情報を確認してください。');
-      return;
-    }
-    
-    // カテゴリ別のAPIツール数を表示
-    logToolStats(tools);
-    
-    saveToolsToFile(tools);
-    
-    // 出力ファイルの確認
-    const outputFilePath = resolve(outputDir, 'api-tools.json');
-    if (fs.existsSync(outputFilePath)) {
-      const stats = fs.statSync(outputFilePath);
-      const fileSizeKb = Math.round(stats.size / 1024);
-      console.log(`[INFO] 出力ファイルサイズ: ${fileSizeKb}KB`);
-    }
-  } catch (error) {
-    handleError('APIツール生成中にエラーが発生しました', error);
-  }
-}
-
-// メイン処理
-async function main() {
-  try {
-    await generateAndValidateTools();
+    console.log('[SUCCESS] 処理が完了しました');
   } catch (error) {
     handleError('予期しないエラーが発生しました', error);
   }
 }
 
-// スクリプト実行
 main().catch(error => {
   handleError('スクリプト実行中に予期しないエラーが発生しました', error);
 });
