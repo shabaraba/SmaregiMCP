@@ -4,12 +4,19 @@ import * as path from 'path';
 import * as fs from 'node:fs';
 import * as os from 'node:os';
 import { createServer } from './server/server.js';
+import { createProxyServer } from './server/proxy-server.js';
 import { Server } from '@modelcontextprotocol/sdk/server/index.js';
+import { config } from './utils/config.js';
 
 /**
  * ロックファイルパス (重複起動防止用)
  */
 const LOCK_FILE_PATH = path.join(os.tmpdir(), 'smaregi-mcp-server.lock');
+
+/**
+ * 環境変数名: ProxyOAuthProviderを使用するかどうか
+ */
+const USE_PROXY_PROVIDER_ENV = 'USE_PROXY_OAUTH_PROVIDER';
 
 /**
  * プロセスが実行中かどうかを確認
@@ -213,8 +220,19 @@ async function run() {
   };
 
   try {
-    // MCPサーバーを作成
-    const { server, mcpServer, expressServer } = await createServer();
+    // ProxyOAuthProviderを使用するかどうかを環境変数で判断
+    const useProxyProvider = process.env[USE_PROXY_PROVIDER_ENV] === 'true';
+    
+    let server, mcpServer, expressServer;
+    
+    if (useProxyProvider) {
+      console.error('[INFO] ProxyOAuthProviderを使用してMCPサーバーを起動します');
+      ({ server, mcpServer, expressServer } = await createProxyServer());
+    } else {
+      console.error('[INFO] 通常のAuthServiceを使用してMCPサーバーを起動します');
+      ({ server, mcpServer, expressServer } = await createServer());
+    }
+    
     setupSignalHandlers(server);
     
     // Expressサーバーをグローバルビジブルにしてシャットダウンできるようにする
@@ -237,6 +255,17 @@ async function run() {
     }
     process.exit(1);
   }
+}
+
+/**
+ * ProxyOAuthProviderを使用したMCPサーバー実行
+ */
+async function runWithProxy() {
+  // 環境変数を設定
+  process.env[USE_PROXY_PROVIDER_ENV] = 'true';
+  
+  // 通常の実行関数を呼び出し
+  await run();
 }
 
 // コマンドライン引数のパース
@@ -263,12 +292,26 @@ switch (cmd) {
         process.exit(1);
       });
     break;
+    
+  case 'run-proxy':
+    runWithProxy()
+      .catch((error) => {
+        console.error(`Unhandled error: ${error}`);
+        process.exit(1);
+      });
+    break;
   
   default:
     // ヘルプ表示
     console.log('Usage: node dist/main.js <command>');
     console.log('Available commands:');
-    console.log('  init - Configure the MCP server in Claude Desktop');
-    console.log('  run  - Run the MCP server');
+    console.log('  init      - Configure the MCP server in Claude Desktop');
+    console.log('  run       - Run the MCP server with the standard AuthService');
+    console.log('  run-proxy - Run the MCP server with the ProxyOAuthProvider');
     process.exit(0);
+}
+
+// グローバル型宣言を追加
+declare global {
+  var expressServer: any;
 }

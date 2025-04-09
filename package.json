@@ -24,6 +24,7 @@
     "generate:typed-openapi": "NODE_OPTIONS=\"--max-old-space-size=8192\" npx typed-openapi ./openapi/pos/openapi.yaml -r zod --output ./src/schema/zod/pos.zod.ts",
     "mcp:init": "cp -r ./src/tools/generated ./dist/tools/ && node dist/main.js init",
     "mcp:run": "node dist/main.js run",
+    "mcp:run:proxy": "node dist/main.js run-proxy",
     "mcp:help": "node dist/main.js",
     "mcp:dev": "nest start --watch",
     "mcp:inspect": "npx @modelcontextprotocol/inspector node dist/main.js run"
@@ -39,7 +40,7 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "@modelcontextprotocol/sdk": "^1.8.0",
+    "@modelcontextprotocol/sdk": "^1.9.0",
     "@nestjs/axios": "^4.0.0",
     "@nestjs/common": "^11.0.12",
     "@nestjs/config": "^4.0.2",
