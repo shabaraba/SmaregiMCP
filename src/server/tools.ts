@@ -4,6 +4,7 @@ import * as fs from 'fs';
 import { AuthService } from '../auth/auth.service.js';
 import { ApiService } from '../api/api.service.js';
 import { ApiToolGenerator } from '../conversion/tool-generator.js';
+import { ZodApiToolGenerator } from '../tools/generators/zod-api-tool-generator.js';
 
 /**
  * Register all tools to the MCP server
@@ -29,7 +30,10 @@ export async function registerTools(
   // Register API info tools
   registerApiInfoTools(mcpServer, apiService);
   
-  // Register generated API tools
+  // Register Zod-based API tools
+  await registerZodApiTools(mcpServer, apiService);
+  
+  // Register generated API tools (will be gradually replaced by Zod-based tools)
   await registerGeneratedApiTools(mcpServer, apiToolGenerator, apiService);
   
   console.error('[INFO] Tools registered successfully');
@@ -459,6 +463,63 @@ async function executeApiRequest(
       ],
       isError: true
     };
+  }
+}
+
+/**
+ * ZodスキーマからAPIツールを登録
+ * @param mcpServer - The MCP server instance
+ * @param apiService - The API service
+ * @returns Number of registered tools
+ */
+async function registerZodApiTools(
+  mcpServer: McpServer,
+  apiService: ApiService
+): Promise<number> {
+  try {
+    console.error('[INFO] Registering Zod API tools...');
+    
+    // ZodApiToolGeneratorのインスタンス化
+    const zodGenerator = new ZodApiToolGenerator();
+    
+    // Zodスキーマからツールを生成
+    const tools = zodGenerator.generateToolsFromZodSchema();
+    console.error(`[INFO] Generated ${tools.length} Zod API tools`);
+    
+    // ツールを登録
+    let registeredCount = 0;
+    
+    // カテゴリ別に整理
+    const toolsByCategory = new Map<string, any[]>();
+    for (const tool of tools) {
+      const category = tool.name.split('.')[0] || 'default';
+      
+      if (!toolsByCategory.has(category)) {
+        toolsByCategory.set(category, []);
+      }
+      
+      toolsByCategory.get(category)!.push(tool);
+    }
+    
+    // カテゴリ別に登録
+    for (const [category, categoryTools] of toolsByCategory.entries()) {
+      console.error(`[INFO] Registering ${categoryTools.length} Zod tools for category: ${category}`);
+      
+      for (const tool of categoryTools) {
+        try {
+          registerSingleTool(mcpServer, tool, apiService);
+          registeredCount++;
+        } catch (error) {
+          console.error(`[ERROR] Failed to register Zod tool ${tool.name}:`, error);
+        }
+      }
+    }
+    
+    console.error(`[INFO] Successfully registered ${registeredCount} Zod API tools`);
+    return registeredCount;
+  } catch (error) {
+    console.error('[ERROR] Failed to register Zod API tools:', error);
+    return 0;
   }
 }
 
