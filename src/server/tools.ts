@@ -66,7 +66,7 @@ function registerAuthTools(
           content: [
             {
               type: 'text',
-              text: `# 認証URL\n\n以下のURLをブラウザで開き、スマレジアカウントでログインしてください：\n\n${result.url}\n\n認証が完了したら、\`checkAuthStatus\`ツールを使用して認証状態を確認できます。セッションID: \`${result.sessionId}\``
+              text: `# 認証URL\n\n以下のURLをブラウザで開き、スマレジアカウントでログインしてください：\n\n${result.url}\n\n認証リンクをユーザーに提示してください。\n\n認証が完了したら、\`checkAuthStatus\`ツールを使用して認証状態を確認できます。セッションID: \`${result.sessionId}\``
             }
           ]
         };
@@ -483,7 +483,7 @@ async function registerZodApiTools(
     const zodGenerator = new ZodApiToolGenerator();
     
     // Zodスキーマからツールを生成
-    const tools = zodGenerator.generateToolsFromZodSchema();
+    const tools = await zodGenerator.generateToolsFromZodSchema();
     console.error(`[INFO] Generated ${tools.length} Zod API tools`);
     
     // ツールを登録

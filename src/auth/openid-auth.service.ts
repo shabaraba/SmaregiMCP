@@ -72,6 +72,7 @@ export class OpenIdAuthService {
     const verifier = this.generateRandomString(64);
     const codeChallenge = this.createCodeChallenge(verifier);
     const state = this.generateRandomString(32);
+    console.error(config);
     
     // Store in session
     const session = await this.sessionManager.createOpenIdSession(
@@ -113,6 +114,7 @@ export class OpenIdAuthService {
     if (!session) {
       throw new Error('Invalid state parameter. Session not found.');
     }
+    console.error("handle callback!!!!!");
     
     try {
       // Exchange code for token
@@ -125,9 +127,9 @@ export class OpenIdAuthService {
       });
       
       // Add client_secret if it exists
-      if (config.clientSecret) {
-        params.append('client_secret', config.clientSecret);
-      }
+      // if (config.clientSecret) {
+      //   params.append('client_secret', config.clientSecret);
+      // }
       
       const response = await axios.post(
         config.smaregiTokenEndpoint,
@@ -174,9 +176,9 @@ export class OpenIdAuthService {
       });
       
       // Add client_secret if it exists
-      if (config.clientSecret) {
-        params.append('client_secret', config.clientSecret);
-      }
+      // if (config.clientSecret) {
+      //   params.append('client_secret', config.clientSecret);
+      // }
       
       const response = await axios.post(
         config.smaregiTokenEndpoint,

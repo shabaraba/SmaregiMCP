@@ -1,7 +1,7 @@
 import { z } from 'zod';
 import * as fs from 'fs';
 import * as path from 'path';
-import { ApiTool, ApiToolParameter } from '../interfaces/api-tool.interface';
+import { ApiTool, ApiToolParameter } from '../interfaces/api-tool.interface.js';
 
 /**
  * ZodApiToolGenerator - typed-openapiで生成されたZodスキーマからAPIツールを生成するクラス
@@ -19,7 +19,7 @@ export class ZodApiToolGenerator {
   /**
    * EndpointByMethodからAPIツールを生成
    */
-  public generateToolsFromZodSchema(): ApiTool[] {
+  public async generateToolsFromZodSchema(): Promise<ApiTool[]> {
     const tools: ApiTool[] = [];
     
     try {
@@ -32,7 +32,7 @@ export class ZodApiToolGenerator {
       // 動的にEndpointByMethodをインポート
       try {
         // EndpointByMethodを動的に取得
-        const zodModule = require('../../schema/zod/pos.zod.js');
+        const zodModule = await import('../../schema/zod/pos.zod.js');
         const EndpointByMethod = zodModule.EndpointByMethod;
         
         if (!EndpointByMethod) {

@@ -1,10 +1,37 @@
-import * as dotenv from 'dotenv';
+import dotenv from 'dotenv';
 import * as path from 'path';
 import * as fs from 'fs';
 import * as os from 'os';
+import { fileURLToPath } from 'url';
+import { dirname } from 'path';
 
-// Load .env file
-dotenv.config();
+// ESモジュール対応のパス解決
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = dirname(__filename);
+const projectRoot = path.resolve(__dirname, '..', '..');
+
+// 複数の可能性のある場所から.envを探す
+const possibleEnvPaths = [
+  path.join(projectRoot, '.env'),               // プロジェクトルート
+  path.resolve(process.cwd(), '.env'),          // カレントディレクトリ
+  path.join(os.homedir(), '.smaregi-mcp', '.env') // ホームディレクトリの設定フォルダ
+];
+
+let envFound = false;
+for (const envPath of possibleEnvPaths) {
+  if (fs.existsSync(envPath)) {
+    console.error(`[DEBUG] Found .env at: ${envPath}`);
+    dotenv.config({ path: envPath });
+    envFound = true;
+    break;
+  }
+}
+
+if (!envFound) {
+  console.error('[WARN] No .env file found. Using default or environment variables only.');
+  // 明示的にカレントディレクトリを指定してみる（最後の手段）
+  dotenv.config();
+}
 
 // Default values
 const DEFAULT_DATABASE_PATH = path.join(os.homedir(), '.smaregi-mcp', 'database.sqlite');
@@ -81,3 +108,14 @@ console.error('[INFO] Configuration loaded:');
 console.error(`  - Debug mode: ${config.debug}`);
 console.error(`  - Database path: ${config.databasePath}`);
 console.error(`  - Environment: ${config.nodeEnv}`);
+console.error(`  - Client ID: ${config.clientId ? `${config.clientId.substring(0, 4)}...` : 'NOT SET'}`);
+console.error(`  - Redirect URI: ${config.redirectUri}`);
+console.error(`  - Smaregi Auth URL: ${config.smaregiAuthUrl}`);
+
+if (!config.clientId) {
+  console.error('[ERROR] CLIENT_ID environment variable is not set. Authentication will fail.');
+  // 環境変数のロード元を確認する情報を出力
+  console.error(`[DEBUG] Current working directory: ${process.cwd()}`);
+  console.error(`[DEBUG] Process argv: ${process.argv.join(' ')}`);
+  console.error(`[DEBUG] ENV variables: ${Object.keys(process.env).filter(key => !key.includes('SECRET')).join(', ')}`);
+}

@@ -4,7 +4,7 @@
   "description": "Microservice Connection Point for integrating Smaregi POS data with Claude AI",
   "type": "module",
   "scripts": {
-    "pre_build": "npm run generate:api:common && npm run generate:api:pos && npm run convert && npm run generate:typed-openapi && (npm run generate:api:endpoints || true) && (npm run generate:api:tools || true)",
+    "pre_build": "npm run generate:api:common && npm run generate:api:pos && npm run convert && npm run generate:typed-openapi",
     "build": "tsc",
     "format": "prettier --write \"src/**/*.ts\" \"test/**/*.ts\"",
     "start": "nest start",
@@ -22,8 +22,6 @@
     "generate:api:pos": " npx openapi-typescript ./openapi/pos/openapi.yaml -o ./src/schema/pos.d.ts",
     "convert": "npx tsx ./scripts/generate-api-schema-json.ts",
     "generate:typed-openapi": "NODE_OPTIONS=\"--max-old-space-size=8192\" npx typed-openapi ./openapi/pos/openapi.yaml -r zod --output ./src/schema/zod/pos.zod.ts",
-    "generate:api:endpoints": "NODE_OPTIONS=\"--max-old-space-size=8192\" npx tsx ./scripts/generate-api-endpoints.ts",
-    "generate:api:tools": "NODE_OPTIONS=\"--max-old-space-size=8192\" npx tsx ./scripts/generate-api-tools-json.ts",
     "mcp:init": "cp -r ./src/tools/generated ./dist/tools/ && node dist/main.js init",
     "mcp:run": "node dist/main.js run",
     "mcp:help": "node dist/main.js",

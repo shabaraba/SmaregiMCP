@@ -1,8 +1,7 @@
-import { ZodApiToolGenerator } from './zod-api-tool-generator';
-import { z } from 'zod';
+import { ZodApiToolGenerator } from './zod-api-tool-generator.js';
 
 // EndpointByMethodのモックデータ
-jest.mock('../../schema/zod/pos.zod', () => {
+jest.mock('../../schema/zod/pos.zod.js', () => {
   return {
     EndpointByMethod: {
       get: {
@@ -61,8 +60,8 @@ describe('ZodApiToolGenerator', () => {
   });
   
   describe('generateToolsFromZodSchema', () => {
-    it('should generate tools from Zod schema', () => {
-      const tools = generator.generateToolsFromZodSchema();
+    it('should generate tools from Zod schema', async () => {
+      const tools = await generator.generateToolsFromZodSchema();
       
       // 生成されたツール数を確認
       expect(tools.length).toBeGreaterThan(0);
