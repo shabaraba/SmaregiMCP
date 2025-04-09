@@ -105,7 +105,7 @@ async function init() {
   
   const config = {
     command: nodePath,
-    args: [distPath, 'run'],
+    args: [distPath, 'runWithProxy'],
   };
   
   console.log(`Looking for existing config in: ${path.dirname(claudeConfigPath)}`);

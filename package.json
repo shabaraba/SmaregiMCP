@@ -5,7 +5,8 @@
   "type": "module",
   "scripts": {
     "pre_build": "npm run generate:api:common && npm run generate:api:pos && npm run convert && npm run generate:typed-openapi",
-    "build": "tsc",
+    "build": "tsc && npm run copy:html",
+    "copy:html": "mkdir -p dist/server/auth && cp src/server/auth/*.html dist/server/auth/",
     "format": "prettier --write \"src/**/*.ts\" \"test/**/*.ts\"",
     "start": "nest start",
     "start:dev": "nest start --watch",
