@@ -170,6 +170,13 @@ async function run() {
         // MCPサーバーを終了
         await server.close();
         
+        // Expressサーバーを終了（グローバル変数から取得）
+        if (global.expressServer) {
+          global.expressServer.close(() => {
+            console.error('[INFO] Express server has been closed');
+          });
+        }
+        
         // ロックファイルを削除
         if (fs.existsSync(LOCK_FILE_PATH)) {
           fs.unlinkSync(LOCK_FILE_PATH);
@@ -207,8 +214,11 @@ async function run() {
 
   try {
     // MCPサーバーを作成
-    const { server, mcpServer } = await createServer();
+    const { server, mcpServer, expressServer } = await createServer();
     setupSignalHandlers(server);
+    
+    // Expressサーバーをグローバルビジブルにしてシャットダウンできるようにする
+    global.expressServer = expressServer;
     
     // StdioServerTransport経由で接続
     const transport = new StdioServerTransport();
