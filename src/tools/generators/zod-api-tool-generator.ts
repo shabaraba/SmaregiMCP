@@ -1,46 +1,83 @@
 import { z } from 'zod';
+import * as fs from 'fs';
+import * as path from 'path';
 import { ApiTool, ApiToolParameter } from '../interfaces/api-tool.interface';
-import { EndpointByMethod } from '../../schema/zod/pos.zod';
 
 /**
  * ZodApiToolGenerator - typed-openapiで生成されたZodスキーマからAPIツールを生成するクラス
  */
 export class ZodApiToolGenerator {
   
+  private zodSchemaPath: string;
+  
+  constructor() {
+    // Zod schema pathの初期化
+    const projectRoot = process.cwd();
+    this.zodSchemaPath = path.resolve(projectRoot, 'src', 'schema', 'zod', 'pos.zod.ts');
+  }
+
   /**
    * EndpointByMethodからAPIツールを生成
    */
   public generateToolsFromZodSchema(): ApiTool[] {
     const tools: ApiTool[] = [];
     
-    // HTTP methodごとに処理
-    for (const [method, endpoints] of Object.entries(EndpointByMethod)) {
-      for (const [path, endpoint] of Object.entries(endpoints)) {
-        try {
-          // ツール名を生成
-          const toolName = this.generateToolName(method, path);
-          
-          // パラメータを抽出・変換
-          const parameters = this.convertZodSchemaToParameters(endpoint.parameters);
-          
-          // 説明文を生成
-          const description = `${method.toUpperCase()} ${path} エンドポイントへのアクセス`;
-          
-          // APIツールを作成
-          const tool: ApiTool = {
-            name: toolName,
-            description,
-            parameters,
-            path,
-            method: method.toUpperCase(),
-            operationId: toolName
-          };
-          
-          tools.push(tool);
-        } catch (error) {
-          console.error(`[ERROR] Failed to generate tool for ${method} ${path}:`, error);
-        }
+    try {
+      // Zodスキーマファイルが存在するか確認
+      if (!fs.existsSync(this.zodSchemaPath)) {
+        console.error(`[ERROR] Zod schema file not found: ${this.zodSchemaPath}`);
+        return tools;
       }
+      
+      // 動的にEndpointByMethodをインポート
+      try {
+        // EndpointByMethodを動的に取得
+        const zodModule = require('../../schema/zod/pos.zod.js');
+        const EndpointByMethod = zodModule.EndpointByMethod;
+        
+        if (!EndpointByMethod) {
+          console.error('[ERROR] EndpointByMethod not found in Zod schema');
+          return tools;
+        }
+        
+        console.error(`[INFO] Successfully loaded EndpointByMethod with ${Object.keys(EndpointByMethod).length} HTTP methods`);
+        
+        // HTTP methodごとに処理
+        for (const [method, endpoints] of Object.entries(EndpointByMethod)) {
+          console.error(`[INFO] Processing ${Object.keys(endpoints).length} endpoints for method: ${method}`);
+          
+          for (const [path, endpoint] of Object.entries(endpoints as Record<string, any>)) {
+            try {
+              // ツール名を生成
+              const toolName = this.generateToolName(method, path);
+              
+              // パラメータを抽出・変換
+              const parameters = this.convertZodSchemaToParameters(endpoint.parameters);
+              
+              // 説明文を生成
+              const description = `${method.toUpperCase()} ${path} エンドポイントへのアクセス`;
+              
+              // APIツールを作成
+              const tool: ApiTool = {
+                name: toolName,
+                description,
+                parameters,
+                path,
+                method: method.toUpperCase(),
+                operationId: toolName
+              };
+              
+              tools.push(tool);
+            } catch (error) {
+              console.error(`[ERROR] Failed to generate tool for ${method} ${path}:`, error);
+            }
+          }
+        }
+      } catch (error) {
+        console.error('[ERROR] Failed to import EndpointByMethod:', error);
+      }
+    } catch (error) {
+      console.error('[ERROR] Failed to generate tools from Zod schema:', error);
     }
     
     return tools;
