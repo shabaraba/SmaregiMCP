@@ -385,42 +385,15 @@ export class ApiToolGenerator {
     
     try {
       // Load POS API schema
-      const posDefinition = this.mockApiDefinition || this.schemaConverter.convertTypeScriptToJson('pos');
-      if (posDefinition && posDefinition.paths) {
-        this.processPathsDefinition(posDefinition.paths, tools, 'pos');
-      }
-      else if (posDefinition && posDefinition.properties) {
+      const posDefinition = this.schemaConverter.convertTypeScriptToJson('pos');
+      if (posDefinition && posDefinition.properties) {
         this.processPathsDefinition(posDefinition.properties, tools, 'pos');
       }
       
       // Load Common API schema
-      const commonDefinition = this.mockApiDefinition || this.schemaConverter.convertTypeScriptToJson('common');
-      if (commonDefinition && commonDefinition.paths) {
-        this.processPathsDefinition(commonDefinition.paths, tools, 'common');
-      }
-      else if (commonDefinition && commonDefinition.properties) {
+      const commonDefinition = this.schemaConverter.convertTypeScriptToJson('common');
+      if (commonDefinition && commonDefinition.properties) {
         this.processPathsDefinition(commonDefinition.properties, tools, 'common');
-      }
-      
-      // Generate mock tools if none were generated
-      if (tools.length === 0) {
-        console.error('[WARN] No API tools were generated from schemas. Using mock tools.');
-        this.processPathsDefinition({
-          '/pos/products': {
-            get: {
-              summary: '商品一覧を取得',
-              parameters: [
-                {
-                  name: 'limit',
-                  in: 'query',
-                  description: '取得する件数',
-                  required: false,
-                  type: 'integer'
-                }
-              ]
-            }
-          }
-        }, tools, 'pos');
       }
       
       console.error(`[INFO] Generated ${tools.length} API tools`);
@@ -434,8 +407,9 @@ export class ApiToolGenerator {
   /**
    * Process OpenAPI paths definition and generate tools
    */
-  private processPathsDefinition(paths: any, tools: ApiTool[], defaultCategory: string = 'api'): void {
-    for (const [path, pathItem] of Object.entries<any>(paths)) {
+  private processPathsDefinition(paths: object, tools: ApiTool[], defaultCategory: string = 'api'): void {
+    for (const [path, _pathItem] of Object.entries<any>(paths)) {
+      const pathItem = _pathItem.properties;
       // Extract path parameters
       const pathParams = (path.match(/{([^}]+)}/g) || [])
         .map(param => param.slice(1, -1));

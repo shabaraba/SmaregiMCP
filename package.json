@@ -4,7 +4,7 @@
   "description": "Microservice Connection Point for integrating Smaregi POS data with Claude AI",
   "type": "module",
   "scripts": {
-    "pre_build": "npm run convert && npm run generate:api:tools",
+    "pre_build": "npm run generate:api:common && npm run generate:api:pos && npm run convert && npm run generate:typed-openapi",
     "build": "tsc",
     "format": "prettier --write \"src/**/*.ts\" \"test/**/*.ts\"",
     "start": "nest start",
@@ -21,7 +21,7 @@
     "generate:api:common": " npx openapi-typescript ./openapi/common/openapi.yaml -o ./src/schema/common.d.ts",
     "generate:api:pos": " npx openapi-typescript ./openapi/pos/openapi.yaml -o ./src/schema/pos.d.ts",
     "convert": "npx tsx ./scripts/generate-api-schema-json.ts",
-    "generate:api:tools": "npx tsx ./scripts/generate-api-tools-json.js",
+    "generate:typed-openapi": "NODE_OPTIONS=\"--max-old-space-size=8192\" npx typed-openapi ./openapi/pos/openapi.yaml -r zod --output ./src/schema/zod/pos.zod.ts",
     "mcp:init": "cp -r ./src/tools/generated ./dist/tools/ && node dist/main.js init",
     "mcp:run": "node dist/main.js run",
     "mcp:help": "node dist/main.js",
@@ -83,7 +83,9 @@
     "ts-jest": "^29.1.0",
     "ts-loader": "^9.4.3",
     "ts-node": "^10.9.2",
+    "ts-to-zod": "^3.15.0",
     "tsconfig-paths": "^4.2.0",
+    "typed-openapi": "^0.10.1",
     "typescript": "^5.0.0",
     "typescript-eslint": "^8.26.1",
     "typescript-json-schema": "^0.65.1"

@@ -1,8 +1,10 @@
 import { McpServer } from '@modelcontextprotocol/sdk/server/mcp.js';
 import { z } from 'zod';
+import * as fs from 'fs';
 import { AuthService } from '../auth/auth.service.js';
 import { ApiService } from '../api/api.service.js';
 import { ApiToolGenerator } from '../conversion/tool-generator.js';
+import { ZodApiToolGenerator } from '../tools/generators/zod-api-tool-generator.js';
 
 /**
  * Register all tools to the MCP server
@@ -28,7 +30,10 @@ export async function registerTools(
   // Register API info tools
   registerApiInfoTools(mcpServer, apiService);
   
-  // Register generated API tools
+  // Register Zod-based API tools
+  await registerZodApiTools(mcpServer, apiService);
+  
+  // Register generated API tools (will be gradually replaced by Zod-based tools)
   await registerGeneratedApiTools(mcpServer, apiToolGenerator, apiService);
   
   console.error('[INFO] Tools registered successfully');
@@ -61,7 +66,7 @@ function registerAuthTools(
           content: [
             {
               type: 'text',
-              text: `# 認証URL\n\n以下のURLをブラウザで開き、スマレジアカウントでログインしてください：\n\n${result.url}\n\n認証が完了したら、\`checkAuthStatus\`ツールを使用して認証状態を確認できます。セッションID: \`${result.sessionId}\``
+              text: `# 認証URL\n\n以下のURLをブラウザで開き、スマレジアカウントでログインしてください：\n\n${result.url}\n\n認証リンクをユーザーに提示してください。\n\n認証が完了したら、\`checkAuthStatus\`ツールを使用して認証状態を確認できます。セッションID: \`${result.sessionId}\``
             }
           ]
         };
@@ -381,6 +386,144 @@ function registerApiInfoTools(
 }
 
 /**
+ * 動的に生成されたAPIツールでリクエストを実行する共通関数
+ * @param params ツールパラメータ
+ * @param endpoint APIエンドポイント
+ * @param method HTTPメソッド
+ * @param apiService APIサービス
+ * @param pathParams パスパラメータ
+ * @param queryParams クエリパラメータ
+ * @param bodyParams ボディパラメータ
+ * @returns ツール実行結果
+ */
+async function executeApiRequest(
+  params: Record<string, any>,
+  endpoint: string,
+  method: string,
+  apiService: ApiService,
+  pathParams: Record<string, any> = {},
+  queryParams: Record<string, any> = {},
+  bodyParams: Record<string, any> | undefined = undefined
+): Promise<any> {
+  try {
+    console.error(`[DEBUG] API call: ${method} ${endpoint}`);
+    console.error(`[DEBUG] Path params: ${JSON.stringify(pathParams)}`);
+    console.error(`[DEBUG] Query params: ${JSON.stringify(queryParams)}`);
+    if (bodyParams) {
+      console.error(`[DEBUG] Body params: ${JSON.stringify(bodyParams)}`);
+    }
+    
+    const { sessionId } = params;
+    
+    const response = await apiService.executeRequest({
+      sessionId,
+      endpoint,
+      method,
+      data: bodyParams,
+      path: pathParams,
+      query: queryParams
+    });
+    
+    let responseText = `# API ${method} ${endpoint} レスポンス\n\n`;
+    
+    responseText += `## リクエスト情報\n`;
+    responseText += `- エンドポイント: \`${endpoint}\`\n`;
+    responseText += `- メソッド: \`${method}\`\n`;
+    
+    if (Object.keys(pathParams).length > 0) {
+      responseText += `- パスパラメータ: \`${JSON.stringify(pathParams)}\`\n`;
+    }
+    
+    if (Object.keys(queryParams).length > 0) {
+      responseText += `- クエリパラメータ: \`${JSON.stringify(queryParams)}\`\n`;
+    }
+    
+    if (bodyParams && Object.keys(bodyParams).length > 0) {
+      responseText += `- リクエストボディ: \`${JSON.stringify(bodyParams)}\`\n`;
+    }
+    
+    responseText += `\n## レスポンスデータ\n\n\`\`\`json\n${JSON.stringify(response, null, 2)}\n\`\`\`\n`;
+    
+    return {
+      content: [
+        {
+          type: 'text',
+          text: responseText
+        }
+      ]
+    };
+  } catch (error) {
+    console.error(`[ERROR] API request failed:`, error);
+    return {
+      content: [
+        {
+          type: 'text',
+          text: `API リクエスト失敗: ${error instanceof Error ? error.message : String(error)}`
+        }
+      ],
+      isError: true
+    };
+  }
+}
+
+/**
+ * ZodスキーマからAPIツールを登録
+ * @param mcpServer - The MCP server instance
+ * @param apiService - The API service
+ * @returns Number of registered tools
+ */
+async function registerZodApiTools(
+  mcpServer: McpServer,
+  apiService: ApiService
+): Promise<number> {
+  try {
+    console.error('[INFO] Registering Zod API tools...');
+    
+    // ZodApiToolGeneratorのインスタンス化
+    const zodGenerator = new ZodApiToolGenerator();
+    
+    // Zodスキーマからツールを生成
+    const tools = await zodGenerator.generateToolsFromZodSchema();
+    console.error(`[INFO] Generated ${tools.length} Zod API tools`);
+    
+    // ツールを登録
+    let registeredCount = 0;
+    
+    // カテゴリ別に整理
+    const toolsByCategory = new Map<string, any[]>();
+    for (const tool of tools) {
+      const category = tool.name.split('.')[0] || 'default';
+      
+      if (!toolsByCategory.has(category)) {
+        toolsByCategory.set(category, []);
+      }
+      
+      toolsByCategory.get(category)!.push(tool);
+    }
+    
+    // カテゴリ別に登録
+    for (const [category, categoryTools] of toolsByCategory.entries()) {
+      console.error(`[INFO] Registering ${categoryTools.length} Zod tools for category: ${category}`);
+      
+      for (const tool of categoryTools) {
+        try {
+          registerSingleTool(mcpServer, tool, apiService);
+          registeredCount++;
+        } catch (error) {
+          console.error(`[ERROR] Failed to register Zod tool ${tool.name}:`, error);
+        }
+      }
+    }
+    
+    console.error(`[INFO] Successfully registered ${registeredCount} Zod API tools`);
+    return registeredCount;
+  } catch (error) {
+    console.error('[ERROR] Failed to register Zod API tools:', error);
+    return 0;
+  }
+}
+
+/**
  * Register generated API tools
  * @param mcpServer - The MCP server instance
  * @param apiToolGenerator - The API tool generator
@@ -395,112 +538,184 @@ async function registerGeneratedApiTools(
   try {
     console.error('[INFO] Registering generated API tools...');
     
-    // Generate API tools
-    const tools = apiToolGenerator.generateTools();
+    const toolsJsonPath = `${process.cwd()}/src/tools/generated/api-tools.json`;
     
-    // Register each tool
-    for (const tool of tools) {
-      console.error(`[DEBUG] Registering tool: ${tool.name}`);
+    if (!fs.existsSync(toolsJsonPath)) {
+      console.error(`[ERROR] API tools JSON file not found: ${toolsJsonPath}`);
+      console.error('[INFO] Falling back to dynamic tool generation');
       
-      // Convert parameters to Zod schema
-      const paramsSchema: Record<string, z.ZodTypeAny> = {};
-      
-      // Always add sessionId parameter
-      paramsSchema['sessionId'] = z.string().describe('認証済みのセッションID');
-      
-      tool.parameters.forEach(param => {
-        // Use default z.string() if schema is not set
-        const schema = param.schema || z.string();
-        
-        if (param.required) {
-          paramsSchema[param.name] = schema.describe(param.description);
-        } else {
-          paramsSchema[param.name] = schema.optional().describe(param.description);
-        }
-      });
-      
-      // Register tool
-      mcpServer.tool(
-        tool.name,
-        tool.description,
-        paramsSchema,
-        async (params) => {
-          try {
-            // Classify parameters as path, query, or body
-            const pathParams: Record<string, any> = {};
-            const queryParams: Record<string, any> = {};
-            let bodyParams: Record<string, any> | undefined = undefined;
-            
-            // Distribute parameters to appropriate categories
-            tool.parameters.forEach(param => {
-              if (params[param.name] === undefined) return;
-              
-              switch (param.type) {
-                case 'path':
-                  pathParams[param.name] = params[param.name];
-                  break;
-                case 'query':
-                  queryParams[param.name] = params[param.name];
-                  break;
-                case 'body':
-                  if (!bodyParams) bodyParams = {};
-                  bodyParams[param.name] = params[param.name];
-                  break;
-              }
-            });
-            
-            console.error(`[DEBUG] API call: ${tool.method} ${tool.path}`);
-            console.error(`[DEBUG] Path params: ${JSON.stringify(pathParams)}`);
-            console.error(`[DEBUG] Query params: ${JSON.stringify(queryParams)}`);
-            if (bodyParams) {
-              console.error(`[DEBUG] Body params: ${JSON.stringify(bodyParams)}`);
-            }
-            
-            // Execute API request via API service
-            const response = await apiService.executeRequest({
-              sessionId: params.sessionId,
-              endpoint: tool.path,
-              method: tool.method,
-              data: bodyParams,
-              path: pathParams,
-              query: queryParams
-            });
-            
-            // Format response with markdown
-            let content = `# ${tool.name} レスポンス\n\n`;
-            content += `## リクエスト情報\n`;
-            content += `- エンドポイント: \`${tool.path}\`\n`;
-            content += `- メソッド: \`${tool.method}\`\n\n`;
-            content += `## レスポンスデータ\n\n\`\`\`json\n${JSON.stringify(response, null, 2)}\n\`\`\`\n`;
-            
-            return {
-              content: [
-                {
-                  type: 'text',
-                  text: content
-                }
-              ]
-            };
-          } catch (error) {
-            console.error(`[ERROR] Tool execution error (${tool.name}): ${error}`);
-            return {
-              content: [
-                {
-                  type: 'text',
-                  text: `Error executing ${tool.name}: ${error instanceof Error ? error.message : String(error)}`
-                }
-              ],
-              isError: true
-            };
-          }
-        }
-      );
+      const tools = apiToolGenerator.generateTools();
+      return registerToolsFromArray(mcpServer, tools, apiService);
     }
     
-    console.error(`[INFO] Registered ${tools.length} API tools`);
-    return tools.length;
+    try {
+      const toolsJson = fs.readFileSync(toolsJsonPath, 'utf8');
+      const tools = JSON.parse(toolsJson);
+      
+      console.error(`[INFO] Loaded ${tools.length} API tools from JSON file`);
+      return registerToolsFromArray(mcpServer, tools, apiService);
+    } catch (error) {
+      console.error(`[ERROR] Failed to parse API tools JSON: ${error}`);
+      
+      console.error('[INFO] Falling back to dynamic tool generation');
+      const tools = apiToolGenerator.generateTools();
+      return registerToolsFromArray(mcpServer, tools, apiService);
+    }
   } catch (error) {
     console.error(`[ERROR] Failed to register API tools: ${error}`);
     return 0;
+  }
+}
+
+/**
+ * Register tools from array
+ * @param mcpServer - The MCP server instance
+ * @param tools - Array of API tools
+ * @param apiService - The API service
+ * @returns Number of registered tools
+ */
+function registerToolsFromArray(
+  mcpServer: McpServer,
+  tools: any[],
+  apiService: ApiService
+): number {
+  try {
+    const toolsByCategory = new Map<string, any[]>();
+    
+    for (const tool of tools) {
+      const category = tool.category || 'default';
+      
+      if (!toolsByCategory.has(category)) {
+        toolsByCategory.set(category, []);
+      }
+      
+      toolsByCategory.get(category)!.push(tool);
+    }
+    
+    let registeredCount = 0;
+    
+    for (const [category, categoryTools] of toolsByCategory.entries()) {
+      console.error(`[INFO] Registering ${categoryTools.length} tools for category: ${category}`);
+      
+      for (const tool of categoryTools) {
+        registerSingleTool(mcpServer, tool, apiService);
+        registeredCount++;
+      }
+    }
+    
+    console.error(`[INFO] Registered ${registeredCount} API tools`);
+    return registeredCount;
+  } catch (error) {
+    console.error(`[ERROR] Failed to register tools from array: ${error}`);
+    return 0;
+  }
+}
+
+/**
+ * Register a single tool
+ * @param mcpServer - The MCP server instance
+ * @param tool - API tool definition
+ * @param apiService - The API service
+ */
+function registerSingleTool(
+  mcpServer: McpServer,
+  tool: any,
+  apiService: ApiService
+): void {
+  try {
+    console.error(`[DEBUG] Registering tool: ${tool.name}`);
+    
+    const paramsSchema: Record<string, z.ZodTypeAny> = {};
+    
+    paramsSchema['sessionId'] = z.string().describe('認証済みのセッションID');
+    
+    for (const param of tool.parameters) {
+      if (param.name === 'sessionId') continue; // 重複を避ける
+      
+      let schema: z.ZodTypeAny;
+      
+      if (param.schema) {
+        switch (param.schema.type) {
+          case 'integer':
+            schema = z.number().int();
+            break;
+          case 'number':
+            schema = z.number();
+            break;
+          case 'boolean':
+            schema = z.boolean();
+            break;
+          case 'array':
+            schema = z.array(z.any());
+            break;
+          case 'object':
+            schema = z.record(z.any());
+            break;
+          default:
+            schema = z.string();
+        }
+      } else {
+        schema = z.string();
+      }
+      
+      if (param.required) {
+        paramsSchema[param.name] = schema.describe(param.description);
+      } else {
+        paramsSchema[param.name] = schema.optional().describe(param.description);
+      }
+    }
+    
+    mcpServer.tool(
+      tool.name,
+      tool.description,
+      paramsSchema,
+      async (params) => {
+        try {
+          const pathParams: Record<string, any> = {};
+          const queryParams: Record<string, any> = {};
+          let bodyParams: Record<string, any> | undefined = undefined;
+          
+          for (const param of tool.parameters) {
+            if (param.name === 'sessionId' || params[param.name] === undefined) continue;
+            
+            switch (param.type) {
+              case 'path':
+                pathParams[param.name] = params[param.name];
+                break;
+              case 'query':
+                queryParams[param.name] = params[param.name];
+                break;
+              case 'body':
+                if (!bodyParams) bodyParams = {};
+                bodyParams[param.name] = params[param.name];
+                break;
+            }
+          }
+          
+          return await executeApiRequest(
+            params,
+            tool.path,
+            tool.method,
+            apiService,
+            pathParams,
+            queryParams,
+            bodyParams
+          );
+        } catch (error) {
+          console.error(`[ERROR] ${tool.name} execution error:`, error);
+          return {
+            content: [
+              {
+                type: 'text',
+                text: `ツール実行エラー (${tool.name}): ${error instanceof Error ? error.message : String(error)}`
+              }
+            ],
+            isError: true
+          };
+        }
+      }
+    );
+  } catch (error) {
+    console.error(`[ERROR] Failed to register tool ${tool.name}: ${error}`);
   }
 }
