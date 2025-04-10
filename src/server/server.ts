@@ -1,8 +1,8 @@
 import { McpServer } from '@modelcontextprotocol/sdk/server/mcp.js';
 import { SchemaConverter } from '../conversion/schema-converter.js';
 import { ApiToolGenerator } from '../conversion/tool-generator.js';
-import { AuthService } from '../auth/auth.service.js';
-import { ApiService } from '../api/api.service.js';
+import { AuthService } from '../auth/auth.service';
+import { ApiService } from '../api/api.service';
 import { packageInfo } from '../utils/package-info.js';
 import { registerResources } from './resources.js';
 import { registerTools } from './tools.js';
