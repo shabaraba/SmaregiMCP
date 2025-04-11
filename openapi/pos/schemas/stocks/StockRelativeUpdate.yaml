@@ -7,18 +7,22 @@ properties:
   productId:
     type: integer
     description: 商品ID
-  addQuantity:
+  stockAmount:
     type: number
     format: float
     description: 増減数量（正の値で増加、負の値で減少）
   division:
     type: integer
     description: 区分（1:取引、2:入庫、3:出庫、4:棚卸、5:発注、6:受注、7:ロス、8:その他）
-  memo:
-    type: string
-    description: メモ
+  stockHistory:
+    type: object
+    description: 在庫履歴情報
+    properties:
+      memo:
+        type: string
+        description: 在庫履歴メモ
 required:
   - storeId
   - productId
-  - addQuantity
+  - stockAmount
   - division

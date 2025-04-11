@@ -95,6 +95,12 @@
   $ref: './stocks/stocks.yaml'
 /stocks/changes:
   $ref: './stocks/stocks_changes.yaml'
+/stock/{product_id}/add:
+  $ref: './stocks/stock_product_id_add.yaml'
+/stock/add/bulk:
+  $ref: './stocks/stock_add_bulk.yaml'
+/stock/changes/{product_id}/{store_id}:
+  $ref: './stocks/stock_changes_product_id_store_id.yaml'
 
 # セール系API
 /bargain:
@@ -303,3 +309,40 @@
   $ref: './customer_classification/customer_types.yaml'
 /customer_type_sections:
   $ref: './customer_classification/customer_type_sections.yaml'
+
+/webhook/categories:
+  $ref: './webhooks/webhook_categories.yaml'
+/webhook/category-groups:
+  $ref: './webhooks/webhook_category_groups.yaml'
+/webhook/products:
+  $ref: './webhooks/webhook_products.yaml'
+/webhook/sales:
+  $ref: './webhooks/webhook_sales.yaml'
+/webhook/option-groups:
+  $ref: './webhooks/webhook_option_groups.yaml'
+/webhook/stores:
+  $ref: './webhooks/webhook_stores.yaml'
+/webhook/staffs:
+  $ref: './webhooks/webhook_staffs.yaml'
+/webhook/transactions:
+  $ref: './webhooks/webhook_transactions.yaml'
+/webhook/coupons:
+  $ref: './webhooks/webhook_coupons.yaml'
+/webhook/layaways:
+  $ref: './webhooks/webhook_layaways.yaml'
+/webhook/pre-sales:
+  $ref: './webhooks/webhook_pre_sales.yaml'
+/webhook/stock:
+  $ref: './webhooks/webhook_stock.yaml'
+/webhook/payment-methods:
+  $ref: './webhooks/webhook_payment_methods.yaml'
+/webhook/losses:
+  $ref: './webhooks/webhook_losses.yaml'
+/webhook/orders:
+  $ref: './webhooks/webhook_orders.yaml'
+/webhook/arrivals:
+  $ref: './webhooks/webhook_arrivals.yaml'
+/webhook/shipments:
+  $ref: './webhooks/webhook_shipments.yaml'
+/webhook/stocktakings:
+  $ref: './webhooks/webhook_stocktakings.yaml'

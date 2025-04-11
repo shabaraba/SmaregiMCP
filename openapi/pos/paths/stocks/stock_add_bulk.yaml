@@ -1,0 +1,43 @@
+post:
+  tags:
+    - 在庫
+  summary: 在庫一括相対値更新
+  description: 在庫情報を一括更新します。在庫数は、現在の値に対し、入力された値を加算（入力値が負の場合は減算）した値に更新します。※在庫の更新処理は非同期で実行されます。処理完了後、指定されたコールバックURLにWebhook通知されます。※在庫は1リクエストにつき100件（店舗）まで登録できます。
+  operationId: updateStockBulkRelative
+  requestBody:
+    content:
+      application/json:
+        schema:
+          $ref: '../../schemas/stocks/StockBulkRelativeUpdate.yaml'
+    required: true
+  responses:
+    '202':
+      description: 処理受付完了
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              requestId:
+                type: integer
+                description: リクエストID
+              callbackUrl:
+                type: string
+                description: コールバックURL
+    '400':
+      description: バリデーションエラー
+      content:
+        application/json:
+          schema:
+            $ref: '../../schemas/common/Error.yaml'
+    '401':
+      description: 認証エラー
+      content:
+        application/json:
+          schema:
+            $ref: '../../schemas/common/Error.yaml'
+  security:
+    - AppAccessToken:
+        - pos.stock:write
+    - UserAccessToken:
+        - pos.stock:write

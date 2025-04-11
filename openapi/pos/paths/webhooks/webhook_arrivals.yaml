@@ -1,0 +1,47 @@
+post:
+  tags:
+    - Webhook
+  summary: 入荷
+  description: 入荷の登録・更新・削除時にWebhookを送信します。
+  operationId: webhookArrivals
+  parameters:
+    - name: Smaregi-Event
+      in: header
+      description: イベント名
+      required: true
+      schema:
+        type: string
+        enum:
+          - pos:arrivals
+  requestBody:
+    content:
+      application/json:
+        schema:
+          type: object
+          properties:
+            contractId:
+              type: string
+              description: 契約ID
+            event:
+              type: string
+              description: イベント
+            action:
+              type: string
+              description: アクション
+              enum:
+                - created
+                - edited
+                - deleted
+            arrivalIds:
+              type: array
+              description: 入荷IDリスト
+              items:
+                type: string
+          required:
+            - contractId
+            - event
+            - action
+            - arrivalIds
+  responses:
+    '200':
+      description: 成功

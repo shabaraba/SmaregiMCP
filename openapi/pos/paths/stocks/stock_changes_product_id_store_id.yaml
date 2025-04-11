@@ -1,0 +1,68 @@
+get:
+  tags:
+    - 在庫
+  summary: 在庫変動履歴取得
+  description: 指定された商品IDと店舗IDの在庫変動履歴を取得します。
+  operationId: getStockChanges
+  parameters:
+    - name: product_id
+      in: path
+      description: 商品ID
+      required: true
+      schema:
+        type: integer
+    - name: store_id
+      in: path
+      description: 店舗ID
+      required: true
+      schema:
+        type: integer
+    - name: limit
+      in: query
+      description: 取得件数
+      schema:
+        type: integer
+        default: 20
+    - name: page
+      in: query
+      description: ページ番号
+      schema:
+        type: integer
+        default: 1
+  responses:
+    '200':
+      description: 成功
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              changes:
+                type: array
+                items:
+                  $ref: '../../schemas/stocks/StockChange.yaml'
+              pagination:
+                $ref: '../../schemas/common/Pagination.yaml'
+    '400':
+      description: バリデーションエラー
+      content:
+        application/json:
+          schema:
+            $ref: '../../schemas/common/Error.yaml'
+    '401':
+      description: 認証エラー
+      content:
+        application/json:
+          schema:
+            $ref: '../../schemas/common/Error.yaml'
+    '404':
+      description: 指定された在庫情報が存在しない
+      content:
+        application/json:
+          schema:
+            $ref: '../../schemas/common/Error.yaml'
+  security:
+    - AppAccessToken:
+        - pos.stock-changes:read
+    - UserAccessToken:
+        - pos.stock-changes:read

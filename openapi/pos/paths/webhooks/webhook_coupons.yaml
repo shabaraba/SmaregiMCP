@@ -1,0 +1,47 @@
+post:
+  tags:
+    - Webhook
+  summary: クーポン
+  description: クーポンの登録・更新・削除時にWebhookを送信します。
+  operationId: webhookCoupons
+  parameters:
+    - name: Smaregi-Event
+      in: header
+      description: イベント名
+      required: true
+      schema:
+        type: string
+        enum:
+          - pos:coupons
+  requestBody:
+    content:
+      application/json:
+        schema:
+          type: object
+          properties:
+            contractId:
+              type: string
+              description: 契約ID
+            event:
+              type: string
+              description: イベント
+            action:
+              type: string
+              description: アクション
+              enum:
+                - created
+                - edited
+                - deleted
+            couponIds:
+              type: array
+              description: クーポンIDリスト
+              items:
+                type: string
+          required:
+            - contractId
+            - event
+            - action
+            - couponIds
+  responses:
+    '200':
+      description: 成功

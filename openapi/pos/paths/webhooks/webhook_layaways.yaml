@@ -1,0 +1,47 @@
+post:
+  tags:
+    - Webhook
+  summary: 取置
+  description: 取置の登録・更新・削除時にWebhookを送信します。
+  operationId: webhookLayaways
+  parameters:
+    - name: Smaregi-Event
+      in: header
+      description: イベント名
+      required: true
+      schema:
+        type: string
+        enum:
+          - pos:layaways
+  requestBody:
+    content:
+      application/json:
+        schema:
+          type: object
+          properties:
+            contractId:
+              type: string
+              description: 契約ID
+            event:
+              type: string
+              description: イベント
+            action:
+              type: string
+              description: アクション
+              enum:
+                - created
+                - edited
+                - deleted
+            layawayIds:
+              type: array
+              description: 取置IDリスト
+              items:
+                type: string
+          required:
+            - contractId
+            - event
+            - action
+            - layawayIds
+  responses:
+    '200':
+      description: 成功

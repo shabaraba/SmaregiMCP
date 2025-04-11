@@ -1,0 +1,47 @@
+post:
+  tags:
+    - Webhook
+  summary: 支払方法
+  description: 支払方法の登録・更新・削除時にWebhookを送信します。
+  operationId: webhookPaymentMethods
+  parameters:
+    - name: Smaregi-Event
+      in: header
+      description: イベント名
+      required: true
+      schema:
+        type: string
+        enum:
+          - pos:payment-methods
+  requestBody:
+    content:
+      application/json:
+        schema:
+          type: object
+          properties:
+            contractId:
+              type: string
+              description: 契約ID
+            event:
+              type: string
+              description: イベント
+            action:
+              type: string
+              description: アクション
+              enum:
+                - created
+                - edited
+                - deleted
+            paymentMethodIds:
+              type: array
+              description: 支払方法IDリスト
+              items:
+                type: string
+          required:
+            - contractId
+            - event
+            - action
+            - paymentMethodIds
+  responses:
+    '200':
+      description: 成功

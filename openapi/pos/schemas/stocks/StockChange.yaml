@@ -1,7 +1,7 @@
 type: object
 description: 在庫変動履歴情報
 properties:
-  stockChangeId:
+  id:
     type: integer
     description: 在庫変動ID
   storeId:
@@ -28,7 +28,7 @@ properties:
   categoryName:
     type: string
     description: 部門名
-  division:
+  stockDivision:
     type: integer
     description: 区分（1:取引、2:入庫、3:出庫、4:棚卸、5:発注、6:受注、7:ロス、8:その他）
   divisionName:
@@ -38,24 +38,45 @@ properties:
     type: number
     format: float
     description: 変動前在庫数
-  changeQuantity:
+  amount:
     type: number
     format: float
     description: 変動数
-  afterQuantity:
+  stockAmount:
     type: number
     format: float
     description: 変動後在庫数
-  targetDate:
+  targetDateTime:
     type: string
     format: date
     description: 変動日
+  upDateTime:
+    type: string
+    format: date-time
+    description: 更新日時
   staffId:
     type: integer
     description: 担当スタッフID
   staffName:
     type: string
     description: 担当スタッフ名
+  fromStoreId:
+    type: integer
+    description: 移動元店舗ID
+  toStoreId:
+    type: integer
+    description: 移動先店舗ID
+  taxDivision:
+    type: integer
+    description: 税区分
+  price:
+    type: number
+    format: float
+    description: 価格
+  cost:
+    type: number
+    format: float
+    description: 原価
   refId:
     type: integer
     description: 関連ID（取引ID、入庫ID、出庫ID等）
@@ -63,11 +84,11 @@ properties:
     type: string
     description: メモ
 required:
-  - stockChangeId
+  - id
   - storeId
   - productId
-  - division
+  - stockDivision
   - beforeQuantity
-  - changeQuantity
-  - afterQuantity
-  - targetDate
+  - amount
+  - stockAmount
+  - targetDateTime
