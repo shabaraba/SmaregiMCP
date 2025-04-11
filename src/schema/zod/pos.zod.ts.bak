@@ -2833,10 +2833,10 @@ export const get_Categories = {
   requestFormat: z.literal("json"),
   parameters: z.object({
     query: z.object({
-      fields: z.array(z.string()).optional().describe("検索パラメータ（カンマ区切りで指定可）"),
+      fields: z.array(z.string()).optional().describe("取得したいフィールド名（カンマ区切りで指定可）"),
       sort: z.string().optional().describe("並び順（カンマ区切りで指定可）"),
-      limit: z.number().optional().describe("上限数"),
-      page: z.number().optional().describe("ページ"),
+      limit: z.number().optional().describe("取得上限数"),
+      page: z.number().optional().describe("ページ番号"),
       category_code: z.string().optional(),
       level: z.union([z.literal("1"), z.literal("2"), z.literal("3")]).optional().describe("階層レベル"),
     }),
@@ -2868,7 +2868,7 @@ export const get_CategoriesId = {
   requestFormat: z.literal("json"),
   parameters: z.object({
     query: z.object({
-      fields: z.array(z.string()).optional().describe("検索パラメータ（カンマ区切りで指定可）"),
+      fields: z.array(z.string()).optional().describe("取得したいフィールド名（カンマ区切りで指定可）"),
     }),
     path: z.object({
       contract_id: z.string(),
@@ -2914,10 +2914,10 @@ export const get_Category_groups = {
   requestFormat: z.literal("json"),
   parameters: z.object({
     query: z.object({
-      fields: z.array(z.string()).optional().describe("検索パラメータ（カンマ区切りで指定可）"),
+      fields: z.array(z.string()).optional().describe("取得したいフィールド名（カンマ区切りで指定可）"),
       sort: z.string().optional().describe("並び順（カンマ区切りで指定可）"),
-      limit: z.number().optional().describe("上限数"),
-      page: z.number().optional().describe("ページ"),
+      limit: z.number().optional().describe("取得上限数"),
+      page: z.number().optional().describe("ページ番号"),
       category_group_id: z.string().optional(),
       category_group_code: z.string().optional(),
     }),
@@ -2978,8 +2978,8 @@ export const get_GetProducts = {
   requestFormat: z.literal("json"),
   parameters: z.object({
     query: z.object({
-      limit: z.number().optional().describe("上限数"),
-      page: z.number().optional().describe("ページ"),
+      limit: z.number().optional().describe("取得上限数"),
+      page: z.number().optional().describe("ページ番号"),
       sort: z
         .union([
           z.literal("productId"),
@@ -3004,14 +3004,14 @@ export const get_GetProducts = {
       storeId: z.number().optional().describe("店舗ID"),
       status: z.union([z.literal(0), z.literal(1)]).optional().describe("ステータス"),
       productType: z.union([z.literal(0), z.literal(1), z.literal(2), z.literal(9)]).optional().describe("商品タイプ"),
-      fields: z.array(z.string()).optional().describe("検索パラメータ（カンマ区切りで指定可）"),
+      fields: z.array(z.string()).optional().describe("取得したいフィールド名（カンマ区切りで指定可）"),
     }),
   }),
   response: z.object({
     items: z.array(Product).optional(),
     total: z.number().optional(),
-    limit: z.number().optional().describe("上限数"),
-    page: z.number().optional().describe("ページ"),
+    limit: z.number().optional().describe("取得上限数"),
+    page: z.number().optional().describe("ページ番号"),
   }),
 };
 
@@ -3033,7 +3033,7 @@ export const get_GetProduct = {
   requestFormat: z.literal("json"),
   parameters: z.object({
     query: z.object({
-      fields: z.array(z.string()).optional().describe("検索パラメータ（カンマ区切りで指定可）"),
+      fields: z.array(z.string()).optional().describe("取得したいフィールド名（カンマ区切りで指定可）"),
     }),
     path: z.object({
       id: z.number().describe("顧客タイプセクションID"),
@@ -3105,7 +3105,7 @@ export const get_GetProductPrices = {
       storeId: z.number().optional().describe("店舗ID"),
       priceDivision: z.number().optional().describe("価格区分"),
       startDate: z.string().optional().describe("適用開始日"),
-      fields: z.array(z.string()).optional().describe("検索パラメータ（カンマ区切りで指定可）"),
+      fields: z.array(z.string()).optional().describe("取得したいフィールド名（カンマ区切りで指定可）"),
     }),
     path: z.object({
       id: z.number().describe("顧客タイプセクションID"),
@@ -3158,9 +3158,9 @@ export const get_GetProductPriceChanges = {
     query: z.object({
       storeId: z.number().optional().describe("店舗ID"),
       priceDivision: z.number().optional().describe("価格区分"),
-      limit: z.number().optional().describe("上限数"),
-      page: z.number().optional().describe("ページ"),
-      fields: z.array(z.string()).optional().describe("検索パラメータ（カンマ区切りで指定可）"),
+      limit: z.number().optional().describe("取得上限数"),
+      page: z.number().optional().describe("ページ番号"),
+      fields: z.array(z.string()).optional().describe("取得したいフィールド名（カンマ区切りで指定可）"),
     }),
     path: z.object({
       id: z.number().describe("顧客タイプセクションID"),
@@ -3169,8 +3169,8 @@ export const get_GetProductPriceChanges = {
   response: z.object({
     items: z.array(ProductPriceChange).optional(),
     total: z.number().optional(),
-    limit: z.number().optional().describe("上限数"),
-    page: z.number().optional().describe("ページ"),
+    limit: z.number().optional().describe("取得上限数"),
+    page: z.number().optional().describe("ページ番号"),
   }),
 };
 
@@ -3181,7 +3181,7 @@ export const get_GetProductReserveItems = {
   requestFormat: z.literal("json"),
   parameters: z.object({
     query: z.object({
-      fields: z.array(z.string()).optional().describe("検索パラメータ（カンマ区切りで指定可）"),
+      fields: z.array(z.string()).optional().describe("取得したいフィールド名（カンマ区切りで指定可）"),
     }),
     path: z.object({
       id: z.number().describe("顧客タイプセクションID"),
@@ -3232,18 +3232,18 @@ export const get_GetProductAttributes = {
   requestFormat: z.literal("json"),
   parameters: z.object({
     query: z.object({
-      limit: z.number().optional().describe("上限数"),
-      page: z.number().optional().describe("ページ"),
+      limit: z.number().optional().describe("取得上限数"),
+      page: z.number().optional().describe("ページ番号"),
       attributeNo: z.number().optional().describe("属性番号"),
       attributeName: z.string().optional().describe("属性名称"),
-      fields: z.array(z.string()).optional().describe("検索パラメータ（カンマ区切りで指定可）"),
+      fields: z.array(z.string()).optional().describe("取得したいフィールド名（カンマ区切りで指定可）"),
     }),
   }),
   response: z.object({
     items: z.array(ProductAttribute).optional(),
     total: z.number().optional(),
-    limit: z.number().optional().describe("上限数"),
-    page: z.number().optional().describe("ページ"),
+    limit: z.number().optional().describe("取得上限数"),
+    page: z.number().optional().describe("ページ番号"),
   }),
 };
 
@@ -3265,19 +3265,19 @@ export const get_GetProductAttributeItems = {
   requestFormat: z.literal("json"),
   parameters: z.object({
     query: z.object({
-      limit: z.number().optional().describe("上限数"),
-      page: z.number().optional().describe("ページ"),
+      limit: z.number().optional().describe("取得上限数"),
+      page: z.number().optional().describe("ページ番号"),
       attributeNo: z.number().optional().describe("属性番号"),
       attributeItemCode: z.string().optional().describe("属性項目コード"),
       attributeItemName: z.string().optional().describe("属性項目名称"),
-      fields: z.array(z.string()).optional().describe("検索パラメータ（カンマ区切りで指定可）"),
+      fields: z.array(z.string()).optional().describe("取得したいフィールド名（カンマ区切りで指定可）"),
     }),
   }),
   response: z.object({
     items: z.array(ProductAttributeItem).optional(),
     total: z.number().optional(),
-    limit: z.number().optional().describe("上限数"),
-    page: z.number().optional().describe("ページ"),
+    limit: z.number().optional().describe("取得上限数"),
+    page: z.number().optional().describe("ページ番号"),
   }),
 };
 
@@ -3300,7 +3300,7 @@ export const get_GetProductStores = {
   parameters: z.object({
     query: z.object({
       storeId: z.number().optional().describe("店舗ID"),
-      fields: z.array(z.string()).optional().describe("検索パラメータ（カンマ区切りで指定可）"),
+      fields: z.array(z.string()).optional().describe("取得したいフィールド名（カンマ区切りで指定可）"),
     }),
     path: z.object({
       id: z.number().describe("顧客タイプセクションID"),
@@ -3352,7 +3352,7 @@ export const get_GetProductInventoryReservations = {
   parameters: z.object({
     query: z.object({
       reservationProductId: z.number().optional().describe("引当商品ID"),
-      fields: z.array(z.string()).optional().describe("検索パラメータ（カンマ区切りで指定可）"),
+      fields: z.array(z.string()).optional().describe("取得したいフィールド名（カンマ区切りで指定可）"),
     }),
     path: z.object({
       id: z.number().describe("顧客タイプセクションID"),
@@ -3403,18 +3403,18 @@ export const get_GetProductReserveItemLabels = {
   requestFormat: z.literal("json"),
   parameters: z.object({
     query: z.object({
-      limit: z.number().optional().describe("上限数"),
-      page: z.number().optional().describe("ページ"),
+      limit: z.number().optional().describe("取得上限数"),
+      page: z.number().optional().describe("ページ番号"),
       no: z.number().optional().describe("予約項目ラベル番号"),
       name: z.string().optional().describe("セクション名"),
-      fields: z.array(z.string()).optional().describe("検索パラメータ（カンマ区切りで指定可）"),
+      fields: z.array(z.string()).optional().describe("取得したいフィールド名（カンマ区切りで指定可）"),
     }),
   }),
   response: z.object({
     items: z.array(ProductReserveItemLabel).optional(),
     total: z.number().optional(),
-    limit: z.number().optional().describe("上限数"),
-    page: z.number().optional().describe("ページ"),
+    limit: z.number().optional().describe("取得上限数"),
+    page: z.number().optional().describe("ページ番号"),
   }),
 };
 
@@ -3436,17 +3436,17 @@ export const get_GetProductImages = {
   requestFormat: z.literal("json"),
   parameters: z.object({
     query: z.object({
-      limit: z.number().optional().describe("上限数"),
-      page: z.number().optional().describe("ページ"),
+      limit: z.number().optional().describe("取得上限数"),
+      page: z.number().optional().describe("ページ番号"),
       productId: z.number().optional().describe("商品ID"),
-      fields: z.array(z.string()).optional().describe("検索パラメータ（カンマ区切りで指定可）"),
+      fields: z.array(z.string()).optional().describe("取得したいフィールド名（カンマ区切りで指定可）"),
     }),
   }),
   response: z.object({
     items: z.array(ProductImage).optional(),
     total: z.number().optional(),
-    limit: z.number().optional().describe("上限数"),
-    page: z.number().optional().describe("ページ"),
+    limit: z.number().optional().describe("取得上限数"),
+    page: z.number().optional().describe("ページ番号"),
   }),
 };
 
@@ -3568,7 +3568,7 @@ export const get_GetProductReserveItem = {
   requestFormat: z.literal("json"),
   parameters: z.object({
     query: z.object({
-      fields: z.array(z.string()).optional().describe("検索パラメータ（カンマ区切りで指定可）"),
+      fields: z.array(z.string()).optional().describe("取得したいフィールド名（カンマ区切りで指定可）"),
     }),
     path: z.object({
       product_id: z.number(),
@@ -3614,7 +3614,7 @@ export const get_GetProductAttribute = {
   requestFormat: z.literal("json"),
   parameters: z.object({
     query: z.object({
-      fields: z.array(z.string()).optional().describe("検索パラメータ（カンマ区切りで指定可）"),
+      fields: z.array(z.string()).optional().describe("取得したいフィールド名（カンマ区切りで指定可）"),
     }),
     path: z.object({
       no: z.number().describe("予約項目ラベル番号"),
@@ -3657,7 +3657,7 @@ export const get_GetProductAttributeItem = {
   requestFormat: z.literal("json"),
   parameters: z.object({
     query: z.object({
-      fields: z.array(z.string()).optional().describe("検索パラメータ（カンマ区切りで指定可）"),
+      fields: z.array(z.string()).optional().describe("取得したいフィールド名（カンマ区切りで指定可）"),
     }),
     path: z.object({
       code: z.string().describe("顧客タイプコード"),
@@ -3700,7 +3700,7 @@ export const get_GetProductInventoryReservation = {
   requestFormat: z.literal("json"),
   parameters: z.object({
     query: z.object({
-      fields: z.array(z.string()).optional().describe("検索パラメータ（カンマ区切りで指定可）"),
+      fields: z.array(z.string()).optional().describe("取得したいフィールド名（カンマ区切りで指定可）"),
     }),
     path: z.object({
       id: z.number().describe("顧客タイプセクションID"),
@@ -3746,7 +3746,7 @@ export const get_GetProductReserveItemLabel = {
   requestFormat: z.literal("json"),
   parameters: z.object({
     query: z.object({
-      fields: z.array(z.string()).optional().describe("検索パラメータ（カンマ区切りで指定可）"),
+      fields: z.array(z.string()).optional().describe("取得したいフィールド名（カンマ区切りで指定可）"),
     }),
     path: z.object({
       no: z.number().describe("予約項目ラベル番号"),
@@ -3798,8 +3798,8 @@ export const get_Transactions = {
       "transactionHead.transactionHeadId": z.number().optional(),
       terminal: z.number().optional().describe("端末ID"),
       paymentMethod: z.number().optional().describe("決済方法ID"),
-      limit: z.number().optional().describe("上限数"),
-      page: z.number().optional().describe("ページ"),
+      limit: z.number().optional().describe("取得上限数"),
+      page: z.number().optional().describe("ページ番号"),
     }),
   }),
   response: z.object({
@@ -3889,8 +3889,8 @@ export const get_Layaways = {
       status: z.union([z.literal(1), z.literal(2)]).optional().describe("ステータス"),
       "layaway.layawayDateTimeFrom": z.string().optional(),
       "layaway.layawayDateTimeTo": z.string().optional(),
-      limit: z.number().optional().describe("上限数"),
-      page: z.number().optional().describe("ページ"),
+      limit: z.number().optional().describe("取得上限数"),
+      page: z.number().optional().describe("ページ番号"),
     }),
   }),
   response: z.object({
@@ -3949,8 +3949,8 @@ export const get_Pre_sales = {
       status: z.union([z.literal(1), z.literal(2)]).optional().describe("ステータス"),
       "preSale.preSaleDateTimeFrom": z.string().optional(),
       "preSale.preSaleDateTimeTo": z.string().optional(),
-      limit: z.number().optional().describe("上限数"),
-      page: z.number().optional().describe("ページ"),
+      limit: z.number().optional().describe("取得上限数"),
+      page: z.number().optional().describe("ページ番号"),
     }),
   }),
   response: z.object({
@@ -4030,8 +4030,8 @@ export const get_Ticket_transactions = {
       "ticketTransaction.ticketDateTimeFrom": z.string().optional(),
       "ticketTransaction.ticketDateTimeTo": z.string().optional(),
       "ticketTransaction.ticketCode": z.string().optional(),
-      limit: z.number().optional().describe("上限数"),
-      page: z.number().optional().describe("ページ"),
+      limit: z.number().optional().describe("取得上限数"),
+      page: z.number().optional().describe("ページ番号"),
     }),
   }),
   response: z.object({
@@ -4082,10 +4082,10 @@ export const get_Customers = {
   requestFormat: z.literal("json"),
   parameters: z.object({
     query: z.object({
-      fields: z.array(z.string()).optional().describe("検索パラメータ（カンマ区切りで指定可）"),
+      fields: z.array(z.string()).optional().describe("取得したいフィールド名（カンマ区切りで指定可）"),
       sort: z.string().optional().describe("並び順（カンマ区切りで指定可）"),
-      limit: z.number().optional().describe("上限数"),
-      page: z.number().optional().describe("ページ"),
+      limit: z.number().optional().describe("取得上限数"),
+      page: z.number().optional().describe("ページ番号"),
       customer_id: z.string().optional(),
       customer_code: z.string().optional(),
       customer_no: z.string().optional(),
@@ -4250,10 +4250,10 @@ export const get_Customer_ranks = {
   requestFormat: z.literal("json"),
   parameters: z.object({
     query: z.object({
-      fields: z.array(z.string()).optional().describe("検索パラメータ（カンマ区切りで指定可）"),
+      fields: z.array(z.string()).optional().describe("取得したいフィールド名（カンマ区切りで指定可）"),
       sort: z.string().optional().describe("並び順（カンマ区切りで指定可）"),
-      limit: z.number().optional().describe("上限数"),
-      page: z.number().optional().describe("ページ"),
+      limit: z.number().optional().describe("取得上限数"),
+      page: z.number().optional().describe("ページ番号"),
       rank_id: z.string().optional(),
       rank_name: z.string().optional(),
       "point_rate-from": z.number().optional(),
@@ -4326,10 +4326,10 @@ export const get_Staff_ranks = {
   requestFormat: z.literal("json"),
   parameters: z.object({
     query: z.object({
-      fields: z.array(z.string()).optional().describe("検索パラメータ（カンマ区切りで指定可）"),
+      fields: z.array(z.string()).optional().describe("取得したいフィールド名（カンマ区切りで指定可）"),
       sort: z.string().optional().describe("並び順（カンマ区切りで指定可）"),
-      limit: z.number().optional().describe("上限数"),
-      page: z.number().optional().describe("ページ"),
+      limit: z.number().optional().describe("取得上限数"),
+      page: z.number().optional().describe("ページ番号"),
       staff_rank_id: z.string().optional(),
       staff_rank_name: z.string().optional(),
       "discount_rate-from": z.number().optional(),
@@ -4418,8 +4418,8 @@ export const get_GetStocks = {
       product_name: z.string().optional(),
       category_id: z.number().optional(),
       barcode: z.string().optional().describe("バーコード"),
-      limit: z.number().optional().describe("上限数"),
-      page: z.number().optional().describe("ページ"),
+      limit: z.number().optional().describe("取得上限数"),
+      page: z.number().optional().describe("ページ番号"),
     }),
   }),
   response: z.object({
@@ -4453,8 +4453,8 @@ export const get_GetStockChanges = {
       division: z.number().optional().describe("入庫区分（1:仕入、2:店舗間移動、3:返品）"),
       target_date_from: z.string().optional(),
       target_date_to: z.string().optional(),
-      limit: z.number().optional().describe("上限数"),
-      page: z.number().optional().describe("ページ"),
+      limit: z.number().optional().describe("取得上限数"),
+      page: z.number().optional().describe("ページ番号"),
     }),
   }),
   response: z.object({
@@ -4470,10 +4470,10 @@ export const get_Bargain = {
   requestFormat: z.literal("json"),
   parameters: z.object({
     query: z.object({
-      fields: z.array(z.string()).optional().describe("検索パラメータ（カンマ区切りで指定可）"),
+      fields: z.array(z.string()).optional().describe("取得したいフィールド名（カンマ区切りで指定可）"),
       sort: z.string().optional().describe("並び順（カンマ区切りで指定可）"),
-      limit: z.number().optional().describe("上限数"),
-      page: z.number().optional().describe("ページ"),
+      limit: z.number().optional().describe("取得上限数"),
+      page: z.number().optional().describe("ページ番号"),
       bargain_id: z.string().optional(),
       term_start: z.string().optional(),
       term_end: z.string().optional(),
@@ -4535,10 +4535,10 @@ export const get_BargainIdstores = {
   requestFormat: z.literal("json"),
   parameters: z.object({
     query: z.object({
-      fields: z.array(z.string()).optional().describe("検索パラメータ（カンマ区切りで指定可）"),
+      fields: z.array(z.string()).optional().describe("取得したいフィールド名（カンマ区切りで指定可）"),
       sort: z.string().optional().describe("並び順（カンマ区切りで指定可）"),
-      limit: z.number().optional().describe("上限数"),
-      page: z.number().optional().describe("ページ"),
+      limit: z.number().optional().describe("取得上限数"),
+      page: z.number().optional().describe("ページ番号"),
       store_id: z.string().optional(),
     }),
     path: z.object({
@@ -4602,10 +4602,10 @@ export const get_BargainIdproducts = {
   requestFormat: z.literal("json"),
   parameters: z.object({
     query: z.object({
-      fields: z.array(z.string()).optional().describe("検索パラメータ（カンマ区切りで指定可）"),
+      fields: z.array(z.string()).optional().describe("取得したいフィールド名（カンマ区切りで指定可）"),
       sort: z.string().optional().describe("並び順（カンマ区切りで指定可）"),
-      limit: z.number().optional().describe("上限数"),
-      page: z.number().optional().describe("ページ"),
+      limit: z.number().optional().describe("取得上限数"),
+      page: z.number().optional().describe("ページ番号"),
       target_division: z.union([z.literal("1"), z.literal("2"), z.literal("3")]).optional(),
       target_id: z.string().optional(),
     }),
@@ -4670,10 +4670,10 @@ export const get_Product_option_groups = {
   requestFormat: z.literal("json"),
   parameters: z.object({
     query: z.object({
-      fields: z.array(z.string()).optional().describe("検索パラメータ（カンマ区切りで指定可）"),
+      fields: z.array(z.string()).optional().describe("取得したいフィールド名（カンマ区切りで指定可）"),
       sort: z.string().optional().describe("並び順（カンマ区切りで指定可）"),
-      limit: z.number().optional().describe("上限数"),
-      page: z.number().optional().describe("ページ"),
+      limit: z.number().optional().describe("取得上限数"),
+      page: z.number().optional().describe("ページ番号"),
       product_option_group_name: z.string().optional(),
       condition_id: z.string().optional(),
     }),
@@ -4705,7 +4705,7 @@ export const get_Product_option_groupsId = {
   requestFormat: z.literal("json"),
   parameters: z.object({
     query: z.object({
-      fields: z.array(z.string()).optional().describe("検索パラメータ（カンマ区切りで指定可）"),
+      fields: z.array(z.string()).optional().describe("取得したいフィールド名（カンマ区切りで指定可）"),
       with_products: z.union([z.literal("all"), z.literal("none")]).optional(),
     }),
     path: z.object({
@@ -4767,10 +4767,10 @@ export const get_Bundles = {
   requestFormat: z.literal("json"),
   parameters: z.object({
     query: z.object({
-      fields: z.array(z.string()).optional().describe("検索パラメータ（カンマ区切りで指定可）"),
+      fields: z.array(z.string()).optional().describe("取得したいフィールド名（カンマ区切りで指定可）"),
       sort: z.string().optional().describe("並び順（カンマ区切りで指定可）"),
-      limit: z.number().optional().describe("上限数"),
-      page: z.number().optional().describe("ページ"),
+      limit: z.number().optional().describe("取得上限数"),
+      page: z.number().optional().describe("ページ番号"),
       product_bundle_group_id: z.string().optional(),
       term_from: z.string().optional(),
       term_to: z.string().optional(),
@@ -4803,7 +4803,7 @@ export const get_BundlesId = {
   requestFormat: z.literal("json"),
   parameters: z.object({
     query: z.object({
-      fields: z.array(z.string()).optional().describe("検索パラメータ（カンマ区切りで指定可）"),
+      fields: z.array(z.string()).optional().describe("取得したいフィールド名（カンマ区切りで指定可）"),
     }),
     path: z.object({
       contract_id: z.string(),
@@ -4864,10 +4864,10 @@ export const get_Stores = {
   requestFormat: z.literal("json"),
   parameters: z.object({
     query: z.object({
-      fields: z.array(z.string()).optional().describe("検索パラメータ（カンマ区切りで指定可）"),
+      fields: z.array(z.string()).optional().describe("取得したいフィールド名（カンマ区切りで指定可）"),
       sort: z.string().optional().describe("並び順（カンマ区切りで指定可）"),
-      limit: z.number().optional().describe("上限数"),
-      page: z.number().optional().describe("ページ"),
+      limit: z.number().optional().describe("取得上限数"),
+      page: z.number().optional().describe("ページ番号"),
       store_id: z.string().optional(),
       store_code: z.string().optional(),
       store_division: z.union([z.literal("0"), z.literal("1")]).optional(),
@@ -4900,7 +4900,7 @@ export const get_StoresId = {
   requestFormat: z.literal("json"),
   parameters: z.object({
     query: z.object({
-      fields: z.array(z.string()).optional().describe("検索パラメータ（カンマ区切りで指定可）"),
+      fields: z.array(z.string()).optional().describe("取得したいフィールド名（カンマ区切りで指定可）"),
     }),
     path: z.object({
       contract_id: z.string(),
@@ -4946,9 +4946,9 @@ export const get_StoresStore_idproducts = {
   requestFormat: z.literal("json"),
   parameters: z.object({
     query: z.object({
-      fields: z.array(z.string()).optional().describe("検索パラメータ（カンマ区切りで指定可）"),
-      limit: z.number().optional().describe("上限数"),
-      page: z.number().optional().describe("ページ"),
+      fields: z.array(z.string()).optional().describe("取得したいフィールド名（カンマ区切りで指定可）"),
+      limit: z.number().optional().describe("取得上限数"),
+      page: z.number().optional().describe("ページ番号"),
     }),
     path: z.object({
       contract_id: z.string(),
@@ -4996,9 +4996,9 @@ export const get_GetStoreProductPrices = {
       productId: z.number().optional().describe("商品ID"),
       priceDivision: z.union([z.literal(1), z.literal(2)]).optional().describe("価格区分"),
       startDate: z.string().optional().describe("適用開始日"),
-      limit: z.number().optional().describe("上限数"),
-      page: z.number().optional().describe("ページ"),
-      fields: z.array(z.string()).optional().describe("検索パラメータ（カンマ区切りで指定可）"),
+      limit: z.number().optional().describe("取得上限数"),
+      page: z.number().optional().describe("ページ番号"),
+      fields: z.array(z.string()).optional().describe("取得したいフィールド名（カンマ区切りで指定可）"),
     }),
     path: z.object({
       store_id: z.number(),
@@ -5007,8 +5007,8 @@ export const get_GetStoreProductPrices = {
   response: z.object({
     items: z.array(ProductPrice).optional(),
     total: z.number().optional(),
-    limit: z.number().optional().describe("上限数"),
-    page: z.number().optional().describe("ページ"),
+    limit: z.number().optional().describe("取得上限数"),
+    page: z.number().optional().describe("ページ番号"),
   }),
 };
 
@@ -5037,10 +5037,10 @@ export const get_Store_groups = {
   requestFormat: z.literal("json"),
   parameters: z.object({
     query: z.object({
-      fields: z.array(z.string()).optional().describe("検索パラメータ（カンマ区切りで指定可）"),
+      fields: z.array(z.string()).optional().describe("取得したいフィールド名（カンマ区切りで指定可）"),
       sort: z.string().optional().describe("並び順（カンマ区切りで指定可）"),
-      limit: z.number().optional().describe("上限数"),
-      page: z.number().optional().describe("ページ"),
+      limit: z.number().optional().describe("取得上限数"),
+      page: z.number().optional().describe("ページ番号"),
       store_group_id: z.string().optional(),
     }),
     path: z.object({
@@ -5100,10 +5100,10 @@ export const get_Store_group_items = {
   requestFormat: z.literal("json"),
   parameters: z.object({
     query: z.object({
-      fields: z.array(z.string()).optional().describe("検索パラメータ（カンマ区切りで指定可）"),
+      fields: z.array(z.string()).optional().describe("取得したいフィールド名（カンマ区切りで指定可）"),
       sort: z.string().optional().describe("並び順（カンマ区切りで指定可）"),
-      limit: z.number().optional().describe("上限数"),
-      page: z.number().optional().describe("ページ"),
+      limit: z.number().optional().describe("取得上限数"),
+      page: z.number().optional().describe("ページ番号"),
       store_group_item_id: z.string().optional(),
       store_group_id: z.string().optional(),
       store_id: z.string().optional(),
@@ -5165,10 +5165,10 @@ export const get_Staffs = {
   requestFormat: z.literal("json"),
   parameters: z.object({
     query: z.object({
-      fields: z.array(z.string()).optional().describe("検索パラメータ（カンマ区切りで指定可）"),
+      fields: z.array(z.string()).optional().describe("取得したいフィールド名（カンマ区切りで指定可）"),
       sort: z.string().optional().describe("並び順（カンマ区切りで指定可）"),
-      limit: z.number().optional().describe("上限数"),
-      page: z.number().optional().describe("ページ"),
+      limit: z.number().optional().describe("取得上限数"),
+      page: z.number().optional().describe("ページ番号"),
       staff_id: z.string().optional(),
       staff_code: z.string().optional(),
       first_name: z.string().optional(),
@@ -5287,10 +5287,10 @@ export const get_Roles = {
   requestFormat: z.literal("json"),
   parameters: z.object({
     query: z.object({
-      fields: z.array(z.string()).optional().describe("検索パラメータ（カンマ区切りで指定可）"),
+      fields: z.array(z.string()).optional().describe("取得したいフィールド名（カンマ区切りで指定可）"),
       sort: z.string().optional().describe("並び順（カンマ区切りで指定可）"),
-      limit: z.number().optional().describe("上限数"),
-      page: z.number().optional().describe("ページ"),
+      limit: z.number().optional().describe("取得上限数"),
+      page: z.number().optional().describe("ページ番号"),
       role_id: z.string().optional(),
       role_name: z.string().optional(),
       permission_id: z.string().optional(),
@@ -5362,10 +5362,10 @@ export const get_Budgetsmonthly = {
   requestFormat: z.literal("json"),
   parameters: z.object({
     query: z.object({
-      fields: z.array(z.string()).optional().describe("検索パラメータ（カンマ区切りで指定可）"),
+      fields: z.array(z.string()).optional().describe("取得したいフィールド名（カンマ区切りで指定可）"),
       sort: z.string().optional().describe("並び順（カンマ区切りで指定可）"),
-      limit: z.number().optional().describe("上限数"),
-      page: z.number().optional().describe("ページ"),
+      limit: z.number().optional().describe("取得上限数"),
+      page: z.number().optional().describe("ページ番号"),
       budget_id: z.string().optional(),
       store_id: z.string().optional(),
       "year_month-from": z.string().optional(),
@@ -5386,10 +5386,10 @@ export const get_BudgetsdailyDate = {
   requestFormat: z.literal("json"),
   parameters: z.object({
     query: z.object({
-      fields: z.array(z.string()).optional().describe("検索パラメータ（カンマ区切りで指定可）"),
+      fields: z.array(z.string()).optional().describe("取得したいフィールド名（カンマ区切りで指定可）"),
       sort: z.string().optional().describe("並び順（カンマ区切りで指定可）"),
-      limit: z.number().optional().describe("上限数"),
-      page: z.number().optional().describe("ページ"),
+      limit: z.number().optional().describe("取得上限数"),
+      page: z.number().optional().describe("ページ番号"),
       budget_id: z.string().optional(),
       store_id: z.string().optional(),
       "ins_date_time-from": z.string().optional(),
@@ -5458,10 +5458,10 @@ export const get_Budgetsstaff = {
   requestFormat: z.literal("json"),
   parameters: z.object({
     query: z.object({
-      fields: z.array(z.string()).optional().describe("検索パラメータ（カンマ区切りで指定可）"),
+      fields: z.array(z.string()).optional().describe("取得したいフィールド名（カンマ区切りで指定可）"),
       sort: z.string().optional().describe("並び順（カンマ区切りで指定可）"),
-      limit: z.number().optional().describe("上限数"),
-      page: z.number().optional().describe("ページ"),
+      limit: z.number().optional().describe("取得上限数"),
+      page: z.number().optional().describe("ページ番号"),
       budget_id: z.string().optional(),
       store_id: z.string().optional(),
       staff_id: z.string().optional(),
@@ -5521,10 +5521,10 @@ export const get_Suppliers = {
   requestFormat: z.literal("json"),
   parameters: z.object({
     query: z.object({
-      fields: z.array(z.string()).optional().describe("検索パラメータ（カンマ区切りで指定可）"),
+      fields: z.array(z.string()).optional().describe("取得したいフィールド名（カンマ区切りで指定可）"),
       sort: z.string().optional().describe("並び順（カンマ区切りで指定可）"),
-      limit: z.number().optional().describe("上限数"),
-      page: z.number().optional().describe("ページ"),
+      limit: z.number().optional().describe("取得上限数"),
+      page: z.number().optional().describe("ページ番号"),
       supplier_id: z.string().optional(),
       supplier_code: z.string().optional(),
       supplier_name: z.string().optional(),
@@ -5599,10 +5599,10 @@ export const get_SuppliersIdproducts = {
   requestFormat: z.literal("json"),
   parameters: z.object({
     query: z.object({
-      fields: z.array(z.string()).optional().describe("検索パラメータ（カンマ区切りで指定可）"),
+      fields: z.array(z.string()).optional().describe("取得したいフィールド名（カンマ区切りで指定可）"),
       sort: z.string().optional().describe("並び順（カンマ区切りで指定可）"),
-      limit: z.number().optional().describe("上限数"),
-      page: z.number().optional().describe("ページ"),
+      limit: z.number().optional().describe("取得上限数"),
+      page: z.number().optional().describe("ページ番号"),
       supplier_product_id: z.string().optional(),
       product_id: z.string().optional(),
       product_code: z.string().optional(),
@@ -5643,10 +5643,10 @@ export const get_Supplier_divisions = {
   requestFormat: z.literal("json"),
   parameters: z.object({
     query: z.object({
-      fields: z.array(z.string()).optional().describe("検索パラメータ（カンマ区切りで指定可）"),
+      fields: z.array(z.string()).optional().describe("取得したいフィールド名（カンマ区切りで指定可）"),
       sort: z.string().optional().describe("並び順（カンマ区切りで指定可）"),
-      limit: z.number().optional().describe("上限数"),
-      page: z.number().optional().describe("ページ"),
+      limit: z.number().optional().describe("取得上限数"),
+      page: z.number().optional().describe("ページ番号"),
       supplier_division_id: z.string().optional(),
       supplier_division_name: z.string().optional(),
       "ins_date_time-from": z.string().optional(),
@@ -5716,10 +5716,10 @@ export const get_Terminals = {
   requestFormat: z.literal("json"),
   parameters: z.object({
     query: z.object({
-      fields: z.array(z.string()).optional().describe("検索パラメータ（カンマ区切りで指定可）"),
+      fields: z.array(z.string()).optional().describe("取得したいフィールド名（カンマ区切りで指定可）"),
       sort: z.string().optional().describe("並び順（カンマ区切りで指定可）"),
-      limit: z.number().optional().describe("上限数"),
-      page: z.number().optional().describe("ページ"),
+      limit: z.number().optional().describe("取得上限数"),
+      page: z.number().optional().describe("ページ番号"),
       terminal_id: z.string().optional(),
       terminal_code: z.string().optional(),
       terminal_name: z.string().optional(),
@@ -5793,10 +5793,10 @@ export const get_Settlements = {
   requestFormat: z.literal("json"),
   parameters: z.object({
     query: z.object({
-      fields: z.array(z.string()).optional().describe("検索パラメータ（カンマ区切りで指定可）"),
+      fields: z.array(z.string()).optional().describe("取得したいフィールド名（カンマ区切りで指定可）"),
       sort: z.string().optional().describe("並び順（カンマ区切りで指定可）"),
-      limit: z.number().optional().describe("上限数"),
-      page: z.number().optional().describe("ページ"),
+      limit: z.number().optional().describe("取得上限数"),
+      page: z.number().optional().describe("ページ番号"),
       settlement_id: z.string().optional(),
       settlement_no: z.string().optional(),
       store_id: z.string().optional(),
@@ -5835,10 +5835,10 @@ export const get_Daily_settlements = {
   requestFormat: z.literal("json"),
   parameters: z.object({
     query: z.object({
-      fields: z.array(z.string()).optional().describe("検索パラメータ（カンマ区切りで指定可）"),
+      fields: z.array(z.string()).optional().describe("取得したいフィールド名（カンマ区切りで指定可）"),
       sort: z.string().optional().describe("並び順（カンマ区切りで指定可）"),
-      limit: z.number().optional().describe("上限数"),
-      page: z.number().optional().describe("ページ"),
+      limit: z.number().optional().describe("取得上限数"),
+      page: z.number().optional().describe("ページ番号"),
       daily_settlement_id: z.string().optional(),
       store_id: z.string().optional(),
       "business_date-from": z.string().optional(),
@@ -5876,10 +5876,10 @@ export const get_Payment_methods = {
   requestFormat: z.literal("json"),
   parameters: z.object({
     query: z.object({
-      fields: z.array(z.string()).optional().describe("検索パラメータ（カンマ区切りで指定可）"),
+      fields: z.array(z.string()).optional().describe("取得したいフィールド名（カンマ区切りで指定可）"),
       sort: z.string().optional().describe("並び順（カンマ区切りで指定可）"),
-      limit: z.number().optional().describe("上限数"),
-      page: z.number().optional().describe("ページ"),
+      limit: z.number().optional().describe("取得上限数"),
+      page: z.number().optional().describe("ページ番号"),
       payment_method_id: z.string().optional(),
       payment_method_code: z.string().optional(),
       payment_method_name: z.string().optional(),
@@ -5954,10 +5954,10 @@ export const get_StoresStore_idpayment_methods = {
   requestFormat: z.literal("json"),
   parameters: z.object({
     query: z.object({
-      fields: z.array(z.string()).optional().describe("検索パラメータ（カンマ区切りで指定可）"),
+      fields: z.array(z.string()).optional().describe("取得したいフィールド名（カンマ区切りで指定可）"),
       sort: z.string().optional().describe("並び順（カンマ区切りで指定可）"),
-      limit: z.number().optional().describe("上限数"),
-      page: z.number().optional().describe("ページ"),
+      limit: z.number().optional().describe("取得上限数"),
+      page: z.number().optional().describe("ページ番号"),
       store_payment_method_id: z.string().optional(),
       payment_method_id: z.string().optional(),
       status: z.union([z.literal("0"), z.literal("1")]).optional().describe("ステータス"),
@@ -5980,10 +5980,10 @@ export const get_Payment_method_divisions = {
   requestFormat: z.literal("json"),
   parameters: z.object({
     query: z.object({
-      fields: z.array(z.string()).optional().describe("検索パラメータ（カンマ区切りで指定可）"),
+      fields: z.array(z.string()).optional().describe("取得したいフィールド名（カンマ区切りで指定可）"),
       sort: z.string().optional().describe("並び順（カンマ区切りで指定可）"),
-      limit: z.number().optional().describe("上限数"),
-      page: z.number().optional().describe("ページ"),
+      limit: z.number().optional().describe("取得上限数"),
+      page: z.number().optional().describe("ページ番号"),
       payment_method_division_id: z.string().optional(),
       payment_method_division_name: z.string().optional(),
       "ins_date_time-from": z.string().optional(),
@@ -6053,10 +6053,10 @@ export const get_App_payment_methods = {
   requestFormat: z.literal("json"),
   parameters: z.object({
     query: z.object({
-      fields: z.array(z.string()).optional().describe("検索パラメータ（カンマ区切りで指定可）"),
+      fields: z.array(z.string()).optional().describe("取得したいフィールド名（カンマ区切りで指定可）"),
       sort: z.string().optional().describe("並び順（カンマ区切りで指定可）"),
-      limit: z.number().optional().describe("上限数"),
-      page: z.number().optional().describe("ページ"),
+      limit: z.number().optional().describe("取得上限数"),
+      page: z.number().optional().describe("ページ番号"),
       app_payment_method_id: z.string().optional(),
       payment_method_id: z.string().optional(),
       app_payment_code: z.string().optional(),
@@ -6120,8 +6120,8 @@ export const get_GetCoupons = {
       start_date_to: z.string().optional(),
       end_date_from: z.string().optional(),
       end_date_to: z.string().optional(),
-      limit: z.number().optional().describe("上限数"),
-      page: z.number().optional().describe("ページ"),
+      limit: z.number().optional().describe("取得上限数"),
+      page: z.number().optional().describe("ページ番号"),
     }),
   }),
   response: z.object({
@@ -6190,8 +6190,8 @@ export const get_GetCouponProducts = {
   requestFormat: z.literal("json"),
   parameters: z.object({
     query: z.object({
-      limit: z.number().optional().describe("上限数"),
-      page: z.number().optional().describe("ページ"),
+      limit: z.number().optional().describe("取得上限数"),
+      page: z.number().optional().describe("ページ番号"),
     }),
     path: z.object({
       id: z.number().describe("顧客タイプセクションID"),
@@ -6269,10 +6269,10 @@ export const get_Losses = {
   requestFormat: z.literal("json"),
   parameters: z.object({
     query: z.object({
-      fields: z.array(z.string()).optional().describe("検索パラメータ（カンマ区切りで指定可）"),
+      fields: z.array(z.string()).optional().describe("取得したいフィールド名（カンマ区切りで指定可）"),
       sort: z.string().optional().describe("並び順（カンマ区切りで指定可）"),
-      limit: z.number().optional().describe("上限数"),
-      page: z.number().optional().describe("ページ"),
+      limit: z.number().optional().describe("取得上限数"),
+      page: z.number().optional().describe("ページ番号"),
       loss_id: z.string().optional(),
       store_id: z.string().optional(),
       "loss_date-from": z.string().optional(),
@@ -6303,7 +6303,7 @@ export const get_LossesId = {
   requestFormat: z.literal("json"),
   parameters: z.object({
     query: z.object({
-      fields: z.array(z.string()).optional().describe("検索パラメータ（カンマ区切りで指定可）"),
+      fields: z.array(z.string()).optional().describe("取得したいフィールド名（カンマ区切りで指定可）"),
     }),
     path: z.object({
       id: z.string().describe("顧客タイプセクションID"),
@@ -6346,10 +6346,10 @@ export const get_LossesIddetails = {
   requestFormat: z.literal("json"),
   parameters: z.object({
     query: z.object({
-      fields: z.array(z.string()).optional().describe("検索パラメータ（カンマ区切りで指定可）"),
+      fields: z.array(z.string()).optional().describe("取得したいフィールド名（カンマ区切りで指定可）"),
       sort: z.string().optional().describe("並び順（カンマ区切りで指定可）"),
-      limit: z.number().optional().describe("上限数"),
-      page: z.number().optional().describe("ページ"),
+      limit: z.number().optional().describe("取得上限数"),
+      page: z.number().optional().describe("ページ番号"),
     }),
     path: z.object({
       id: z.string().describe("顧客タイプセクションID"),
@@ -6365,10 +6365,10 @@ export const get_Loss_divisions = {
   requestFormat: z.literal("json"),
   parameters: z.object({
     query: z.object({
-      fields: z.array(z.string()).optional().describe("検索パラメータ（カンマ区切りで指定可）"),
+      fields: z.array(z.string()).optional().describe("取得したいフィールド名（カンマ区切りで指定可）"),
       sort: z.string().optional().describe("並び順（カンマ区切りで指定可）"),
-      limit: z.number().optional().describe("上限数"),
-      page: z.number().optional().describe("ページ"),
+      limit: z.number().optional().describe("取得上限数"),
+      page: z.number().optional().describe("ページ番号"),
       loss_division_id: z.string().optional(),
     }),
   }),
@@ -6393,7 +6393,7 @@ export const get_Loss_divisionsId = {
   requestFormat: z.literal("json"),
   parameters: z.object({
     query: z.object({
-      fields: z.array(z.string()).optional().describe("検索パラメータ（カンマ区切りで指定可）"),
+      fields: z.array(z.string()).optional().describe("取得したいフィールド名（カンマ区切りで指定可）"),
     }),
     path: z.object({
       id: z.string().describe("顧客タイプセクションID"),
@@ -6436,10 +6436,10 @@ export const get_Orders = {
   requestFormat: z.literal("json"),
   parameters: z.object({
     query: z.object({
-      fields: z.array(z.string()).optional().describe("検索パラメータ（カンマ区切りで指定可）"),
+      fields: z.array(z.string()).optional().describe("取得したいフィールド名（カンマ区切りで指定可）"),
       sort: z.string().optional().describe("並び順（カンマ区切りで指定可）"),
-      limit: z.number().optional().describe("上限数"),
-      page: z.number().optional().describe("ページ"),
+      limit: z.number().optional().describe("取得上限数"),
+      page: z.number().optional().describe("ページ番号"),
       order_id: z.string().optional(),
       store_id: z.string().optional(),
       supplier_id: z.string().optional(),
@@ -6473,7 +6473,7 @@ export const get_OrdersId = {
   requestFormat: z.literal("json"),
   parameters: z.object({
     query: z.object({
-      fields: z.array(z.string()).optional().describe("検索パラメータ（カンマ区切りで指定可）"),
+      fields: z.array(z.string()).optional().describe("取得したいフィールド名（カンマ区切りで指定可）"),
     }),
     path: z.object({
       id: z.string().describe("顧客タイプセクションID"),
@@ -6516,10 +6516,10 @@ export const get_Ordersproducts = {
   requestFormat: z.literal("json"),
   parameters: z.object({
     query: z.object({
-      fields: z.array(z.string()).optional().describe("検索パラメータ（カンマ区切りで指定可）"),
+      fields: z.array(z.string()).optional().describe("取得したいフィールド名（カンマ区切りで指定可）"),
       sort: z.string().optional().describe("並び順（カンマ区切りで指定可）"),
-      limit: z.number().optional().describe("上限数"),
-      page: z.number().optional().describe("ページ"),
+      limit: z.number().optional().describe("取得上限数"),
+      page: z.number().optional().describe("ページ番号"),
       product_id: z.string().optional(),
       product_code: z.string().optional(),
       supplier_id: z.string().optional(),
@@ -6538,10 +6538,10 @@ export const get_Ordersstores = {
   requestFormat: z.literal("json"),
   parameters: z.object({
     query: z.object({
-      fields: z.array(z.string()).optional().describe("検索パラメータ（カンマ区切りで指定可）"),
+      fields: z.array(z.string()).optional().describe("取得したいフィールド名（カンマ区切りで指定可）"),
       sort: z.string().optional().describe("並び順（カンマ区切りで指定可）"),
-      limit: z.number().optional().describe("上限数"),
-      page: z.number().optional().describe("ページ"),
+      limit: z.number().optional().describe("取得上限数"),
+      page: z.number().optional().describe("ページ番号"),
     }),
   }),
   response: z.array(OrderStore),
@@ -6554,10 +6554,10 @@ export const get_Arrivals = {
   requestFormat: z.literal("json"),
   parameters: z.object({
     query: z.object({
-      fields: z.array(z.string()).optional().describe("検索パラメータ（カンマ区切りで指定可）"),
+      fields: z.array(z.string()).optional().describe("取得したいフィールド名（カンマ区切りで指定可）"),
       sort: z.string().optional().describe("並び順（カンマ区切りで指定可）"),
-      limit: z.number().optional().describe("上限数"),
-      page: z.number().optional().describe("ページ"),
+      limit: z.number().optional().describe("取得上限数"),
+      page: z.number().optional().describe("ページ番号"),
       arrival_id: z.string().optional(),
       order_id: z.string().optional(),
       store_id: z.string().optional(),
@@ -6589,7 +6589,7 @@ export const get_ArrivalsId = {
   requestFormat: z.literal("json"),
   parameters: z.object({
     query: z.object({
-      fields: z.array(z.string()).optional().describe("検索パラメータ（カンマ区切りで指定可）"),
+      fields: z.array(z.string()).optional().describe("取得したいフィールド名（カンマ区切りで指定可）"),
     }),
     path: z.object({
       id: z.string().describe("顧客タイプセクションID"),
@@ -6619,10 +6619,10 @@ export const get_ArrivalsIddetails = {
   requestFormat: z.literal("json"),
   parameters: z.object({
     query: z.object({
-      fields: z.array(z.string()).optional().describe("検索パラメータ（カンマ区切りで指定可）"),
+      fields: z.array(z.string()).optional().describe("取得したいフィールド名（カンマ区切りで指定可）"),
       sort: z.string().optional().describe("並び順（カンマ区切りで指定可）"),
-      limit: z.number().optional().describe("上限数"),
-      page: z.number().optional().describe("ページ"),
+      limit: z.number().optional().describe("取得上限数"),
+      page: z.number().optional().describe("ページ番号"),
     }),
     path: z.object({
       id: z.string().describe("顧客タイプセクションID"),
@@ -6638,10 +6638,10 @@ export const get_Shipments = {
   requestFormat: z.literal("json"),
   parameters: z.object({
     query: z.object({
-      fields: z.array(z.string()).optional().describe("検索パラメータ（カンマ区切りで指定可）"),
+      fields: z.array(z.string()).optional().describe("取得したいフィールド名（カンマ区切りで指定可）"),
       sort: z.string().optional().describe("並び順（カンマ区切りで指定可）"),
-      limit: z.number().optional().describe("上限数"),
-      page: z.number().optional().describe("ページ"),
+      limit: z.number().optional().describe("取得上限数"),
+      page: z.number().optional().describe("ページ番号"),
       shipment_id: z.string().optional(),
       store_id: z.string().optional(),
       "shipment_date-from": z.string().optional(),
@@ -6672,7 +6672,7 @@ export const get_ShipmentsId = {
   requestFormat: z.literal("json"),
   parameters: z.object({
     query: z.object({
-      fields: z.array(z.string()).optional().describe("検索パラメータ（カンマ区切りで指定可）"),
+      fields: z.array(z.string()).optional().describe("取得したいフィールド名（カンマ区切りで指定可）"),
     }),
     path: z.object({
       id: z.string().describe("顧客タイプセクションID"),
@@ -6715,10 +6715,10 @@ export const get_ShipmentsIddetails = {
   requestFormat: z.literal("json"),
   parameters: z.object({
     query: z.object({
-      fields: z.array(z.string()).optional().describe("検索パラメータ（カンマ区切りで指定可）"),
+      fields: z.array(z.string()).optional().describe("取得したいフィールド名（カンマ区切りで指定可）"),
       sort: z.string().optional().describe("並び順（カンマ区切りで指定可）"),
-      limit: z.number().optional().describe("上限数"),
-      page: z.number().optional().describe("ページ"),
+      limit: z.number().optional().describe("取得上限数"),
+      page: z.number().optional().describe("ページ番号"),
     }),
     path: z.object({
       id: z.string().describe("顧客タイプセクションID"),
@@ -6740,8 +6740,8 @@ export const get_GetIncomingStocks = {
       status: z.number().optional().describe("ステータス"),
       target_date_from: z.string().optional(),
       target_date_to: z.string().optional(),
-      limit: z.number().optional().describe("上限数"),
-      page: z.number().optional().describe("ページ"),
+      limit: z.number().optional().describe("取得上限数"),
+      page: z.number().optional().describe("ページ番号"),
     }),
   }),
   response: z.object({
@@ -6831,8 +6831,8 @@ export const get_GetIncomingStockDetails = {
   requestFormat: z.literal("json"),
   parameters: z.object({
     query: z.object({
-      limit: z.number().optional().describe("上限数"),
-      page: z.number().optional().describe("ページ"),
+      limit: z.number().optional().describe("取得上限数"),
+      page: z.number().optional().describe("ページ番号"),
     }),
     path: z.object({
       id: z.number().describe("顧客タイプセクションID"),
@@ -6881,8 +6881,8 @@ export const get_GetOutgoingStocks = {
       status: z.number().optional().describe("ステータス"),
       target_date_from: z.string().optional(),
       target_date_to: z.string().optional(),
-      limit: z.number().optional().describe("上限数"),
-      page: z.number().optional().describe("ページ"),
+      limit: z.number().optional().describe("取得上限数"),
+      page: z.number().optional().describe("ページ番号"),
     }),
   }),
   response: z.object({
@@ -6951,8 +6951,8 @@ export const get_GetOutgoingStockDetails = {
   requestFormat: z.literal("json"),
   parameters: z.object({
     query: z.object({
-      limit: z.number().optional().describe("上限数"),
-      page: z.number().optional().describe("ページ"),
+      limit: z.number().optional().describe("取得上限数"),
+      page: z.number().optional().describe("ページ番号"),
     }),
     path: z.object({
       id: z.number().describe("顧客タイプセクションID"),
@@ -7000,8 +7000,8 @@ export const get_GetCorrectionOutgoingStocks = {
       status: z.number().optional().describe("ステータス"),
       target_date_from: z.string().optional(),
       target_date_to: z.string().optional(),
-      limit: z.number().optional().describe("上限数"),
-      page: z.number().optional().describe("ページ"),
+      limit: z.number().optional().describe("取得上限数"),
+      page: z.number().optional().describe("ページ番号"),
     }),
   }),
   response: z.object({
@@ -7089,8 +7089,8 @@ export const get_GetStocktakings = {
       start_date_to: z.string().optional(),
       end_date_from: z.string().optional(),
       end_date_to: z.string().optional(),
-      limit: z.number().optional().describe("上限数"),
-      page: z.number().optional().describe("ページ"),
+      limit: z.number().optional().describe("取得上限数"),
+      page: z.number().optional().describe("ページ番号"),
     }),
   }),
   response: z.object({
@@ -7137,8 +7137,8 @@ export const get_GetStocktakingCategories = {
       category_code: z.string().optional(),
       category_name: z.string().optional(),
       is_complete: z.number().optional(),
-      limit: z.number().optional().describe("上限数"),
-      page: z.number().optional().describe("ページ"),
+      limit: z.number().optional().describe("取得上限数"),
+      page: z.number().optional().describe("ページ番号"),
     }),
   }),
   response: z.object({
@@ -7178,8 +7178,8 @@ export const get_GetStocktakingProducts = {
       product_name: z.string().optional(),
       barcode: z.string().optional().describe("バーコード"),
       is_counted: z.number().optional(),
-      limit: z.number().optional().describe("上限数"),
-      page: z.number().optional().describe("ページ"),
+      limit: z.number().optional().describe("取得上限数"),
+      page: z.number().optional().describe("ページ番号"),
     }),
   }),
   response: z.object({
@@ -7215,8 +7215,8 @@ export const get_GetStocktakingStocks = {
       stocktaking_id: z.number().optional(),
       store_id: z.number().optional(),
       product_id: z.number().optional(),
-      limit: z.number().optional().describe("上限数"),
-      page: z.number().optional().describe("ページ"),
+      limit: z.number().optional().describe("取得上限数"),
+      page: z.number().optional().describe("ページ番号"),
     }),
   }),
   response: z.object({
@@ -7338,8 +7338,8 @@ export const get_GetCustomerTypes = {
       customer_type_id: z.number().optional(),
       code: z.string().optional().describe("顧客タイプコード"),
       name: z.string().optional().describe("セクション名"),
-      limit: z.number().optional().describe("上限数"),
-      page: z.number().optional().describe("ページ"),
+      limit: z.number().optional().describe("取得上限数"),
+      page: z.number().optional().describe("ページ番号"),
     }),
   }),
   response: z.object({
@@ -7371,8 +7371,8 @@ export const get_GetCustomerTypeSections = {
       customer_type_section_id: z.number().optional(),
       customer_type_id: z.number().optional(),
       name: z.string().optional().describe("セクション名"),
-      limit: z.number().optional().describe("上限数"),
-      page: z.number().optional().describe("ページ"),
+      limit: z.number().optional().describe("取得上限数"),
+      page: z.number().optional().describe("ページ番号"),
     }),
   }),
   response: z.object({
@@ -7395,291 +7395,16 @@ export const patch_UpdateCustomerTypeSection = {
 // <EndpointByMethod>
 export const EndpointByMethod = {
   get: {
-    "/categories": get_Categories,
-    "/categories/{id}": get_CategoriesId,
-    "/category_groups": get_Category_groups,
-    "/products": get_GetProducts,
-    "/products/{id}": get_GetProduct,
-    "/products/{id}/prices": get_GetProductPrices,
-    "/products/{id}/prices/changes": get_GetProductPriceChanges,
-    "/products/{id}/reserve_items": get_GetProductReserveItems,
-    "/products/attributes": get_GetProductAttributes,
-    "/products/attribute_items": get_GetProductAttributeItems,
-    "/products/{id}/stores": get_GetProductStores,
-    "/products/{id}/inventory_reservations": get_GetProductInventoryReservations,
-    "/products/reserve_item_labels": get_GetProductReserveItemLabels,
-    "/products/images": get_GetProductImages,
-    "/products/{id}/image": get_GetProductImage,
-    "/products/{id}/icon_image": get_GetProductIconImage,
-    "/products/{product_id}/reserve_items/{no}": get_GetProductReserveItem,
-    "/products/attributes/{no}": get_GetProductAttribute,
-    "/products/attribute_items/{code}": get_GetProductAttributeItem,
-    "/products/{id}/inventory_reservations/{reservation_product_id}": get_GetProductInventoryReservation,
-    "/products/reserve_item_labels/{no}": get_GetProductReserveItemLabel,
-    "/transactions": get_Transactions,
-    "/transactions/{id}": get_TransactionsId,
-    "/transactions/{id}/details": get_TransactionsIddetails,
-    "/layaways": get_Layaways,
-    "/layaways/{id}": get_LayawaysId,
-    "/pre_sales": get_Pre_sales,
-    "/pre_sales/{id}": get_Pre_salesId,
-    "/ticket_transactions": get_Ticket_transactions,
-    "/ticket_transactions/{id}": get_Ticket_transactionsId,
-    "/customers": get_Customers,
-    "/customers/{id}": get_CustomersId,
-    "/customers/{id}/points": get_CustomersIdpoints,
-    "/customer_ranks": get_Customer_ranks,
-    "/customer_ranks/{id}": get_Customer_ranksId,
-    "/staff_ranks": get_Staff_ranks,
-    "/staff_ranks/{id}": get_Staff_ranksId,
-    "/customers/required": get_Customersrequired,
-    "/stocks": get_GetStocks,
-    "/stocks/changes": get_GetStockChanges,
-    "/bargain": get_Bargain,
-    "/bargain/{id}/stores": get_BargainIdstores,
-    "/bargain/{id}/products": get_BargainIdproducts,
-    "/product_option_groups": get_Product_option_groups,
-    "/product_option_groups/{id}": get_Product_option_groupsId,
-    "/bundles": get_Bundles,
-    "/bundles/{id}": get_BundlesId,
-    "/stores": get_Stores,
-    "/stores/{id}": get_StoresId,
-    "/stores/{store_id}/products": get_StoresStore_idproducts,
-    "/stores/{store_id}/product_prices": get_GetStoreProductPrices,
-    "/store_groups": get_Store_groups,
-    "/store_group_items": get_Store_group_items,
-    "/staffs": get_Staffs,
-    "/staffs/{id}": get_StaffsId,
-    "/roles": get_Roles,
-    "/roles/{id}": get_RolesId,
-    "/budgets/monthly": get_Budgetsmonthly,
-    "/budgets/daily/{date}": get_BudgetsdailyDate,
-    "/budgets/staff": get_Budgetsstaff,
-    "/suppliers": get_Suppliers,
-    "/suppliers/{id}": get_SuppliersId,
-    "/suppliers/{id}/products": get_SuppliersIdproducts,
-    "/supplier_divisions": get_Supplier_divisions,
-    "/supplier_divisions/{id}": get_Supplier_divisionsId,
-    "/terminals": get_Terminals,
-    "/terminals/{id}": get_TerminalsId,
-    "/settlements": get_Settlements,
-    "/daily_settlements": get_Daily_settlements,
-    "/payment_methods": get_Payment_methods,
-    "/payment_methods/{id}": get_Payment_methodsId,
-    "/stores/{store_id}/payment_methods": get_StoresStore_idpayment_methods,
-    "/payment_method_divisions": get_Payment_method_divisions,
-    "/payment_method_divisions/{id}": get_Payment_method_divisionsId,
-    "/app_payment_methods": get_App_payment_methods,
-    "/app_payment_methods/{id}": get_App_payment_methodsId,
-    "/coupons": get_GetCoupons,
-    "/coupons/{id}": get_GetCoupon,
-    "/coupons/{id}/products": get_GetCouponProducts,
-    "/coupons/{id}/products/{couponProductId}": get_GetCouponProduct,
-    "/losses": get_Losses,
-    "/losses/{id}": get_LossesId,
-    "/losses/{id}/details": get_LossesIddetails,
-    "/loss_divisions": get_Loss_divisions,
-    "/loss_divisions/{id}": get_Loss_divisionsId,
-    "/orders": get_Orders,
-    "/orders/{id}": get_OrdersId,
-    "/orders/products": get_Ordersproducts,
-    "/orders/stores": get_Ordersstores,
-    "/arrivals": get_Arrivals,
-    "/arrivals/{id}": get_ArrivalsId,
-    "/arrivals/{id}/details": get_ArrivalsIddetails,
-    "/shipments": get_Shipments,
-    "/shipments/{id}": get_ShipmentsId,
-    "/shipments/{id}/details": get_ShipmentsIddetails,
-    "/incoming_stocks": get_GetIncomingStocks,
-    "/incoming_stocks/{id}": get_GetIncomingStock,
-    "/incoming_stocks/{id}/details": get_GetIncomingStockDetails,
-    "/outgoing_stocks": get_GetOutgoingStocks,
-    "/outgoing_stocks/{id}": get_GetOutgoingStock,
-    "/outgoing_stocks/{id}/details": get_GetOutgoingStockDetails,
-    "/correction_requests/outgoing_stocks": get_GetCorrectionOutgoingStocks,
-    "/correction_requests/outgoing_stocks/{id}": get_GetCorrectionOutgoingStock,
-    "/stocktakings": get_GetStocktakings,
-    "/stocktakings/categories": get_GetStocktakingCategories,
-    "/stocktakings/products": get_GetStocktakingProducts,
-    "/stocktakings/stocks": get_GetStocktakingStocks,
-    "/tax_rates": get_GetTaxRates,
-    "/reduce_tax_rates": get_GetReduceTaxRates,
-    "/receipt_remarks": get_GetReceiptRemarks,
-    "/discount_divisions": get_GetDiscountDivisions,
-    "/cat_cct_card_companies": get_GetCatCctCardCompanies,
-    "/customer_types": get_GetCustomerTypes,
-    "/customer_type_sections": get_GetCustomerTypeSections,
   },
   post: {
-    "/categories": post_Categories,
-    "/category_groups": post_Category_groups,
-    "/products": post_CreateProduct,
-    "/products/bulk": post_BulkCreateProducts,
-    "/products/{id}/prices": post_CreateProductPrice,
-    "/products/{id}/reserve_items": post_CreateProductReserveItem,
-    "/products/attributes": post_CreateProductAttribute,
-    "/products/attribute_items": post_CreateProductAttributeItem,
-    "/products/{id}/stores": post_CreateProductStore,
-    "/products/{id}/inventory_reservations": post_CreateProductInventoryReservation,
-    "/products/reserve_item_labels": post_CreateProductReserveItemLabel,
-    "/products/images": post_UploadProductImage,
-    "/transactions": post_Transactions,
-    "/layaways": post_Layaways,
-    "/pre_sales": post_Pre_sales,
-    "/customers": post_Customers,
-    "/customers/bulk": post_Customersbulk,
-    "/customer_ranks": post_Customer_ranks,
-    "/staff_ranks": post_Staff_ranks,
-    "/bargain": post_Bargain,
-    "/bargain/{id}/stores": post_BargainIdstores,
-    "/bargain/{id}/products": post_BargainIdproducts,
-    "/product_option_groups": post_Product_option_groups,
-    "/bundles": post_Bundles,
-    "/stores": post_Stores,
-    "/stores/{store_id}/products": post_StoresStore_idproducts,
-    "/stores/{store_id}/product_prices": post_CreateOrUpdateStoreProductPrice,
-    "/store_groups": post_Store_groups,
-    "/store_group_items": post_Store_group_items,
-    "/staffs": post_Staffs,
-    "/roles": post_Roles,
-    "/budgets/daily/{date}": post_BudgetsdailyDate,
-    "/budgets/staff": post_Budgetsstaff,
-    "/suppliers": post_Suppliers,
-    "/suppliers/{id}/products": post_SuppliersIdproducts,
-    "/supplier_divisions": post_Supplier_divisions,
-    "/terminals": post_Terminals,
-    "/settlements": post_Settlements,
-    "/daily_settlements": post_Daily_settlements,
-    "/payment_methods": post_Payment_methods,
-    "/payment_method_divisions": post_Payment_method_divisions,
-    "/app_payment_methods": post_App_payment_methods,
-    "/coupons": post_CreateCoupon,
-    "/coupons/{id}/products": post_CreateCouponProduct,
-    "/losses": post_Losses,
-    "/loss_divisions": post_Loss_divisions,
-    "/orders": post_Orders,
-    "/arrivals": post_Arrivals,
-    "/shipments": post_Shipments,
-    "/incoming_stocks": post_CreateIncomingStock,
-    "/outgoing_stocks": post_CreateOutgoingStock,
-    "/correction_requests/outgoing_stocks": post_CreateCorrectionOutgoingStock,
-    "/stocktakings": post_CreateStocktaking,
-    "/stocktakings/stocks": post_CreateStocktakingStock,
-    "/receipt_remarks": post_CreateReceiptRemark,
-    "/customer_types": post_CreateCustomerType,
   },
   patch: {
-    "/categories/{id}": patch_CategoriesId,
-    "/category_groups/{id}": patch_Category_groupsId,
-    "/customers/{id}/points": patch_CustomersIdpoints,
-    "/stocks": patch_UpdateStock,
-    "/bargain/{id}": patch_BargainId,
-    "/bargain/{id}/stores/{bargainStoreId}": patch_BargainIdstoresBargainStoreId,
-    "/bargain/{id}/products/{bargainProductId}": patch_BargainIdproductsBargainProductId,
-    "/product_option_groups/{id}": patch_Product_option_groupsId,
-    "/bundles/{id}": patch_BundlesId,
-    "/stores/{id}": patch_StoresId,
-    "/store_groups/{id}": patch_Store_groupsId,
-    "/store_group_items/{id}": patch_Store_group_itemsId,
-    "/coupons/{id}": patch_UpdateCoupon,
-    "/coupons/{id}/products/{couponProductId}": patch_UpdateCouponProduct,
-    "/losses/{id}": patch_LossesId,
-    "/loss_divisions/{id}": patch_Loss_divisionsId,
-    "/orders/{id}": patch_OrdersId,
-    "/arrivals/{id}": patch_ArrivalsId,
-    "/shipments/{id}": patch_ShipmentsId,
-    "/incoming_stocks/{id}": patch_UpdateIncomingStock,
-    "/incoming_stocks/{id}/details": patch_UpdateIncomingStockDetails,
-    "/outgoing_stocks/{id}": patch_UpdateOutgoingStock,
-    "/outgoing_stocks/{id}/details": patch_UpdateOutgoingStockDetails,
-    "/correction_requests/outgoing_stocks/{id}": patch_UpdateCorrectionOutgoingStock,
-    "/stocktakings/categories": patch_UpdateStocktakingCategory,
-    "/stocktakings/products": patch_UpdateStocktakingProduct,
-    "/stocktakings/stocks": patch_UpdateStocktakingStock,
-    "/customer_type_sections": patch_UpdateCustomerTypeSection,
   },
   delete: {
-    "/categories/{id}": delete_CategoriesId,
-    "/category_groups/{id}": delete_Category_groupsId,
-    "/products/{id}": delete_DeleteProduct,
-    "/products/{id}/image": delete_DeleteProductImage,
-    "/products/{id}/icon_image": delete_DeleteProductIconImage,
-    "/products/{product_id}/prices/{price_division}/{store_id}/{start_date}": delete_DeleteProductPrice,
-    "/products/{product_id}/reserve_items/{no}": delete_DeleteProductReserveItem,
-    "/products/attributes/{no}": delete_DeleteProductAttribute,
-    "/products/attribute_items/{code}": delete_DeleteProductAttributeItem,
-    "/products/{id}/inventory_reservations/{reservation_product_id}": delete_DeleteProductInventoryReservation,
-    "/products/reserve_item_labels/{no}": delete_DeleteProductReserveItemLabel,
-    "/transactions/{id}": delete_TransactionsId,
-    "/layaways/{id}": delete_LayawaysId,
-    "/pre_sales/{id}": delete_Pre_salesId,
-    "/customers/{id}": delete_CustomersId,
-    "/customer_ranks/{id}": delete_Customer_ranksId,
-    "/staff_ranks/{id}": delete_Staff_ranksId,
-    "/bargain/{id}": delete_BargainId,
-    "/bargain/{id}/stores/{bargainStoreId}": delete_BargainIdstoresBargainStoreId,
-    "/bargain/{id}/products/{bargainProductId}": delete_BargainIdproductsBargainProductId,
-    "/product_option_groups/{id}": delete_Product_option_groupsId,
-    "/product_option_groups/{id}/products/{product_id}": delete_Product_option_groupsIdproductsProduct_id,
-    "/bundles/{id}": delete_BundlesId,
-    "/bundles/{id}/products/{bundleProductId}": delete_BundlesIdproductsBundleProductId,
-    "/stores/{id}": delete_StoresId,
-    "/store_groups/{id}": delete_Store_groupsId,
-    "/store_group_items/{id}": delete_Store_group_itemsId,
-    "/staffs/{id}": delete_StaffsId,
-    "/roles/{id}": delete_RolesId,
-    "/budgets/daily/{date}": delete_BudgetsdailyDate,
-    "/budgets/staff": delete_Budgetsstaff,
-    "/suppliers/{id}": delete_SuppliersId,
-    "/supplier_divisions/{id}": delete_Supplier_divisionsId,
-    "/terminals/{id}": delete_TerminalsId,
-    "/payment_methods/{id}": delete_Payment_methodsId,
-    "/payment_method_divisions/{id}": delete_Payment_method_divisionsId,
-    "/app_payment_methods/{id}": delete_App_payment_methodsId,
-    "/coupons/{id}": delete_DeleteCoupon,
-    "/coupons/{id}/products/{couponProductId}": delete_DeleteCouponProduct,
-    "/losses/{id}": delete_LossesId,
-    "/loss_divisions/{id}": delete_Loss_divisionsId,
-    "/orders/{id}": delete_OrdersId,
-    "/shipments/{id}": delete_ShipmentsId,
-    "/incoming_stocks/{id}": delete_DeleteIncomingStock,
-    "/outgoing_stocks/{id}": delete_DeleteOutgoingStock,
-    "/correction_requests/outgoing_stocks/{id}": delete_DeleteCorrectionOutgoingStock,
   },
   put: {
-    "/products/{id}": put_UpdateProduct,
-    "/products/bulk": put_BulkUpdateProducts,
-    "/products/{id}/prices": put_UpdateProductPrices,
-    "/products/{id}/reserve_items": put_UpdateProductReserveItems,
-    "/products/{id}/stores": put_UpdateProductStores,
-    "/products/{id}/inventory_reservations": put_UpdateProductInventoryReservations,
-    "/products/{id}/image": put_UpdateProductImage,
-    "/products/{id}/icon_image": put_UpdateProductIconImage,
-    "/products/{product_id}/reserve_items/{no}": put_UpdateProductReserveItem,
-    "/products/attributes/{no}": put_UpdateProductAttribute,
-    "/products/attribute_items/{code}": put_UpdateProductAttributeItem,
-    "/products/{id}/inventory_reservations/{reservation_product_id}": put_UpdateProductInventoryReservation,
-    "/products/reserve_item_labels/{no}": put_UpdateProductReserveItemLabel,
-    "/transactions/{id}": put_TransactionsId,
-    "/pre_sales/{id}": put_Pre_salesId,
-    "/ticket_transactions/{id}": put_Ticket_transactionsId,
-    "/customers/{id}": put_CustomersId,
-    "/customers/bulk": put_Customersbulk,
-    "/customers/{id}/points": put_CustomersIdpoints,
-    "/customer_ranks/{id}": put_Customer_ranksId,
-    "/staff_ranks/{id}": put_Staff_ranksId,
-    "/staffs/{id}": put_StaffsId,
-    "/roles/{id}": put_RolesId,
-    "/budgets/daily/{date}": put_BudgetsdailyDate,
-    "/budgets/staff": put_Budgetsstaff,
-    "/suppliers/{id}": put_SuppliersId,
-    "/supplier_divisions/{id}": put_Supplier_divisionsId,
-    "/terminals/{id}": put_TerminalsId,
-    "/payment_methods/{id}": put_Payment_methodsId,
-    "/payment_method_divisions/{id}": put_Payment_method_divisionsId,
   },
 };
-export type EndpointByMethod = typeof EndpointByMethod;
 // </EndpointByMethod>
 
 // <EndpointByMethod.Shorthands>

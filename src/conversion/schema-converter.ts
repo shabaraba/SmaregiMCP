@@ -606,25 +606,4 @@ export class SchemaConverter {
       console.error(`[ERROR] Failed to save schema: ${error}`);
     }
   }
-  
-  /**
-   * Get Zod schema for a specific namespace
-   * @param namespace Namespace to get Zod schema for (pos or common)
-   * @returns Path to the Zod schema file or null if not found
-   */
-  getZodSchemaPath(namespace: 'pos' | 'common'): string | null {
-    try {
-      const zodSchemaPath = path.resolve(process.cwd(), 'src', 'schema', 'zod', `${namespace}.zod.ts`);
-      
-      if (!fs.existsSync(zodSchemaPath)) {
-        console.error(`[WARN] Zod schema file not found: ${zodSchemaPath}`);
-        return null;
-      }
-      
-      return zodSchemaPath;
-    } catch (error) {
-      console.error(`[ERROR] Failed to get Zod schema path: ${error}`);
-      return null;
-    }
-  }
 }

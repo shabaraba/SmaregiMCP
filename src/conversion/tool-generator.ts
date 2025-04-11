@@ -202,10 +202,10 @@ export class ApiToolGenerator {
     const byId = hasPathParam && !['create', 'list'].includes(action) ? 'ById' : '';
     
     // Capitalize resource name
-    const capitalizedResource = resource.charAt(0).toUpperCase() + resource.slice(1);
+    const capitalizedResource = (resource.charAt(0).toUpperCase() + resource.slice(1)).replace(category, "");
     
     // Format according to MCP SDK standard, including category
-    return `${category}.${action}${capitalizedResource}${byId}`;
+    return `${category}_${action}${capitalizedResource}${byId}`;
   }
   
   /**
