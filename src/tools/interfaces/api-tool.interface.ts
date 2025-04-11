@@ -2,7 +2,7 @@ export interface ApiToolParameter {
   name: string;
   description: string;
   required: boolean;
-  type: string;
+  type: 'query' | 'path' | 'body' | 'auth';
   schema?: any; // zod schema
 }
 

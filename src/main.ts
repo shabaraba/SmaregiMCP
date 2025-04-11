@@ -1,12 +1,15 @@
-import { McpServer } from '@modelcontextprotocol/sdk/server/mcp.js';
+// SDK importは.jsを含める
 import { StdioServerTransport } from '@modelcontextprotocol/sdk/server/stdio.js';
+import { Server } from '@modelcontextprotocol/sdk/server/index.js';
+
+// 標準モジュール
 import * as path from 'path';
 import * as fs from 'node:fs';
 import * as os from 'node:os';
+
+// 内部モジュール
 import { createServer } from './server/server.js';
 import { createProxyServer } from './server/proxy-server.js';
-import { Server } from '@modelcontextprotocol/sdk/server/index.js';
-import { config } from './utils/config.js';
 
 /**
  * ロックファイルパス (重複起動防止用)
@@ -101,11 +104,11 @@ async function init() {
   console.log(`Found Node.js at: ${nodePath}`);
   
   const projectRoot = process.cwd();
-  const distPath = path.join(projectRoot, 'dist', 'main.js');
+  const distPath = path.join(projectRoot, 'dist', 'main');
   
   const config = {
     command: nodePath,
-    args: [distPath, 'runWithProxy'],
+    args: [distPath, 'run-proxy'],
   };
   
   console.log(`Looking for existing config in: ${path.dirname(claudeConfigPath)}`);

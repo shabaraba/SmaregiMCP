@@ -259,6 +259,7 @@ export class OpenIdAuthService {
       return session.id;
     } catch (error) {
       console.error(`[ERROR] Token exchange failed: ${error}`);
+      console.error(`[ERROR] stack trace: ${error.trace}`);
       throw new Error(`Authentication failed: ${error instanceof Error ? error.message : String(error)}`);
     }
   }
