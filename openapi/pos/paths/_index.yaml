@@ -13,8 +13,6 @@
   $ref: './products/products.yaml'
 /products/{id}:
   $ref: './products/products_id.yaml'
-/products/bulk:
-  $ref: './products/products_bulk.yaml'
 /products/{id}/prices:
   $ref: './products/products_prices.yaml'
 /products/{id}/prices/changes:
@@ -25,28 +23,28 @@
   $ref: './products/products_attributes.yaml'
 /products/attribute_items:
   $ref: './products/products_attribute_items.yaml'
+/products/attributes/{no}:
+  $ref: './products/products_attributes_no.yaml'
+/products/attribute_items/{code}:
+  $ref: './products/products_attribute_items_code.yaml'
 /products/{id}/stores:
   $ref: './products/products_stores.yaml'
 /products/{id}/inventory_reservations:
   $ref: './products/products_inventory_reservations.yaml'
+/products/{id}/inventory_reservations/{reservation_product_id}:
+  $ref: './products/products_inventory_reservations_id.yaml'
 /products/reserve_item_labels:
   $ref: './products/products_reserve_item_labels.yaml'
 /products/images:
   $ref: './products/products_images.yaml'
 /products/{id}/image:
-  $ref: './products/products_image.yaml'
+  $ref: './products/products_image_id.yaml'
 /products/{id}/icon_image:
   $ref: './products/products_icon_image.yaml'
 /products/{product_id}/prices/{price_division}/{store_id}/{start_date}:
   $ref: './products/products_prices_delete.yaml'
 /products/{product_id}/reserve_items/{no}:
   $ref: './products/products_reserve_items_no.yaml'
-/products/attributes/{no}:
-  $ref: './products/products_attributes_no.yaml'
-/products/attribute_items/{code}:
-  $ref: './products/products_attribute_items_code.yaml'
-/products/{id}/inventory_reservations/{reservation_product_id}:
-  $ref: './products/products_inventory_reservations_id.yaml'
 /products/reserve_item_labels/{no}:
   $ref: './products/products_reserve_item_labels_no.yaml'
 

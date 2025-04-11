@@ -14,18 +14,12 @@ get:
   tags:
     - 商品
   parameters:
-    - name: storeId
+    - name: price_division
       in: query
-      description: 店舗ID
+      description: 価格区分(1：商品単価、2：会員価格、3：原価、4：商品単価詳細、5：会員価格詳細)
       schema:
         type: integer
-        format: int64
-    - name: priceDivision
-      in: query
-      description: 価格区分
-      schema:
-        type: integer
-        format: int32
+        enum: ['1','2','3','4','5']
     - name: limit
       in: query
       description: 取得件数

@@ -14,24 +14,18 @@ get:
   tags:
     - 商品
   parameters:
-    - name: storeId
+    - name: store_id
       in: query
       description: 店舗ID
       schema:
         type: integer
         format: int64
-    - name: priceDivision
+    - name: price_division
       in: query
       description: 価格区分
       schema:
         type: integer
         format: int32
-    - name: startDate
-      in: query
-      description: 適用開始日
-      schema:
-        type: string
-        format: date
     - name: fields
       in: query
       description: 取得するフィールド
@@ -104,71 +98,6 @@ post:
         application/json:
           schema:
             $ref: '../../schemas/products/ProductPrice.yaml'
-    '400':
-      description: リクエストパラメータが不正
-      content:
-        application/json:
-          schema:
-            $ref: '../../schemas/common/Error.yaml'
-    '401':
-      description: 認証エラー
-      content:
-        application/json:
-          schema:
-            $ref: '../../schemas/common/Error.yaml'
-    '403':
-      description: 権限エラー
-      content:
-        application/json:
-          schema:
-            $ref: '../../schemas/common/Error.yaml'
-    '404':
-      description: 商品が存在しない
-      content:
-        application/json:
-          schema:
-            $ref: '../../schemas/common/Error.yaml'
-    '409':
-      description: 既存データとの競合エラー
-      content:
-        application/json:
-          schema:
-            $ref: '../../schemas/common/Error.yaml'
-  security:
-    - AppAccessToken:
-        - pos.products:write
-    - UserAccessToken:
-        - pos.products:write
-
-put:
-  summary: 商品の価格情報一括更新
-  description: 指定した商品IDの価格情報を一括で更新します。
-  operationId: updateProductPrices
-  tags:
-    - 商品
-  requestBody:
-    required: true
-    content:
-      application/json:
-        schema:
-          type: object
-          properties:
-            items:
-              type: array
-              items:
-                $ref: '../../schemas/products/ProductPrice.yaml'
-  responses:
-    '200':
-      description: 商品価格情報の更新に成功
-      content:
-        application/json:
-          schema:
-            type: object
-            properties:
-              items:
-                type: array
-                items:
-                  $ref: '../../schemas/products/ProductPrice.yaml'
     '400':
       description: リクエストパラメータが不正
       content:

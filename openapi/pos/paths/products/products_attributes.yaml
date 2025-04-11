@@ -22,17 +22,6 @@ get:
         format: int32
         minimum: 1
         default: 1
-    - name: attributeNo
-      in: query
-      description: 属性番号
-      schema:
-        type: integer
-        format: int32
-    - name: attributeName
-      in: query
-      description: 属性名称
-      schema:
-        type: string
     - name: fields
       in: query
       description: 取得するフィールド
