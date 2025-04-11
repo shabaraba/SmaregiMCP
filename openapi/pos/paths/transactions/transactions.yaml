@@ -24,19 +24,13 @@ get:
       description: 会員コード
       schema:
         type: string
-    - name: transactionHead.transactionDateTime
-      in: query
-      description: 取引日時。一致検索
-      schema:
-        type: string
-        format: date-time
-    - name: transactionHead.transactionDateTimeFrom
+    - name: transaction_date_time-from
       in: query
       description: 取引日時(From)。範囲検索（開始日時）
       schema:
         type: string
         format: date-time
-    - name: transactionHead.transactionDateTimeTo
+    - name: transaction_date_time-to
       in: query
       description: 取引日時(To)。範囲検索（終了日時）
       schema:
