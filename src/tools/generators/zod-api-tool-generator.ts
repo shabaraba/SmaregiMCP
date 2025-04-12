@@ -104,7 +104,7 @@ export class ZodApiToolGenerator {
     }
 
     const category = segments[0] || "api";
-    const capitalizedResource = this.capitalize(resource).replace(category, "");
+    const capitalizedResource = this.capitalize(resource).replace(new RegExp(category, "gi"), "");
 
     return `${category}_${action}${capitalizedResource}`;
   }
