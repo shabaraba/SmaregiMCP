@@ -1,7 +1,6 @@
 import sqlite3 from 'sqlite3';
 import { TokenEntity } from './entities/token.entity.js';
 import { promisify } from 'util';
-import { TokenResponseDto } from './dto/token-response.dto.js';
 import { config } from '../utils/config.js';
 import * as fs from 'fs';
 import * as path from 'path';

@@ -1,7 +1,7 @@
 import { ZodApiToolGenerator } from './zod-api-tool-generator.js';
 
 // EndpointByMethodのモックデータ
-jest.mock('../../schema/zod/pos.zod.js', () => {
+jest.mock('../../schema/zod/pos.zod', () => {
   return {
     EndpointByMethod: {
       get: {

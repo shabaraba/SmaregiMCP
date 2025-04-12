@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>スマレジ認証エラー</title>
+  <style>
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+      background-color: #f9f9f9;
+      color: #333;
+      line-height: 1.6;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      margin: 0;
+      padding: 20px;
+      box-sizing: border-box;
+    }
+    .container {
+      max-width: 600px;
+      padding: 40px;
+      background-color: white;
+      border-radius: 8px;
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+      text-align: center;
+    }
+    h1 {
+      color: #f44336;
+      margin-bottom: 20px;
+    }
+    p {
+      margin-bottom: 20px;
+      font-size: 16px;
+    }
+    .icon {
+      font-size: 64px;
+      color: #f44336;
+      margin-bottom: 20px;
+    }
+    .error-message {
+      background-color: #fff6f6;
+      padding: 15px;
+      border-radius: 4px;
+      margin-bottom: 25px;
+      font-size: 18px;
+      color: #d32f2f;
+      border: 1px solid #ffcdd2;
+    }
+    .note {
+      font-size: 14px;
+      color: #666;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="icon">✗</div>
+    <h1>認証エラーが発生しました</h1>
+    <div class="error-message">
+      スマレジとの連携中にエラーが発生しました。<br>
+      <span id="error-details">{{ERROR_MESSAGE}}</span>
+    </div>
+    <p>
+      Claude Desktopに戻り、再度認証を試みてください。<br>
+      問題が解決しない場合は、エラーメッセージを確認してください。
+    </p>
+    <p class="note">
+      このページは閉じても構いません。
+    </p>
+  </div>
+</body>
+</html>

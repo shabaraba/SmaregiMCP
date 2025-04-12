@@ -7,6 +7,7 @@ import { packageInfo } from '../utils/package-info.js';
 import { registerResources } from './resources.js';
 import { registerTools } from './tools.js';
 import { registerPrompts } from './prompts.js';
+import { createExpressServer } from './express-server.js';
 
 import { z } from 'zod';
 
@@ -66,11 +67,15 @@ export async function createServer() {
   await registerTools(mcpServer, authService, apiService, apiToolGenerator);
   await registerPrompts(mcpServer);
   
+  // Create and set up Express server for handling auth callbacks
+  const { server: expressServer } = createExpressServer();
+  
   console.error('[INFO] MCP server created and configured successfully');
   
   return { 
     server: mcpServer.server,
-    mcpServer 
+    mcpServer,
+    expressServer
   };
 }
 

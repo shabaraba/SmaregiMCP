@@ -1,15 +1,25 @@
-import { McpServer } from '@modelcontextprotocol/sdk/server/mcp.js';
+// SDK importは.jsを含める
 import { StdioServerTransport } from '@modelcontextprotocol/sdk/server/stdio.js';
+import { Server } from '@modelcontextprotocol/sdk/server/index.js';
+
+// 標準モジュール
 import * as path from 'path';
 import * as fs from 'node:fs';
 import * as os from 'node:os';
+
+// 内部モジュール
 import { createServer } from './server/server.js';
-import { Server } from '@modelcontextprotocol/sdk/server/index.js';
+import { createProxyServer } from './server/proxy-server.js';
 
 /**
  * ロックファイルパス (重複起動防止用)
  */
 const LOCK_FILE_PATH = path.join(os.tmpdir(), 'smaregi-mcp-server.lock');
+
+/**
+ * 環境変数名: ProxyOAuthProviderを使用するかどうか
+ */
+const USE_PROXY_PROVIDER_ENV = 'USE_PROXY_OAUTH_PROVIDER';
 
 /**
  * プロセスが実行中かどうかを確認
@@ -94,11 +104,11 @@ async function init() {
   console.log(`Found Node.js at: ${nodePath}`);
   
   const projectRoot = process.cwd();
-  const distPath = path.join(projectRoot, 'dist', 'main.js');
+  const distPath = path.join(projectRoot, 'dist', 'main');
   
   const config = {
     command: nodePath,
-    args: [distPath, 'run'],
+    args: [distPath, 'run-proxy'],
   };
   
   console.log(`Looking for existing config in: ${path.dirname(claudeConfigPath)}`);
@@ -170,6 +180,13 @@ async function run() {
         // MCPサーバーを終了
         await server.close();
         
+        // Expressサーバーを終了（グローバル変数から取得）
+        if (global.expressServer) {
+          global.expressServer.close(() => {
+            console.error('[INFO] Express server has been closed');
+          });
+        }
+        
         // ロックファイルを削除
         if (fs.existsSync(LOCK_FILE_PATH)) {
           fs.unlinkSync(LOCK_FILE_PATH);
@@ -206,9 +223,23 @@ async function run() {
   };
 
   try {
-    // MCPサーバーを作成
-    const { server, mcpServer } = await createServer();
+    // ProxyOAuthProviderを使用するかどうかを環境変数で判断
+    const useProxyProvider = process.env[USE_PROXY_PROVIDER_ENV] === 'true';
+    
+    let server, mcpServer, expressServer;
+    
+    if (useProxyProvider) {
+      console.error('[INFO] ProxyOAuthProviderを使用してMCPサーバーを起動します');
+      ({ server, mcpServer, expressServer } = await createProxyServer());
+    } else {
+      console.error('[INFO] 通常のAuthServiceを使用してMCPサーバーを起動します');
+      ({ server, mcpServer, expressServer } = await createServer());
+    }
+    
     setupSignalHandlers(server);
+    
+    // Expressサーバーをグローバルビジブルにしてシャットダウンできるようにする
+    global.expressServer = expressServer;
     
     // StdioServerTransport経由で接続
     const transport = new StdioServerTransport();
@@ -227,6 +258,17 @@ async function run() {
     }
     process.exit(1);
   }
+}
+
+/**
+ * ProxyOAuthProviderを使用したMCPサーバー実行
+ */
+async function runWithProxy() {
+  // 環境変数を設定
+  process.env[USE_PROXY_PROVIDER_ENV] = 'true';
+  
+  // 通常の実行関数を呼び出し
+  await run();
 }
 
 // コマンドライン引数のパース
@@ -253,12 +295,26 @@ switch (cmd) {
         process.exit(1);
       });
     break;
+    
+  case 'run-proxy':
+    runWithProxy()
+      .catch((error) => {
+        console.error(`Unhandled error: ${error}`);
+        process.exit(1);
+      });
+    break;
   
   default:
     // ヘルプ表示
     console.log('Usage: node dist/main.js <command>');
     console.log('Available commands:');
-    console.log('  init - Configure the MCP server in Claude Desktop');
-    console.log('  run  - Run the MCP server');
+    console.log('  init      - Configure the MCP server in Claude Desktop');
+    console.log('  run       - Run the MCP server with the standard AuthService');
+    console.log('  run-proxy - Run the MCP server with the ProxyOAuthProvider');
     process.exit(0);
+}
+
+// グローバル型宣言を追加
+declare global {
+  var expressServer: any;
 }

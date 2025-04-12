@@ -21,7 +21,13 @@
     "moduleResolution": "NodeNext",
     "strict": false,
     "forceConsistentCasingInFileNames": true,
-    "resolveJsonModule": true
+    "resolveJsonModule": true,
+    "verbatimModuleSyntax": false,
+    "allowJs": false,
+    "checkJs": false,
+    "paths": {
+      "*": ["src/*", "node_modules/*"]
+    }
   },
   "include": ["src/**/*"],
   "exclude": ["node_modules", "dist", "tests"]
