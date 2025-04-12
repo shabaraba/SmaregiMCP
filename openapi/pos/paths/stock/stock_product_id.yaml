@@ -1,0 +1,43 @@
+patch:
+  tags:
+    - 在庫
+  summary: 在庫更新
+  description: |
+    在庫情報を更新します。
+    在庫数は、入力された値と同じになるよう更新します。
+  operationId: patchProductStock
+  parameters:
+    - name: product_id
+      in: path
+      description: 商品ID
+      schema:
+        type: integer
+  requestBody:
+    content:
+      application/json:
+        schema:
+          $ref: '../../schemas/stocks/StockUpdate.yaml'
+  responses:
+    '200':
+      description: 成功
+      content:
+        application/json:
+          schema:
+            $ref: '../../schemas/stocks/StockUpdate.yaml'
+    '400':
+      description: バリデーションエラー
+      content:
+        application/json:
+          schema:
+            $ref: '../../schemas/common/Error.yaml'
+    '401':
+      description: 認証エラー
+      content:
+        application/json:
+          schema:
+            $ref: '../../schemas/common/Error.yaml'
+  security:
+    - AppAccessToken:
+        - pos.stock:read
+    - UserAccessToken:
+        - pos.stock:read

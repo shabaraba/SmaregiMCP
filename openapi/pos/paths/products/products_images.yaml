@@ -22,7 +22,7 @@ get:
         format: int32
         minimum: 1
         default: 1
-    - name: productId
+    - name: product_id
       in: query
       description: 商品ID
       schema:

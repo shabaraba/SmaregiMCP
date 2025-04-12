@@ -22,12 +22,6 @@ get:
         format: int32
         minimum: 1
         default: 1
-    - name: no
-      in: query
-      description: 予約項目ラベル番号
-      schema:
-        type: integer
-        format: int32
     - name: name
       in: query
       description: 予約項目ラベル名

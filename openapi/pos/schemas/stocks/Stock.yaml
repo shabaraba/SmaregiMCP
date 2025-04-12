@@ -25,11 +25,11 @@ properties:
   categoryName:
     type: string
     description: 部門名
-  quantity:
+  stockAmount:
     type: number
     format: float
     description: 在庫数
-  reservedQuantity:
+  layawayStockAmount:
     type: number
     format: float
     description: 予約在庫数
@@ -37,11 +37,11 @@ properties:
     type: number
     format: float
     description: 棚卸前在庫数
-  lastUpdateDate:
+  upDateTime:
     type: string
     format: date-time
     description: 最終更新日時
 required:
   - storeId
   - productId
-  - quantity
+  - stockAmount

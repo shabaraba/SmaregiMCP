@@ -14,12 +14,6 @@ get:
   tags:
     - 商品
   parameters:
-    - name: reservationProductId
-      in: query
-      description: 引当商品ID
-      schema:
-        type: integer
-        format: int64
     - name: fields
       in: query
       description: 取得するフィールド

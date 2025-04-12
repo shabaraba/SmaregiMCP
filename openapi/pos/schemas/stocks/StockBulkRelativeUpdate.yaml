@@ -6,5 +6,9 @@ properties:
     description: 在庫相対更新情報の配列
     items:
       $ref: './StockRelativeUpdate.yaml'
+  callbackUrl:
+    type: string
+    description: コールバックURL
 required:
   - stocks
+  - callbackUrl

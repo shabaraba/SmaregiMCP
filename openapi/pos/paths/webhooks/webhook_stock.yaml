@@ -1,0 +1,52 @@
+post:
+  tags:
+    - Webhook
+  summary: 在庫
+  description: 在庫の更新時にWebhookを送信します。
+  operationId: webhookStock
+  parameters:
+    - name: Smaregi-Event
+      in: header
+      description: イベント名
+      required: true
+      schema:
+        type: string
+        enum:
+          - pos:stock
+  requestBody:
+    content:
+      application/json:
+        schema:
+          type: object
+          properties:
+            contractId:
+              type: string
+              description: 契約ID
+            event:
+              type: string
+              description: イベント
+            action:
+              type: string
+              description: アクション
+              enum:
+                - edited
+                - bulk-update
+            storeIds:
+              type: array
+              description: 店舗IDリスト
+              items:
+                type: string
+            productIds:
+              type: array
+              description: 商品IDリスト
+              items:
+                type: string
+          required:
+            - contractId
+            - event
+            - action
+            - storeIds
+            - productIds
+  responses:
+    '200':
+      description: 成功

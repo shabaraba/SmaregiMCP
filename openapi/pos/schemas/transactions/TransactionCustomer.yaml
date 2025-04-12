@@ -1,0 +1,21 @@
+type: object
+description: 取引会員更新リクエスト
+properties:
+  customerId:
+    type: integer
+    description: |
+      会員コードとどちらかが必須です。(会員を解除する場合はnullを指定)
+    nullable: true
+  customerCode:
+    type: string
+    description: |
+      会員IDとどちらかが必須です。(会員を解除する場合はnullを指定)
+    nullable: true
+  pointUpdateDivision:
+    type: string
+    enum: ['0','1','2']
+    description: |
+      会員ポイントの更新フラグ。
+      0:（デフォルト値）：ポイント変動なし
+      1:変動あり（対象取引によって実際に加算・減算されたポイントの差分を、更新前のユーザーから更新後のユーザーに付け替える形で更新）
+      2:変動あり（更新前・更新後の会員それぞれに対して、現在の会員個人設定または会員ランク、店舗のポイント付与区分を対象取引の内容に照らして、再計算した当該取引におけるポイント差分を反映する形で更新）

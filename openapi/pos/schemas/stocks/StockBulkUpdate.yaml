@@ -6,5 +6,8 @@ properties:
     description: 在庫更新情報の配列
     items:
       $ref: './StockUpdate.yaml'
+  callbackUrl:
+    type: string
+    description: コールバックURL
 required:
   - stocks

@@ -1,0 +1,49 @@
+post:
+  tags:
+    - 在庫
+  summary: 在庫相対値更新
+  description: 在庫情報を相対値で更新します。現在の値に対し、入力された値を加算（入力値が負の場合は減算）した値に更新します。
+  operationId: updateStockRelative
+  parameters:
+    - name: product_id
+      in: path
+      description: 商品ID
+      required: true
+      schema:
+        type: integer
+  requestBody:
+    content:
+      application/json:
+        schema:
+          $ref: '../../schemas/stocks/StockRelativeUpdate.yaml'
+    required: true
+  responses:
+    '200':
+      description: 成功
+      content:
+        application/json:
+          schema:
+            $ref: '../../schemas/stocks/StockUpdate.yaml'
+    '400':
+      description: バリデーションエラー
+      content:
+        application/json:
+          schema:
+            $ref: '../../schemas/common/Error.yaml'
+    '401':
+      description: 認証エラー
+      content:
+        application/json:
+          schema:
+            $ref: '../../schemas/common/Error.yaml'
+    '404':
+      description: 指定された在庫情報が存在しない
+      content:
+        application/json:
+          schema:
+            $ref: '../../schemas/common/Error.yaml'
+  security:
+    - AppAccessToken:
+        - pos.stock:write
+    - UserAccessToken:
+        - pos.stock:write

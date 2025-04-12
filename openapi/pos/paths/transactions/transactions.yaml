@@ -1,65 +1,9 @@
 get:
   summary: 取引一覧取得
-  description: |-
-    取引一覧を取得します。
-    
-    レスポンスデータは作成日時の降順で取得されます。
+  description: 取引一覧を取得します。
   tags:
     - 取引
   parameters:
-    - name: storeId
-      in: query
-      description: 店舗ID
-      schema:
-        type: integer
-        format: int64
-    - name: customerId
-      in: query
-      description: 会員ID
-      schema:
-        type: integer
-        format: int64
-    - name: customerCode
-      in: query
-      description: 会員コード
-      schema:
-        type: string
-    - name: transactionHead.transactionDateTime
-      in: query
-      description: 取引日時。一致検索
-      schema:
-        type: string
-        format: date-time
-    - name: transactionHead.transactionDateTimeFrom
-      in: query
-      description: 取引日時(From)。範囲検索（開始日時）
-      schema:
-        type: string
-        format: date-time
-    - name: transactionHead.transactionDateTimeTo
-      in: query
-      description: 取引日時(To)。範囲検索（終了日時）
-      schema:
-        type: string
-        format: date-time
-    - name: transactionHead.transactionHeadId
-      in: query
-      description: 取引ヘッドID
-      schema:
-        type: integer
-        format: int64
-    - name: terminal
-      in: query
-      description: 端末ID
-      schema:
-        type: integer
-        format: int64
-    - name: paymentMethod
-      in: query
-      description: 決済方法ID
-      schema:
-        type: integer
-        format: int64
     - name: limit
       in: query
       description: 最大取得件数
@@ -75,6 +19,173 @@ get:
         type: integer
         minimum: 1
         default: 1
+    - name: transaction_head_id-from
+      in: query
+      description: 取引ID(From)
+      schema:
+        type: string
+    - name: transaction_head_id-to
+      in: query
+      description: 取引ID(To)
+      schema:
+        type: string
+    - name: transaction_date_time-from
+      in: query
+      description: |
+        取引日時(From)。範囲検索（開始日時）
+        ※ From〜Toの期間は最大31日までの指定でご利用ください
+        ※ 取引日時(From)(To)、端末取引日時(From)(To)、締め日(From)(To)、更新日時(From)(To)のうち1つ以上を必ず指定してご利用ください
+      schema:
+        type: string
+        format: date-time
+    - name: transaction_date_time-to
+      in: query
+      description: |
+        取引日時(To)。範囲検索（終了日時）
+        ※ From〜Toの期間は最大31日までの指定でご利用ください
+        ※ 取引日時(From)(To)、端末取引日時(From)(To)、締め日(From)(To)、更新日時(From)(To)のうち1つ以上を必ず指定してご利用ください
+      schema:
+        type: string
+        format: date-time
+    - name: transaction_head_division
+      in: query
+      description: 取引区分(1:通常,2:入金,3:出金,4:預かり金,5:預かり金返金,6:ポイント加算,7:ポイント減算,8:ポイント失効,9:回数券,11:チップ,13:マイル加算,14:マイル減算,15：バリューカード入金,16：領収証)
+      schema:
+        type: string
+        enum: ['1','2','3','4','5','6','7','8','9','11','13','14','15','16']
+    - name: store_id
+      in: query
+      description: 店舗ID
+      schema:
+        type: integer
+        format: int64
+    - name: terminal_tran_date_time-from
+      in: query
+      description: |
+        端末取引日時(From)。範囲検索（開始日時）
+        ※ From〜Toの期間は最大31日までの指定でご利用ください
+        ※ 取引日時(From)(To)、端末取引日時(From)(To)、締め日(From)(To)、更新日時(From)(To)のうち1つ以上を必ず指定してご利用ください
+      schema:
+        type: string
+        format: date-time
+    - name: terminal_tran_date_time-to
+      in: query
+      description: |
+        端末取引日時(To)。範囲検索（終了日時）
+        ※ From〜Toの期間は最大31日までの指定でご利用ください
+        ※ 取引日時(From)(To)、端末取引日時(From)(To)、締め日(From)(To)、更新日時(From)(To)のうち1つ以上を必ず指定してご利用ください
+      schema:
+        type: string
+        format: date-time
+    - name: adjustment_date_time
+      in: query
+      description: 精算日時 [YYYY-MM-DDThh:mm:ssTZD]
+      schema:
+        type: string
+        format: date-time
+    - name: sum_date
+      in: query
+      description: 締め日 [YYYY-MM-DD]
+      schema:
+        type: string
+        format: date
+    - name: sum_date-from
+      in: query
+      description: |
+        締め日(From)。範囲検索（開始日）
+        ※ From〜Toの期間は最大31日までの指定でご利用ください
+        ※ 取引日時(From)(To)、端末取引日時(From)(To)、締め日(From)(To)、更新日時(From)(To)のうち1つ以上を必ず指定してご利用ください
+      schema:
+        type: string
+        format: date
+    - name: sum_date-to
+      in: query
+      description: |
+        締め日(To)。範囲検索（終了日）
+        ※ From〜Toの期間は最大31日までの指定でご利用ください
+        ※ 取引日時(From)(To)、端末取引日時(From)(To)、締め日(From)(To)、更新日時(From)(To)のうち1つ以上を必ず指定してご利用ください
+      schema:
+        type: string
+        format: date
+    - name: customer_code
+      in: query
+      description: 会員コード
+      schema:
+        type: string
+    - name: transaction_uuid
+      in: query
+      description: レシート番号：指定した値を完全一致で検索します
+      schema:
+        type: string
+    - name: barcode
+      in: query
+      description: バーコード：指定したバーコードの仮販売データに紐づく、取引データを取得します。
+      schema:
+        type: string
+    - name: upd_date_time-from
+      in: query
+      description: |
+        更新日時(From)：登録時・更新時の日時。締め日(From)[YYYY-MM-DD]
+        ※ From〜Toの期間は最大31日までの指定でご利用ください
+        ※ 取引日時(From)(To)、端末取引日時(From)(To)、締め日(From)(To)、更新日時(From)(To)のうち1つ以上を必ず指定してご利用ください
+      schema:
+        type: string
+        format: date-time
+    - name: upd_date_time-to
+      in: query
+      description: |
+        更新日時(To)：登録時・更新時の日時。締め日(From)[YYYY-MM-DD]
+        ※ From〜Toの期間は最大31日までの指定でご利用ください
+        ※ 取引日時(From)(To)、端末取引日時(From)(To)、締め日(From)(To)、更新日時(From)(To)のうち1つ以上を必ず指定してご利用ください
+      schema:
+        type: string
+        format: date-time
+    - name: with_details
+      in: query
+      description: |
+        取引明細情報を付加するか(全項目付加する場合はall,
+        一部項目を付加する場合はsummary, しない場合はnone)
+        ※ none以外に設定する場合、limitは100以下のみ設定可能。
+      schema:
+        type: string
+        enum: ['none', 'all', 'summary']
+        default: 'none'
+    - name: with_deposit_others
+      in: query
+      description: |
+        その他支払い情報を付加するか(付加する場合はall, しない場合はnone)
+      schema:
+        type: string
+        enum: ['none', 'all']
+        default: 'none'
+    - name: with_layaways
+      in: query
+      description: 取置き情報を付加するか(付加する場合はall, しない場合はnone)
+      schema:
+        type: string
+        enum: ['none', 'all']
+        default: 'none'
+    - name: with_layaway_pick_ups
+      in: query
+      description: 取置き引取情報を付加するか(付加する場合はall, しない場合はnone)
+      schema:
+        type: string
+        enum: ['none', 'all']
+        default: 'none'
+    - name: with_money_control
+      in: query
+      description: 取引金操作情報を付加するか(付加する場合はall, しない場合はnone)
+      schema:
+        type: string
+        enum: ['none', 'all']
+        default: 'none'
+    - name: with_detail_product_attributes
+      in: query
+      description: 販売時の商品属性情報を付加するか(付加する場合はall, しない場合はnone)
+      schema:
+        type: string
+        enum: ['none', 'all']
+        default: 'none'
   responses:
     "200":
       description: 成功時のレスポンス

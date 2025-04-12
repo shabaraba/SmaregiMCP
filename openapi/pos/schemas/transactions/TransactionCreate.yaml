@@ -1,6 +1,183 @@
 type: object
 description: 取引作成リクエスト
 properties:
+  transactionHeadDivision:
+    type: string
+    enum: ['1','2','3','4','5','6','7','13','14']
+    description: |
+      取引を識別する区分。
+      （1:通常、2:入金、3:出金、4:預かり金、 5:預かり金返金、6:ポイント加算、7:ポイント減算、8:ポイント失効、10:取置き、13:マイル加算、14:マイル減算、15:バリューカード入金、16:領収証）
+      ※ 10:取置きについては、取置き登録APIをご使用ください。
+      ※ 8:ポイント失効、9:回数券、11:チップ、15バリューカード入金、16:領収証は対応しておりません。
+  cancelDivision:
+    type: string
+    enum: ['0', '1']
+    default: '0'
+    description: 取引の取消を識別する区分。 (0:通常、1取消）
+  subtotal:
+    type: integer
+    format: int64
+    description: |
+      取引明細の値引き後小計の合計。
+      ※明細合計と異なる場合エラー
+  subtotalDiscountPrice:
+    type: integer
+    format: int64
+    description: 小計の値引き金額を設定
+  subtotalDiscountRate:
+    type: integer
+    format: int64
+    description: |
+      小計の割引を設定 （単位％） デフォルトは未設定。
+      設定された場合、小計値引は必須。
+      ※小計値引率から小計値引は計算しないため小計値引に値引額を設定してください。
+  subtotalDiscountDivision:
+    type: integer
+    format: int64
+    description: |
+      小計値引き/割引時に指定された区分を設定。
+      管理画面->設定->販売設定->値引区分/割引区分のページで確認できるID。
+  pointDiscount:
+    type: integer
+    format: int64
+    description: |
+      使用ポイント * ポイント還元率。
+  total:
+    type: integer
+    format: int64
+    description: |
+      小計 - 小計値引き - ポイント値引き - クーポン値引き + 端数値引額 + 外税額 + 手数料 + 送料 - 免税額 を設定
+      ※ 端数値引き機能は現在ご利用いただけません
+  taxInclude:
+    type: integer
+    format: int64
+    description: |
+      内税商品計 / 110 * 10。
+      ※税率が10%の場合
+      ※小数点以下は税の丸め方式で指定の通り
+  taxExclude:
+    type: integer
+    format: int64
+    description: |
+      外税商品計 / 110 * 10。
+      ※税率が10%の場合
+      ※小数点以下は税の丸め方式で指定の通り
+  roundingDivision:
+    type: string
+    enum: ['00','11','12','13','21','22','23','31','32','33','41','42','43','99']
+    description: |
+      販売時の合計金額の端数を丸めるか否かを設定する。
+      00:なし
+      11:一の位を四捨五入 12:一の位を切捨 13:一の位を切上
+      21:十の位を四捨五入 22:十の位を切捨 23:十の位を切上
+      31:百の位を四捨五入 32:百の位を切捨 33:百の位を切上
+      41:千の位を四捨五入 42:千の位を切捨 43:千の位を切上
+      99:手入力
+  roundingPrice:
+    type: integer
+    format: int64
+    description: |
+      端数値引額
+  deposit:
+    type: integer
+    format: int64
+    description: |
+      会計時に預かった金額。（預かり金現金 + 預かり金クレジット + 預かり金その他)
+      ※預かり金を正しく設定しないと、日報が正しく表示されません。
+  depositcash:
+    type: integer
+    format: int64
+    description: |
+      会計時に預かった現金金額。
+      ※現金支払の場合必ず設定。（預かり金現金 - 釣銭)が現金支払額に設定されます。
+      ※預かり金を正しく設定しないと、日報が正しく表示されません。
+  depositCredit:
+    type: integer
+    format: int64
+    description: |
+      会計時に預かったクレジット金額。
+      ※クレジット払いの場合必ず設定。預かり金クレジットが内クレジット支払金額に設定されます。
+      ※預かり金を正しく設定しないと、日報が正しく表示されません。
+  change:
+    type: integer
+    format: int64
+    description: |
+      釣銭。現金の返却金額。
+      ※預かり金を正しく設定しないと、日報が正しく表示されません。
+  newPoint:
+    type: integer
+    format: int64
+    default: 0
+    description: |
+      取引で付与されるポイント。 合計 * ポイント付与率
+      会員IDが設定されている場合、会員ポイント情報を更新。
+      ※省略時は0を設定
+      スマレジのポイント算出方式について
+      1. カード会社・支払方法にポイント付与単位(金額)とポイント付与単位(ポイント)の設定がない場合
+      付与されるポイントはポイント対象金額 / ポイント付与単位(金額) * ポイント付与単位(ポイント)で計算されます。(端数切り捨て） スマレジ・アプリから取引登録された時に採用されるポイント付与情報は会員のポイント付与率が未設定だった場合は会員ランクを、 会員ランクも未設定だった場合は店舗のポイント付与単位(金額)及びポイント付与単位(ポイント)が採用されます。
+        - 会員ランクのポイント付与単位(金額)及びポイント付与単位(金額)については、スマレジ管理画面の[設定]->[会員設定]->[会員ランク]よりご確認ください。
+        - 店舗のポイント付与単位(金額)については店舗登録APIのRequest Body記載のpointCondition.pointGivingUnitPriceをご確認ください。
+        - 会員のポイント付与単位(金額)については会員登録APIのRequest Body記載のpointGivingUnitPriceをご確認ください。
+  spendPoint:
+    type: integer
+    format: int64
+    default: 0
+    description: |
+      取引で使用したポイント。
+      会員IDが設定されている場合、会員ポイント情報を更新。
+      ※省略時は0を設定
+  point:
+    type: integer
+    format: int64
+    default: 0
+    description: |
+      取引前のポイント
+  totalPoint:
+    type: integer
+    format: int64
+    default: 0
+    description: |
+      取引後のポイント 現在ポイント + 付与ポイント - 使用ポイント。
+  currentMile:
+    type: integer
+    format: int64
+    default: 0
+    description: |
+      取引前のマイル
+  earnMile:
+    type: integer
+    format: int64
+    default: 0
+    description: |
+      取引で付与されるマイル
+      合計 * ポイント付与率
+  totalMile:
+    type: integer
+    format: int64
+    default: 0
+    description: |
+      取引後のマイル
+      現在マイル + 獲得マイル + 調整マイル
+  adjustmentMile:
+    type: integer
+    format: int64
+    default: 0
+    description: |
+      取引で手動で付与されるマイル
+  adjustmentMileDivision:
+    type: string
+    enum: ['1','2','3','4']
+    description: |
+      調整マイルの区分
+      1:0マイル　（マイルを付与しない。「調整マイル = -1 * 獲得マイル」）
+      2:マイル指定（指定したマイルにする。「調整マイル = 入力値 - 獲得マイル」）
+      3:マイル加算（マイルを加算/減算する。「調整マイル =入力値」）
+      4:マイルｎ倍（指定倍数にする。「調整マイル = 獲得マイル * (n - 1)」
+  adjustmentMileValue:
+    type: integer
+    format: int64
+    description: |
+      調整マイルの入力値
   storeId:
     type: integer
     format: int64
@@ -14,202 +191,362 @@ properties:
     format: int64
     description: 会員ID
     nullable: true
+  customerCode:
+    type: string
+    description: |
+      会員毎に付与する一意のコード。
+      ※設定された場合、会員IDは必須。
+      ※会員マスタに存在する会員IDが設定されている場合、会員情報の会員コードと一致しないとエラー。
+      ※省略時、会員IDが設定されている場合、会員マスタの会員コードを設定。（スマレジ管理画面ver.4.12.0リリース以降）
+  terminalTranId:
+    type: integer
+    format: int64
+    description: |
+      端末で設定された取引ID。(連携元システムで任意の連番を設定してください）
+  terminalTranDateTime:
+    type: string
+    format: date-time
+    description: |
+      端末で設定された取引日時。[YYYY-MM-DDThh:mm:ssTZD]（連携元システムで処理日時を設定してください）
+  sumDivision:
+    type: string
+    enum: ['0','1','2']
+    default: '0'
+    description: |
+      締め処理を実施したかの区分。 （0:未処理、1:精算処理済み、2:締め処理済み）
+      ※省略時は、店舗情報の締め方式区分に合わせて設定します。
+      ※0:未処理または1:精算処理済みは、店舗の締め方式区分が「手動締め処理」のときのみ設定可能。
+      ※存在しない端末IDを設定した場合、2:締め処理済みを設定してください。
+  sumDate:
+    type: string
+    format: date
+    description: |
+      締めをしたら年月日が入る。 [YYYY-MM-DD]
+      ※締め区分を2に設定した場合必須。締め区分を0に設定した場合設定不可。
+  customerRank:
+    type: string
+    description: |
+      管理画面の[設定]→[会員設定]→[会員ランク]で設定したコードを設定してください。
+      存在しないコードを設定するとエラーになります。
+  customerGroupId:
+    type: integer
+    format: int64
+    description: |
+      客層ID。客層セクションIDが1の客層IDを設定。
+      ※客層情報が存在しない場合エラー
+  customerGroupId2:
+    type: integer
+    format: int64
+    description: |
+      客層ID2。客層セクションIDが2の客層IDを設定。
+      ※客層情報が存在しない場合エラー
+  customerGroupId3:
+    type: integer
+    format: int64
+    description: |
+      客層ID3。客層セクションIDが3の客層IDを設定。
+      ※客層情報が存在しない場合エラー
+  customerGroupId4:
+    type: integer
+    format: int64
+    description: |
+      客層ID4。客層セクションIDが4の客層IDを設定。
+      ※客層情報が存在しない場合エラー
+  customerGroupId5:
+    type: integer
+    format: int64
+    description: |
+      客層ID5。客層セクションIDが5の客層IDを設定。
+      ※客層情報が存在しない場合エラー
   staffId:
     type: integer
     format: int64
     description: スタッフID
-    nullable: true
-  transactionDateTime:
-    type: string
-    format: date-time
-    description: 取引日時
-  totalAmount:
-    type: number
-    format: double
-    description: 合計金額
-  taxIncludedAmount:
-    type: number
-    format: double
-    description: 内税額
-  taxExcludedAmount:
-    type: number
-    format: double
-    description: 外税額
-  subtotalAmount:
-    type: number
-    format: double
-    description: 小計金額
-  paymentAmount:
-    type: number
-    format: double
-    description: 支払金額
-  changeAmount:
-    type: number
-    format: double
-    description: お釣り金額
-  pointAmount:
-    type: number
-    format: double
-    description: ポイント使用額
-    nullable: true
-  paymentType:
-    type: integer
-    description: |-
-      支払種別
-      * 1: 現金
-      * 2: クレジットカード
-      * 3: 電子マネー
-      * 4: 商品券
-      * 5: 複合決済
-      * 6: その他
-  status:
-    type: integer
-    description: |-
-      取引ステータス
-      * 1: 会計済
-      * 2: 返品
-      * 3: 取消
-  receiptNo:
-    type: string
-    description: レシート番号
-  receiptText:
-    type: string
-    description: レシートテキスト
-    nullable: true
   memo:
     type: string
     description: メモ
-    nullable: true
+  receiptMemo:
+    type: string
+    description: レシートに印字するメモ
+  carriage:
+    type: integer
+    format: int64
+    description: EC連携用送料。
+  commission:
+    type: integer
+    format: int64
+    description: EC連携用手数料。
+  guestNumbers:
+    type: integer
+    format: int64
+    description: 客数
+  guestNumbersMale:
+    type: integer
+    format: int64
+    description: 客数(男)
+  guestNumbersFemale:
+    type: integer
+    format: int64
+    description: 客数(女)
+  guestNumbersUnknown:
+    type: integer
+    format: int64
+    description: 客数(不明)
+  enterDateTime:
+    type: string
+    format: date-time
+    description: 入店日時
+  taxFreeSalesDivision:
+    type: string
+    enum: ['0','1','2','3','4','5']
+    default: '0'
+    description: |
+      免税販売区分 (0:通常販売、1:免税販売(自動計算)、2:免税販売(強制免税適用)、3:免税販売(一般品のみ強制免税適用)、4:免税販売(消耗品のみ強制免税適用)、5:免税販売(自動計算・合算))
+      ※未設定の場合、0:通常販売
+  netTaxFreeGeneralTaxInclude:
+    type: integer
+    format: int64
+    description: 内税商品の一般品免税額。
+  netTaxFreeGeneralTaxExclude:
+    type: integer
+    format: int64
+    description: 外税商品の一般品免税額。
+  netTaxFreeConsumableTaxInclude:
+    type: integer
+    format: int64
+    description: 内税商品の消耗般品免税額。
+  netTaxFreeConsumableTaxExclude:
+    type: integer
+    format: int64
+    description: 外税商品の消耗般品免税額。
+  tags:
+    type: string
+    description: |
+      レジ端末よりクイックコマンドを押下した値を設定。 和名を設定する。
+      ※1取引タグは最大64文字。複数ある場合は、カンマ区切りで設定。
+  pointGivingDivision:
+    type: string
+    enum: ['1','2','3','4']
+    description: |
+      1:税額を含める + 利用ポイント分を含める、
+      2:税額を含めない + 利用ポイント分を含める、
+      3:税額を含める + 利用ポイント分を含めない、
+      4:税額を含めない + 利用ポイント分を含めない
+      ※省略時、店舗マスタから設定。
+  pointGivingUnitPrice:
+    type: integer
+    format: int64
+    description: |
+      ポイント付与の設定 n円をnポイントの「n円」の部分。 （設定範囲1円～99999円)
+      （例10円ごとに2ポイントの場合、10円）
+      ※未設定の場合は店舗マスタから設定。
+  pointGivingUnit:
+    type: integer
+    format: int64
+    description: |
+      ポイント付与の設定 n円をnポイントの「nポイント」の部分 （設定範囲0.00ポイント～99999.99ポイント)
+      （例10円ごとに0.2ポイントの場合、0.2ポイント）
+      ※未設定の場合は店舗マスタから設定。
+  pointSpendDivision:
+    type: string
+    enum: ['1','2']
+    description: |
+      ポイント利用時の税を含む／含まないを判定。
+      1:ポイント利用を現金として扱う (税を含む値引き)
+      2:ポイント利用を値引として扱う (税を含まない値引き)
+      ※未設定の場合は店舗マスタから設定。 初期値:1。
+  mileageDivision:
+    type: string
+    enum: ['0','1','2']
+    description: |
+      マイレージ機能を利用するか否か。 (0: 利用しない 1: 利用する 2: ポイントの代わりに貯める)
+      ※未設定の場合は店舗マスタから設定。 初期値:0。
+  mileageLabel:
+    type: string
+    description: |
+      マイレージの名称。未設定の場合は「マイル」
+  customerPinCode:
+    type: string
+    description: |
+      自由な文字列。 PINコードなど会員を識別する任意の文字列を設定してください。
+  sellDivision:
+    type: string
+    enum: ['0','1']
+    description: |
+      取引が外税販売、内税販売かを識別する区分。 （0:内税販売、1:外税販売）
+      ※省略時は0:内税販売を設定
+  taxRate:
+    type: number
+    format: float
+    description: |
+      税率 （単位％）
+      ※省略時は、スマレジに設定されている消費税を設定（端末取引日時より算出）
+  taxRounding:
+    type: string
+    enum: ['0','1','2']
+    description: |
+      税の丸めを判定。 0:四捨五入、1:切り捨て、2:切り上げ
+      ※省略時はスマレジに設定されている税の丸め方式を設定
+  discountRoundingDivision:
+    type: string
+    enum: ['0','1','2']
+    description: |
+      割引の端数を丸める方法を指定する区分。 0:四捨五入、1:切り捨て、2:切り上げ
+      ※省略時は店舗マスタに設定されている税の丸め方式を設定
+  transactionUuid:
+    type: string
+    description: |
+      レシートに印字する番号。ユニークな値を設定してください。
+      ※レシート番号が重複するとスマレジ・アプリにて取引データの呼び出しができなくなる可能性があります
+      ※省略時は、1970年から計算した現在秒の末尾9桁＋端末IDゼロ詰め4桁
+  exchangeTicketNo:
+    type: string
+    description: |
+      引換券番号
+  giftReceiptValidDays:
+    type: integer
+    format: int64
+    description: |
+      有効日数が経過しても、ギフトレシートの引換ができなくなるわけではありません。
+  discountCalculateDivision:
+    type: string
+    enum: ['0','1']
+    description: |
+      小計に対する値引または割引の上にさらに割引を行う際の、割引額の算出方法を指定する区分。
+      0:小計（明細から算出された、値引・割引前の小計を一律対象に割引率を乗算したものを割引額とします。）
+      1:他の値引割引に追従した小計（小計に対し他の値引・割引で変動した後の金額を都度対象に割引率を乗算したものを割引額とします。小計値引・割引 → クーポン値引・割引 の順番で計算されます。）
+      ※割引額計算対象の設定値は取引登録後にスマレジ・アプリにて取引を編集する際の割引額算出に使用します。
+      ※（注）取引登録APIでは、自動算出した値ではなくsubtotalDiscountPrice(小計値引き)の設定値を割引額に登録します。そのため、APIで登録される取引の割引額が割引額計算対象の設定値によって変動することはありません。
+  barcode:
+    type: string
+    description: |
+      仮販売のバーコード。
+      ※ 複数ある場合はカンマ区切り。
+  layawayServerTransactionHeadId:
+    type: integer
+    format: int64
+    description: |
+      取置きの取引ID。
+      ※ 指定した取置き取引を引取済にします。
   details:
     type: array
     description: 取引詳細
     items:
       type: object
       properties:
+        transactionDetailId:
+          type: integer
+          format: int64
+          description: |
+            ユニーク値 取引毎の明細に付与するID。
+            設定する場合は1〜999まで。
+            取引明細を指定する場合必須。
+        parentTransactionDetailId:
+          type: integer
+          format: int64
+          description: |
+            紐付く親の取引明細がある場合、その取引明細IDを設定。
+            ※商品区分が、0（通常販売）, 4（バンドル(親)）の場合は設定できず、2（オプション商品）の場合はオプション元の取引明細IDを、7（バンドル子）, 8（バンドル値引）の時は、バンドル(親)の取引明細IDを設定しなければならない。
+        transactionDetailDivision:
+          type: string
+          enum: ['1','2','3']
+          description: |
+            取引明細を識別する区分。
+            （1:通常、2:返品、3:部門売り）
+            取引明細を指定する場合必須。
         productId:
           type: integer
           format: int64
-          description: 商品ID
-          nullable: true
+          description: |
+            商品毎に付与するID
+            ※ 存在しない商品IDが設定されている場合、nullを登録。
+            ※ 商品IDで指定された商品の持つ商品区分が 1:回数券 の明細は登録できません。
+            ※ ユーザーアクセストークンを利用する場合、ユーザーの所属する店舗で販売している商品IDを指定してください。
         productCode:
           type: string
-          description: 商品コード
+          description: |
+            商品コード。（半角英数記号 20桁以内）
+            省略時、商品IDが設定されている場合、マスタから設定。その他の場合はnull。
           nullable: true
         productName:
           type: string
-          description: 商品名
+          description: |
+            商品名
+            省略時、商品区分が0:通常、2:オプション商品、7:バンドル商品(子)、8:バンドル値引(子)で商品IDが設定されている場合、商品マスタから設定。商品区分が4:バンドル (親)で商品バンドルグループIDが設定されている場合、商品バンドルグループマスタから設定。その他の場合はnull。
+          nullable: true
+        printReceiptProductName:
+          type: string
+          description: |
+            レシート印字商品名
+            省略時、商品IDが設定されている場合、マスタから設定。その他の場合はnull。
+          nullable: true
+        taxDivision:
+          type: string
+          enum: ['0','1','2']
+          description: |
+            税区分
+            (0:税込、1:税抜、2:非課税)
+            ※設定時そのまま設定
+            ※省略時、商品IDが設定されている場合、マスタから設定。その他の場合は0:税込。
+        price:
+          type: integer
+          format: int64
+          description: |
+            単価
+            ※設定時そのまま設定
+            ※省略時、商品IDが設定されている場合、マスタから設定。その他の場合は0円。
+        salesPrice:
+          type: integer
+          format: int64
+          description: |
+            販売単価
+            販売時の単価を設定。
+            取引明細を指定する場合必須。
+        unitDiscountPrice:
+          type: integer
+          format: int64
+          description: 単品値引額。販売単価の値引き金額を設定。
+        unitDiscountRate:
+          type: integer
+          format: int64
+          description: |
+            単品の割引率を設定。（単位:％）
+            ※このフィールドはラベルであり、販売単価の値引き金額の算出には利用されません。
+            ※設定された場合、単品値引は必須
+        unitDiscountDivision:
+          type: integer
+          format: int64
+          description: |
+            単品値引き/割引時に指定された割引区分を設定。
+        quantity:
+          type: integer
+          format: int64
+          description: 購入数。取引明細を指定する場合必須。
         categoryId:
           type: integer
           format: int64
-          description: 部門ID
-          nullable: true
-        price:
-          type: number
-          format: double
-          description: 単価
-        quantity:
-          type: number
-          format: double
-          description: 数量
-        unitDiscountAmount:
-          type: number
-          format: double
-          description: 単品値引額
-          nullable: true
-        unitDiscountRate:
-          type: number
-          format: double
-          description: 単品値引率
-          nullable: true
-        unitDiscountType:
-          type: integer
-          description: |-
-            単品値引種別
-            * 1: 金額値引
-            * 2: 率値引
-          nullable: true
-        subtotalAmount:
-          type: number
-          format: double
-          description: 小計金額
-        taxRate:
-          type: number
-          format: double
-          description: 税率
-        taxType:
-          type: integer
-          description: |-
-            税種別
-            * 1: 内税
-            * 2: 外税
-        detailType:
-          type: integer
-          description: |-
-            明細種別
-            * 1: 通常商品
-            * 2: セット親商品
-            * 3: セット子商品
-            * 4: 返品親明細
-            * 5: 返品子明細
-            * 6: 訂正明細
-            * 7: 取引値引
-            * 8: 小計値引
-            * 9: 小計割引
-            * 10: クーポン明細
+          description: |
+            商品に紐付く部門毎に付与するID。数字9桁以内。
+            ※部門情報が存在しない場合、エラー
+            ※商品IDが設定されている場合、商品情報の部門IDと一致しないとエラー
+            ※省略時、商品IDが設定されている場合、商品マスタの部門IDを設定
+        categoryName:
+          type: string
+          description: |
+            商品に紐付く部門名。(85文字以内)
+            ※設定時、そのまま設定。
+            ※省略時、部門IDが設定されている場合、マスタから設定。その他の場合はnull。
+# 以降TODO
       required:
-        - productName
-        - price
+        - transactionDetailId
+        - transactionDetailDivision
+        - salesPrice
         - quantity
-        - subtotalAmount
-        - taxRate
-        - taxType
-        - detailType
-  payments:
-    type: array
-    description: 支払明細
-    items:
-      type: object
-      properties:
-        paymentMethodId:
-          type: integer
-          format: int64
-          description: 支払方法ID
-        paymentMethodName:
-          type: string
-          description: 支払方法名
-        amount:
-          type: number
-          format: double
-          description: 支払金額
-        paymentNo:
-          type: string
-          description: 決済番号
-          nullable: true
-        cardCompanyId:
-          type: integer
-          format: int64
-          description: カード会社ID
-          nullable: true
-        cardCompanyName:
-          type: string
-          description: カード会社名
-          nullable: true
-      required:
-        - paymentMethodId
-        - paymentMethodName
-        - amount
 required:
+  - transactionHeadDivision
+  - subtotal
+  - total
   - storeId
   - terminalId
-  - transactionDateTime
-  - totalAmount
-  - taxIncludedAmount
-  - taxExcludedAmount
-  - subtotalAmount
-  - paymentAmount
-  - changeAmount
-  - paymentType
-  - status
-  - receiptNo
-  - details
-  - payments
+  - terminalTranId
+  - terminalTranDateTime

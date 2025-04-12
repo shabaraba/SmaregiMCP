@@ -1,0 +1,47 @@
+post:
+  tags:
+    - Webhook
+  summary: ロス
+  description: ロスの登録・更新・削除時にWebhookを送信します。
+  operationId: webhookLosses
+  parameters:
+    - name: Smaregi-Event
+      in: header
+      description: イベント名
+      required: true
+      schema:
+        type: string
+        enum:
+          - pos:losses
+  requestBody:
+    content:
+      application/json:
+        schema:
+          type: object
+          properties:
+            contractId:
+              type: string
+              description: 契約ID
+            event:
+              type: string
+              description: イベント
+            action:
+              type: string
+              description: アクション
+              enum:
+                - created
+                - edited
+                - deleted
+            lossIds:
+              type: array
+              description: ロスIDリスト
+              items:
+                type: string
+          required:
+            - contractId
+            - event
+            - action
+            - lossIds
+  responses:
+    '200':
+      description: 成功

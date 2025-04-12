@@ -14,6 +14,30 @@ get:
   tags:
     - 商品
   parameters:
+    - name: limit
+      in: query
+      description: 取得件数
+      schema:
+        type: integer
+        format: int32
+        minimum: 1
+        maximum: 1000
+        default: 100
+    - name: page
+      in: query
+      description: ページ番号
+      schema:
+        type: integer
+        format: int32
+        minimum: 1
+        default: 1
+    - name: sort
+      in: query
+      description: ソート順
+      schema:
+        type: string
+        enum:
+          - no
     - name: fields
       in: query
       description: 取得するフィールド
@@ -67,122 +91,3 @@ get:
     - UserAccessToken:
         - pos.products:read
 
-post:
-  summary: 商品の予約項目登録
-  description: 指定した商品IDに予約項目情報を登録します。
-  operationId: createProductReserveItem
-  tags:
-    - 商品
-  requestBody:
-    required: true
-    content:
-      application/json:
-        schema:
-          $ref: '../../schemas/products/ProductReserveItem.yaml'
-  responses:
-    '201':
-      description: 商品予約項目の登録に成功
-      content:
-        application/json:
-          schema:
-            $ref: '../../schemas/products/ProductReserveItem.yaml'
-    '400':
-      description: リクエストパラメータが不正
-      content:
-        application/json:
-          schema:
-            $ref: '../../schemas/common/Error.yaml'
-    '401':
-      description: 認証エラー
-      content:
-        application/json:
-          schema:
-            $ref: '../../schemas/common/Error.yaml'
-    '403':
-      description: 権限エラー
-      content:
-        application/json:
-          schema:
-            $ref: '../../schemas/common/Error.yaml'
-    '404':
-      description: 商品が存在しない
-      content:
-        application/json:
-          schema:
-            $ref: '../../schemas/common/Error.yaml'
-    '409':
-      description: 既存データとの競合エラー
-      content:
-        application/json:
-          schema:
-            $ref: '../../schemas/common/Error.yaml'
-  security:
-    - AppAccessToken:
-        - pos.products:write
-    - UserAccessToken:
-        - pos.products:write
-
-put:
-  summary: 商品の予約項目一括更新
-  description: 指定した商品IDの予約項目情報を一括で更新します。
-  operationId: updateProductReserveItems
-  tags:
-    - 商品
-  requestBody:
-    required: true
-    content:
-      application/json:
-        schema:
-          type: object
-          properties:
-            items:
-              type: array
-              items:
-                $ref: '../../schemas/products/ProductReserveItem.yaml'
-  responses:
-    '200':
-      description: 商品予約項目情報の更新に成功
-      content:
-        application/json:
-          schema:
-            type: object
-            properties:
-              items:
-                type: array
-                items:
-                  $ref: '../../schemas/products/ProductReserveItem.yaml'
-    '400':
-      description: リクエストパラメータが不正
-      content:
-        application/json:
-          schema:
-            $ref: '../../schemas/common/Error.yaml'
-    '401':
-      description: 認証エラー
-      content:
-        application/json:
-          schema:
-            $ref: '../../schemas/common/Error.yaml'
-    '403':
-      description: 権限エラー
-      content:
-        application/json:
-          schema:
-            $ref: '../../schemas/common/Error.yaml'
-    '404':
-      description: 商品が存在しない
-      content:
-        application/json:
-          schema:
-            $ref: '../../schemas/common/Error.yaml'
-    '409':
-      description: 既存データとの競合エラー
-      content:
-        application/json:
-          schema:
-            $ref: '../../schemas/common/Error.yaml'
-  security:
-    - AppAccessToken:
-        - pos.products:write
-    - UserAccessToken:
-        - pos.products:write

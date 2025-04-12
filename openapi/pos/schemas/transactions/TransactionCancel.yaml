@@ -1,0 +1,27 @@
+type: object
+description: 取引取消リクエスト
+properties:
+  cancelDateTime:
+    type: string
+    format: date-time
+    description: |
+      取消／打消しの場合自動設定。[YYYY-MM-DDThh:mm:ssTZD]
+      未設定の場合、自動で設定されます。
+    nullable: true
+  depositOthers:
+    type: array
+    description: |
+      個別アプリ専用支払方法IDを指定した決済で取消伝票番号を登録するのに利用します
+      ※現状は最大１つしか指定できません
+    items:
+      type: object
+      properties:
+        no:
+          type: string
+          enum: ['1','2','3']
+          description: 個別アプリ専用支払方法IDを設定した項番を指定してください
+        cancelSlipNumber:
+          type: string
+          description: |
+            キャッシュレス決済時の取消伝票番号を設定してください
+            ※個別アプリ専用支払方法登録APIで登録した支払方法IDを指定した場合しか利用できません

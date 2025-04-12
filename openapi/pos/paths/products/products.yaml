@@ -39,82 +39,73 @@ get:
           - cost
           - modified
         default: productId
-    - name: order
-      in: query
-      description: ソート順序
-      schema:
-        type: string
-        enum:
-          - asc
-          - desc
-        default: asc
-    - name: productId
+    - name: product_id
       in: query
       description: 商品ID
       schema:
         type: integer
         format: int64
-    - name: productCode
+    - name: product_code
       in: query
       description: 商品コード
       schema:
         type: string
-    - name: janCode
+    - name: group_code
       in: query
-      description: JANコード
+      description: グループコード
       schema:
         type: string
-    - name: productName
-      in: query
-      description: 商品名
-      schema:
-        type: string
-    - name: categoryId
+    - name: category_id
       in: query
       description: 部門ID
       schema:
         type: integer
         format: int64
-    - name: categoryCode
+    - name: display_flag
       in: query
-      description: 部門コード
+      description: 端末表示（0. 表示しない、1. 表示する）
       schema:
         type: string
-    - name: supplierId
+        enum: ['0', '1']
+    - name: division
       in: query
-      description: 仕入先ID
-      schema:
-        type: integer
-        format: int64
-    - name: supplierCode
-      in: query
-      description: 仕入先コード
+      description: 商品区分 (0：通常商品、1：回数券、2：オプション商品)
       schema:
         type: string
-    - name: storeId
+        enum: ['0', '1', '2']
+    - name: sales_division
       in: query
-      description: 店舗ID
+      description: 売上区分 (0:売上対象、1:売上対象外)
       schema:
-        type: integer
-        format: int64
-    - name: status
+        type: string
+        enum: ['0', '1']
+    - name: stock_control_division
       in: query
-      description: ステータス
+      description: 在庫管理区分 (0:在庫管理対象、1:在庫管理対象外)
       schema:
-        type: integer
-        enum:
-          - 0  # 未使用
-          - 1  # 使用中
-    - name: productType
+        type: string
+        enum: ['0', '1']
+    - name: supplier_product_no
       in: query
-      description: 商品タイプ
+      description: 品番
       schema:
-        type: integer
-        enum:
-          - 0  # 通常商品
-          - 1  # セット販売
-          - 2  # 簡易バンドル販売
-          - 9  # その他
+        type: string
+    - name: upd_date_time-from
+      in: query
+      description: |
+        更新日時(From)：登録時・更新時の日時。[YYYY-MM-DDThh:mm:ssTZD]
+        ※ From〜Toの期間は最大31日までの指定でご利用ください
+      schema:
+        type: string
+        format: date-time
+    - name: upd_date_time-to
+      in: query
+      description: |
+        更新日時(To)：登録時・更新時の日時。[YYYY-MM-DDThh:mm:ssTZD]
+        ※ From〜Toの期間は最大31日までの指定でご利用ください
+      schema:
+        type: string
+        format: date-time
     - name: fields
       in: query
       description: 取得するフィールド
@@ -122,7 +113,6 @@ get:
         type: array
         items:
           type: string
-        default: ["*"]
   responses:
     '200':
       description: 商品一覧を返却

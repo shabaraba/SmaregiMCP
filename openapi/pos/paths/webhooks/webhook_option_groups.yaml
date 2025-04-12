@@ -1,0 +1,47 @@
+post:
+  tags:
+    - Webhook
+  summary: オプショングループ
+  description: オプショングループの登録・更新・削除時にWebhookを送信します。
+  operationId: webhookOptionGroups
+  parameters:
+    - name: Smaregi-Event
+      in: header
+      description: イベント名
+      required: true
+      schema:
+        type: string
+        enum:
+          - pos:option-groups
+  requestBody:
+    content:
+      application/json:
+        schema:
+          type: object
+          properties:
+            contractId:
+              type: string
+              description: 契約ID
+            event:
+              type: string
+              description: イベント
+            action:
+              type: string
+              description: アクション
+              enum:
+                - created
+                - edited
+                - deleted
+            optionGroupIds:
+              type: array
+              description: オプショングループIDリスト
+              items:
+                type: string
+          required:
+            - contractId
+            - event
+            - action
+            - optionGroupIds
+  responses:
+    '200':
+      description: 成功

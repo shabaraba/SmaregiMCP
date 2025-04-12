@@ -1,0 +1,50 @@
+patch:
+  summary: 取引会員更新
+  description: |-
+    取引の会員情報を更新します。
+  tags:
+    - 取引
+  parameters:
+    - name: id
+      in: path
+      required: true
+      description: 取引ID
+      schema:
+        type: integer
+        format: int64
+  requestBody:
+    required: true
+    content:
+      application/json:
+        schema:
+          $ref: "../../schemas/transactions/TransactionCustomer.yaml"
+  responses:
+    "200":
+      description: 成功時のレスポンス
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              message:
+                type: string
+                description: 取引会員更新完了メッセージ
+                example: "取引会員更新が完了しました"
+    "400":
+      description: バリデーションエラー
+      content:
+        application/json:
+          schema:
+            $ref: "../../schemas/common/Error.yaml"
+    "404":
+      description: 指定された取引が見つからない
+      content:
+        application/json:
+          schema:
+            $ref: "../../schemas/common/Error.yaml"
+  security:
+    - AppAccessToken:
+        - pos.transactions:write
+    - UserAccessToken:
+        - pos.transactions:write
+
