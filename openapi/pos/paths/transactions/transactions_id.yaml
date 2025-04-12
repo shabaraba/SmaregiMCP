@@ -11,6 +11,117 @@ get:
       schema:
         type: integer
         format: int64
+    - name: with_details
+      in: query
+      description: |
+        取引明細情報を付加するか(全項目付加する場合はall,
+        一部項目を付加する場合はsummary, しない場合はnone)
+      schema:
+        type: string
+        enum: ['none', 'all', 'summary']
+        default: 'none'
+    - name: with_deposit_others
+      in: query
+      description: |
+        その他支払い情報を付加するか(付加する場合はall, しない場合はnone)
+      schema:
+        type: string
+        enum: ['none', 'all']
+        default: 'none'
+    - name: with_coupons
+      in: query
+      description: |
+        クーポン情報を付加するか(付加する場合はall, しない場合はnone)
+        対象プラン プレミアム／プレミアムプラス／フードビジネス／リテールビジネス
+      schema:
+        type: string
+        enum: ['none', 'all']
+        default: 'none'
+    - name: with_coupon_items
+      in: query
+      description: |
+        クーポン商品付与情報を付加するか(付加する場合はall, しない場合はnone)
+        対象プラン プレミアム／プレミアムプラス／フードビジネス／リテールビジネス
+      schema:
+        type: string
+        enum: ['none', 'all']
+        default: 'none'
+    - name: with_discounts
+      in: query
+      description: |
+        小計値引／割引、単品値引／割引の値引区分や割引区分情報を付加するか(付加する場合はall, しない場合はnone)
+      schema:
+        type: string
+        enum: ['none', 'all']
+        default: 'none'
+    - name: with_store
+      in: query
+      description: |
+        店舗情報を付加するか(付加する場合はall, しない場合はnone)
+      schema:
+        type: string
+        enum: ['none', 'all']
+        default: 'none'
+    - name: with_customer
+      in: query
+      description: |
+        会員情報を付加するか(付加する場合はall, しない場合はnone)
+      schema:
+        type: string
+        enum: ['none', 'all']
+        default: 'none'
+    - name: with_customer_groups
+      in: query
+      description: |
+        客層情報を付加するか(付加する場合はall, しない場合はnone)
+      schema:
+        type: string
+        enum: ['none', 'all']
+        default: 'none'
+    - name: with_staff
+      in: query
+      description: |
+        スタッフ情報を付加するか(付加する場合はall, しない場合はnone)
+      schema:
+        type: string
+        enum: ['none', 'all']
+        default: 'none'
+    - name: with_recorded_staff
+      in: query
+      description: |
+        取引時のスタッフ情報を付加するか(付加する場合はall, しない場合はnone)
+      schema:
+        type: string
+        enum: ['none', 'all']
+        default: 'none'
+    - name: with_layaways
+      in: query
+      description: 取置き情報を付加するか(付加する場合はall, しない場合はnone)
+      schema:
+        type: string
+        enum: ['none', 'all']
+        default: 'none'
+    - name: with_layaway_pick_ups
+      in: query
+      description: 取置き引取情報を付加するか(付加する場合はall, しない場合はnone)
+      schema:
+        type: string
+        enum: ['none', 'all']
+        default: 'none'
+    - name: with_money_control
+      in: query
+      description: 取引金操作情報を付加するか(付加する場合はall, しない場合はnone)
+      schema:
+        type: string
+        enum: ['none', 'all']
+        default: 'none'
+    - name: with_detail_product_attributes
+      in: query
+      description: 販売時の商品属性情報を付加するか(付加する場合はall, しない場合はnone)
+      schema:
+        type: string
+        enum: ['none', 'all']
+        default: 'none'
   responses:
     "200":
       description: 成功時のレスポンス
@@ -30,7 +141,7 @@ get:
     - UserAccessToken:
         - pos.transactions:read
 
-put:
+patch:
   summary: 取引更新
   description: |-
     取引情報を更新します。

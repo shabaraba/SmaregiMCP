@@ -1,39 +1,9 @@
 get:
-  summary: 預かり取引一覧取得
-  description: |-
-    預かり取引一覧を取得します。
-    
-    レスポンスデータは作成日時の降順で取得されます。
+  summary: 取置一覧取得
+  description: 取置一覧を取得します。
   tags:
     - 取引
   parameters:
-    - name: storeId
-      in: query
-      description: 店舗ID
-      schema:
-        type: integer
-        format: int64
-    - name: status
-      in: query
-      description: |-
-        ステータス
-        * 1: 預かり
-        * 2: 終了
-      schema:
-        type: integer
-        enum: [1, 2]
-    - name: layaway.layawayDateTimeFrom
-      in: query
-      description: 預かり日時(From)。範囲検索（開始日時）
-      schema:
-        type: string
-        format: date-time
-    - name: layaway.layawayDateTimeTo
-      in: query
-      description: 預かり日時(To)。範囲検索（終了日時）
-      schema:
-        type: string
-        format: date-time
     - name: limit
       in: query
       description: 最大取得件数
@@ -49,6 +19,130 @@ get:
         type: integer
         minimum: 1
         default: 1
+    - name: transaction_head_id-from
+      in: query
+      description: 取引ID(From)
+      schema:
+        type: string
+    - name: transaction_head_id-to
+      in: query
+      description: 取引ID(To)
+      schema:
+        type: string
+    - name: transaction_date_time-from
+      in: query
+      description: |
+        取引日時(From)。範囲検索（開始日時）
+        ※ From〜Toの期間は最大31日までの指定でご利用ください
+        ※ 取引日時(From)(To)、端末取引日時(From)(To)、締め日(From)(To)、更新日時(From)(To)のうち1つ以上を必ず指定してご利用ください
+      schema:
+        type: string
+        format: date-time
+    - name: transaction_date_time-to
+      in: query
+      description: |
+        取引日時(To)。範囲検索（終了日時）
+        ※ From〜Toの期間は最大31日までの指定でご利用ください
+        ※ 取引日時(From)(To)、端末取引日時(From)(To)、締め日(From)(To)、更新日時(From)(To)のうち1つ以上を必ず指定してご利用ください
+      schema:
+        type: string
+        format: date-time
+    - name: store_id
+      in: query
+      description: 店舗ID
+      schema:
+        type: integer
+        format: int64
+    - name: terminal_tran_date_time-from
+      in: query
+      description: |
+        端末取引日時(From)。範囲検索（開始日時）
+        ※ From〜Toの期間は最大31日までの指定でご利用ください
+        ※ 取引日時(From)(To)、端末取引日時(From)(To)、締め日(From)(To)、更新日時(From)(To)のうち1つ以上を必ず指定してご利用ください
+      schema:
+        type: string
+        format: date-time
+    - name: terminal_tran_date_time-to
+      in: query
+      description: |
+        端末取引日時(To)。範囲検索（終了日時）
+        ※ From〜Toの期間は最大31日までの指定でご利用ください
+        ※ 取引日時(From)(To)、端末取引日時(From)(To)、締め日(From)(To)、更新日時(From)(To)のうち1つ以上を必ず指定してご利用ください
+      schema:
+        type: string
+        format: date-time
+    - name: adjustment_date_time
+      in: query
+      description: 精算日時 [YYYY-MM-DDThh:mm:ssTZD]
+      schema:
+        type: string
+        format: date-time
+    - name: sum_date
+      in: query
+      description: 締め日 [YYYY-MM-DD]
+      schema:
+        type: string
+        format: date
+    - name: sum_date-from
+      in: query
+      description: |
+        締め日(From)。範囲検索（開始日）
+        ※ From〜Toの期間は最大31日までの指定でご利用ください
+        ※ 取引日時(From)(To)、端末取引日時(From)(To)、締め日(From)(To)、更新日時(From)(To)のうち1つ以上を必ず指定してご利用ください
+      schema:
+        type: string
+        format: date
+    - name: sum_date-to
+      in: query
+      description: |
+        締め日(To)。範囲検索（終了日）
+        ※ From〜Toの期間は最大31日までの指定でご利用ください
+        ※ 取引日時(From)(To)、端末取引日時(From)(To)、締め日(From)(To)、更新日時(From)(To)のうち1つ以上を必ず指定してご利用ください
+      schema:
+        type: string
+        format: date
+    - name: customer_code
+      in: query
+      description: 会員コード
+      schema:
+        type: string
+    - name: transaction_uuid
+      in: query
+      description: レシート番号：指定した値を完全一致で検索します
+      schema:
+        type: string
+    - name: upd_date_time-from
+      in: query
+      description: |
+        更新日時(From)：登録時・更新時の日時。締め日(From)[YYYY-MM-DD]
+        ※ From〜Toの期間は最大31日までの指定でご利用ください
+        ※ 取引日時(From)(To)、端末取引日時(From)(To)、締め日(From)(To)、更新日時(From)(To)のうち1つ以上を必ず指定してご利用ください
+      schema:
+        type: string
+        format: date-time
+    - name: upd_date_time-to
+      in: query
+      description: |
+        更新日時(To)：登録時・更新時の日時。締め日(From)[YYYY-MM-DD]
+        ※ From〜Toの期間は最大31日までの指定でご利用ください
+        ※ 取引日時(From)(To)、端末取引日時(From)(To)、締め日(From)(To)、更新日時(From)(To)のうち1つ以上を必ず指定してご利用ください
+      schema:
+        type: string
+        format: date-time
+    - name: with_layaway
+      in: query
+      description: 取置き情報を付加するか(付加する場合はall, しない場合はnone)
+      schema:
+        type: string
+        enum: ['none', 'all']
+        default: 'none'
+    - name: with_layaway_pick_up
+      in: query
+      description: 取置き引取情報を付加するか(付加する場合はall, しない場合はnone)
+      schema:
+        type: string
+        enum: ['none', 'all']
+        default: 'none'
   responses:
     "200":
       description: 成功時のレスポンス
@@ -57,18 +151,12 @@ get:
           schema:
             type: object
             properties:
-              layaways:
+              transactions:
                 type: array
                 items:
                   $ref: "../../schemas/transactions/Layaway.yaml"
               pagination:
                 $ref: "../../schemas/common/Pagination.yaml"
-    "400":
-      description: バリデーションエラー
-      content:
-        application/json:
-          schema:
-            $ref: "../../schemas/common/Error.yaml"
   security:
     - AppAccessToken:
         - pos.transactions:read
@@ -76,11 +164,11 @@ get:
         - pos.transactions:read
 
 post:
-  summary: 預かり取引作成
+  summary: 取引作成
   description: |-
-    預かり取引情報を作成します。
+    取引情報を作成します。
     
-    作成した預かり取引データには、自動的に預かり取引IDが割り当てられます。
+    作成した取引データには、自動的に取引IDが割り当てられます。
   tags:
     - 取引
   requestBody:
@@ -100,7 +188,7 @@ post:
               id:
                 type: integer
                 format: int64
-                description: 作成された預かり取引ID
+                description: 作成された取引ID
     "400":
       description: バリデーションエラー
       content:

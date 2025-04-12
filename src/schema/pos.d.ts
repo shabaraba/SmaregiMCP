@@ -550,34 +550,6 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
-    "/products/bulk": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        get?: never;
-        /**
-         * 商品の一括更新
-         * @description 複数の商品を一括で更新します。
-         *     一括更新では、1リクエストで最大100件まで処理することができます。
-         *
-         */
-        put: operations["bulkUpdateProducts"];
-        /**
-         * 商品の一括登録
-         * @description 複数の商品を一括で登録します。
-         *     一括登録では、1リクエストで最大100件まで処理することができます。
-         *
-         */
-        post: operations["bulkCreateProducts"];
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
     "/products/{id}/prices": {
         parameters: {
             query?: never;
@@ -593,11 +565,7 @@ export interface paths {
          * @description 指定した商品IDの価格情報を取得します。
          */
         get: operations["getProductPrices"];
-        /**
-         * 商品の価格情報一括更新
-         * @description 指定した商品IDの価格情報を一括で更新します。
-         */
-        put: operations["updateProductPrices"];
+        put?: never;
         /**
          * 商品の価格情報登録
          * @description 指定した商品IDに価格情報を登録します。
@@ -632,6 +600,35 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/products/{product_id}/prices/{price_division}/{store_id}/{start_date}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                /** @description 商品ID */
+                product_id: number;
+                /** @description 価格区分 */
+                price_division: number;
+                /** @description 店舗ID */
+                store_id: number;
+                /** @description 適用開始日(YYYY-MM-DD形式) */
+                start_date: string;
+            };
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post?: never;
+        /**
+         * 商品価格情報の削除
+         * @description 指定した商品の特定価格区分、店舗、適用開始日の価格情報を削除します。
+         */
+        delete: operations["deleteProductPrice"];
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/products/{id}/reserve_items": {
         parameters: {
             query?: never;
@@ -647,16 +644,8 @@ export interface paths {
          * @description 指定した商品IDの予約項目情報を取得します。
          */
         get: operations["getProductReserveItems"];
-        /**
-         * 商品の予約項目一括更新
-         * @description 指定した商品IDの予約項目情報を一括で更新します。
-         */
-        put: operations["updateProductReserveItems"];
-        /**
-         * 商品の予約項目登録
-         * @description 指定した商品IDに予約項目情報を登録します。
-         */
-        post: operations["createProductReserveItem"];
+        put?: never;
+        post?: never;
         delete?: never;
         options?: never;
         head?: never;
@@ -709,6 +698,60 @@ export interface paths {
         options?: never;
         head?: never;
         patch?: never;
+        trace?: never;
+    };
+    "/products/attributes/{no}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                /** @description 属性番号 */
+                no: number;
+            };
+            cookie?: never;
+        };
+        get?: never;
+        /**
+         * 商品属性の更新
+         * @description 指定した番号の商品属性情報を更新します。
+         */
+        put: operations["updateProductAttribute"];
+        post?: never;
+        /**
+         * 商品属性の削除
+         * @description 指定した番号の商品属性を削除します。属性項目や商品との関連が存在する場合は削除できません。
+         */
+        delete: operations["deleteProductAttribute"];
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/products/attribute_items/{code}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                /** @description 属性項目コード */
+                code: string;
+            };
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post?: never;
+        /**
+         * 商品属性項目の削除
+         * @description 指定したコードの商品属性項目を削除します。商品との関連が存在する場合は削除できません。
+         */
+        delete: operations["deleteProductAttributeItem"];
+        options?: never;
+        head?: never;
+        /**
+         * 商品属性項目の更新
+         * @description 指定したコードの商品属性項目情報を更新します。
+         */
+        patch: operations["updateProductAttributeItem"];
         trace?: never;
     };
     "/products/{id}/stores": {
@@ -773,6 +816,31 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/products/{id}/inventory_reservations/{reservation_product_id}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                /** @description 商品ID */
+                id: number;
+                /** @description 引当商品ID */
+                reservation_product_id: number;
+            };
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post?: never;
+        /**
+         * 商品の在庫引当情報削除
+         * @description 指定した商品IDと引当商品IDの在庫引当情報を削除します。
+         */
+        delete: operations["deleteProductInventoryReservation"];
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/products/reserve_item_labels": {
         parameters: {
             query?: never;
@@ -792,6 +860,58 @@ export interface paths {
          */
         post: operations["createProductReserveItemLabel"];
         delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/products/{product_id}/reserve_items/{no}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                /** @description 商品ID */
+                product_id: number;
+                /** @description 予約項目番号 */
+                no: number;
+            };
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post?: never;
+        /**
+         * 商品の予約項目削除
+         * @description 指定した商品IDと予約項目番号の予約項目情報を削除します。
+         */
+        delete: operations["deleteProductReserveItem"];
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/products/reserve_item_labels/{no}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                /** @description 予約項目ラベル番号 */
+                no: number;
+            };
+            cookie?: never;
+        };
+        get?: never;
+        /**
+         * 予約項目ラベルの更新
+         * @description 指定した番号の予約項目ラベル情報を更新します。
+         */
+        put: operations["updateProductReserveItemLabel"];
+        post?: never;
+        /**
+         * 予約項目ラベルの削除
+         * @description 指定した番号の予約項目ラベルを削除します。商品の予約項目での使用があると削除できません。
+         */
+        delete: operations["deleteProductReserveItemLabel"];
         options?: never;
         head?: never;
         patch?: never;
@@ -831,11 +951,7 @@ export interface paths {
             };
             cookie?: never;
         };
-        /**
-         * 商品メイン画像の取得
-         * @description 指定した商品IDのメイン画像を取得します。
-         */
-        get: operations["getProductImage"];
+        get?: never;
         /**
          * 商品メイン画像の更新
          * @description 指定した商品IDのメイン画像を更新します。
@@ -862,11 +978,7 @@ export interface paths {
             };
             cookie?: never;
         };
-        /**
-         * 商品アイコン画像の取得
-         * @description 指定した商品IDのアイコン画像を取得します。
-         */
-        get: operations["getProductIconImage"];
+        get?: never;
         /**
          * 商品アイコン画像の更新
          * @description 指定した商品IDのアイコン画像を更新します。
@@ -883,194 +995,6 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
-    "/products/{product_id}/prices/{price_division}/{store_id}/{start_date}": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path: {
-                /** @description 商品ID */
-                product_id: number;
-                /** @description 価格区分 */
-                price_division: number;
-                /** @description 店舗ID */
-                store_id: number;
-                /** @description 適用開始日(YYYY-MM-DD形式) */
-                start_date: string;
-            };
-            cookie?: never;
-        };
-        get?: never;
-        put?: never;
-        post?: never;
-        /**
-         * 商品価格情報の削除
-         * @description 指定した商品の特定価格区分、店舗、適用開始日の価格情報を削除します。
-         */
-        delete: operations["deleteProductPrice"];
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/products/{product_id}/reserve_items/{no}": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path: {
-                /** @description 商品ID */
-                product_id: number;
-                /** @description 予約項目番号 */
-                no: number;
-            };
-            cookie?: never;
-        };
-        /**
-         * 特定の商品予約項目取得
-         * @description 指定した商品IDと予約項目番号の予約項目情報を取得します。
-         */
-        get: operations["getProductReserveItem"];
-        /**
-         * 商品の予約項目更新
-         * @description 指定した商品IDと予約項目番号の予約項目情報を更新します。
-         */
-        put: operations["updateProductReserveItem"];
-        post?: never;
-        /**
-         * 商品の予約項目削除
-         * @description 指定した商品IDと予約項目番号の予約項目情報を削除します。
-         */
-        delete: operations["deleteProductReserveItem"];
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/products/attributes/{no}": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path: {
-                /** @description 属性番号 */
-                no: number;
-            };
-            cookie?: never;
-        };
-        /**
-         * 商品属性の取得
-         * @description 指定した番号の商品属性情報を取得します。
-         */
-        get: operations["getProductAttribute"];
-        /**
-         * 商品属性の更新
-         * @description 指定した番号の商品属性情報を更新します。
-         */
-        put: operations["updateProductAttribute"];
-        post?: never;
-        /**
-         * 商品属性の削除
-         * @description 指定した番号の商品属性を削除します。属性項目や商品との関連が存在する場合は削除できません。
-         */
-        delete: operations["deleteProductAttribute"];
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/products/attribute_items/{code}": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path: {
-                /** @description 属性項目コード */
-                code: string;
-            };
-            cookie?: never;
-        };
-        /**
-         * 商品属性項目の取得
-         * @description 指定したコードの商品属性項目情報を取得します。
-         */
-        get: operations["getProductAttributeItem"];
-        /**
-         * 商品属性項目の更新
-         * @description 指定したコードの商品属性項目情報を更新します。
-         */
-        put: operations["updateProductAttributeItem"];
-        post?: never;
-        /**
-         * 商品属性項目の削除
-         * @description 指定したコードの商品属性項目を削除します。商品との関連が存在する場合は削除できません。
-         */
-        delete: operations["deleteProductAttributeItem"];
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/products/{id}/inventory_reservations/{reservation_product_id}": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path: {
-                /** @description 商品ID */
-                id: number;
-                /** @description 引当商品ID */
-                reservation_product_id: number;
-            };
-            cookie?: never;
-        };
-        /**
-         * 特定の商品在庫引当情報取得
-         * @description 指定した商品IDと引当商品IDの在庫引当情報を取得します。
-         */
-        get: operations["getProductInventoryReservation"];
-        /**
-         * 商品の在庫引当情報更新
-         * @description 指定した商品IDと引当商品IDの在庫引当情報を更新します。
-         */
-        put: operations["updateProductInventoryReservation"];
-        post?: never;
-        /**
-         * 商品の在庫引当情報削除
-         * @description 指定した商品IDと引当商品IDの在庫引当情報を削除します。
-         */
-        delete: operations["deleteProductInventoryReservation"];
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/products/reserve_item_labels/{no}": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path: {
-                /** @description 予約項目ラベル番号 */
-                no: number;
-            };
-            cookie?: never;
-        };
-        /**
-         * 予約項目ラベルの取得
-         * @description 指定した番号の予約項目ラベル情報を取得します。
-         */
-        get: operations["getProductReserveItemLabel"];
-        /**
-         * 予約項目ラベルの更新
-         * @description 指定した番号の予約項目ラベル情報を更新します。
-         */
-        put: operations["updateProductReserveItemLabel"];
-        post?: never;
-        /**
-         * 予約項目ラベルの削除
-         * @description 指定した番号の予約項目ラベルを削除します。商品の予約項目での使用があると削除できません。
-         */
-        delete: operations["deleteProductReserveItemLabel"];
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
     "/transactions": {
         parameters: {
             query?: never;
@@ -1081,34 +1005,88 @@ export interface paths {
         /**
          * 取引一覧取得
          * @description 取引一覧を取得します。
-         *
-         *     レスポンスデータは作成日時の降順で取得されます。
          */
         get: {
             parameters: {
                 query?: {
-                    /** @description 店舗ID */
-                    storeId?: number;
-                    /** @description 会員ID */
-                    customerId?: number;
-                    /** @description 会員コード */
-                    customerCode?: string;
-                    /** @description 取引日時。一致検索 */
-                    "transactionHead.transactionDateTime"?: string;
-                    /** @description 取引日時(From)。範囲検索（開始日時） */
-                    "transactionHead.transactionDateTimeFrom"?: string;
-                    /** @description 取引日時(To)。範囲検索（終了日時） */
-                    "transactionHead.transactionDateTimeTo"?: string;
-                    /** @description 取引ヘッドID */
-                    "transactionHead.transactionHeadId"?: number;
-                    /** @description 端末ID */
-                    terminal?: number;
-                    /** @description 決済方法ID */
-                    paymentMethod?: number;
                     /** @description 最大取得件数 */
                     limit?: number;
                     /** @description ページ番号 */
                     page?: number;
+                    /** @description 取引ID(From) */
+                    "transaction_head_id-from"?: string;
+                    /** @description 取引ID(To) */
+                    "transaction_head_id-to"?: string;
+                    /** @description 取引日時(From)。範囲検索（開始日時）
+                     *     ※ From〜Toの期間は最大31日までの指定でご利用ください
+                     *     ※ 取引日時(From)(To)、端末取引日時(From)(To)、締め日(From)(To)、更新日時(From)(To)のうち1つ以上を必ず指定してご利用ください
+                     *      */
+                    "transaction_date_time-from"?: string;
+                    /** @description 取引日時(To)。範囲検索（終了日時）
+                     *     ※ From〜Toの期間は最大31日までの指定でご利用ください
+                     *     ※ 取引日時(From)(To)、端末取引日時(From)(To)、締め日(From)(To)、更新日時(From)(To)のうち1つ以上を必ず指定してご利用ください
+                     *      */
+                    "transaction_date_time-to"?: string;
+                    /** @description 取引区分(1:通常,2:入金,3:出金,4:預かり金,5:預かり金返金,6:ポイント加算,7:ポイント減算,8:ポイント失効,9:回数券,11:チップ,13:マイル加算,14:マイル減算,15：バリューカード入金,16：領収証) */
+                    transaction_head_division?: "1" | "2" | "3" | "4" | "5" | "6" | "7" | "8" | "9" | "11" | "13" | "14" | "15" | "16";
+                    /** @description 店舗ID */
+                    store_id?: number;
+                    /** @description 端末取引日時(From)。範囲検索（開始日時）
+                     *     ※ From〜Toの期間は最大31日までの指定でご利用ください
+                     *     ※ 取引日時(From)(To)、端末取引日時(From)(To)、締め日(From)(To)、更新日時(From)(To)のうち1つ以上を必ず指定してご利用ください
+                     *      */
+                    "terminal_tran_date_time-from"?: string;
+                    /** @description 端末取引日時(To)。範囲検索（終了日時）
+                     *     ※ From〜Toの期間は最大31日までの指定でご利用ください
+                     *     ※ 取引日時(From)(To)、端末取引日時(From)(To)、締め日(From)(To)、更新日時(From)(To)のうち1つ以上を必ず指定してご利用ください
+                     *      */
+                    "terminal_tran_date_time-to"?: string;
+                    /** @description 精算日時 [YYYY-MM-DDThh:mm:ssTZD] */
+                    adjustment_date_time?: string;
+                    /** @description 締め日 [YYYY-MM-DD] */
+                    sum_date?: string;
+                    /** @description 締め日(From)。範囲検索（開始日）
+                     *     ※ From〜Toの期間は最大31日までの指定でご利用ください
+                     *     ※ 取引日時(From)(To)、端末取引日時(From)(To)、締め日(From)(To)、更新日時(From)(To)のうち1つ以上を必ず指定してご利用ください
+                     *      */
+                    "sum_date-from"?: string;
+                    /** @description 締め日(To)。範囲検索（終了日）
+                     *     ※ From〜Toの期間は最大31日までの指定でご利用ください
+                     *     ※ 取引日時(From)(To)、端末取引日時(From)(To)、締め日(From)(To)、更新日時(From)(To)のうち1つ以上を必ず指定してご利用ください
+                     *      */
+                    "sum_date-to"?: string;
+                    /** @description 会員コード */
+                    customer_code?: string;
+                    /** @description レシート番号：指定した値を完全一致で検索します */
+                    transaction_uuid?: string;
+                    /** @description バーコード：指定したバーコードの仮販売データに紐づく、取引データを取得します。 */
+                    barcode?: string;
+                    /** @description 更新日時(From)：登録時・更新時の日時。締め日(From)[YYYY-MM-DD]
+                     *     ※ From〜Toの期間は最大31日までの指定でご利用ください
+                     *     ※ 取引日時(From)(To)、端末取引日時(From)(To)、締め日(From)(To)、更新日時(From)(To)のうち1つ以上を必ず指定してご利用ください
+                     *      */
+                    "upd_date_time-from"?: string;
+                    /** @description 更新日時(To)：登録時・更新時の日時。締め日(From)[YYYY-MM-DD]
+                     *     ※ From〜Toの期間は最大31日までの指定でご利用ください
+                     *     ※ 取引日時(From)(To)、端末取引日時(From)(To)、締め日(From)(To)、更新日時(From)(To)のうち1つ以上を必ず指定してご利用ください
+                     *      */
+                    "upd_date_time-to"?: string;
+                    /** @description 取引明細情報を付加するか(全項目付加する場合はall,
+                     *     一部項目を付加する場合はsummary, しない場合はnone)
+                     *     ※ none以外に設定する場合、limitは100以下のみ設定可能。
+                     *      */
+                    with_details?: "none" | "all" | "summary";
+                    /** @description その他支払い情報を付加するか(付加する場合はall, しない場合はnone)
+                     *      */
+                    with_deposit_others?: "none" | "all";
+                    /** @description 取置き情報を付加するか(付加する場合はall, しない場合はnone) */
+                    with_layaways?: "none" | "all";
+                    /** @description 取置き引取情報を付加するか(付加する場合はall, しない場合はnone) */
+                    with_layaway_pick_ups?: "none" | "all";
+                    /** @description 取引金操作情報を付加するか(付加する場合はall, しない場合はnone) */
+                    with_money_control?: "none" | "all";
+                    /** @description 販売時の商品属性情報を付加するか(付加する場合はall, しない場合はnone) */
+                    with_detail_product_attributes?: "none" | "all";
                 };
                 header?: never;
                 path?: never;
@@ -1204,7 +1182,49 @@ export interface paths {
          */
         get: {
             parameters: {
-                query?: never;
+                query?: {
+                    /** @description 取引明細情報を付加するか(全項目付加する場合はall,
+                     *     一部項目を付加する場合はsummary, しない場合はnone)
+                     *      */
+                    with_details?: "none" | "all" | "summary";
+                    /** @description その他支払い情報を付加するか(付加する場合はall, しない場合はnone)
+                     *      */
+                    with_deposit_others?: "none" | "all";
+                    /** @description クーポン情報を付加するか(付加する場合はall, しない場合はnone)
+                     *     対象プラン プレミアム／プレミアムプラス／フードビジネス／リテールビジネス
+                     *      */
+                    with_coupons?: "none" | "all";
+                    /** @description クーポン商品付与情報を付加するか(付加する場合はall, しない場合はnone)
+                     *     対象プラン プレミアム／プレミアムプラス／フードビジネス／リテールビジネス
+                     *      */
+                    with_coupon_items?: "none" | "all";
+                    /** @description 小計値引／割引、単品値引／割引の値引区分や割引区分情報を付加するか(付加する場合はall, しない場合はnone)
+                     *      */
+                    with_discounts?: "none" | "all";
+                    /** @description 店舗情報を付加するか(付加する場合はall, しない場合はnone)
+                     *      */
+                    with_store?: "none" | "all";
+                    /** @description 会員情報を付加するか(付加する場合はall, しない場合はnone)
+                     *      */
+                    with_customer?: "none" | "all";
+                    /** @description 客層情報を付加するか(付加する場合はall, しない場合はnone)
+                     *      */
+                    with_customer_groups?: "none" | "all";
+                    /** @description スタッフ情報を付加するか(付加する場合はall, しない場合はnone)
+                     *      */
+                    with_staff?: "none" | "all";
+                    /** @description 取引時のスタッフ情報を付加するか(付加する場合はall, しない場合はnone)
+                     *      */
+                    with_recorded_staff?: "none" | "all";
+                    /** @description 取置き情報を付加するか(付加する場合はall, しない場合はnone) */
+                    with_layaways?: "none" | "all";
+                    /** @description 取置き引取情報を付加するか(付加する場合はall, しない場合はnone) */
+                    with_layaway_pick_ups?: "none" | "all";
+                    /** @description 取引金操作情報を付加するか(付加する場合はall, しない場合はnone) */
+                    with_money_control?: "none" | "all";
+                    /** @description 販売時の商品属性情報を付加するか(付加する場合はall, しない場合はnone) */
+                    with_detail_product_attributes?: "none" | "all";
+                };
                 header?: never;
                 path: {
                     /** @description 取引ID */
@@ -1234,13 +1254,60 @@ export interface paths {
                 };
             };
         };
+        put?: never;
+        post?: never;
+        /**
+         * 取引削除
+         * @description 取引情報を削除します。
+         */
+        delete: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path: {
+                    /** @description 取引ID */
+                    id: number;
+                };
+                cookie?: never;
+            };
+            requestBody?: never;
+            responses: {
+                /** @description 成功時のレスポンス（コンテンツなし） */
+                204: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content?: never;
+                };
+                /** @description 指定された取引が見つからない */
+                404: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["Error"];
+                    };
+                };
+                /** @description 取引が既に処理済みなど、削除できない状態である */
+                409: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["Error"];
+                    };
+                };
+            };
+        };
+        options?: never;
+        head?: never;
         /**
          * 取引更新
          * @description 取引情報を更新します。
          *
          *     リクエストボディに含まれていないフィールドは更新されません。
          */
-        put: {
+        patch: {
             parameters: {
                 query?: never;
                 header?: never;
@@ -1291,53 +1358,6 @@ export interface paths {
                 };
             };
         };
-        post?: never;
-        /**
-         * 取引削除
-         * @description 取引情報を削除します。
-         */
-        delete: {
-            parameters: {
-                query?: never;
-                header?: never;
-                path: {
-                    /** @description 取引ID */
-                    id: number;
-                };
-                cookie?: never;
-            };
-            requestBody?: never;
-            responses: {
-                /** @description 成功時のレスポンス（コンテンツなし） */
-                204: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content?: never;
-                };
-                /** @description 指定された取引が見つからない */
-                404: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content: {
-                        "application/json": components["schemas"]["Error"];
-                    };
-                };
-                /** @description 取引が既に処理済みなど、削除できない状態である */
-                409: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content: {
-                        "application/json": components["schemas"]["Error"];
-                    };
-                };
-            };
-        };
-        options?: never;
-        head?: never;
-        patch?: never;
         trace?: never;
     };
     "/transactions/{id}/details": {
@@ -1353,7 +1373,17 @@ export interface paths {
          */
         get: {
             parameters: {
-                query?: never;
+                query?: {
+                    /** @description 最大取得件数 */
+                    limit?: number;
+                    /** @description ページ番号 */
+                    page?: number;
+                    /** @description 小計値引／割引、単品値引／割引の値引区分や割引区分情報を付加するか(付加する場合はall, しない場合はnone)
+                     *      */
+                    with_discounts?: "none" | "all";
+                    /** @description 販売時の商品属性情報を付加するか(付加する場合はall, しない場合はnone) */
+                    with_detail_product_attributes?: "none" | "all";
+                };
                 header?: never;
                 path: {
                     /** @description 取引ID */
@@ -1393,385 +1423,33 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
-    "/layaways": {
+    "/transactions/{id}/cancel": {
         parameters: {
             query?: never;
             header?: never;
             path?: never;
             cookie?: never;
         };
-        /**
-         * 預かり取引一覧取得
-         * @description 預かり取引一覧を取得します。
-         *
-         *     レスポンスデータは作成日時の降順で取得されます。
-         */
-        get: {
-            parameters: {
-                query?: {
-                    /** @description 店舗ID */
-                    storeId?: number;
-                    /** @description ステータス
-                     *     * 1: 預かり
-                     *     * 2: 終了 */
-                    status?: 1 | 2;
-                    /** @description 預かり日時(From)。範囲検索（開始日時） */
-                    "layaway.layawayDateTimeFrom"?: string;
-                    /** @description 預かり日時(To)。範囲検索（終了日時） */
-                    "layaway.layawayDateTimeTo"?: string;
-                    /** @description 最大取得件数 */
-                    limit?: number;
-                    /** @description ページ番号 */
-                    page?: number;
-                };
-                header?: never;
-                path?: never;
-                cookie?: never;
-            };
-            requestBody?: never;
-            responses: {
-                /** @description 成功時のレスポンス */
-                200: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content: {
-                        "application/json": {
-                            layaways?: components["schemas"]["Layaway"][];
-                            pagination?: components["schemas"]["Pagination"];
-                        };
-                    };
-                };
-                /** @description バリデーションエラー */
-                400: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content: {
-                        "application/json": components["schemas"]["Error"];
-                    };
-                };
-            };
-        };
+        get?: never;
         put?: never;
         /**
-         * 預かり取引作成
-         * @description 預かり取引情報を作成します。
-         *
-         *     作成した預かり取引データには、自動的に預かり取引IDが割り当てられます。
+         * 取引取り消し
+         * @description 取引を取消します。
+         *     ※外部決済連携を行う支払方法での決済を含む取引を取消しても、外部決済システムへの返金処理は行われません。
          */
         post: {
             parameters: {
                 query?: never;
                 header?: never;
-                path?: never;
-                cookie?: never;
-            };
-            requestBody: {
-                content: {
-                    "application/json": components["schemas"]["LayawayCreate"];
-                };
-            };
-            responses: {
-                /** @description 成功時のレスポンス */
-                201: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content: {
-                        "application/json": {
-                            /**
-                             * Format: int64
-                             * @description 作成された預かり取引ID
-                             */
-                            id?: number;
-                        };
-                    };
-                };
-                /** @description バリデーションエラー */
-                400: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content: {
-                        "application/json": components["schemas"]["Error"];
-                    };
-                };
-            };
-        };
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/layaways/{id}": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        /**
-         * 預かり取引取得
-         * @description 預かり取引情報を取得します。
-         */
-        get: {
-            parameters: {
-                query?: never;
-                header?: never;
                 path: {
-                    /** @description 預かり取引ID */
-                    id: number;
-                };
-                cookie?: never;
-            };
-            requestBody?: never;
-            responses: {
-                /** @description 成功時のレスポンス */
-                200: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content: {
-                        "application/json": components["schemas"]["Layaway"];
-                    };
-                };
-                /** @description 指定された預かり取引が見つからない */
-                404: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content: {
-                        "application/json": components["schemas"]["Error"];
-                    };
-                };
-            };
-        };
-        put?: never;
-        post?: never;
-        /**
-         * 預かり取引削除
-         * @description 預かり取引情報を削除します。
-         */
-        delete: {
-            parameters: {
-                query?: never;
-                header?: never;
-                path: {
-                    /** @description 預かり取引ID */
-                    id: number;
-                };
-                cookie?: never;
-            };
-            requestBody?: never;
-            responses: {
-                /** @description 成功時のレスポンス（コンテンツなし） */
-                204: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content?: never;
-                };
-                /** @description 指定された預かり取引が見つからない */
-                404: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content: {
-                        "application/json": components["schemas"]["Error"];
-                    };
-                };
-                /** @description 預かり取引が既に処理済みなど、削除できない状態である */
-                409: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content: {
-                        "application/json": components["schemas"]["Error"];
-                    };
-                };
-            };
-        };
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/pre_sales": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        /**
-         * 事前会計一覧取得
-         * @description 事前会計一覧を取得します。
-         *
-         *     レスポンスデータは作成日時の降順で取得されます。
-         */
-        get: {
-            parameters: {
-                query?: {
-                    /** @description 店舗ID */
-                    storeId?: number;
-                    /** @description ステータス
-                     *     * 1: 未会計
-                     *     * 2: 会計済 */
-                    status?: 1 | 2;
-                    /** @description 事前会計日時(From)。範囲検索（開始日時） */
-                    "preSale.preSaleDateTimeFrom"?: string;
-                    /** @description 事前会計日時(To)。範囲検索（終了日時） */
-                    "preSale.preSaleDateTimeTo"?: string;
-                    /** @description 最大取得件数 */
-                    limit?: number;
-                    /** @description ページ番号 */
-                    page?: number;
-                };
-                header?: never;
-                path?: never;
-                cookie?: never;
-            };
-            requestBody?: never;
-            responses: {
-                /** @description 成功時のレスポンス */
-                200: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content: {
-                        "application/json": {
-                            preSales?: components["schemas"]["PreSale"][];
-                            pagination?: components["schemas"]["Pagination"];
-                        };
-                    };
-                };
-                /** @description バリデーションエラー */
-                400: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content: {
-                        "application/json": components["schemas"]["Error"];
-                    };
-                };
-            };
-        };
-        put?: never;
-        /**
-         * 事前会計作成
-         * @description 事前会計情報を作成します。
-         *
-         *     作成した事前会計データには、自動的に事前会計IDが割り当てられます。
-         */
-        post: {
-            parameters: {
-                query?: never;
-                header?: never;
-                path?: never;
-                cookie?: never;
-            };
-            requestBody: {
-                content: {
-                    "application/json": components["schemas"]["PreSaleCreate"];
-                };
-            };
-            responses: {
-                /** @description 成功時のレスポンス */
-                201: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content: {
-                        "application/json": {
-                            /**
-                             * Format: int64
-                             * @description 作成された事前会計ID
-                             */
-                            id?: number;
-                        };
-                    };
-                };
-                /** @description バリデーションエラー */
-                400: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content: {
-                        "application/json": components["schemas"]["Error"];
-                    };
-                };
-            };
-        };
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/pre_sales/{id}": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        /**
-         * 事前会計取得
-         * @description 事前会計情報を取得します。
-         */
-        get: {
-            parameters: {
-                query?: never;
-                header?: never;
-                path: {
-                    /** @description 事前会計ID */
-                    id: number;
-                };
-                cookie?: never;
-            };
-            requestBody?: never;
-            responses: {
-                /** @description 成功時のレスポンス */
-                200: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content: {
-                        "application/json": components["schemas"]["PreSale"];
-                    };
-                };
-                /** @description 指定された事前会計が見つからない */
-                404: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content: {
-                        "application/json": components["schemas"]["Error"];
-                    };
-                };
-            };
-        };
-        /**
-         * 事前会計更新
-         * @description 事前会計情報を更新します。
-         *
-         *     リクエストボディに含まれていないフィールドは更新されません。
-         */
-        put: {
-            parameters: {
-                query?: never;
-                header?: never;
-                path: {
-                    /** @description 事前会計ID */
+                    /** @description 取引ID */
                     id: number;
                 };
                 cookie?: never;
             };
             requestBody: {
                 content: {
-                    "application/json": components["schemas"]["PreSaleUpdate"];
+                    "application/json": components["schemas"]["TransactionCancel"];
                 };
             };
             responses: {
@@ -1783,8 +1461,8 @@ export interface paths {
                     content: {
                         "application/json": {
                             /**
-                             * @description 更新完了メッセージ
-                             * @example 更新が完了しました
+                             * @description 取消完了メッセージ
+                             * @example 取消が完了しました
                              */
                             message?: string;
                         };
@@ -1799,7 +1477,7 @@ export interface paths {
                         "application/json": components["schemas"]["Error"];
                     };
                 };
-                /** @description 指定された事前会計が見つからない */
+                /** @description 指定された取引が見つからない */
                 404: {
                     headers: {
                         [name: string]: unknown;
@@ -1810,199 +1488,39 @@ export interface paths {
                 };
             };
         };
-        post?: never;
-        /**
-         * 事前会計削除
-         * @description 事前会計情報を削除します。
-         */
-        delete: {
-            parameters: {
-                query?: never;
-                header?: never;
-                path: {
-                    /** @description 事前会計ID */
-                    id: number;
-                };
-                cookie?: never;
-            };
-            requestBody?: never;
-            responses: {
-                /** @description 成功時のレスポンス（コンテンツなし） */
-                204: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content?: never;
-                };
-                /** @description 指定された事前会計が見つからない */
-                404: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content: {
-                        "application/json": components["schemas"]["Error"];
-                    };
-                };
-                /** @description 事前会計が既に処理済みなど、削除できない状態である */
-                409: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content: {
-                        "application/json": components["schemas"]["Error"];
-                    };
-                };
-            };
-        };
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/ticket_transactions": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        /**
-         * チケット取引一覧取得
-         * @description チケット取引一覧を取得します。
-         *
-         *     レスポンスデータは作成日時の降順で取得されます。
-         */
-        get: {
-            parameters: {
-                query?: {
-                    /** @description 店舗ID */
-                    storeId?: number;
-                    /** @description ステータスタイプ
-                     *     * 1: 未使用
-                     *     * 2: 使用済
-                     *     * 3: 期限切れ
-                     *     * 4: 取消 */
-                    statusType?: 1 | 2 | 3 | 4;
-                    /** @description チケット発行日時(From)。範囲検索（開始日時） */
-                    "ticketTransaction.ticketDateTimeFrom"?: string;
-                    /** @description チケット発行日時(To)。範囲検索（終了日時） */
-                    "ticketTransaction.ticketDateTimeTo"?: string;
-                    /** @description チケットコード */
-                    "ticketTransaction.ticketCode"?: string;
-                    /** @description 最大取得件数 */
-                    limit?: number;
-                    /** @description ページ番号 */
-                    page?: number;
-                };
-                header?: never;
-                path?: never;
-                cookie?: never;
-            };
-            requestBody?: never;
-            responses: {
-                /** @description 成功時のレスポンス */
-                200: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content: {
-                        "application/json": {
-                            ticketTransactions?: components["schemas"]["TicketTransaction"][];
-                            pagination?: components["schemas"]["Pagination"];
-                        };
-                    };
-                };
-                /** @description バリデーションエラー */
-                400: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content: {
-                        "application/json": components["schemas"]["Error"];
-                    };
-                };
-            };
-        };
-        put?: never;
-        post?: never;
         delete?: never;
         options?: never;
         head?: never;
         patch?: never;
         trace?: never;
     };
-    "/ticket_transactions/{id}": {
+    "/transactions/{id}/dispose": {
         parameters: {
             query?: never;
             header?: never;
             path?: never;
             cookie?: never;
         };
+        get?: never;
+        put?: never;
         /**
-         * チケット取引取得
-         * @description チケット取引情報を取得します。
+         * 取引打消取消
+         * @description 取引を打消取消します。指定された取引に対して、返品する取引情報を作成します。
+         *     ※外部決済連携を行う支払方法での決済を含む取引を取消しても、外部決済システムへの返金処理は行われません。
          */
-        get: {
+        post: {
             parameters: {
                 query?: never;
                 header?: never;
                 path: {
-                    /** @description チケット取引ID */
-                    id: number;
-                };
-                cookie?: never;
-            };
-            requestBody?: never;
-            responses: {
-                /** @description 成功時のレスポンス */
-                200: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content: {
-                        "application/json": components["schemas"]["TicketTransaction"];
-                    };
-                };
-                /** @description 指定されたチケット取引が見つからない */
-                404: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content: {
-                        "application/json": components["schemas"]["Error"];
-                    };
-                };
-            };
-        };
-        /**
-         * チケット取引ステータス更新
-         * @description チケット取引のステータスを更新します。
-         *
-         *     主にチケットの使用状態を変更するために使用します。
-         */
-        put: {
-            parameters: {
-                query?: never;
-                header?: never;
-                path: {
-                    /** @description チケット取引ID */
+                    /** @description 取引ID */
                     id: number;
                 };
                 cookie?: never;
             };
             requestBody: {
                 content: {
-                    "application/json": {
-                        /**
-                         * @description ステータスタイプ
-                         *     * 1: 未使用
-                         *     * 2: 使用済
-                         *     * 3: 期限切れ
-                         *     * 4: 取消
-                         * @enum {integer}
-                         */
-                        statusType: 1 | 2 | 3 | 4;
-                    };
+                    "application/json": components["schemas"]["TransactionDispose"];
                 };
             };
             responses: {
@@ -2014,8 +1532,8 @@ export interface paths {
                     content: {
                         "application/json": {
                             /**
-                             * @description 更新完了メッセージ
-                             * @example 更新が完了しました
+                             * @description 打消取消完了メッセージ
+                             * @example 打消取消が完了しました
                              */
                             message?: string;
                         };
@@ -2030,7 +1548,7 @@ export interface paths {
                         "application/json": components["schemas"]["Error"];
                     };
                 };
-                /** @description 指定されたチケット取引が見つからない */
+                /** @description 指定された取引が見つからない */
                 404: {
                     headers: {
                         [name: string]: unknown;
@@ -2041,7 +1559,6 @@ export interface paths {
                 };
             };
         };
-        post?: never;
         delete?: never;
         options?: never;
         head?: never;
@@ -2070,78 +1587,14 @@ export interface paths {
                     limit?: number;
                     /** @description ページ番号 */
                     page?: number;
-                    /** @description 会員ID */
-                    customer_id?: string;
                     /** @description 会員コード */
                     customer_code?: string;
+                    /** @description 会員ID(From) */
+                    "customer_id-from"?: string;
+                    /** @description 会員ID(To) */
+                    "customer_id-to"?: string;
                     /** @description 会員番号 */
                     customer_no?: string;
-                    /** @description 会員ランク */
-                    rank?: string;
-                    /** @description スタッフランク */
-                    staff_rank?: string;
-                    /** @description 名前（部分一致） */
-                    first_name?: string;
-                    /** @description 苗字（部分一致） */
-                    last_name?: string;
-                    /** @description 名前カナ（部分一致） */
-                    first_name_kana?: string;
-                    /** @description 苗字カナ（部分一致） */
-                    last_name_kana?: string;
-                    /** @description 性別(0:不明, 1:男性, 2:女性) */
-                    sex?: "0" | "1" | "2";
-                    /** @description バーコード */
-                    barcode?: string;
-                    /** @description 生年月日(From) */
-                    "birth_date-from"?: string;
-                    /** @description 生年月日(To) */
-                    "birth_date-to"?: string;
-                    /** @description 郵便番号（部分一致） */
-                    zip_code?: string;
-                    /** @description 住所（部分一致） */
-                    address?: string;
-                    /** @description 電話番号（部分一致） */
-                    phone_number?: string;
-                    /** @description FAX番号（部分一致） */
-                    fax_number?: string;
-                    /** @description 携帯電話番号（部分一致） */
-                    mobile_number?: string;
-                    /** @description メールアドレス（部分一致） */
-                    mail_address?: string;
-                    /** @description 会社名（部分一致） */
-                    company_name?: string;
-                    /** @description 部署名（部分一致） */
-                    department_name?: string;
-                    /** @description 担当者フラグ */
-                    manager_flag?: boolean;
-                    /** @description スタッフフラグ */
-                    is_staff?: boolean;
-                    /** @description ポイント(From) */
-                    "points-from"?: number;
-                    /** @description ポイント(To) */
-                    "points-to"?: number;
-                    /** @description 店舗ID */
-                    store_id?: string;
-                    /** @description 備考（部分一致） */
-                    note?: string;
-                    /** @description 状態(1:利用, 2:停止) */
-                    status_id?: 1 | 2;
-                    /** @description 入会日(From) */
-                    "enter_date-from"?: string;
-                    /** @description 入会日(To) */
-                    "enter_date-to"?: string;
-                    /** @description 退会日(From) */
-                    "suspend_date-from"?: string;
-                    /** @description 退会日(To) */
-                    "suspend_date-to"?: string;
-                    /** @description ポイント有効期限(From) */
-                    "point_expire_date-from"?: string;
-                    /** @description ポイント有効期限(To) */
-                    "point_expire_date-to"?: string;
-                    /** @description 登録日時(From) */
-                    "ins_date_time-from"?: string;
-                    /** @description 登録日時(To) */
-                    "ins_date_time-to"?: string;
                     /** @description 更新日時(From) */
                     "upd_date_time-from"?: string;
                     /** @description 更新日時(To) */
@@ -2340,721 +1793,7 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
-    "/customers/bulk": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        get?: never;
-        /**
-         * 会員一括更新
-         * @description 会員情報を一括で更新します。
-         */
-        put: {
-            parameters: {
-                query?: never;
-                header?: never;
-                path?: never;
-                cookie?: never;
-            };
-            requestBody: {
-                content: {
-                    "application/json": components["schemas"]["CustomerBulkUpdate"];
-                };
-            };
-            responses: {
-                /** @description 一括更新成功 */
-                200: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content: {
-                        "application/json": components["schemas"]["Customer"][];
-                    };
-                };
-                /** @description 入力チェックエラーの場合 */
-                400: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content: {
-                        "application/json": components["schemas"]["Error"];
-                    };
-                };
-                /** @description 対象リソースが存在しない場合 */
-                404: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content: {
-                        "application/json": components["schemas"]["Error"];
-                    };
-                };
-            };
-        };
-        /**
-         * 会員一括登録
-         * @description 会員情報を一括で登録します。
-         */
-        post: {
-            parameters: {
-                query?: never;
-                header?: never;
-                path?: never;
-                cookie?: never;
-            };
-            requestBody: {
-                content: {
-                    "application/json": components["schemas"]["CustomerBulkCreate"];
-                };
-            };
-            responses: {
-                /** @description 一括登録成功 */
-                200: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content: {
-                        "application/json": components["schemas"]["Customer"][];
-                    };
-                };
-                /** @description 入力チェックエラーの場合 */
-                400: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content: {
-                        "application/json": components["schemas"]["Error"];
-                    };
-                };
-            };
-        };
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/customers/{id}/points": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        /**
-         * 会員ポイント情報取得
-         * @description 指定したIDの会員のポイント情報を取得します。
-         */
-        get: {
-            parameters: {
-                query?: never;
-                header?: never;
-                path: {
-                    /** @description 会員ID */
-                    id: string;
-                };
-                cookie?: never;
-            };
-            requestBody?: never;
-            responses: {
-                /** @description 取得成功 */
-                200: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content: {
-                        "application/json": components["schemas"]["CustomerPoint"];
-                    };
-                };
-                /** @description 対象リソースが存在しない場合 */
-                404: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content: {
-                        "application/json": components["schemas"]["Error"];
-                    };
-                };
-            };
-        };
-        /**
-         * 会員ポイント情報更新
-         * @description 指定したIDの会員のポイント情報を更新します。
-         */
-        put: {
-            parameters: {
-                query?: never;
-                header?: never;
-                path: {
-                    /** @description 会員ID */
-                    id: string;
-                };
-                cookie?: never;
-            };
-            requestBody: {
-                content: {
-                    "application/json": components["schemas"]["CustomerPointUpdate"];
-                };
-            };
-            responses: {
-                /** @description 更新成功 */
-                200: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content: {
-                        "application/json": components["schemas"]["CustomerPoint"];
-                    };
-                };
-                /** @description 入力チェックエラーの場合 */
-                400: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content: {
-                        "application/json": components["schemas"]["Error"];
-                    };
-                };
-                /** @description 対象リソースが存在しない場合 */
-                404: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content: {
-                        "application/json": components["schemas"]["Error"];
-                    };
-                };
-            };
-        };
-        post?: never;
-        delete?: never;
-        options?: never;
-        head?: never;
-        /**
-         * 会員ポイント加減算
-         * @description 指定したIDの会員のポイントを加減算します。
-         */
-        patch: {
-            parameters: {
-                query?: never;
-                header?: never;
-                path: {
-                    /** @description 会員ID */
-                    id: string;
-                };
-                cookie?: never;
-            };
-            requestBody: {
-                content: {
-                    "application/json": components["schemas"]["CustomerPointRelativeUpdate"];
-                };
-            };
-            responses: {
-                /** @description 更新成功 */
-                200: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content: {
-                        "application/json": components["schemas"]["CustomerPoint"];
-                    };
-                };
-                /** @description 入力チェックエラーの場合 */
-                400: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content: {
-                        "application/json": components["schemas"]["Error"];
-                    };
-                };
-                /** @description 対象リソースが存在しない場合 */
-                404: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content: {
-                        "application/json": components["schemas"]["Error"];
-                    };
-                };
-            };
-        };
-        trace?: never;
-    };
-    "/customer_ranks": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        /**
-         * 会員ランク一覧取得
-         * @description 会員ランク情報一覧を取得します。
-         */
-        get: {
-            parameters: {
-                query?: {
-                    /** @description 取得したいフィールド名（カンマ区切りで指定可） */
-                    fields?: string[];
-                    /** @description 並び順（カンマ区切りで指定可） */
-                    sort?: string;
-                    /** @description 取得上限数 */
-                    limit?: number;
-                    /** @description ページ番号 */
-                    page?: number;
-                    /** @description 会員ランクID */
-                    rank_id?: string;
-                    /** @description 会員ランク名（部分一致） */
-                    rank_name?: string;
-                    /** @description ポイント付与率(From) */
-                    "point_rate-from"?: number;
-                    /** @description ポイント付与率(To) */
-                    "point_rate-to"?: number;
-                    /** @description ポイント有効期限タイプ（0:なし, 1:年月設定, 2:付与から一定期間） */
-                    point_expiration_type?: "0" | "1" | "2";
-                    /** @description 登録日時(From) */
-                    "ins_date_time-from"?: string;
-                    /** @description 登録日時(To) */
-                    "ins_date_time-to"?: string;
-                    /** @description 更新日時(From) */
-                    "upd_date_time-from"?: string;
-                    /** @description 更新日時(To) */
-                    "upd_date_time-to"?: string;
-                };
-                header?: never;
-                path?: never;
-                cookie?: never;
-            };
-            requestBody?: never;
-            responses: {
-                /** @description 取得成功 */
-                200: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content: {
-                        "application/json": components["schemas"]["CustomerRank"][];
-                    };
-                };
-            };
-        };
-        put?: never;
-        /**
-         * 会員ランク登録
-         * @description 会員ランク情報を登録します。
-         */
-        post: {
-            parameters: {
-                query?: never;
-                header?: never;
-                path?: never;
-                cookie?: never;
-            };
-            requestBody: {
-                content: {
-                    "application/json": components["schemas"]["CustomerRankCreate"];
-                };
-            };
-            responses: {
-                /** @description 登録成功 */
-                200: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content: {
-                        "application/json": components["schemas"]["CustomerRank"];
-                    };
-                };
-                /** @description 入力チェックエラーの場合 */
-                400: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content: {
-                        "application/json": components["schemas"]["Error"];
-                    };
-                };
-            };
-        };
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/customer_ranks/{id}": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        /**
-         * 会員ランク情報取得
-         * @description 指定したIDの会員ランク情報を取得します。
-         */
-        get: {
-            parameters: {
-                query?: never;
-                header?: never;
-                path: {
-                    /** @description 会員ランクID */
-                    id: string;
-                };
-                cookie?: never;
-            };
-            requestBody?: never;
-            responses: {
-                /** @description 取得成功 */
-                200: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content: {
-                        "application/json": components["schemas"]["CustomerRank"];
-                    };
-                };
-                /** @description 対象リソースが存在しない場合 */
-                404: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content: {
-                        "application/json": components["schemas"]["Error"];
-                    };
-                };
-            };
-        };
-        /**
-         * 会員ランク情報更新
-         * @description 指定したIDの会員ランク情報を更新します。
-         */
-        put: {
-            parameters: {
-                query?: never;
-                header?: never;
-                path: {
-                    /** @description 会員ランクID */
-                    id: string;
-                };
-                cookie?: never;
-            };
-            requestBody: {
-                content: {
-                    "application/json": components["schemas"]["CustomerRankUpdate"];
-                };
-            };
-            responses: {
-                /** @description 更新成功 */
-                200: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content: {
-                        "application/json": components["schemas"]["CustomerRank"];
-                    };
-                };
-                /** @description 入力チェックエラーの場合 */
-                400: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content: {
-                        "application/json": components["schemas"]["Error"];
-                    };
-                };
-                /** @description 対象リソースが存在しない場合 */
-                404: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content: {
-                        "application/json": components["schemas"]["Error"];
-                    };
-                };
-            };
-        };
-        post?: never;
-        /**
-         * 会員ランク情報削除
-         * @description 指定したIDの会員ランク情報を削除します。
-         */
-        delete: {
-            parameters: {
-                query?: never;
-                header?: never;
-                path: {
-                    /** @description 会員ランクID */
-                    id: string;
-                };
-                cookie?: never;
-            };
-            requestBody?: never;
-            responses: {
-                /** @description 削除成功 */
-                204: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content?: never;
-                };
-                /** @description 対象リソースが存在しない場合 */
-                404: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content: {
-                        "application/json": components["schemas"]["Error"];
-                    };
-                };
-            };
-        };
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/staff_ranks": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        /**
-         * スタッフランク一覧取得
-         * @description スタッフランク情報一覧を取得します。
-         */
-        get: {
-            parameters: {
-                query?: {
-                    /** @description 取得したいフィールド名（カンマ区切りで指定可） */
-                    fields?: string[];
-                    /** @description 並び順（カンマ区切りで指定可） */
-                    sort?: string;
-                    /** @description 取得上限数 */
-                    limit?: number;
-                    /** @description ページ番号 */
-                    page?: number;
-                    /** @description スタッフランクID */
-                    staff_rank_id?: string;
-                    /** @description スタッフランク名（部分一致） */
-                    staff_rank_name?: string;
-                    /** @description 社員割引率(From) */
-                    "discount_rate-from"?: number;
-                    /** @description 社員割引率(To) */
-                    "discount_rate-to"?: number;
-                    /** @description ポイント付与率(From) */
-                    "point_rate-from"?: number;
-                    /** @description ポイント付与率(To) */
-                    "point_rate-to"?: number;
-                    /** @description 登録日時(From) */
-                    "ins_date_time-from"?: string;
-                    /** @description 登録日時(To) */
-                    "ins_date_time-to"?: string;
-                    /** @description 更新日時(From) */
-                    "upd_date_time-from"?: string;
-                    /** @description 更新日時(To) */
-                    "upd_date_time-to"?: string;
-                };
-                header?: never;
-                path?: never;
-                cookie?: never;
-            };
-            requestBody?: never;
-            responses: {
-                /** @description 取得成功 */
-                200: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content: {
-                        "application/json": components["schemas"]["StaffRank"][];
-                    };
-                };
-            };
-        };
-        put?: never;
-        /**
-         * スタッフランク登録
-         * @description スタッフランク情報を登録します。
-         */
-        post: {
-            parameters: {
-                query?: never;
-                header?: never;
-                path?: never;
-                cookie?: never;
-            };
-            requestBody: {
-                content: {
-                    "application/json": components["schemas"]["StaffRankCreate"];
-                };
-            };
-            responses: {
-                /** @description 登録成功 */
-                200: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content: {
-                        "application/json": components["schemas"]["StaffRank"];
-                    };
-                };
-                /** @description 入力チェックエラーの場合 */
-                400: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content: {
-                        "application/json": components["schemas"]["Error"];
-                    };
-                };
-            };
-        };
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/staff_ranks/{id}": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        /**
-         * スタッフランク情報取得
-         * @description 指定したIDのスタッフランク情報を取得します。
-         */
-        get: {
-            parameters: {
-                query?: never;
-                header?: never;
-                path: {
-                    /** @description スタッフランクID */
-                    id: string;
-                };
-                cookie?: never;
-            };
-            requestBody?: never;
-            responses: {
-                /** @description 取得成功 */
-                200: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content: {
-                        "application/json": components["schemas"]["StaffRank"];
-                    };
-                };
-                /** @description 対象リソースが存在しない場合 */
-                404: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content: {
-                        "application/json": components["schemas"]["Error"];
-                    };
-                };
-            };
-        };
-        /**
-         * スタッフランク情報更新
-         * @description 指定したIDのスタッフランク情報を更新します。
-         */
-        put: {
-            parameters: {
-                query?: never;
-                header?: never;
-                path: {
-                    /** @description スタッフランクID */
-                    id: string;
-                };
-                cookie?: never;
-            };
-            requestBody: {
-                content: {
-                    "application/json": components["schemas"]["StaffRankUpdate"];
-                };
-            };
-            responses: {
-                /** @description 更新成功 */
-                200: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content: {
-                        "application/json": components["schemas"]["StaffRank"];
-                    };
-                };
-                /** @description 入力チェックエラーの場合 */
-                400: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content: {
-                        "application/json": components["schemas"]["Error"];
-                    };
-                };
-                /** @description 対象リソースが存在しない場合 */
-                404: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content: {
-                        "application/json": components["schemas"]["Error"];
-                    };
-                };
-            };
-        };
-        post?: never;
-        /**
-         * スタッフランク情報削除
-         * @description 指定したIDのスタッフランク情報を削除します。
-         */
-        delete: {
-            parameters: {
-                query?: never;
-                header?: never;
-                path: {
-                    /** @description スタッフランクID */
-                    id: string;
-                };
-                cookie?: never;
-            };
-            requestBody?: never;
-            responses: {
-                /** @description 削除成功 */
-                204: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content?: never;
-                };
-                /** @description 対象リソースが存在しない場合 */
-                404: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content: {
-                        "application/json": components["schemas"]["Error"];
-                    };
-                };
-            };
-        };
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/customers/required": {
+    "/customer_required_column_setting": {
         parameters: {
             query?: never;
             header?: never;
@@ -3067,7 +1806,20 @@ export interface paths {
          */
         get: {
             parameters: {
-                query?: never;
+                query?: {
+                    /** @description 取得したいフィールド名（カンマ区切りで指定可） */
+                    fields?: string[];
+                    /** @description 並び順（カンマ区切りで指定可） */
+                    sort?: string;
+                    /** @description 取得上限数 */
+                    limit?: number;
+                    /** @description ページ番号 */
+                    page?: number;
+                    /** @description カラム名 */
+                    column_name?: string;
+                    /** @description 設定値：会員登録・更新時に必須項目とするかどうかの設定値。 (0:任意、1:必須) */
+                    value?: "0" | "1";
+                };
                 header?: never;
                 path?: never;
                 cookie?: never;
@@ -3093,7 +1845,7 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
-    "/stocks": {
+    "/stock": {
         parameters: {
             query?: never;
             header?: never;
@@ -3110,14 +1862,52 @@ export interface paths {
         delete?: never;
         options?: never;
         head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/stock/{product_id}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
         /**
          * 在庫更新
          * @description 在庫情報を更新します。
+         *     在庫数は、入力された値と同じになるよう更新します。
+         *
          */
-        patch: operations["updateStock"];
+        patch: operations["patchProductStock"];
         trace?: never;
     };
-    "/stocks/changes": {
+    "/stock/{product_id}/add": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * 在庫相対値更新
+         * @description 在庫情報を相対値で更新します。現在の値に対し、入力された値を加算（入力値が負の場合は減算）した値に更新します。
+         */
+        post: operations["updateStockRelative"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/stock/changes/{product_id}/{store_id}": {
         parameters: {
             query?: never;
             header?: never;
@@ -3125,8 +1915,8 @@ export interface paths {
             cookie?: never;
         };
         /**
-         * 在庫変動履歴一覧取得
-         * @description 条件を指定して、在庫変動履歴の一覧を取得します。
+         * 在庫変動履歴取得
+         * @description 指定された商品IDと店舗IDの在庫変動履歴を取得します。
          */
         get: operations["getStockChanges"];
         put?: never;
@@ -3135,6944 +1925,6 @@ export interface paths {
         options?: never;
         head?: never;
         patch?: never;
-        trace?: never;
-    };
-    "/bargain": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        /**
-         * セール一覧取得
-         * @description セール情報一覧を取得します。
-         *
-         *     Plans:
-         *     スタンダード・プレミアム・プレミアムプラス・フードビジネス・リテールビジネス
-         *
-         *     sortで使用可能なパラメータ
-         *     - bargainId：セールID
-         *     - termStart：適用開始日時
-         *     - termEnd：適用終了日時
-         *
-         */
-        get: {
-            parameters: {
-                query?: {
-                    /** @description 検索パラメータ（カンマ区切りで指定可）
-                     *     Response項目を指定可能
-                     *     ※一部項目(withで指定する項目、2階層目以降の項目)については指定不可
-                     *      */
-                    fields?: string[];
-                    /** @description 並び順（カンマ区切りで指定可）
-                     *     指定可能な項目については上記参照
-                     *      */
-                    sort?: string;
-                    /** @description 上限数 */
-                    limit?: number;
-                    /** @description ページ */
-                    page?: number;
-                    /** @description セールID */
-                    bargain_id?: string;
-                    /** @description 適用開始日時 */
-                    term_start?: string;
-                    /** @description 適用終了日時 */
-                    term_end?: string;
-                };
-                header?: never;
-                path: {
-                    /** @description 契約ID */
-                    contract_id: string;
-                };
-                cookie?: never;
-            };
-            requestBody?: never;
-            responses: {
-                /** @description 取得成功 */
-                200: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content: {
-                        "application/json": components["schemas"]["Bargain"][];
-                    };
-                };
-            };
-        };
-        put?: never;
-        /**
-         * セール登録
-         * @description セール情報を登録します。
-         *
-         *     Plans:
-         *     スタンダード・プレミアム・プレミアムプラス・フードビジネス・リテールビジネス
-         *
-         */
-        post: {
-            parameters: {
-                query?: never;
-                header?: never;
-                path: {
-                    /** @description 契約ID */
-                    contract_id: string;
-                };
-                cookie?: never;
-            };
-            requestBody: {
-                content: {
-                    "application/json": components["schemas"]["BargainCreate"];
-                };
-            };
-            responses: {
-                /** @description 取得成功 */
-                200: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content: {
-                        "application/json": components["schemas"]["Bargain"];
-                    };
-                };
-                /** @description セール終了日が開始日以前の場合 */
-                400: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content: {
-                        "application/json": components["schemas"]["Error"];
-                    };
-                };
-            };
-        };
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/bargain/{id}": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        get?: never;
-        put?: never;
-        post?: never;
-        /**
-         * セール削除
-         * @description セール情報を削除します。
-         *
-         *     Plans:
-         *     スタンダード・プレミアム・プレミアムプラス・フードビジネス・リテールビジネス
-         *
-         */
-        delete: {
-            parameters: {
-                query?: never;
-                header?: never;
-                path: {
-                    /** @description 契約ID */
-                    contract_id: string;
-                    /** @description セールID */
-                    id: string;
-                };
-                cookie?: never;
-            };
-            requestBody?: never;
-            responses: {
-                /** @description 削除成功 */
-                200: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content?: never;
-                };
-                /** @description 指定したセールデータが存在しない場合 */
-                404: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content: {
-                        "application/json": components["schemas"]["Error"];
-                    };
-                };
-            };
-        };
-        options?: never;
-        head?: never;
-        /**
-         * セール更新
-         * @description セール情報を更新します。
-         *
-         *     Plans:
-         *     スタンダード・プレミアム・プレミアムプラス・フードビジネス・リテールビジネス
-         *
-         */
-        patch: {
-            parameters: {
-                query?: never;
-                header?: never;
-                path: {
-                    /** @description 契約ID */
-                    contract_id: string;
-                    /** @description セールID */
-                    id: string;
-                };
-                cookie?: never;
-            };
-            requestBody: {
-                content: {
-                    "application/json": components["schemas"]["BargainUpdate"];
-                };
-            };
-            responses: {
-                /** @description 取得成功 */
-                200: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content: {
-                        "application/json": components["schemas"]["Bargain"];
-                    };
-                };
-                /** @description セール終了日が開始日以前の場合 */
-                400: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content: {
-                        "application/json": components["schemas"]["Error"];
-                    };
-                };
-            };
-        };
-        trace?: never;
-    };
-    "/bargain/{id}/stores": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        /**
-         * セール店舗一覧取得
-         * @description セール店舗情報一覧を取得します。
-         *
-         *     Plans:
-         *     スタンダード・プレミアム・プレミアムプラス・フードビジネス・リテールビジネス
-         *
-         *     sortで使用可能なパラメータ
-         *     - storeId：店舗ID
-         *
-         */
-        get: {
-            parameters: {
-                query?: {
-                    /** @description 検索パラメータ（カンマ区切りで指定可）
-                     *     Response項目を指定可能
-                     *     ※一部項目(withで指定する項目、2階層目以降の項目)については指定不可
-                     *      */
-                    fields?: string[];
-                    /** @description 並び順（カンマ区切りで指定可）
-                     *     指定可能な項目については上記参照
-                     *      */
-                    sort?: string;
-                    /** @description 上限数 */
-                    limit?: number;
-                    /** @description ページ */
-                    page?: number;
-                    /** @description 店舗ID */
-                    store_id?: string;
-                };
-                header?: never;
-                path: {
-                    /** @description 契約ID */
-                    contract_id: string;
-                    /** @description セールID */
-                    id: string;
-                };
-                cookie?: never;
-            };
-            requestBody?: never;
-            responses: {
-                /** @description 取得成功 */
-                200: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content: {
-                        "application/json": components["schemas"]["BargainStore"][];
-                    };
-                };
-            };
-        };
-        put?: never;
-        /**
-         * セール店舗登録
-         * @description セール店舗情報を登録します。
-         *
-         *     Plans:
-         *     スタンダード・プレミアム・プレミアムプラス・フードビジネス・リテールビジネス
-         *
-         */
-        post: {
-            parameters: {
-                query?: never;
-                header?: never;
-                path: {
-                    /** @description 契約ID */
-                    contract_id: string;
-                    /** @description セールID */
-                    id: string;
-                };
-                cookie?: never;
-            };
-            requestBody: {
-                content: {
-                    "application/json": components["schemas"]["BargainStoreCreate"];
-                };
-            };
-            responses: {
-                /** @description 取得成功 */
-                200: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content: {
-                        "application/json": components["schemas"]["BargainStore"];
-                    };
-                };
-                /** @description 指定された店舗が登録済みの場合 */
-                400: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content: {
-                        "application/json": components["schemas"]["Error"];
-                    };
-                };
-            };
-        };
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/bargain/{id}/stores/{bargainStoreId}": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        get?: never;
-        put?: never;
-        post?: never;
-        /**
-         * セール店舗削除
-         * @description セール店舗情報を削除します。
-         *
-         *     Plans:
-         *     スタンダード・プレミアム・プレミアムプラス・フードビジネス・リテールビジネス
-         *
-         */
-        delete: {
-            parameters: {
-                query?: never;
-                header?: never;
-                path: {
-                    /** @description 契約ID */
-                    contract_id: string;
-                    /** @description セールID */
-                    id: string;
-                    /** @description セール店舗ID */
-                    bargainStoreId: string;
-                };
-                cookie?: never;
-            };
-            requestBody?: never;
-            responses: {
-                /** @description 削除成功 */
-                200: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content?: never;
-                };
-                /** @description 指定したセール店舗データが存在しない場合 */
-                404: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content: {
-                        "application/json": components["schemas"]["Error"];
-                    };
-                };
-            };
-        };
-        options?: never;
-        head?: never;
-        /**
-         * セール店舗更新
-         * @description セール店舗情報を更新します。
-         *
-         *     Plans:
-         *     スタンダード・プレミアム・プレミアムプラス・フードビジネス・リテールビジネス
-         *
-         */
-        patch: {
-            parameters: {
-                query?: never;
-                header?: never;
-                path: {
-                    /** @description 契約ID */
-                    contract_id: string;
-                    /** @description セールID */
-                    id: string;
-                    /** @description セール店舗ID */
-                    bargainStoreId: string;
-                };
-                cookie?: never;
-            };
-            requestBody: {
-                content: {
-                    "application/json": components["schemas"]["BargainStoreUpdate"];
-                };
-            };
-            responses: {
-                /** @description 取得成功 */
-                200: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content: {
-                        "application/json": components["schemas"]["BargainStore"];
-                    };
-                };
-                /** @description 指定された店舗が登録済みの場合 */
-                400: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content: {
-                        "application/json": components["schemas"]["Error"];
-                    };
-                };
-            };
-        };
-        trace?: never;
-    };
-    "/bargain/{id}/products": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        /**
-         * セール商品一覧取得
-         * @description セール商品情報一覧を取得します。
-         *
-         *     Plans:
-         *     スタンダード・プレミアム・プレミアムプラス・フードビジネス・リテールビジネス
-         *
-         *     sortで使用可能なパラメータ
-         *     - targetDivision：対象区分
-         *     - targetId：対象ID
-         *
-         */
-        get: {
-            parameters: {
-                query?: {
-                    /** @description 検索パラメータ（カンマ区切りで指定可）
-                     *     Response項目を指定可能
-                     *     ※一部項目(withで指定する項目、2階層目以降の項目)については指定不可
-                     *      */
-                    fields?: string[];
-                    /** @description 並び順（カンマ区切りで指定可）
-                     *     指定可能な項目については上記参照
-                     *      */
-                    sort?: string;
-                    /** @description 上限数 */
-                    limit?: number;
-                    /** @description ページ */
-                    page?: number;
-                    /** @description 対象区分 (1:部門、2:商品、3:グループコード) */
-                    target_division?: "1" | "2" | "3";
-                    /** @description 対象ID (部門ID, 商品ID, グループコードのいずれか) */
-                    target_id?: string;
-                };
-                header?: never;
-                path: {
-                    /** @description 契約ID */
-                    contract_id: string;
-                    /** @description セールID */
-                    id: string;
-                };
-                cookie?: never;
-            };
-            requestBody?: never;
-            responses: {
-                /** @description 取得成功 */
-                200: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content: {
-                        "application/json": components["schemas"]["BargainProduct"][];
-                    };
-                };
-            };
-        };
-        put?: never;
-        /**
-         * セール商品登録
-         * @description セール商品情報を登録します。
-         *
-         *     Plans:
-         *     スタンダード・プレミアム・プレミアムプラス・フードビジネス・リテールビジネス
-         *
-         */
-        post: {
-            parameters: {
-                query?: never;
-                header?: never;
-                path: {
-                    /** @description 契約ID */
-                    contract_id: string;
-                    /** @description セールID */
-                    id: string;
-                };
-                cookie?: never;
-            };
-            requestBody: {
-                content: {
-                    "application/json": components["schemas"]["BargainProductCreate"];
-                };
-            };
-            responses: {
-                /** @description 取得成功 */
-                200: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content: {
-                        "application/json": components["schemas"]["BargainProduct"];
-                    };
-                };
-                /** @description 入力チェックエラーの場合 */
-                400: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content: {
-                        "application/json": components["schemas"]["Error"];
-                    };
-                };
-            };
-        };
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/bargain/{id}/products/{bargainProductId}": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        get?: never;
-        put?: never;
-        post?: never;
-        /**
-         * セール商品削除
-         * @description セール商品情報を削除します。
-         *
-         *     Plans:
-         *     スタンダード・プレミアム・プレミアムプラス・フードビジネス・リテールビジネス
-         *
-         */
-        delete: {
-            parameters: {
-                query?: never;
-                header?: never;
-                path: {
-                    /** @description 契約ID */
-                    contract_id: string;
-                    /** @description セールID */
-                    id: string;
-                    /** @description セール商品ID */
-                    bargainProductId: string;
-                };
-                cookie?: never;
-            };
-            requestBody?: never;
-            responses: {
-                /** @description 削除成功 */
-                200: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content?: never;
-                };
-                /** @description 指定したセール商品データが存在しない場合 */
-                404: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content: {
-                        "application/json": components["schemas"]["Error"];
-                    };
-                };
-            };
-        };
-        options?: never;
-        head?: never;
-        /**
-         * セール商品更新
-         * @description セール商品情報を更新します。
-         *
-         *     Plans:
-         *     スタンダード・プレミアム・プレミアムプラス・フードビジネス・リテールビジネス
-         *
-         */
-        patch: {
-            parameters: {
-                query?: never;
-                header?: never;
-                path: {
-                    /** @description 契約ID */
-                    contract_id: string;
-                    /** @description セールID */
-                    id: string;
-                    /** @description セール商品ID */
-                    bargainProductId: string;
-                };
-                cookie?: never;
-            };
-            requestBody: {
-                content: {
-                    "application/json": components["schemas"]["BargainProductUpdate"];
-                };
-            };
-            responses: {
-                /** @description 取得成功 */
-                200: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content: {
-                        "application/json": components["schemas"]["BargainProduct"];
-                    };
-                };
-                /** @description 入力チェックエラーの場合 */
-                400: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content: {
-                        "application/json": components["schemas"]["Error"];
-                    };
-                };
-            };
-        };
-        trace?: never;
-    };
-    "/product_option_groups": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        /**
-         * オプショングループ一覧取得
-         * @description オプショングループの一覧を取得します。
-         *
-         *     Plans:
-         *     スタンダード・プレミアム・プレミアムプラス・フードビジネス・リテールビジネス
-         *
-         *     sortで使用可能なパラメータ
-         *     - productOptionGroupId：商品オプショングループID
-         *     - conditionId：条件ID
-         *     - updDateTime：更新日時
-         *
-         */
-        get: {
-            parameters: {
-                query?: {
-                    /** @description 検索パラメータ（カンマ区切りで指定可）
-                     *     Response項目を指定可能
-                     *     ※一部項目(withで指定する項目、2階層目以降の項目)については指定不可
-                     *      */
-                    fields?: string[];
-                    /** @description 並び順（カンマ区切りで指定可）
-                     *     指定可能な項目については上記参照
-                     *      */
-                    sort?: string;
-                    /** @description 上限数 */
-                    limit?: number;
-                    /** @description ページ */
-                    page?: number;
-                    /** @description オプショングループ名 */
-                    product_option_group_name?: string;
-                    /** @description 条件ID (0:条件なし、1:全体、2:部門毎) */
-                    condition_id?: string;
-                };
-                header?: never;
-                path: {
-                    /** @description 契約ID */
-                    contract_id: string;
-                };
-                cookie?: never;
-            };
-            requestBody?: never;
-            responses: {
-                /** @description 取得成功 */
-                200: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content: {
-                        "application/json": components["schemas"]["ProductOptionGroup"][];
-                    };
-                };
-            };
-        };
-        put?: never;
-        /**
-         * オプショングループ登録
-         * @description オプショングループを登録します。
-         *
-         *     Plans:
-         *     スタンダード・プレミアム・プレミアムプラス・フードビジネス・リテールビジネス
-         *
-         */
-        post: {
-            parameters: {
-                query?: never;
-                header?: never;
-                path: {
-                    /** @description 契約ID */
-                    contract_id: string;
-                };
-                cookie?: never;
-            };
-            requestBody: {
-                content: {
-                    "application/json": components["schemas"]["ProductOptionGroupCreate"];
-                };
-            };
-            responses: {
-                /** @description 更新成功 */
-                200: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content: {
-                        "application/json": components["schemas"]["ProductOptionGroup"];
-                    };
-                };
-                /** @description 入力チェックエラーの場合 */
-                400: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content: {
-                        "application/json": components["schemas"]["Error"];
-                    };
-                };
-            };
-        };
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/product_option_groups/{id}": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        /**
-         * オプショングループ取得
-         * @description 指定されたオプショングループを取得します。
-         *
-         *     Plans:
-         *     スタンダード・プレミアム・プレミアムプラス・フードビジネス・リテールビジネス
-         *
-         */
-        get: {
-            parameters: {
-                query?: {
-                    /** @description 検索パラメータ（カンマ区切りで指定可）
-                     *     Response項目を指定可能
-                     *     ※一部項目(withで指定する項目、2階層目以降の項目)については指定不可
-                     *      */
-                    fields?: string[];
-                    /** @description オプショングループ商品情報を付加するか(付加する場合はall, しない場合はnone) */
-                    with_products?: "all" | "none";
-                };
-                header?: never;
-                path: {
-                    /** @description 契約ID */
-                    contract_id: string;
-                    /** @description オプショングループID */
-                    id: string;
-                };
-                cookie?: never;
-            };
-            requestBody?: never;
-            responses: {
-                /** @description 取得成功 */
-                200: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content: {
-                        "application/json": components["schemas"]["ProductOptionGroup"];
-                    };
-                };
-                /** @description 指定されたIDが存在しない場合 */
-                404: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content: {
-                        "application/json": components["schemas"]["Error"];
-                    };
-                };
-            };
-        };
-        put?: never;
-        post?: never;
-        /**
-         * オプショングループ削除
-         * @description オプショングループを削除します。
-         *
-         *     Plans:
-         *     スタンダード・プレミアム・プレミアムプラス・フードビジネス・リテールビジネス
-         *
-         */
-        delete: {
-            parameters: {
-                query?: never;
-                header?: never;
-                path: {
-                    /** @description 契約ID */
-                    contract_id: string;
-                    /** @description オプショングループID */
-                    id: string;
-                };
-                cookie?: never;
-            };
-            requestBody?: never;
-            responses: {
-                /** @description 削除成功 */
-                200: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content?: never;
-                };
-                /** @description 指定されたオプショングループが使用中の場合 */
-                400: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content: {
-                        "application/json": components["schemas"]["Error"];
-                    };
-                };
-                /** @description 指定されたIDが存在しない場合 */
-                404: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content: {
-                        "application/json": components["schemas"]["Error"];
-                    };
-                };
-            };
-        };
-        options?: never;
-        head?: never;
-        /**
-         * オプショングループ更新
-         * @description オプショングループを更新します。
-         *
-         *     Plans:
-         *     スタンダード・プレミアム・プレミアムプラス・フードビジネス・リテールビジネス
-         *
-         */
-        patch: {
-            parameters: {
-                query?: never;
-                header?: never;
-                path: {
-                    /** @description 契約ID */
-                    contract_id: string;
-                    /** @description オプショングループID */
-                    id: string;
-                };
-                cookie?: never;
-            };
-            requestBody: {
-                content: {
-                    "application/json": components["schemas"]["ProductOptionGroupUpdate"];
-                };
-            };
-            responses: {
-                /** @description 更新成功 */
-                200: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content: {
-                        "application/json": components["schemas"]["ProductOptionGroup"];
-                    };
-                };
-                /** @description 入力チェックエラーの場合 */
-                400: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content: {
-                        "application/json": components["schemas"]["Error"];
-                    };
-                };
-                /** @description 指定されたIDが存在しない場合 */
-                404: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content: {
-                        "application/json": components["schemas"]["Error"];
-                    };
-                };
-            };
-        };
-        trace?: never;
-    };
-    "/product_option_groups/{id}/products/{product_id}": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        get?: never;
-        put?: never;
-        post?: never;
-        /**
-         * オプショングループ商品削除
-         * @description 指定されたオプショングループ商品を削除します。
-         *
-         *     Plans:
-         *     スタンダード・プレミアム・プレミアムプラス・フードビジネス・リテールビジネス
-         *
-         */
-        delete: {
-            parameters: {
-                query?: never;
-                header?: never;
-                path: {
-                    /** @description 契約ID */
-                    contract_id: string;
-                    /** @description オプショングループID */
-                    id: string;
-                    /** @description 商品ID */
-                    product_id: string;
-                };
-                cookie?: never;
-            };
-            requestBody?: never;
-            responses: {
-                /** @description 削除成功 */
-                200: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content?: never;
-                };
-                /** @description 指定されたオプショングループのオプション商品が１件の場合 */
-                400: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content: {
-                        "application/json": components["schemas"]["Error"];
-                    };
-                };
-                /** @description URIで指定されたオプショングループが存在しない場合
-                 *     URIで指定された商品が存在しない場合
-                 *     URIで指定されたパラメータの組み合わせが存在しない場合
-                 *      */
-                404: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content: {
-                        "application/json": components["schemas"]["Error"];
-                    };
-                };
-            };
-        };
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/bundles": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        /**
-         * バンドル販売一覧取得
-         * @description バンドル販売情報一覧を取得します。
-         *
-         *     Plans:
-         *     スタンダード・プレミアム・プレミアムプラス・フードビジネス・リテールビジネス
-         *
-         *     sortで使用可能なパラメータ
-         *     - productBundleGroupId：商品バンドルグループID
-         *     - termFrom：適用開始日
-         *     - termTo：適用終了日
-         *
-         */
-        get: {
-            parameters: {
-                query?: {
-                    /** @description 検索パラメータ（カンマ区切りで指定可）
-                     *     Response項目を指定可能
-                     *     ※一部項目(withで指定する項目、2階層目以降の項目)については指定不可
-                     *      */
-                    fields?: string[];
-                    /** @description 並び順（カンマ区切りで指定可）
-                     *     指定可能な項目については上記参照
-                     *      */
-                    sort?: string;
-                    /** @description 上限数 */
-                    limit?: number;
-                    /** @description ページ */
-                    page?: number;
-                    /** @description 商品バンドルグループID */
-                    product_bundle_group_id?: string;
-                    /** @description 適用開始日 */
-                    term_from?: string;
-                    /** @description 適用終了日 */
-                    term_to?: string;
-                };
-                header?: never;
-                path: {
-                    /** @description 契約ID */
-                    contract_id: string;
-                };
-                cookie?: never;
-            };
-            requestBody?: never;
-            responses: {
-                /** @description 取得成功 */
-                200: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content: {
-                        "application/json": components["schemas"]["Bundle"][];
-                    };
-                };
-            };
-        };
-        put?: never;
-        /**
-         * バンドル販売登録
-         * @description バンドル販売情報を登録します。
-         *
-         *     Plans:
-         *     スタンダード・プレミアム・プレミアムプラス・フードビジネス・リテールビジネス
-         *
-         */
-        post: {
-            parameters: {
-                query?: never;
-                header?: never;
-                path: {
-                    /** @description 契約ID */
-                    contract_id: string;
-                };
-                cookie?: never;
-            };
-            requestBody: {
-                content: {
-                    "application/json": components["schemas"]["BundleCreate"];
-                };
-            };
-            responses: {
-                /** @description 更新成功 */
-                200: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content: {
-                        "application/json": components["schemas"]["Bundle"];
-                    };
-                };
-                /** @description 入力チェックエラーの場合 */
-                400: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content: {
-                        "application/json": components["schemas"]["Error"];
-                    };
-                };
-            };
-        };
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/bundles/{id}": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        /**
-         * バンドル販売取得
-         * @description バンドル販売情報を取得します。
-         *
-         *     Plans:
-         *     スタンダード・プレミアム・プレミアムプラス・フードビジネス・リテールビジネス
-         *
-         */
-        get: {
-            parameters: {
-                query?: {
-                    /** @description 検索パラメータ（カンマ区切りで指定可）
-                     *     Response項目を指定可能
-                     *     ※一部項目(withで指定する項目、2階層目以降の項目)については指定不可
-                     *      */
-                    fields?: string[];
-                };
-                header?: never;
-                path: {
-                    /** @description 契約ID */
-                    contract_id: string;
-                    /** @description バンドル販売ID */
-                    id: string;
-                };
-                cookie?: never;
-            };
-            requestBody?: never;
-            responses: {
-                /** @description 取得成功 */
-                200: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content: {
-                        "application/json": components["schemas"]["Bundle"];
-                    };
-                };
-            };
-        };
-        put?: never;
-        post?: never;
-        /**
-         * バンドル販売削除
-         * @description バンドル販売を削除します。
-         *
-         *     Plans:
-         *     スタンダード・プレミアム・プレミアムプラス・フードビジネス・リテールビジネス
-         *
-         */
-        delete: {
-            parameters: {
-                query?: never;
-                header?: never;
-                path: {
-                    /** @description 契約ID */
-                    contract_id: string;
-                    /** @description バンドル販売ID */
-                    id: string;
-                };
-                cookie?: never;
-            };
-            requestBody?: never;
-            responses: {
-                /** @description 削除成功 */
-                200: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content?: never;
-                };
-                /** @description 指定したバンドル販売データが存在しない場合 */
-                404: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content: {
-                        "application/json": components["schemas"]["Error"];
-                    };
-                };
-            };
-        };
-        options?: never;
-        head?: never;
-        /**
-         * バンドル販売更新
-         * @description バンドル販売情報を更新します。
-         *
-         *     Plans:
-         *     スタンダード・プレミアム・プレミアムプラス・フードビジネス・リテールビジネス
-         *
-         */
-        patch: {
-            parameters: {
-                query?: never;
-                header?: never;
-                path: {
-                    /** @description 契約ID */
-                    contract_id: string;
-                    /** @description バンドル販売ID */
-                    id: string;
-                };
-                cookie?: never;
-            };
-            requestBody: {
-                content: {
-                    "application/json": components["schemas"]["BundleUpdate"];
-                };
-            };
-            responses: {
-                /** @description 更新成功 */
-                200: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content: {
-                        "application/json": components["schemas"]["Bundle"];
-                    };
-                };
-                /** @description 入力チェックエラーの場合 */
-                400: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content: {
-                        "application/json": components["schemas"]["Error"];
-                    };
-                };
-            };
-        };
-        trace?: never;
-    };
-    "/bundles/{id}/products/{bundleProductId}": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        get?: never;
-        put?: never;
-        post?: never;
-        /**
-         * バンドル販売商品削除
-         * @description バンドル販売商品を削除します。
-         *
-         *     Plans:
-         *     スタンダード・プレミアム・プレミアムプラス・フードビジネス・リテールビジネス
-         *
-         */
-        delete: {
-            parameters: {
-                query?: never;
-                header?: never;
-                path: {
-                    /** @description 契約ID */
-                    contract_id: string;
-                    /** @description バンドル販売ID */
-                    id: string;
-                    /** @description バンドル販売商品ID */
-                    bundleProductId: string;
-                };
-                cookie?: never;
-            };
-            requestBody?: never;
-            responses: {
-                /** @description 削除成功 */
-                200: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content?: never;
-                };
-                /** @description URIで指定されたパラメータの組み合わせが存在しない場合 */
-                404: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content: {
-                        "application/json": components["schemas"]["Error"];
-                    };
-                };
-            };
-        };
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/stores": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        /**
-         * 店舗一覧取得
-         * @description 店舗情報一覧を取得します。
-         *
-         *     Plans:
-         *     スタンダード・プレミアム・プレミアムプラス・フードビジネス・リテールビジネス
-         *
-         *     sortで使用可能なパラメータ
-         *     - storeId：店舗ID
-         *     - storeCode：店舗コード
-         *     - displaySequence：表示順
-         *     - updDateTime：更新日時
-         *
-         */
-        get: {
-            parameters: {
-                query?: {
-                    /** @description 検索パラメータ（カンマ区切りで指定可）
-                     *     Response項目を指定可能
-                     *     ※一部項目(withで指定する項目、2階層目以降の項目)については指定不可
-                     *      */
-                    fields?: string[];
-                    /** @description 並び順（カンマ区切りで指定可）
-                     *     指定可能な項目については上記参照
-                     *      */
-                    sort?: string;
-                    /** @description 上限数 */
-                    limit?: number;
-                    /** @description ページ */
-                    page?: number;
-                    /** @description 店舗ID */
-                    store_id?: string;
-                    /** @description 店舗コード */
-                    store_code?: string;
-                    /** @description 店舗区分 (0:通常店舗、1:倉庫) */
-                    store_division?: "0" | "1";
-                };
-                header?: never;
-                path: {
-                    /** @description 契約ID */
-                    contract_id: string;
-                };
-                cookie?: never;
-            };
-            requestBody?: never;
-            responses: {
-                /** @description 取得成功 */
-                200: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content: {
-                        "application/json": components["schemas"]["Store"][];
-                    };
-                };
-            };
-        };
-        put?: never;
-        /**
-         * 店舗登録
-         * @description 店舗情報を登録します。
-         *
-         *     Plans:
-         *     スタンダード・プレミアム・プレミアムプラス・フードビジネス・リテールビジネス
-         *
-         */
-        post: {
-            parameters: {
-                query?: never;
-                header?: never;
-                path: {
-                    /** @description 契約ID */
-                    contract_id: string;
-                };
-                cookie?: never;
-            };
-            requestBody: {
-                content: {
-                    "application/json": components["schemas"]["StoreCreate"];
-                };
-            };
-            responses: {
-                /** @description 登録成功 */
-                200: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content: {
-                        "application/json": components["schemas"]["Store"];
-                    };
-                };
-                /** @description 入力チェックエラーの場合 */
-                400: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content: {
-                        "application/json": components["schemas"]["Error"];
-                    };
-                };
-            };
-        };
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/stores/{id}": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        /**
-         * 店舗取得
-         * @description 店舗情報を取得します。
-         *
-         *     Plans:
-         *     スタンダード・プレミアム・プレミアムプラス・フードビジネス・リテールビジネス
-         *
-         */
-        get: {
-            parameters: {
-                query?: {
-                    /** @description 検索パラメータ（カンマ区切りで指定可）
-                     *     Response項目を指定可能
-                     *     ※一部項目(withで指定する項目、2階層目以降の項目)については指定不可
-                     *      */
-                    fields?: string[];
-                };
-                header?: never;
-                path: {
-                    /** @description 契約ID */
-                    contract_id: string;
-                    /** @description 店舗ID */
-                    id: string;
-                };
-                cookie?: never;
-            };
-            requestBody?: never;
-            responses: {
-                /** @description 取得成功 */
-                200: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content: {
-                        "application/json": components["schemas"]["Store"];
-                    };
-                };
-                /** @description 指定されたIDが存在しない場合 */
-                404: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content: {
-                        "application/json": components["schemas"]["Error"];
-                    };
-                };
-            };
-        };
-        put?: never;
-        post?: never;
-        /**
-         * 店舗削除
-         * @description 店舗を削除します。
-         *
-         *     Plans:
-         *     スタンダード・プレミアム・プレミアムプラス・フードビジネス・リテールビジネス
-         *
-         */
-        delete: {
-            parameters: {
-                query?: never;
-                header?: never;
-                path: {
-                    /** @description 契約ID */
-                    contract_id: string;
-                    /** @description 店舗ID */
-                    id: string;
-                };
-                cookie?: never;
-            };
-            requestBody?: never;
-            responses: {
-                /** @description 削除成功 */
-                200: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content?: never;
-                };
-                /** @description 削除できない店舗の場合 */
-                400: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content: {
-                        "application/json": components["schemas"]["Error"];
-                    };
-                };
-                /** @description 指定されたIDが存在しない場合 */
-                404: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content: {
-                        "application/json": components["schemas"]["Error"];
-                    };
-                };
-            };
-        };
-        options?: never;
-        head?: never;
-        /**
-         * 店舗更新
-         * @description 店舗情報を更新します。
-         *
-         *     Plans:
-         *     スタンダード・プレミアム・プレミアムプラス・フードビジネス・リテールビジネス
-         *
-         */
-        patch: {
-            parameters: {
-                query?: never;
-                header?: never;
-                path: {
-                    /** @description 契約ID */
-                    contract_id: string;
-                    /** @description 店舗ID */
-                    id: string;
-                };
-                cookie?: never;
-            };
-            requestBody: {
-                content: {
-                    "application/json": components["schemas"]["StoreUpdate"];
-                };
-            };
-            responses: {
-                /** @description 更新成功 */
-                200: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content: {
-                        "application/json": components["schemas"]["Store"];
-                    };
-                };
-                /** @description 入力チェックエラーの場合 */
-                400: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content: {
-                        "application/json": components["schemas"]["Error"];
-                    };
-                };
-                /** @description 指定されたIDが存在しない場合 */
-                404: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content: {
-                        "application/json": components["schemas"]["Error"];
-                    };
-                };
-            };
-        };
-        trace?: never;
-    };
-    "/stores/{store_id}/products": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        /**
-         * 商品発注点一覧取得
-         * @description 商品発注点情報一覧を取得します。
-         *
-         *     Plans:
-         *     スタンダード・プレミアム・プレミアムプラス・フードビジネス・リテールビジネス
-         *
-         */
-        get: {
-            parameters: {
-                query?: {
-                    /** @description 検索パラメータ（カンマ区切りで指定可）
-                     *     Response項目を指定可能
-                     *     ※一部項目(withで指定する項目、2階層目以降の項目)については指定不可
-                     *      */
-                    fields?: string[];
-                    /** @description 上限数 */
-                    limit?: number;
-                    /** @description ページ */
-                    page?: number;
-                };
-                header?: never;
-                path: {
-                    /** @description 契約ID */
-                    contract_id: string;
-                    /** @description 店舗ID */
-                    store_id: string;
-                };
-                cookie?: never;
-            };
-            requestBody?: never;
-            responses: {
-                /** @description 取得成功 */
-                200: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content: {
-                        "application/json": {
-                            /**
-                             * @description 店舗ID
-                             * @example 1
-                             */
-                            storeId: string;
-                            /**
-                             * @description 商品ID
-                             * @example 101
-                             */
-                            productId: string;
-                            /**
-                             * @description 発注点
-                             * @example 5
-                             */
-                            orderPoint: string;
-                        }[];
-                    };
-                };
-                /** @description 指定された店舗IDが存在しない場合 */
-                404: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content: {
-                        "application/json": components["schemas"]["Error"];
-                    };
-                };
-            };
-        };
-        put?: never;
-        /**
-         * 商品発注点設定
-         * @description 商品発注点を設定します。
-         *
-         *     Plans:
-         *     スタンダード・プレミアム・プレミアムプラス・フードビジネス・リテールビジネス
-         *
-         */
-        post: {
-            parameters: {
-                query?: never;
-                header?: never;
-                path: {
-                    /** @description 契約ID */
-                    contract_id: string;
-                    /** @description 店舗ID */
-                    store_id: string;
-                };
-                cookie?: never;
-            };
-            requestBody: {
-                content: {
-                    "application/json": {
-                        /**
-                         * @description 商品ID
-                         * @example 101
-                         */
-                        productId: string;
-                        /**
-                         * @description 発注点
-                         * @example 5
-                         */
-                        orderPoint: string;
-                    };
-                };
-            };
-            responses: {
-                /** @description 登録成功 */
-                200: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content: {
-                        "application/json": {
-                            /**
-                             * @description 店舗ID
-                             * @example 1
-                             */
-                            storeId: string;
-                            /**
-                             * @description 商品ID
-                             * @example 101
-                             */
-                            productId: string;
-                            /**
-                             * @description 発注点
-                             * @example 5
-                             */
-                            orderPoint: string;
-                        };
-                    };
-                };
-                /** @description 入力チェックエラーの場合 */
-                400: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content: {
-                        "application/json": components["schemas"]["Error"];
-                    };
-                };
-                /** @description 指定された店舗IDが存在しない場合 */
-                404: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content: {
-                        "application/json": components["schemas"]["Error"];
-                    };
-                };
-            };
-        };
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/stores/{store_id}/product_prices": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path: {
-                /** @description 店舗ID */
-                store_id: number;
-            };
-            cookie?: never;
-        };
-        /**
-         * 店舗の商品価格一覧取得
-         * @description 指定した店舗IDの商品価格一覧を取得します。
-         *
-         *     Plans:
-         *     スタンダード・プレミアム・プレミアムプラス・フードビジネス・リテールビジネス
-         *
-         */
-        get: operations["getStoreProductPrices"];
-        put?: never;
-        /**
-         * 店舗の商品価格登録・更新
-         * @description 指定した店舗IDに商品価格情報を登録または更新します。
-         *
-         *     Plans:
-         *     スタンダード・プレミアム・プレミアムプラス・フードビジネス・リテールビジネス
-         *
-         */
-        post: operations["createOrUpdateStoreProductPrice"];
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/store_groups": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        /**
-         * 店舗分類一覧取得
-         * @description 店舗分類一覧を取得します。
-         *
-         *     Plans:
-         *     スタンダード・プレミアム・プレミアムプラス・フードビジネス・リテールビジネス
-         *
-         *     sortで使用可能なパラメータ
-         *     - storeGroupId：店舗分類ID
-         *     - updDateTime：更新日時
-         *
-         */
-        get: {
-            parameters: {
-                query?: {
-                    /** @description 検索パラメータ（カンマ区切りで指定可）
-                     *     Response項目を指定可能
-                     *     ※一部項目(withで指定する項目、2階層目以降の項目)については指定不可
-                     *      */
-                    fields?: string[];
-                    /** @description 並び順（カンマ区切りで指定可）
-                     *     指定可能な項目については上記参照
-                     *      */
-                    sort?: string;
-                    /** @description 上限数 */
-                    limit?: number;
-                    /** @description ページ */
-                    page?: number;
-                    /** @description 店舗分類ID */
-                    store_group_id?: string;
-                };
-                header?: never;
-                path: {
-                    /** @description 契約ID */
-                    contract_id: string;
-                };
-                cookie?: never;
-            };
-            requestBody?: never;
-            responses: {
-                /** @description 取得成功 */
-                200: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content: {
-                        "application/json": components["schemas"]["StoreGroup"][];
-                    };
-                };
-            };
-        };
-        put?: never;
-        /**
-         * 店舗分類登録
-         * @description 店舗分類を登録します。
-         *
-         *     Plans:
-         *     スタンダード・プレミアム・プレミアムプラス・フードビジネス・リテールビジネス
-         *
-         */
-        post: {
-            parameters: {
-                query?: never;
-                header?: never;
-                path: {
-                    /** @description 契約ID */
-                    contract_id: string;
-                };
-                cookie?: never;
-            };
-            requestBody: {
-                content: {
-                    "application/json": components["schemas"]["StoreGroupCreate"];
-                };
-            };
-            responses: {
-                /** @description 登録成功 */
-                200: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content: {
-                        "application/json": components["schemas"]["StoreGroup"];
-                    };
-                };
-                /** @description 入力チェックエラーの場合 */
-                400: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content: {
-                        "application/json": components["schemas"]["Error"];
-                    };
-                };
-            };
-        };
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/store_groups/{id}": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        get?: never;
-        put?: never;
-        post?: never;
-        /**
-         * 店舗分類削除
-         * @description 店舗分類を削除します。
-         *
-         *     Plans:
-         *     スタンダード・プレミアム・プレミアムプラス・フードビジネス・リテールビジネス
-         *
-         */
-        delete: {
-            parameters: {
-                query?: never;
-                header?: never;
-                path: {
-                    /** @description 契約ID */
-                    contract_id: string;
-                    /** @description 店舗分類ID */
-                    id: string;
-                };
-                cookie?: never;
-            };
-            requestBody?: never;
-            responses: {
-                /** @description 削除成功 */
-                200: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content?: never;
-                };
-                /** @description 指定された店舗分類に紐付いている店舗分類項目が存在する場合 */
-                400: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content: {
-                        "application/json": components["schemas"]["Error"];
-                    };
-                };
-                /** @description 指定されたIDが存在しない場合 */
-                404: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content: {
-                        "application/json": components["schemas"]["Error"];
-                    };
-                };
-            };
-        };
-        options?: never;
-        head?: never;
-        /**
-         * 店舗分類更新
-         * @description 店舗分類を更新します。
-         *
-         *     Plans:
-         *     スタンダード・プレミアム・プレミアムプラス・フードビジネス・リテールビジネス
-         *
-         */
-        patch: {
-            parameters: {
-                query?: never;
-                header?: never;
-                path: {
-                    /** @description 契約ID */
-                    contract_id: string;
-                    /** @description 店舗分類ID */
-                    id: string;
-                };
-                cookie?: never;
-            };
-            requestBody: {
-                content: {
-                    "application/json": components["schemas"]["StoreGroupUpdate"];
-                };
-            };
-            responses: {
-                /** @description 更新成功 */
-                200: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content: {
-                        "application/json": components["schemas"]["StoreGroup"];
-                    };
-                };
-                /** @description 入力チェックエラーの場合 */
-                400: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content: {
-                        "application/json": components["schemas"]["Error"];
-                    };
-                };
-                /** @description 指定されたIDが存在しない場合 */
-                404: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content: {
-                        "application/json": components["schemas"]["Error"];
-                    };
-                };
-            };
-        };
-        trace?: never;
-    };
-    "/store_group_items": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        /**
-         * 店舗分類項目一覧取得
-         * @description 店舗分類項目一覧を取得します。
-         *
-         *     Plans:
-         *     スタンダード・プレミアム・プレミアムプラス・フードビジネス・リテールビジネス
-         *
-         *     sortで使用可能なパラメータ
-         *     - storeGroupItemId：店舗分類項目ID
-         *     - storeGroupId：店舗分類ID
-         *     - storeId：店舗ID
-         *     - updDateTime：更新日時
-         *
-         */
-        get: {
-            parameters: {
-                query?: {
-                    /** @description 検索パラメータ（カンマ区切りで指定可）
-                     *     Response項目を指定可能
-                     *     ※一部項目(withで指定する項目、2階層目以降の項目)については指定不可
-                     *      */
-                    fields?: string[];
-                    /** @description 並び順（カンマ区切りで指定可）
-                     *     指定可能な項目については上記参照
-                     *      */
-                    sort?: string;
-                    /** @description 上限数 */
-                    limit?: number;
-                    /** @description ページ */
-                    page?: number;
-                    /** @description 店舗分類項目ID */
-                    store_group_item_id?: string;
-                    /** @description 店舗分類ID */
-                    store_group_id?: string;
-                    /** @description 店舗ID */
-                    store_id?: string;
-                };
-                header?: never;
-                path: {
-                    /** @description 契約ID */
-                    contract_id: string;
-                };
-                cookie?: never;
-            };
-            requestBody?: never;
-            responses: {
-                /** @description 取得成功 */
-                200: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content: {
-                        "application/json": components["schemas"]["StoreGroupItem"][];
-                    };
-                };
-            };
-        };
-        put?: never;
-        /**
-         * 店舗分類項目登録
-         * @description 店舗分類項目を登録します。
-         *
-         *     Plans:
-         *     スタンダード・プレミアム・プレミアムプラス・フードビジネス・リテールビジネス
-         *
-         */
-        post: {
-            parameters: {
-                query?: never;
-                header?: never;
-                path: {
-                    /** @description 契約ID */
-                    contract_id: string;
-                };
-                cookie?: never;
-            };
-            requestBody: {
-                content: {
-                    "application/json": components["schemas"]["StoreGroupItemCreate"];
-                };
-            };
-            responses: {
-                /** @description 登録成功 */
-                200: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content: {
-                        "application/json": components["schemas"]["StoreGroupItem"];
-                    };
-                };
-                /** @description 入力チェックエラーの場合 */
-                400: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content: {
-                        "application/json": components["schemas"]["Error"];
-                    };
-                };
-            };
-        };
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/store_group_items/{id}": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        get?: never;
-        put?: never;
-        post?: never;
-        /**
-         * 店舗分類項目削除
-         * @description 店舗分類項目を削除します。
-         *
-         *     Plans:
-         *     スタンダード・プレミアム・プレミアムプラス・フードビジネス・リテールビジネス
-         *
-         */
-        delete: {
-            parameters: {
-                query?: never;
-                header?: never;
-                path: {
-                    /** @description 契約ID */
-                    contract_id: string;
-                    /** @description 店舗分類項目ID */
-                    id: string;
-                };
-                cookie?: never;
-            };
-            requestBody?: never;
-            responses: {
-                /** @description 削除成功 */
-                200: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content?: never;
-                };
-                /** @description 指定されたIDが存在しない場合 */
-                404: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content: {
-                        "application/json": components["schemas"]["Error"];
-                    };
-                };
-            };
-        };
-        options?: never;
-        head?: never;
-        /**
-         * 店舗分類項目更新
-         * @description 店舗分類項目を更新します。
-         *
-         *     Plans:
-         *     スタンダード・プレミアム・プレミアムプラス・フードビジネス・リテールビジネス
-         *
-         */
-        patch: {
-            parameters: {
-                query?: never;
-                header?: never;
-                path: {
-                    /** @description 契約ID */
-                    contract_id: string;
-                    /** @description 店舗分類項目ID */
-                    id: string;
-                };
-                cookie?: never;
-            };
-            requestBody: {
-                content: {
-                    "application/json": components["schemas"]["StoreGroupItemUpdate"];
-                };
-            };
-            responses: {
-                /** @description 更新成功 */
-                200: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content: {
-                        "application/json": components["schemas"]["StoreGroupItem"];
-                    };
-                };
-                /** @description 入力チェックエラーの場合 */
-                400: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content: {
-                        "application/json": components["schemas"]["Error"];
-                    };
-                };
-                /** @description 指定されたIDが存在しない場合 */
-                404: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content: {
-                        "application/json": components["schemas"]["Error"];
-                    };
-                };
-            };
-        };
-        trace?: never;
-    };
-    "/staffs": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        /**
-         * スタッフ一覧取得
-         * @description スタッフ情報一覧を取得します。
-         */
-        get: {
-            parameters: {
-                query?: {
-                    /** @description 取得したいフィールド名（カンマ区切りで指定可） */
-                    fields?: string[];
-                    /** @description 並び順（カンマ区切りで指定可） */
-                    sort?: string;
-                    /** @description 取得上限数 */
-                    limit?: number;
-                    /** @description ページ番号 */
-                    page?: number;
-                    /** @description スタッフID */
-                    staff_id?: string;
-                    /** @description スタッフコード */
-                    staff_code?: string;
-                    /** @description 名前（部分一致） */
-                    first_name?: string;
-                    /** @description 苗字（部分一致） */
-                    last_name?: string;
-                    /** @description 名前カナ（部分一致） */
-                    first_name_kana?: string;
-                    /** @description 苗字カナ（部分一致） */
-                    last_name_kana?: string;
-                    /** @description 電話番号（部分一致） */
-                    tel?: string;
-                    /** @description 携帯電話番号（部分一致） */
-                    mobile_phone?: string;
-                    /** @description メールアドレス（部分一致） */
-                    mail?: string;
-                    /** @description 権限(0:なし, 1:店舗管理者, 2:店舗スタッフ, 3:システム管理者) */
-                    staff_authorization?: "0" | "1" | "2" | "3";
-                    /** @description 所属店舗ID */
-                    store_id?: string;
-                    /** @description 役割ID */
-                    role_id?: string;
-                    /** @description ステータス(1:有効, 2:無効) */
-                    status?: "1" | "2";
-                    /** @description 登録日時(From) */
-                    "ins_date_time-from"?: string;
-                    /** @description 登録日時(To) */
-                    "ins_date_time-to"?: string;
-                    /** @description 更新日時(From) */
-                    "upd_date_time-from"?: string;
-                    /** @description 更新日時(To) */
-                    "upd_date_time-to"?: string;
-                };
-                header?: never;
-                path?: never;
-                cookie?: never;
-            };
-            requestBody?: never;
-            responses: {
-                /** @description 取得成功 */
-                200: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content: {
-                        "application/json": components["schemas"]["Staff"][];
-                    };
-                };
-            };
-        };
-        put?: never;
-        /**
-         * スタッフ登録
-         * @description スタッフ情報を登録します。
-         */
-        post: {
-            parameters: {
-                query?: never;
-                header?: never;
-                path?: never;
-                cookie?: never;
-            };
-            requestBody: {
-                content: {
-                    "application/json": components["schemas"]["StaffCreate"];
-                };
-            };
-            responses: {
-                /** @description 登録成功 */
-                200: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content: {
-                        "application/json": components["schemas"]["Staff"];
-                    };
-                };
-                /** @description 入力チェックエラーの場合 */
-                400: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content: {
-                        "application/json": components["schemas"]["Error"];
-                    };
-                };
-            };
-        };
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/staffs/{id}": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        /**
-         * スタッフ情報取得
-         * @description 指定したIDのスタッフ情報を取得します。
-         */
-        get: {
-            parameters: {
-                query?: never;
-                header?: never;
-                path: {
-                    /** @description スタッフID */
-                    id: string;
-                };
-                cookie?: never;
-            };
-            requestBody?: never;
-            responses: {
-                /** @description 取得成功 */
-                200: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content: {
-                        "application/json": components["schemas"]["Staff"];
-                    };
-                };
-                /** @description 対象リソースが存在しない場合 */
-                404: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content: {
-                        "application/json": components["schemas"]["Error"];
-                    };
-                };
-            };
-        };
-        /**
-         * スタッフ情報更新
-         * @description 指定したIDのスタッフ情報を更新します。
-         */
-        put: {
-            parameters: {
-                query?: never;
-                header?: never;
-                path: {
-                    /** @description スタッフID */
-                    id: string;
-                };
-                cookie?: never;
-            };
-            requestBody: {
-                content: {
-                    "application/json": components["schemas"]["StaffUpdate"];
-                };
-            };
-            responses: {
-                /** @description 更新成功 */
-                200: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content: {
-                        "application/json": components["schemas"]["Staff"];
-                    };
-                };
-                /** @description 入力チェックエラーの場合 */
-                400: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content: {
-                        "application/json": components["schemas"]["Error"];
-                    };
-                };
-                /** @description 対象リソースが存在しない場合 */
-                404: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content: {
-                        "application/json": components["schemas"]["Error"];
-                    };
-                };
-            };
-        };
-        post?: never;
-        /**
-         * スタッフ情報削除
-         * @description 指定したIDのスタッフ情報を削除します。
-         */
-        delete: {
-            parameters: {
-                query?: never;
-                header?: never;
-                path: {
-                    /** @description スタッフID */
-                    id: string;
-                };
-                cookie?: never;
-            };
-            requestBody?: never;
-            responses: {
-                /** @description 削除成功 */
-                204: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content?: never;
-                };
-                /** @description 対象リソースが存在しない場合 */
-                404: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content: {
-                        "application/json": components["schemas"]["Error"];
-                    };
-                };
-            };
-        };
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/roles": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        /**
-         * 役割一覧取得
-         * @description 役割情報一覧を取得します。
-         */
-        get: {
-            parameters: {
-                query?: {
-                    /** @description 取得したいフィールド名（カンマ区切りで指定可） */
-                    fields?: string[];
-                    /** @description 並び順（カンマ区切りで指定可） */
-                    sort?: string;
-                    /** @description 取得上限数 */
-                    limit?: number;
-                    /** @description ページ番号 */
-                    page?: number;
-                    /** @description 役割ID */
-                    role_id?: string;
-                    /** @description 役割名（部分一致） */
-                    role_name?: string;
-                    /** @description 権限ID */
-                    permission_id?: string;
-                    /** @description 権限値(0:無効, 1:有効) */
-                    permission_value?: 0 | 1;
-                    /** @description 登録日時(From) */
-                    "ins_date_time-from"?: string;
-                    /** @description 登録日時(To) */
-                    "ins_date_time-to"?: string;
-                    /** @description 更新日時(From) */
-                    "upd_date_time-from"?: string;
-                    /** @description 更新日時(To) */
-                    "upd_date_time-to"?: string;
-                };
-                header?: never;
-                path?: never;
-                cookie?: never;
-            };
-            requestBody?: never;
-            responses: {
-                /** @description 取得成功 */
-                200: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content: {
-                        "application/json": components["schemas"]["Role"][];
-                    };
-                };
-            };
-        };
-        put?: never;
-        /**
-         * 役割登録
-         * @description 役割情報を登録します。
-         */
-        post: {
-            parameters: {
-                query?: never;
-                header?: never;
-                path?: never;
-                cookie?: never;
-            };
-            requestBody: {
-                content: {
-                    "application/json": components["schemas"]["RoleCreate"];
-                };
-            };
-            responses: {
-                /** @description 登録成功 */
-                200: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content: {
-                        "application/json": components["schemas"]["Role"];
-                    };
-                };
-                /** @description 入力チェックエラーの場合 */
-                400: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content: {
-                        "application/json": components["schemas"]["Error"];
-                    };
-                };
-            };
-        };
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/roles/{id}": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        /**
-         * 役割情報取得
-         * @description 指定したIDの役割情報を取得します。
-         */
-        get: {
-            parameters: {
-                query?: never;
-                header?: never;
-                path: {
-                    /** @description 役割ID */
-                    id: string;
-                };
-                cookie?: never;
-            };
-            requestBody?: never;
-            responses: {
-                /** @description 取得成功 */
-                200: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content: {
-                        "application/json": components["schemas"]["Role"];
-                    };
-                };
-                /** @description 対象リソースが存在しない場合 */
-                404: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content: {
-                        "application/json": components["schemas"]["Error"];
-                    };
-                };
-            };
-        };
-        /**
-         * 役割情報更新
-         * @description 指定したIDの役割情報を更新します。
-         */
-        put: {
-            parameters: {
-                query?: never;
-                header?: never;
-                path: {
-                    /** @description 役割ID */
-                    id: string;
-                };
-                cookie?: never;
-            };
-            requestBody: {
-                content: {
-                    "application/json": components["schemas"]["RoleUpdate"];
-                };
-            };
-            responses: {
-                /** @description 更新成功 */
-                200: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content: {
-                        "application/json": components["schemas"]["Role"];
-                    };
-                };
-                /** @description 入力チェックエラーの場合 */
-                400: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content: {
-                        "application/json": components["schemas"]["Error"];
-                    };
-                };
-                /** @description 対象リソースが存在しない場合 */
-                404: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content: {
-                        "application/json": components["schemas"]["Error"];
-                    };
-                };
-            };
-        };
-        post?: never;
-        /**
-         * 役割情報削除
-         * @description 指定したIDの役割情報を削除します。
-         */
-        delete: {
-            parameters: {
-                query?: never;
-                header?: never;
-                path: {
-                    /** @description 役割ID */
-                    id: string;
-                };
-                cookie?: never;
-            };
-            requestBody?: never;
-            responses: {
-                /** @description 削除成功 */
-                204: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content?: never;
-                };
-                /** @description 対象リソースが存在しない場合 */
-                404: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content: {
-                        "application/json": components["schemas"]["Error"];
-                    };
-                };
-            };
-        };
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/budgets/monthly": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        /**
-         * 月次予算一覧取得
-         * @description 月次予算情報一覧を取得します。
-         */
-        get: {
-            parameters: {
-                query?: {
-                    /** @description 取得したいフィールド名（カンマ区切りで指定可） */
-                    fields?: string[];
-                    /** @description 並び順（カンマ区切りで指定可） */
-                    sort?: string;
-                    /** @description 取得上限数 */
-                    limit?: number;
-                    /** @description ページ番号 */
-                    page?: number;
-                    /** @description 予算ID */
-                    budget_id?: string;
-                    /** @description 店舗ID */
-                    store_id?: string;
-                    /** @description 年月(From) */
-                    "year_month-from"?: string;
-                    /** @description 年月(To) */
-                    "year_month-to"?: string;
-                    /** @description 登録日時(From) */
-                    "ins_date_time-from"?: string;
-                    /** @description 登録日時(To) */
-                    "ins_date_time-to"?: string;
-                    /** @description 更新日時(From) */
-                    "upd_date_time-from"?: string;
-                    /** @description 更新日時(To) */
-                    "upd_date_time-to"?: string;
-                };
-                header?: never;
-                path?: never;
-                cookie?: never;
-            };
-            requestBody?: never;
-            responses: {
-                /** @description 取得成功 */
-                200: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content: {
-                        "application/json": components["schemas"]["MonthlyBudget"][];
-                    };
-                };
-            };
-        };
-        put?: never;
-        post?: never;
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/budgets/daily/{date}": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        /**
-         * 日次予算一覧取得
-         * @description 指定した日付の日次予算情報一覧を取得します。
-         */
-        get: {
-            parameters: {
-                query?: {
-                    /** @description 取得したいフィールド名（カンマ区切りで指定可） */
-                    fields?: string[];
-                    /** @description 並び順（カンマ区切りで指定可） */
-                    sort?: string;
-                    /** @description 取得上限数 */
-                    limit?: number;
-                    /** @description ページ番号 */
-                    page?: number;
-                    /** @description 予算ID */
-                    budget_id?: string;
-                    /** @description 店舗ID */
-                    store_id?: string;
-                    /** @description 登録日時(From) */
-                    "ins_date_time-from"?: string;
-                    /** @description 登録日時(To) */
-                    "ins_date_time-to"?: string;
-                    /** @description 更新日時(From) */
-                    "upd_date_time-from"?: string;
-                    /** @description 更新日時(To) */
-                    "upd_date_time-to"?: string;
-                };
-                header?: never;
-                path: {
-                    /** @description 日付（YYYY-MM-DD形式） */
-                    date: string;
-                };
-                cookie?: never;
-            };
-            requestBody?: never;
-            responses: {
-                /** @description 取得成功 */
-                200: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content: {
-                        "application/json": components["schemas"]["DailyBudget"][];
-                    };
-                };
-            };
-        };
-        /**
-         * 日次予算更新
-         * @description 指定した日付の日次予算情報を更新します。
-         */
-        put: {
-            parameters: {
-                query: {
-                    /** @description 店舗ID */
-                    store_id: string;
-                };
-                header?: never;
-                path: {
-                    /** @description 日付（YYYY-MM-DD形式） */
-                    date: string;
-                };
-                cookie?: never;
-            };
-            requestBody: {
-                content: {
-                    "application/json": components["schemas"]["DailyBudgetUpdate"];
-                };
-            };
-            responses: {
-                /** @description 更新成功 */
-                200: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content: {
-                        "application/json": components["schemas"]["DailyBudget"];
-                    };
-                };
-                /** @description 入力チェックエラーの場合 */
-                400: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content: {
-                        "application/json": components["schemas"]["Error"];
-                    };
-                };
-                /** @description 対象リソースが存在しない場合 */
-                404: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content: {
-                        "application/json": components["schemas"]["Error"];
-                    };
-                };
-            };
-        };
-        /**
-         * 日次予算登録
-         * @description 指定した日付の日次予算情報を登録します。
-         */
-        post: {
-            parameters: {
-                query?: never;
-                header?: never;
-                path: {
-                    /** @description 日付（YYYY-MM-DD形式） */
-                    date: string;
-                };
-                cookie?: never;
-            };
-            requestBody: {
-                content: {
-                    "application/json": components["schemas"]["DailyBudgetCreate"];
-                };
-            };
-            responses: {
-                /** @description 登録成功 */
-                200: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content: {
-                        "application/json": components["schemas"]["DailyBudget"];
-                    };
-                };
-                /** @description 入力チェックエラーの場合 */
-                400: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content: {
-                        "application/json": components["schemas"]["Error"];
-                    };
-                };
-            };
-        };
-        /**
-         * 日次予算削除
-         * @description 指定した日付の日次予算情報を削除します。
-         */
-        delete: {
-            parameters: {
-                query: {
-                    /** @description 店舗ID */
-                    store_id: string;
-                };
-                header?: never;
-                path: {
-                    /** @description 日付（YYYY-MM-DD形式） */
-                    date: string;
-                };
-                cookie?: never;
-            };
-            requestBody?: never;
-            responses: {
-                /** @description 削除成功 */
-                204: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content?: never;
-                };
-                /** @description 対象リソースが存在しない場合 */
-                404: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content: {
-                        "application/json": components["schemas"]["Error"];
-                    };
-                };
-            };
-        };
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/budgets/staff": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        /**
-         * スタッフ予算一覧取得
-         * @description スタッフ予算情報一覧を取得します。
-         */
-        get: {
-            parameters: {
-                query?: {
-                    /** @description 取得したいフィールド名（カンマ区切りで指定可） */
-                    fields?: string[];
-                    /** @description 並び順（カンマ区切りで指定可） */
-                    sort?: string;
-                    /** @description 取得上限数 */
-                    limit?: number;
-                    /** @description ページ番号 */
-                    page?: number;
-                    /** @description 予算ID */
-                    budget_id?: string;
-                    /** @description 店舗ID */
-                    store_id?: string;
-                    /** @description スタッフID */
-                    staff_id?: string;
-                    /** @description 年月(From) */
-                    "year_month-from"?: string;
-                    /** @description 年月(To) */
-                    "year_month-to"?: string;
-                    /** @description 登録日時(From) */
-                    "ins_date_time-from"?: string;
-                    /** @description 登録日時(To) */
-                    "ins_date_time-to"?: string;
-                    /** @description 更新日時(From) */
-                    "upd_date_time-from"?: string;
-                    /** @description 更新日時(To) */
-                    "upd_date_time-to"?: string;
-                };
-                header?: never;
-                path?: never;
-                cookie?: never;
-            };
-            requestBody?: never;
-            responses: {
-                /** @description 取得成功 */
-                200: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content: {
-                        "application/json": components["schemas"]["StaffBudget"][];
-                    };
-                };
-            };
-        };
-        /**
-         * スタッフ予算更新
-         * @description スタッフ予算情報を更新します。
-         */
-        put: {
-            parameters: {
-                query: {
-                    /** @description 予算ID */
-                    budget_id: string;
-                };
-                header?: never;
-                path?: never;
-                cookie?: never;
-            };
-            requestBody: {
-                content: {
-                    "application/json": components["schemas"]["StaffBudgetUpdate"];
-                };
-            };
-            responses: {
-                /** @description 更新成功 */
-                200: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content: {
-                        "application/json": components["schemas"]["StaffBudget"];
-                    };
-                };
-                /** @description 入力チェックエラーの場合 */
-                400: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content: {
-                        "application/json": components["schemas"]["Error"];
-                    };
-                };
-                /** @description 対象リソースが存在しない場合 */
-                404: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content: {
-                        "application/json": components["schemas"]["Error"];
-                    };
-                };
-            };
-        };
-        /**
-         * スタッフ予算登録
-         * @description スタッフ予算情報を登録します。
-         */
-        post: {
-            parameters: {
-                query?: never;
-                header?: never;
-                path?: never;
-                cookie?: never;
-            };
-            requestBody: {
-                content: {
-                    "application/json": components["schemas"]["StaffBudgetCreate"];
-                };
-            };
-            responses: {
-                /** @description 登録成功 */
-                200: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content: {
-                        "application/json": components["schemas"]["StaffBudget"];
-                    };
-                };
-                /** @description 入力チェックエラーの場合 */
-                400: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content: {
-                        "application/json": components["schemas"]["Error"];
-                    };
-                };
-            };
-        };
-        /**
-         * スタッフ予算削除
-         * @description スタッフ予算情報を削除します。
-         */
-        delete: {
-            parameters: {
-                query: {
-                    /** @description 予算ID */
-                    budget_id: string;
-                };
-                header?: never;
-                path?: never;
-                cookie?: never;
-            };
-            requestBody?: never;
-            responses: {
-                /** @description 削除成功 */
-                204: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content?: never;
-                };
-                /** @description 対象リソースが存在しない場合 */
-                404: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content: {
-                        "application/json": components["schemas"]["Error"];
-                    };
-                };
-            };
-        };
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/suppliers": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        /**
-         * 仕入先一覧取得
-         * @description 仕入先情報一覧を取得します。
-         */
-        get: {
-            parameters: {
-                query?: {
-                    /** @description 取得したいフィールド名（カンマ区切りで指定可） */
-                    fields?: string[];
-                    /** @description 並び順（カンマ区切りで指定可） */
-                    sort?: string;
-                    /** @description 取得上限数 */
-                    limit?: number;
-                    /** @description ページ番号 */
-                    page?: number;
-                    /** @description 仕入先ID */
-                    supplier_id?: string;
-                    /** @description 仕入先コード */
-                    supplier_code?: string;
-                    /** @description 仕入先名（部分一致） */
-                    supplier_name?: string;
-                    /** @description 仕入先略称（部分一致） */
-                    supplier_abbr?: string;
-                    /** @description 仕入先区分ID */
-                    supplier_division_id?: string;
-                    /** @description 電話番号（部分一致） */
-                    phone_number?: string;
-                    /** @description ステータス(0:無効, 1:有効) */
-                    status?: "0" | "1";
-                    /** @description 登録日時(From) */
-                    "ins_date_time-from"?: string;
-                    /** @description 登録日時(To) */
-                    "ins_date_time-to"?: string;
-                    /** @description 更新日時(From) */
-                    "upd_date_time-from"?: string;
-                    /** @description 更新日時(To) */
-                    "upd_date_time-to"?: string;
-                };
-                header?: never;
-                path?: never;
-                cookie?: never;
-            };
-            requestBody?: never;
-            responses: {
-                /** @description 取得成功 */
-                200: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content: {
-                        "application/json": components["schemas"]["Supplier"][];
-                    };
-                };
-            };
-        };
-        put?: never;
-        /**
-         * 仕入先登録
-         * @description 仕入先情報を登録します。
-         */
-        post: {
-            parameters: {
-                query?: never;
-                header?: never;
-                path?: never;
-                cookie?: never;
-            };
-            requestBody: {
-                content: {
-                    "application/json": components["schemas"]["SupplierCreate"];
-                };
-            };
-            responses: {
-                /** @description 登録成功 */
-                200: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content: {
-                        "application/json": components["schemas"]["Supplier"];
-                    };
-                };
-                /** @description 入力チェックエラーの場合 */
-                400: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content: {
-                        "application/json": components["schemas"]["Error"];
-                    };
-                };
-            };
-        };
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/suppliers/{id}": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        /**
-         * 仕入先情報取得
-         * @description 指定したIDの仕入先情報を取得します。
-         */
-        get: {
-            parameters: {
-                query?: never;
-                header?: never;
-                path: {
-                    /** @description 仕入先ID */
-                    id: string;
-                };
-                cookie?: never;
-            };
-            requestBody?: never;
-            responses: {
-                /** @description 取得成功 */
-                200: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content: {
-                        "application/json": components["schemas"]["Supplier"];
-                    };
-                };
-                /** @description 対象リソースが存在しない場合 */
-                404: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content: {
-                        "application/json": components["schemas"]["Error"];
-                    };
-                };
-            };
-        };
-        /**
-         * 仕入先情報更新
-         * @description 指定したIDの仕入先情報を更新します。
-         */
-        put: {
-            parameters: {
-                query?: never;
-                header?: never;
-                path: {
-                    /** @description 仕入先ID */
-                    id: string;
-                };
-                cookie?: never;
-            };
-            requestBody: {
-                content: {
-                    "application/json": components["schemas"]["SupplierUpdate"];
-                };
-            };
-            responses: {
-                /** @description 更新成功 */
-                200: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content: {
-                        "application/json": components["schemas"]["Supplier"];
-                    };
-                };
-                /** @description 入力チェックエラーの場合 */
-                400: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content: {
-                        "application/json": components["schemas"]["Error"];
-                    };
-                };
-                /** @description 対象リソースが存在しない場合 */
-                404: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content: {
-                        "application/json": components["schemas"]["Error"];
-                    };
-                };
-            };
-        };
-        post?: never;
-        /**
-         * 仕入先情報削除
-         * @description 指定したIDの仕入先情報を削除します。
-         */
-        delete: {
-            parameters: {
-                query?: never;
-                header?: never;
-                path: {
-                    /** @description 仕入先ID */
-                    id: string;
-                };
-                cookie?: never;
-            };
-            requestBody?: never;
-            responses: {
-                /** @description 削除成功 */
-                204: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content?: never;
-                };
-                /** @description 対象リソースが存在しない場合 */
-                404: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content: {
-                        "application/json": components["schemas"]["Error"];
-                    };
-                };
-            };
-        };
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/suppliers/{id}/products": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        /**
-         * 仕入先商品一覧取得
-         * @description 指定した仕入先の商品情報一覧を取得します。
-         */
-        get: {
-            parameters: {
-                query?: {
-                    /** @description 取得したいフィールド名（カンマ区切りで指定可） */
-                    fields?: string[];
-                    /** @description 並び順（カンマ区切りで指定可） */
-                    sort?: string;
-                    /** @description 取得上限数 */
-                    limit?: number;
-                    /** @description ページ番号 */
-                    page?: number;
-                    /** @description 仕入先商品ID */
-                    supplier_product_id?: string;
-                    /** @description 商品ID */
-                    product_id?: string;
-                    /** @description 商品コード */
-                    product_code?: string;
-                    /** @description 商品名（部分一致） */
-                    product_name?: string;
-                    /** @description 仕入先商品コード */
-                    supplier_product_code?: string;
-                    /** @description 仕入先商品名（部分一致） */
-                    supplier_product_name?: string;
-                    /** @description ステータス(0:無効, 1:有効) */
-                    status?: "0" | "1";
-                    /** @description 登録日時(From) */
-                    "ins_date_time-from"?: string;
-                    /** @description 登録日時(To) */
-                    "ins_date_time-to"?: string;
-                    /** @description 更新日時(From) */
-                    "upd_date_time-from"?: string;
-                    /** @description 更新日時(To) */
-                    "upd_date_time-to"?: string;
-                };
-                header?: never;
-                path: {
-                    /** @description 仕入先ID */
-                    id: string;
-                };
-                cookie?: never;
-            };
-            requestBody?: never;
-            responses: {
-                /** @description 取得成功 */
-                200: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content: {
-                        "application/json": components["schemas"]["SupplierProduct"][];
-                    };
-                };
-                /** @description 対象仕入先が存在しない場合 */
-                404: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content: {
-                        "application/json": components["schemas"]["Error"];
-                    };
-                };
-            };
-        };
-        put?: never;
-        /**
-         * 仕入先商品登録
-         * @description 指定した仕入先に商品情報を登録します。
-         */
-        post: {
-            parameters: {
-                query?: never;
-                header?: never;
-                path: {
-                    /** @description 仕入先ID */
-                    id: string;
-                };
-                cookie?: never;
-            };
-            requestBody: {
-                content: {
-                    "application/json": components["schemas"]["SupplierProductCreate"];
-                };
-            };
-            responses: {
-                /** @description 登録成功 */
-                200: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content: {
-                        "application/json": components["schemas"]["SupplierProduct"];
-                    };
-                };
-                /** @description 入力チェックエラーの場合 */
-                400: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content: {
-                        "application/json": components["schemas"]["Error"];
-                    };
-                };
-                /** @description 対象仕入先が存在しない場合 */
-                404: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content: {
-                        "application/json": components["schemas"]["Error"];
-                    };
-                };
-            };
-        };
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/supplier_divisions": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        /**
-         * 仕入先区分一覧取得
-         * @description 仕入先区分情報一覧を取得します。
-         */
-        get: {
-            parameters: {
-                query?: {
-                    /** @description 取得したいフィールド名（カンマ区切りで指定可） */
-                    fields?: string[];
-                    /** @description 並び順（カンマ区切りで指定可） */
-                    sort?: string;
-                    /** @description 取得上限数 */
-                    limit?: number;
-                    /** @description ページ番号 */
-                    page?: number;
-                    /** @description 仕入先区分ID */
-                    supplier_division_id?: string;
-                    /** @description 仕入先区分名（部分一致） */
-                    supplier_division_name?: string;
-                    /** @description 登録日時(From) */
-                    "ins_date_time-from"?: string;
-                    /** @description 登録日時(To) */
-                    "ins_date_time-to"?: string;
-                    /** @description 更新日時(From) */
-                    "upd_date_time-from"?: string;
-                    /** @description 更新日時(To) */
-                    "upd_date_time-to"?: string;
-                };
-                header?: never;
-                path?: never;
-                cookie?: never;
-            };
-            requestBody?: never;
-            responses: {
-                /** @description 取得成功 */
-                200: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content: {
-                        "application/json": components["schemas"]["SupplierDivision"][];
-                    };
-                };
-            };
-        };
-        put?: never;
-        /**
-         * 仕入先区分登録
-         * @description 仕入先区分情報を登録します。
-         */
-        post: {
-            parameters: {
-                query?: never;
-                header?: never;
-                path?: never;
-                cookie?: never;
-            };
-            requestBody: {
-                content: {
-                    "application/json": components["schemas"]["SupplierDivisionCreate"];
-                };
-            };
-            responses: {
-                /** @description 登録成功 */
-                200: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content: {
-                        "application/json": components["schemas"]["SupplierDivision"];
-                    };
-                };
-                /** @description 入力チェックエラーの場合 */
-                400: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content: {
-                        "application/json": components["schemas"]["Error"];
-                    };
-                };
-            };
-        };
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/supplier_divisions/{id}": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        /**
-         * 仕入先区分情報取得
-         * @description 指定したIDの仕入先区分情報を取得します。
-         */
-        get: {
-            parameters: {
-                query?: never;
-                header?: never;
-                path: {
-                    /** @description 仕入先区分ID */
-                    id: string;
-                };
-                cookie?: never;
-            };
-            requestBody?: never;
-            responses: {
-                /** @description 取得成功 */
-                200: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content: {
-                        "application/json": components["schemas"]["SupplierDivision"];
-                    };
-                };
-                /** @description 対象リソースが存在しない場合 */
-                404: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content: {
-                        "application/json": components["schemas"]["Error"];
-                    };
-                };
-            };
-        };
-        /**
-         * 仕入先区分情報更新
-         * @description 指定したIDの仕入先区分情報を更新します。
-         */
-        put: {
-            parameters: {
-                query?: never;
-                header?: never;
-                path: {
-                    /** @description 仕入先区分ID */
-                    id: string;
-                };
-                cookie?: never;
-            };
-            requestBody: {
-                content: {
-                    "application/json": components["schemas"]["SupplierDivisionUpdate"];
-                };
-            };
-            responses: {
-                /** @description 更新成功 */
-                200: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content: {
-                        "application/json": components["schemas"]["SupplierDivision"];
-                    };
-                };
-                /** @description 入力チェックエラーの場合 */
-                400: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content: {
-                        "application/json": components["schemas"]["Error"];
-                    };
-                };
-                /** @description 対象リソースが存在しない場合 */
-                404: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content: {
-                        "application/json": components["schemas"]["Error"];
-                    };
-                };
-            };
-        };
-        post?: never;
-        /**
-         * 仕入先区分情報削除
-         * @description 指定したIDの仕入先区分情報を削除します。
-         */
-        delete: {
-            parameters: {
-                query?: never;
-                header?: never;
-                path: {
-                    /** @description 仕入先区分ID */
-                    id: string;
-                };
-                cookie?: never;
-            };
-            requestBody?: never;
-            responses: {
-                /** @description 削除成功 */
-                204: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content?: never;
-                };
-                /** @description 対象リソースが存在しない場合 */
-                404: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content: {
-                        "application/json": components["schemas"]["Error"];
-                    };
-                };
-            };
-        };
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/terminals": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        /**
-         * レジ端末一覧取得
-         * @description レジ端末情報一覧を取得します。
-         */
-        get: {
-            parameters: {
-                query?: {
-                    /** @description 取得したいフィールド名（カンマ区切りで指定可） */
-                    fields?: string[];
-                    /** @description 並び順（カンマ区切りで指定可） */
-                    sort?: string;
-                    /** @description 取得上限数 */
-                    limit?: number;
-                    /** @description ページ番号 */
-                    page?: number;
-                    /** @description レジ端末ID */
-                    terminal_id?: string;
-                    /** @description レジ端末コード */
-                    terminal_code?: string;
-                    /** @description レジ端末名（部分一致） */
-                    terminal_name?: string;
-                    /** @description 店舗ID */
-                    store_id?: string;
-                    /** @description レジ端末種別(1:PC, 2:iPad, 3:ハンディ) */
-                    terminal_type?: "1" | "2" | "3";
-                    /** @description ステータス(0:無効, 1:有効) */
-                    status?: "0" | "1";
-                    /** @description 登録日時(From) */
-                    "ins_date_time-from"?: string;
-                    /** @description 登録日時(To) */
-                    "ins_date_time-to"?: string;
-                    /** @description 更新日時(From) */
-                    "upd_date_time-from"?: string;
-                    /** @description 更新日時(To) */
-                    "upd_date_time-to"?: string;
-                };
-                header?: never;
-                path?: never;
-                cookie?: never;
-            };
-            requestBody?: never;
-            responses: {
-                /** @description 取得成功 */
-                200: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content: {
-                        "application/json": components["schemas"]["Terminal"][];
-                    };
-                };
-            };
-        };
-        put?: never;
-        /**
-         * レジ端末登録
-         * @description レジ端末情報を登録します。
-         */
-        post: {
-            parameters: {
-                query?: never;
-                header?: never;
-                path?: never;
-                cookie?: never;
-            };
-            requestBody: {
-                content: {
-                    "application/json": components["schemas"]["TerminalCreate"];
-                };
-            };
-            responses: {
-                /** @description 登録成功 */
-                200: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content: {
-                        "application/json": components["schemas"]["Terminal"];
-                    };
-                };
-                /** @description 入力チェックエラーの場合 */
-                400: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content: {
-                        "application/json": components["schemas"]["Error"];
-                    };
-                };
-            };
-        };
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/terminals/{id}": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        /**
-         * レジ端末情報取得
-         * @description 指定したIDのレジ端末情報を取得します。
-         */
-        get: {
-            parameters: {
-                query?: never;
-                header?: never;
-                path: {
-                    /** @description レジ端末ID */
-                    id: string;
-                };
-                cookie?: never;
-            };
-            requestBody?: never;
-            responses: {
-                /** @description 取得成功 */
-                200: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content: {
-                        "application/json": components["schemas"]["Terminal"];
-                    };
-                };
-                /** @description 対象リソースが存在しない場合 */
-                404: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content: {
-                        "application/json": components["schemas"]["Error"];
-                    };
-                };
-            };
-        };
-        /**
-         * レジ端末情報更新
-         * @description 指定したIDのレジ端末情報を更新します。
-         */
-        put: {
-            parameters: {
-                query?: never;
-                header?: never;
-                path: {
-                    /** @description レジ端末ID */
-                    id: string;
-                };
-                cookie?: never;
-            };
-            requestBody: {
-                content: {
-                    "application/json": components["schemas"]["TerminalUpdate"];
-                };
-            };
-            responses: {
-                /** @description 更新成功 */
-                200: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content: {
-                        "application/json": components["schemas"]["Terminal"];
-                    };
-                };
-                /** @description 入力チェックエラーの場合 */
-                400: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content: {
-                        "application/json": components["schemas"]["Error"];
-                    };
-                };
-                /** @description 対象リソースが存在しない場合 */
-                404: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content: {
-                        "application/json": components["schemas"]["Error"];
-                    };
-                };
-            };
-        };
-        post?: never;
-        /**
-         * レジ端末情報削除
-         * @description 指定したIDのレジ端末情報を削除します。
-         */
-        delete: {
-            parameters: {
-                query?: never;
-                header?: never;
-                path: {
-                    /** @description レジ端末ID */
-                    id: string;
-                };
-                cookie?: never;
-            };
-            requestBody?: never;
-            responses: {
-                /** @description 削除成功 */
-                204: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content?: never;
-                };
-                /** @description 対象リソースが存在しない場合 */
-                404: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content: {
-                        "application/json": components["schemas"]["Error"];
-                    };
-                };
-            };
-        };
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/settlements": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        /**
-         * 精算一覧取得
-         * @description 精算情報一覧を取得します。
-         */
-        get: {
-            parameters: {
-                query?: {
-                    /** @description 取得したいフィールド名（カンマ区切りで指定可） */
-                    fields?: string[];
-                    /** @description 並び順（カンマ区切りで指定可） */
-                    sort?: string;
-                    /** @description 取得上限数 */
-                    limit?: number;
-                    /** @description ページ番号 */
-                    page?: number;
-                    /** @description 精算ID */
-                    settlement_id?: string;
-                    /** @description 精算番号 */
-                    settlement_no?: string;
-                    /** @description 店舗ID */
-                    store_id?: string;
-                    /** @description 端末ID */
-                    terminal_id?: string;
-                    /** @description スタッフID */
-                    staff_id?: string;
-                    /** @description 精算日時(From) */
-                    "settlement_date_time-from"?: string;
-                    /** @description 精算日時(To) */
-                    "settlement_date_time-to"?: string;
-                    /** @description レジ開始日時(From) */
-                    "opening_date_time-from"?: string;
-                    /** @description レジ開始日時(To) */
-                    "opening_date_time-to"?: string;
-                    /** @description レジ締め日時(From) */
-                    "closing_date_time-from"?: string;
-                    /** @description レジ締め日時(To) */
-                    "closing_date_time-to"?: string;
-                    /** @description 登録日時(From) */
-                    "ins_date_time-from"?: string;
-                    /** @description 登録日時(To) */
-                    "ins_date_time-to"?: string;
-                    /** @description 更新日時(From) */
-                    "upd_date_time-from"?: string;
-                    /** @description 更新日時(To) */
-                    "upd_date_time-to"?: string;
-                };
-                header?: never;
-                path?: never;
-                cookie?: never;
-            };
-            requestBody?: never;
-            responses: {
-                /** @description 取得成功 */
-                200: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content: {
-                        "application/json": components["schemas"]["Settlement"][];
-                    };
-                };
-            };
-        };
-        put?: never;
-        /**
-         * 精算登録
-         * @description 精算情報を登録します。
-         */
-        post: {
-            parameters: {
-                query?: never;
-                header?: never;
-                path?: never;
-                cookie?: never;
-            };
-            requestBody: {
-                content: {
-                    "application/json": components["schemas"]["SettlementCreate"];
-                };
-            };
-            responses: {
-                /** @description 登録成功 */
-                200: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content: {
-                        "application/json": components["schemas"]["Settlement"];
-                    };
-                };
-                /** @description 入力チェックエラーの場合 */
-                400: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content: {
-                        "application/json": components["schemas"]["Error"];
-                    };
-                };
-            };
-        };
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/daily_settlements": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        /**
-         * 日次締め一覧取得
-         * @description 日次締め情報一覧を取得します。
-         */
-        get: {
-            parameters: {
-                query?: {
-                    /** @description 取得したいフィールド名（カンマ区切りで指定可） */
-                    fields?: string[];
-                    /** @description 並び順（カンマ区切りで指定可） */
-                    sort?: string;
-                    /** @description 取得上限数 */
-                    limit?: number;
-                    /** @description ページ番号 */
-                    page?: number;
-                    /** @description 日次締めID */
-                    daily_settlement_id?: string;
-                    /** @description 店舗ID */
-                    store_id?: string;
-                    /** @description 営業日(From) */
-                    "business_date-from"?: string;
-                    /** @description 営業日(To) */
-                    "business_date-to"?: string;
-                    /** @description 締め日(From) */
-                    "closing_date-from"?: string;
-                    /** @description 締め日(To) */
-                    "closing_date-to"?: string;
-                    /** @description 締め日時(From) */
-                    "closing_date_time-from"?: string;
-                    /** @description 締め日時(To) */
-                    "closing_date_time-to"?: string;
-                    /** @description スタッフID */
-                    staff_id?: string;
-                    /** @description ステータス(0:未確定, 1:確定) */
-                    status?: "0" | "1";
-                    /** @description 登録日時(From) */
-                    "ins_date_time-from"?: string;
-                    /** @description 登録日時(To) */
-                    "ins_date_time-to"?: string;
-                    /** @description 更新日時(From) */
-                    "upd_date_time-from"?: string;
-                    /** @description 更新日時(To) */
-                    "upd_date_time-to"?: string;
-                };
-                header?: never;
-                path?: never;
-                cookie?: never;
-            };
-            requestBody?: never;
-            responses: {
-                /** @description 取得成功 */
-                200: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content: {
-                        "application/json": components["schemas"]["DailySettlement"][];
-                    };
-                };
-            };
-        };
-        put?: never;
-        /**
-         * 日次締め登録
-         * @description 日次締め情報を登録します。
-         */
-        post: {
-            parameters: {
-                query?: never;
-                header?: never;
-                path?: never;
-                cookie?: never;
-            };
-            requestBody: {
-                content: {
-                    "application/json": components["schemas"]["DailySettlementCreate"];
-                };
-            };
-            responses: {
-                /** @description 登録成功 */
-                200: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content: {
-                        "application/json": components["schemas"]["DailySettlement"];
-                    };
-                };
-                /** @description 入力チェックエラーの場合 */
-                400: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content: {
-                        "application/json": components["schemas"]["Error"];
-                    };
-                };
-            };
-        };
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/payment_methods": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        /**
-         * 支払方法一覧取得
-         * @description 支払方法情報一覧を取得します。
-         */
-        get: {
-            parameters: {
-                query?: {
-                    /** @description 取得したいフィールド名（カンマ区切りで指定可） */
-                    fields?: string[];
-                    /** @description 並び順（カンマ区切りで指定可） */
-                    sort?: string;
-                    /** @description 取得上限数 */
-                    limit?: number;
-                    /** @description ページ番号 */
-                    page?: number;
-                    /** @description 支払方法ID */
-                    payment_method_id?: string;
-                    /** @description 支払方法コード */
-                    payment_method_code?: string;
-                    /** @description 支払方法名（部分一致） */
-                    payment_method_name?: string;
-                    /** @description 支払方法区分ID */
-                    payment_method_division_id?: string;
-                    /** @description 金額入力タイプ(0:不要, 1:任意, 2:必須) */
-                    amount_input_type?: "0" | "1" | "2";
-                    /** @description お釣り対応タイプ(0:不可, 1:可, 2:自動計算) */
-                    change_type?: "0" | "1" | "2";
-                    /** @description ステータス(0:無効, 1:有効) */
-                    status?: "0" | "1";
-                    /** @description 登録日時(From) */
-                    "ins_date_time-from"?: string;
-                    /** @description 登録日時(To) */
-                    "ins_date_time-to"?: string;
-                    /** @description 更新日時(From) */
-                    "upd_date_time-from"?: string;
-                    /** @description 更新日時(To) */
-                    "upd_date_time-to"?: string;
-                };
-                header?: never;
-                path?: never;
-                cookie?: never;
-            };
-            requestBody?: never;
-            responses: {
-                /** @description 取得成功 */
-                200: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content: {
-                        "application/json": components["schemas"]["PaymentMethod"][];
-                    };
-                };
-            };
-        };
-        put?: never;
-        /**
-         * 支払方法登録
-         * @description 支払方法情報を登録します。
-         */
-        post: {
-            parameters: {
-                query?: never;
-                header?: never;
-                path?: never;
-                cookie?: never;
-            };
-            requestBody: {
-                content: {
-                    "application/json": components["schemas"]["PaymentMethodCreate"];
-                };
-            };
-            responses: {
-                /** @description 登録成功 */
-                200: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content: {
-                        "application/json": components["schemas"]["PaymentMethod"];
-                    };
-                };
-                /** @description 入力チェックエラーの場合 */
-                400: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content: {
-                        "application/json": components["schemas"]["Error"];
-                    };
-                };
-            };
-        };
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/payment_methods/{id}": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        /**
-         * 支払方法情報取得
-         * @description 指定したIDの支払方法情報を取得します。
-         */
-        get: {
-            parameters: {
-                query?: never;
-                header?: never;
-                path: {
-                    /** @description 支払方法ID */
-                    id: string;
-                };
-                cookie?: never;
-            };
-            requestBody?: never;
-            responses: {
-                /** @description 取得成功 */
-                200: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content: {
-                        "application/json": components["schemas"]["PaymentMethod"];
-                    };
-                };
-                /** @description 対象リソースが存在しない場合 */
-                404: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content: {
-                        "application/json": components["schemas"]["Error"];
-                    };
-                };
-            };
-        };
-        /**
-         * 支払方法情報更新
-         * @description 指定したIDの支払方法情報を更新します。
-         */
-        put: {
-            parameters: {
-                query?: never;
-                header?: never;
-                path: {
-                    /** @description 支払方法ID */
-                    id: string;
-                };
-                cookie?: never;
-            };
-            requestBody: {
-                content: {
-                    "application/json": components["schemas"]["PaymentMethodUpdate"];
-                };
-            };
-            responses: {
-                /** @description 更新成功 */
-                200: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content: {
-                        "application/json": components["schemas"]["PaymentMethod"];
-                    };
-                };
-                /** @description 入力チェックエラーの場合 */
-                400: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content: {
-                        "application/json": components["schemas"]["Error"];
-                    };
-                };
-                /** @description 対象リソースが存在しない場合 */
-                404: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content: {
-                        "application/json": components["schemas"]["Error"];
-                    };
-                };
-            };
-        };
-        post?: never;
-        /**
-         * 支払方法情報削除
-         * @description 指定したIDの支払方法情報を削除します。
-         */
-        delete: {
-            parameters: {
-                query?: never;
-                header?: never;
-                path: {
-                    /** @description 支払方法ID */
-                    id: string;
-                };
-                cookie?: never;
-            };
-            requestBody?: never;
-            responses: {
-                /** @description 削除成功 */
-                204: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content?: never;
-                };
-                /** @description 対象リソースが存在しない場合 */
-                404: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content: {
-                        "application/json": components["schemas"]["Error"];
-                    };
-                };
-            };
-        };
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/stores/{store_id}/payment_methods": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        /**
-         * 店舗支払方法一覧取得
-         * @description 店舗に設定された支払方法情報一覧を取得します。
-         */
-        get: {
-            parameters: {
-                query?: {
-                    /** @description 取得したいフィールド名（カンマ区切りで指定可） */
-                    fields?: string[];
-                    /** @description 並び順（カンマ区切りで指定可） */
-                    sort?: string;
-                    /** @description 取得上限数 */
-                    limit?: number;
-                    /** @description ページ番号 */
-                    page?: number;
-                    /** @description 店舗支払方法ID */
-                    store_payment_method_id?: string;
-                    /** @description 支払方法ID */
-                    payment_method_id?: string;
-                    /** @description ステータス(0:無効, 1:有効) */
-                    status?: "0" | "1";
-                    /** @description 登録日時(From) */
-                    "ins_date_time-from"?: string;
-                    /** @description 登録日時(To) */
-                    "ins_date_time-to"?: string;
-                    /** @description 更新日時(From) */
-                    "upd_date_time-from"?: string;
-                    /** @description 更新日時(To) */
-                    "upd_date_time-to"?: string;
-                };
-                header?: never;
-                path: {
-                    /** @description 店舗ID */
-                    store_id: string;
-                };
-                cookie?: never;
-            };
-            requestBody?: never;
-            responses: {
-                /** @description 取得成功 */
-                200: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content: {
-                        "application/json": components["schemas"]["StorePaymentMethod"][];
-                    };
-                };
-                /** @description 対象店舗が存在しない場合 */
-                404: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content: {
-                        "application/json": components["schemas"]["Error"];
-                    };
-                };
-            };
-        };
-        put?: never;
-        post?: never;
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/payment_method_divisions": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        /**
-         * 支払方法区分一覧取得
-         * @description 支払方法区分情報一覧を取得します。
-         */
-        get: {
-            parameters: {
-                query?: {
-                    /** @description 取得したいフィールド名（カンマ区切りで指定可） */
-                    fields?: string[];
-                    /** @description 並び順（カンマ区切りで指定可） */
-                    sort?: string;
-                    /** @description 取得上限数 */
-                    limit?: number;
-                    /** @description ページ番号 */
-                    page?: number;
-                    /** @description 支払方法区分ID */
-                    payment_method_division_id?: string;
-                    /** @description 支払方法区分名（部分一致） */
-                    payment_method_division_name?: string;
-                    /** @description 登録日時(From) */
-                    "ins_date_time-from"?: string;
-                    /** @description 登録日時(To) */
-                    "ins_date_time-to"?: string;
-                    /** @description 更新日時(From) */
-                    "upd_date_time-from"?: string;
-                    /** @description 更新日時(To) */
-                    "upd_date_time-to"?: string;
-                };
-                header?: never;
-                path?: never;
-                cookie?: never;
-            };
-            requestBody?: never;
-            responses: {
-                /** @description 取得成功 */
-                200: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content: {
-                        "application/json": components["schemas"]["PaymentMethodDivision"][];
-                    };
-                };
-            };
-        };
-        put?: never;
-        /**
-         * 支払方法区分登録
-         * @description 支払方法区分情報を登録します。
-         */
-        post: {
-            parameters: {
-                query?: never;
-                header?: never;
-                path?: never;
-                cookie?: never;
-            };
-            requestBody: {
-                content: {
-                    "application/json": components["schemas"]["PaymentMethodDivisionCreate"];
-                };
-            };
-            responses: {
-                /** @description 登録成功 */
-                200: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content: {
-                        "application/json": components["schemas"]["PaymentMethodDivision"];
-                    };
-                };
-                /** @description 入力チェックエラーの場合 */
-                400: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content: {
-                        "application/json": components["schemas"]["Error"];
-                    };
-                };
-            };
-        };
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/payment_method_divisions/{id}": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        /**
-         * 支払方法区分情報取得
-         * @description 指定したIDの支払方法区分情報を取得します。
-         */
-        get: {
-            parameters: {
-                query?: never;
-                header?: never;
-                path: {
-                    /** @description 支払方法区分ID */
-                    id: string;
-                };
-                cookie?: never;
-            };
-            requestBody?: never;
-            responses: {
-                /** @description 取得成功 */
-                200: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content: {
-                        "application/json": components["schemas"]["PaymentMethodDivision"];
-                    };
-                };
-                /** @description 対象リソースが存在しない場合 */
-                404: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content: {
-                        "application/json": components["schemas"]["Error"];
-                    };
-                };
-            };
-        };
-        /**
-         * 支払方法区分情報更新
-         * @description 指定したIDの支払方法区分情報を更新します。
-         */
-        put: {
-            parameters: {
-                query?: never;
-                header?: never;
-                path: {
-                    /** @description 支払方法区分ID */
-                    id: string;
-                };
-                cookie?: never;
-            };
-            requestBody: {
-                content: {
-                    "application/json": components["schemas"]["PaymentMethodDivisionUpdate"];
-                };
-            };
-            responses: {
-                /** @description 更新成功 */
-                200: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content: {
-                        "application/json": components["schemas"]["PaymentMethodDivision"];
-                    };
-                };
-                /** @description 入力チェックエラーの場合 */
-                400: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content: {
-                        "application/json": components["schemas"]["Error"];
-                    };
-                };
-                /** @description 対象リソースが存在しない場合 */
-                404: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content: {
-                        "application/json": components["schemas"]["Error"];
-                    };
-                };
-            };
-        };
-        post?: never;
-        /**
-         * 支払方法区分情報削除
-         * @description 指定したIDの支払方法区分情報を削除します。
-         */
-        delete: {
-            parameters: {
-                query?: never;
-                header?: never;
-                path: {
-                    /** @description 支払方法区分ID */
-                    id: string;
-                };
-                cookie?: never;
-            };
-            requestBody?: never;
-            responses: {
-                /** @description 削除成功 */
-                204: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content?: never;
-                };
-                /** @description 対象リソースが存在しない場合 */
-                404: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content: {
-                        "application/json": components["schemas"]["Error"];
-                    };
-                };
-            };
-        };
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/app_payment_methods": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        /**
-         * アプリ連携支払方法一覧取得
-         * @description アプリ連携支払方法情報一覧を取得します。
-         */
-        get: {
-            parameters: {
-                query?: {
-                    /** @description 取得したいフィールド名（カンマ区切りで指定可） */
-                    fields?: string[];
-                    /** @description 並び順（カンマ区切りで指定可） */
-                    sort?: string;
-                    /** @description 取得上限数 */
-                    limit?: number;
-                    /** @description ページ番号 */
-                    page?: number;
-                    /** @description アプリ連携支払方法ID */
-                    app_payment_method_id?: string;
-                    /** @description 支払方法ID */
-                    payment_method_id?: string;
-                    /** @description アプリ連携用支払コード */
-                    app_payment_code?: string;
-                    /** @description ステータス(0:無効, 1:有効) */
-                    status?: "0" | "1";
-                    /** @description 登録日時(From) */
-                    "ins_date_time-from"?: string;
-                    /** @description 登録日時(To) */
-                    "ins_date_time-to"?: string;
-                    /** @description 更新日時(From) */
-                    "upd_date_time-from"?: string;
-                    /** @description 更新日時(To) */
-                    "upd_date_time-to"?: string;
-                };
-                header?: never;
-                path?: never;
-                cookie?: never;
-            };
-            requestBody?: never;
-            responses: {
-                /** @description 取得成功 */
-                200: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content: {
-                        "application/json": components["schemas"]["AppPaymentMethod"][];
-                    };
-                };
-            };
-        };
-        put?: never;
-        /**
-         * アプリ連携支払方法登録
-         * @description アプリ連携支払方法情報を登録します。
-         */
-        post: {
-            parameters: {
-                query?: never;
-                header?: never;
-                path?: never;
-                cookie?: never;
-            };
-            requestBody: {
-                content: {
-                    "application/json": components["schemas"]["AppPaymentMethodCreate"];
-                };
-            };
-            responses: {
-                /** @description 登録成功 */
-                200: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content: {
-                        "application/json": components["schemas"]["AppPaymentMethod"];
-                    };
-                };
-                /** @description 入力チェックエラーの場合 */
-                400: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content: {
-                        "application/json": components["schemas"]["Error"];
-                    };
-                };
-            };
-        };
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/app_payment_methods/{id}": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        /**
-         * アプリ連携支払方法情報取得
-         * @description 指定したIDのアプリ連携支払方法情報を取得します。
-         */
-        get: {
-            parameters: {
-                query?: never;
-                header?: never;
-                path: {
-                    /** @description アプリ連携支払方法ID */
-                    id: string;
-                };
-                cookie?: never;
-            };
-            requestBody?: never;
-            responses: {
-                /** @description 取得成功 */
-                200: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content: {
-                        "application/json": components["schemas"]["AppPaymentMethod"];
-                    };
-                };
-                /** @description 対象リソースが存在しない場合 */
-                404: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content: {
-                        "application/json": components["schemas"]["Error"];
-                    };
-                };
-            };
-        };
-        put?: never;
-        post?: never;
-        /**
-         * アプリ連携支払方法情報削除
-         * @description 指定したIDのアプリ連携支払方法情報を削除します。
-         */
-        delete: {
-            parameters: {
-                query?: never;
-                header?: never;
-                path: {
-                    /** @description アプリ連携支払方法ID */
-                    id: string;
-                };
-                cookie?: never;
-            };
-            requestBody?: never;
-            responses: {
-                /** @description 削除成功 */
-                204: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content?: never;
-                };
-                /** @description 対象リソースが存在しない場合 */
-                404: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content: {
-                        "application/json": components["schemas"]["Error"];
-                    };
-                };
-            };
-        };
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/coupons": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        /**
-         * クーポン一覧取得
-         * @description 条件を指定して、クーポン情報の一覧を取得します。
-         */
-        get: operations["getCoupons"];
-        put?: never;
-        /**
-         * クーポン登録
-         * @description クーポン情報を登録します。
-         */
-        post: operations["createCoupon"];
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/coupons/{id}": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path: {
-                /** @description クーポンID */
-                id: number;
-            };
-            cookie?: never;
-        };
-        /**
-         * クーポン取得
-         * @description クーポン情報を取得します。
-         */
-        get: operations["getCoupon"];
-        put?: never;
-        post?: never;
-        /**
-         * クーポン削除
-         * @description クーポン情報を削除します。
-         */
-        delete: operations["deleteCoupon"];
-        options?: never;
-        head?: never;
-        /**
-         * クーポン更新
-         * @description クーポン情報を更新します。
-         */
-        patch: operations["updateCoupon"];
-        trace?: never;
-    };
-    "/coupons/{id}/products": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path: {
-                /** @description クーポンID */
-                id: number;
-            };
-            cookie?: never;
-        };
-        /**
-         * クーポン適用商品一覧取得
-         * @description クーポンに適用される商品の一覧を取得します。
-         */
-        get: operations["getCouponProducts"];
-        put?: never;
-        /**
-         * クーポン適用商品登録
-         * @description クーポンに適用される商品を登録します。
-         */
-        post: operations["createCouponProduct"];
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/coupons/{id}/products/{couponProductId}": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path: {
-                /** @description クーポンID */
-                id: number;
-                /** @description クーポン適用商品ID */
-                couponProductId: number;
-            };
-            cookie?: never;
-        };
-        /**
-         * クーポン適用商品取得
-         * @description クーポンに適用される商品の情報を取得します。
-         */
-        get: operations["getCouponProduct"];
-        put?: never;
-        post?: never;
-        /**
-         * クーポン適用商品削除
-         * @description クーポンに適用される商品の情報を削除します。
-         */
-        delete: operations["deleteCouponProduct"];
-        options?: never;
-        head?: never;
-        /**
-         * クーポン適用商品更新
-         * @description クーポンに適用される商品の情報を更新します。
-         */
-        patch: operations["updateCouponProduct"];
-        trace?: never;
-    };
-    "/losses": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        /**
-         * ロス一覧取得
-         * @description ロス情報一覧を取得します。
-         */
-        get: {
-            parameters: {
-                query?: {
-                    /** @description 検索パラメータ（カンマ区切りで指定可） */
-                    fields?: string[];
-                    /** @description 並び順（カンマ区切りで指定可） */
-                    sort?: string;
-                    /** @description 上限数 */
-                    limit?: number;
-                    /** @description ページ */
-                    page?: number;
-                    /** @description ロスID */
-                    loss_id?: string;
-                    /** @description 店舗ID */
-                    store_id?: string;
-                    /** @description ロス日(From) */
-                    "loss_date-from"?: string;
-                    /** @description ロス日(To) */
-                    "loss_date-to"?: string;
-                    /** @description ロス区分ID */
-                    loss_division_id?: string;
-                    /** @description 更新日時(From) */
-                    "upd_date_time-from"?: string;
-                    /** @description 更新日時(To) */
-                    "upd_date_time-to"?: string;
-                };
-                header?: never;
-                path?: never;
-                cookie?: never;
-            };
-            requestBody?: never;
-            responses: {
-                /** @description 取得成功 */
-                200: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content: {
-                        "application/json": components["schemas"]["Loss"][];
-                    };
-                };
-            };
-        };
-        put?: never;
-        /**
-         * ロス登録
-         * @description ロス情報を登録します。
-         */
-        post: {
-            parameters: {
-                query?: never;
-                header?: never;
-                path?: never;
-                cookie?: never;
-            };
-            requestBody: {
-                content: {
-                    "application/json": components["schemas"]["LossCreate"];
-                };
-            };
-            responses: {
-                /** @description 登録成功 */
-                200: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content: {
-                        "application/json": components["schemas"]["Loss"];
-                    };
-                };
-                /** @description 入力チェックエラーの場合 */
-                400: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content: {
-                        "application/json": components["schemas"]["Error"];
-                    };
-                };
-            };
-        };
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/losses/{id}": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        /**
-         * ロス取得
-         * @description ロス情報を取得します。
-         */
-        get: {
-            parameters: {
-                query?: {
-                    /** @description 検索パラメータ（カンマ区切りで指定可） */
-                    fields?: string[];
-                };
-                header?: never;
-                path: {
-                    /** @description ロスID */
-                    id: string;
-                };
-                cookie?: never;
-            };
-            requestBody?: never;
-            responses: {
-                /** @description 取得成功 */
-                200: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content: {
-                        "application/json": components["schemas"]["Loss"];
-                    };
-                };
-                /** @description 指定されたロスIDが存在しない場合 */
-                404: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content: {
-                        "application/json": components["schemas"]["Error"];
-                    };
-                };
-            };
-        };
-        put?: never;
-        post?: never;
-        /**
-         * ロス削除
-         * @description ロス情報を削除します。
-         */
-        delete: {
-            parameters: {
-                query?: never;
-                header?: never;
-                path: {
-                    /** @description ロスID */
-                    id: string;
-                };
-                cookie?: never;
-            };
-            requestBody?: never;
-            responses: {
-                /** @description 削除成功 */
-                200: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content?: never;
-                };
-                /** @description 指定されたロスIDが存在しない場合 */
-                404: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content: {
-                        "application/json": components["schemas"]["Error"];
-                    };
-                };
-            };
-        };
-        options?: never;
-        head?: never;
-        /**
-         * ロス更新
-         * @description ロス情報を更新します。
-         */
-        patch: {
-            parameters: {
-                query?: never;
-                header?: never;
-                path: {
-                    /** @description ロスID */
-                    id: string;
-                };
-                cookie?: never;
-            };
-            requestBody: {
-                content: {
-                    "application/json": components["schemas"]["LossUpdate"];
-                };
-            };
-            responses: {
-                /** @description 更新成功 */
-                200: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content: {
-                        "application/json": components["schemas"]["Loss"];
-                    };
-                };
-                /** @description 入力チェックエラーの場合 */
-                400: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content: {
-                        "application/json": components["schemas"]["Error"];
-                    };
-                };
-                /** @description 指定されたロスIDが存在しない場合 */
-                404: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content: {
-                        "application/json": components["schemas"]["Error"];
-                    };
-                };
-            };
-        };
-        trace?: never;
-    };
-    "/losses/{id}/details": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        /**
-         * ロス明細取得
-         * @description ロス明細情報を取得します。
-         */
-        get: {
-            parameters: {
-                query?: {
-                    /** @description 検索パラメータ（カンマ区切りで指定可） */
-                    fields?: string[];
-                    /** @description 並び順（カンマ区切りで指定可） */
-                    sort?: string;
-                    /** @description 上限数 */
-                    limit?: number;
-                    /** @description ページ */
-                    page?: number;
-                };
-                header?: never;
-                path: {
-                    /** @description ロスID */
-                    id: string;
-                };
-                cookie?: never;
-            };
-            requestBody?: never;
-            responses: {
-                /** @description 取得成功 */
-                200: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content: {
-                        "application/json": components["schemas"]["LossDetail"][];
-                    };
-                };
-                /** @description 指定されたロスIDが存在しない場合 */
-                404: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content: {
-                        "application/json": components["schemas"]["Error"];
-                    };
-                };
-            };
-        };
-        put?: never;
-        post?: never;
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/loss_divisions": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        /**
-         * ロス区分一覧取得
-         * @description ロス区分情報一覧を取得します。
-         */
-        get: {
-            parameters: {
-                query?: {
-                    /** @description 検索パラメータ（カンマ区切りで指定可） */
-                    fields?: string[];
-                    /** @description 並び順（カンマ区切りで指定可） */
-                    sort?: string;
-                    /** @description 上限数 */
-                    limit?: number;
-                    /** @description ページ */
-                    page?: number;
-                    /** @description ロス区分ID */
-                    loss_division_id?: string;
-                };
-                header?: never;
-                path?: never;
-                cookie?: never;
-            };
-            requestBody?: never;
-            responses: {
-                /** @description 取得成功 */
-                200: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content: {
-                        "application/json": components["schemas"]["LossDivision"][];
-                    };
-                };
-            };
-        };
-        put?: never;
-        /**
-         * ロス区分登録
-         * @description ロス区分情報を登録します。
-         */
-        post: {
-            parameters: {
-                query?: never;
-                header?: never;
-                path?: never;
-                cookie?: never;
-            };
-            requestBody: {
-                content: {
-                    "application/json": components["schemas"]["LossDivisionCreate"];
-                };
-            };
-            responses: {
-                /** @description 登録成功 */
-                200: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content: {
-                        "application/json": components["schemas"]["LossDivision"];
-                    };
-                };
-                /** @description 入力チェックエラーの場合 */
-                400: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content: {
-                        "application/json": components["schemas"]["Error"];
-                    };
-                };
-            };
-        };
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/loss_divisions/{id}": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        /**
-         * ロス区分取得
-         * @description ロス区分情報を取得します。
-         */
-        get: {
-            parameters: {
-                query?: {
-                    /** @description 検索パラメータ（カンマ区切りで指定可） */
-                    fields?: string[];
-                };
-                header?: never;
-                path: {
-                    /** @description ロス区分ID */
-                    id: string;
-                };
-                cookie?: never;
-            };
-            requestBody?: never;
-            responses: {
-                /** @description 取得成功 */
-                200: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content: {
-                        "application/json": components["schemas"]["LossDivision"];
-                    };
-                };
-                /** @description 指定されたロス区分IDが存在しない場合 */
-                404: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content: {
-                        "application/json": components["schemas"]["Error"];
-                    };
-                };
-            };
-        };
-        put?: never;
-        post?: never;
-        /**
-         * ロス区分削除
-         * @description ロス区分情報を削除します。
-         */
-        delete: {
-            parameters: {
-                query?: never;
-                header?: never;
-                path: {
-                    /** @description ロス区分ID */
-                    id: string;
-                };
-                cookie?: never;
-            };
-            requestBody?: never;
-            responses: {
-                /** @description 削除成功 */
-                200: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content?: never;
-                };
-                /** @description 指定されたロス区分IDが存在しない場合 */
-                404: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content: {
-                        "application/json": components["schemas"]["Error"];
-                    };
-                };
-            };
-        };
-        options?: never;
-        head?: never;
-        /**
-         * ロス区分更新
-         * @description ロス区分情報を更新します。
-         */
-        patch: {
-            parameters: {
-                query?: never;
-                header?: never;
-                path: {
-                    /** @description ロス区分ID */
-                    id: string;
-                };
-                cookie?: never;
-            };
-            requestBody: {
-                content: {
-                    "application/json": components["schemas"]["LossDivisionUpdate"];
-                };
-            };
-            responses: {
-                /** @description 更新成功 */
-                200: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content: {
-                        "application/json": components["schemas"]["LossDivision"];
-                    };
-                };
-                /** @description 入力チェックエラーの場合 */
-                400: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content: {
-                        "application/json": components["schemas"]["Error"];
-                    };
-                };
-                /** @description 指定されたロス区分IDが存在しない場合 */
-                404: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content: {
-                        "application/json": components["schemas"]["Error"];
-                    };
-                };
-            };
-        };
-        trace?: never;
-    };
-    "/orders": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        /**
-         * 発注一覧取得
-         * @description 発注情報一覧を取得します。
-         */
-        get: {
-            parameters: {
-                query?: {
-                    /** @description 検索パラメータ（カンマ区切りで指定可） */
-                    fields?: string[];
-                    /** @description 並び順（カンマ区切りで指定可） */
-                    sort?: string;
-                    /** @description 上限数 */
-                    limit?: number;
-                    /** @description ページ */
-                    page?: number;
-                    /** @description 発注ID */
-                    order_id?: string;
-                    /** @description 店舗ID */
-                    store_id?: string;
-                    /** @description 仕入先ID */
-                    supplier_id?: string;
-                    /** @description 入荷予定日(From) */
-                    "estimated_arrival_date-from"?: string;
-                    /** @description 入荷予定日(To) */
-                    "estimated_arrival_date-to"?: string;
-                    /** @description 発注日(From) */
-                    "order_date-from"?: string;
-                    /** @description 発注日(To) */
-                    "order_date-to"?: string;
-                    /** @description ステータス */
-                    status?: "0" | "1" | "2" | "3";
-                    /** @description 更新日時(From) */
-                    "upd_date_time-from"?: string;
-                    /** @description 更新日時(To) */
-                    "upd_date_time-to"?: string;
-                };
-                header?: never;
-                path?: never;
-                cookie?: never;
-            };
-            requestBody?: never;
-            responses: {
-                /** @description 取得成功 */
-                200: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content: {
-                        "application/json": components["schemas"]["Order"][];
-                    };
-                };
-            };
-        };
-        put?: never;
-        /**
-         * 発注登録
-         * @description 発注情報を登録します。
-         */
-        post: {
-            parameters: {
-                query?: never;
-                header?: never;
-                path?: never;
-                cookie?: never;
-            };
-            requestBody: {
-                content: {
-                    "application/json": components["schemas"]["OrderCreate"];
-                };
-            };
-            responses: {
-                /** @description 登録成功 */
-                200: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content: {
-                        "application/json": components["schemas"]["Order"];
-                    };
-                };
-                /** @description 入力チェックエラーの場合 */
-                400: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content: {
-                        "application/json": components["schemas"]["Error"];
-                    };
-                };
-            };
-        };
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/orders/{id}": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        /**
-         * 発注取得
-         * @description 発注情報を取得します。
-         */
-        get: {
-            parameters: {
-                query?: {
-                    /** @description 検索パラメータ（カンマ区切りで指定可） */
-                    fields?: string[];
-                };
-                header?: never;
-                path: {
-                    /** @description 発注ID */
-                    id: string;
-                };
-                cookie?: never;
-            };
-            requestBody?: never;
-            responses: {
-                /** @description 取得成功 */
-                200: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content: {
-                        "application/json": components["schemas"]["Order"];
-                    };
-                };
-                /** @description 指定された発注IDが存在しない場合 */
-                404: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content: {
-                        "application/json": components["schemas"]["Error"];
-                    };
-                };
-            };
-        };
-        put?: never;
-        post?: never;
-        /**
-         * 発注削除
-         * @description 発注情報を削除します。
-         */
-        delete: {
-            parameters: {
-                query?: never;
-                header?: never;
-                path: {
-                    /** @description 発注ID */
-                    id: string;
-                };
-                cookie?: never;
-            };
-            requestBody?: never;
-            responses: {
-                /** @description 削除成功 */
-                200: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content?: never;
-                };
-                /** @description 指定された発注IDが存在しない場合 */
-                404: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content: {
-                        "application/json": components["schemas"]["Error"];
-                    };
-                };
-            };
-        };
-        options?: never;
-        head?: never;
-        /**
-         * 発注更新
-         * @description 発注情報を更新します。
-         */
-        patch: {
-            parameters: {
-                query?: never;
-                header?: never;
-                path: {
-                    /** @description 発注ID */
-                    id: string;
-                };
-                cookie?: never;
-            };
-            requestBody: {
-                content: {
-                    "application/json": components["schemas"]["OrderUpdate"];
-                };
-            };
-            responses: {
-                /** @description 更新成功 */
-                200: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content: {
-                        "application/json": components["schemas"]["Order"];
-                    };
-                };
-                /** @description 入力チェックエラーの場合 */
-                400: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content: {
-                        "application/json": components["schemas"]["Error"];
-                    };
-                };
-                /** @description 指定された発注IDが存在しない場合 */
-                404: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content: {
-                        "application/json": components["schemas"]["Error"];
-                    };
-                };
-            };
-        };
-        trace?: never;
-    };
-    "/orders/products": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        /**
-         * 発注対象商品取得
-         * @description 発注対象商品情報を取得します。
-         */
-        get: {
-            parameters: {
-                query?: {
-                    /** @description 検索パラメータ（カンマ区切りで指定可） */
-                    fields?: string[];
-                    /** @description 並び順（カンマ区切りで指定可） */
-                    sort?: string;
-                    /** @description 上限数 */
-                    limit?: number;
-                    /** @description ページ */
-                    page?: number;
-                    /** @description 商品ID */
-                    product_id?: string;
-                    /** @description 商品コード */
-                    product_code?: string;
-                    /** @description 仕入先ID */
-                    supplier_id?: string;
-                    /** @description 部門ID */
-                    category_id?: string;
-                    /** @description 発注点以下の在庫商品のみ */
-                    min_remains_inventories?: boolean;
-                    /** @description 店舗ID */
-                    store_id?: string;
-                };
-                header?: never;
-                path?: never;
-                cookie?: never;
-            };
-            requestBody?: never;
-            responses: {
-                /** @description 取得成功 */
-                200: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content: {
-                        "application/json": components["schemas"]["OrderProduct"][];
-                    };
-                };
-            };
-        };
-        put?: never;
-        post?: never;
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/orders/stores": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        /**
-         * 発注対象店舗取得
-         * @description 発注対象店舗情報を取得します。
-         */
-        get: {
-            parameters: {
-                query?: {
-                    /** @description 検索パラメータ（カンマ区切りで指定可） */
-                    fields?: string[];
-                    /** @description 並び順（カンマ区切りで指定可） */
-                    sort?: string;
-                    /** @description 上限数 */
-                    limit?: number;
-                    /** @description ページ */
-                    page?: number;
-                };
-                header?: never;
-                path?: never;
-                cookie?: never;
-            };
-            requestBody?: never;
-            responses: {
-                /** @description 取得成功 */
-                200: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content: {
-                        "application/json": components["schemas"]["OrderStore"][];
-                    };
-                };
-            };
-        };
-        put?: never;
-        post?: never;
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/arrivals": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        /**
-         * 入荷一覧取得
-         * @description 入荷情報一覧を取得します。
-         */
-        get: {
-            parameters: {
-                query?: {
-                    /** @description 検索パラメータ（カンマ区切りで指定可） */
-                    fields?: string[];
-                    /** @description 並び順（カンマ区切りで指定可） */
-                    sort?: string;
-                    /** @description 上限数 */
-                    limit?: number;
-                    /** @description ページ */
-                    page?: number;
-                    /** @description 入荷ID */
-                    arrival_id?: string;
-                    /** @description 発注ID */
-                    order_id?: string;
-                    /** @description 店舗ID */
-                    store_id?: string;
-                    /** @description 仕入先ID */
-                    supplier_id?: string;
-                    /** @description 入荷日(From) */
-                    "arrival_date-from"?: string;
-                    /** @description 入荷日(To) */
-                    "arrival_date-to"?: string;
-                    /** @description 更新日時(From) */
-                    "upd_date_time-from"?: string;
-                    /** @description 更新日時(To) */
-                    "upd_date_time-to"?: string;
-                };
-                header?: never;
-                path?: never;
-                cookie?: never;
-            };
-            requestBody?: never;
-            responses: {
-                /** @description 取得成功 */
-                200: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content: {
-                        "application/json": components["schemas"]["Arrival"][];
-                    };
-                };
-            };
-        };
-        put?: never;
-        /**
-         * 入荷登録
-         * @description 入荷情報を登録します。
-         */
-        post: {
-            parameters: {
-                query?: never;
-                header?: never;
-                path?: never;
-                cookie?: never;
-            };
-            requestBody: {
-                content: {
-                    "application/json": components["schemas"]["ArrivalCreate"];
-                };
-            };
-            responses: {
-                /** @description 登録成功 */
-                200: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content: {
-                        "application/json": components["schemas"]["Arrival"];
-                    };
-                };
-                /** @description 入力チェックエラーの場合 */
-                400: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content: {
-                        "application/json": components["schemas"]["Error"];
-                    };
-                };
-            };
-        };
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/arrivals/{id}": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        /**
-         * 入荷取得
-         * @description 入荷情報を取得します。
-         */
-        get: {
-            parameters: {
-                query?: {
-                    /** @description 検索パラメータ（カンマ区切りで指定可） */
-                    fields?: string[];
-                };
-                header?: never;
-                path: {
-                    /** @description 入荷ID */
-                    id: string;
-                };
-                cookie?: never;
-            };
-            requestBody?: never;
-            responses: {
-                /** @description 取得成功 */
-                200: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content: {
-                        "application/json": components["schemas"]["Arrival"];
-                    };
-                };
-                /** @description 指定された入荷IDが存在しない場合 */
-                404: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content: {
-                        "application/json": components["schemas"]["Error"];
-                    };
-                };
-            };
-        };
-        put?: never;
-        post?: never;
-        delete?: never;
-        options?: never;
-        head?: never;
-        /**
-         * 入荷更新
-         * @description 入荷情報を更新します。
-         */
-        patch: {
-            parameters: {
-                query?: never;
-                header?: never;
-                path: {
-                    /** @description 入荷ID */
-                    id: string;
-                };
-                cookie?: never;
-            };
-            requestBody: {
-                content: {
-                    "application/json": components["schemas"]["ArrivalUpdate"];
-                };
-            };
-            responses: {
-                /** @description 更新成功 */
-                200: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content: {
-                        "application/json": components["schemas"]["Arrival"];
-                    };
-                };
-                /** @description 入力チェックエラーの場合 */
-                400: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content: {
-                        "application/json": components["schemas"]["Error"];
-                    };
-                };
-                /** @description 指定された入荷IDが存在しない場合 */
-                404: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content: {
-                        "application/json": components["schemas"]["Error"];
-                    };
-                };
-            };
-        };
-        trace?: never;
-    };
-    "/arrivals/{id}/details": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        /**
-         * 入荷明細取得
-         * @description 入荷明細情報を取得します。
-         */
-        get: {
-            parameters: {
-                query?: {
-                    /** @description 検索パラメータ（カンマ区切りで指定可） */
-                    fields?: string[];
-                    /** @description 並び順（カンマ区切りで指定可） */
-                    sort?: string;
-                    /** @description 上限数 */
-                    limit?: number;
-                    /** @description ページ */
-                    page?: number;
-                };
-                header?: never;
-                path: {
-                    /** @description 入荷ID */
-                    id: string;
-                };
-                cookie?: never;
-            };
-            requestBody?: never;
-            responses: {
-                /** @description 取得成功 */
-                200: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content: {
-                        "application/json": components["schemas"]["ArrivalDetail"][];
-                    };
-                };
-                /** @description 指定された入荷IDが存在しない場合 */
-                404: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content: {
-                        "application/json": components["schemas"]["Error"];
-                    };
-                };
-            };
-        };
-        put?: never;
-        post?: never;
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/shipments": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        /**
-         * 出荷一覧取得
-         * @description 出荷情報一覧を取得します。
-         */
-        get: {
-            parameters: {
-                query?: {
-                    /** @description 検索パラメータ（カンマ区切りで指定可） */
-                    fields?: string[];
-                    /** @description 並び順（カンマ区切りで指定可） */
-                    sort?: string;
-                    /** @description 上限数 */
-                    limit?: number;
-                    /** @description ページ */
-                    page?: number;
-                    /** @description 出荷ID */
-                    shipment_id?: string;
-                    /** @description 出荷元店舗ID */
-                    store_id?: string;
-                    /** @description 出荷日(From) */
-                    "shipment_date-from"?: string;
-                    /** @description 出荷日(To) */
-                    "shipment_date-to"?: string;
-                    /** @description 出荷先店舗ID */
-                    destination_store_id?: string;
-                    /** @description 更新日時(From) */
-                    "upd_date_time-from"?: string;
-                    /** @description 更新日時(To) */
-                    "upd_date_time-to"?: string;
-                };
-                header?: never;
-                path?: never;
-                cookie?: never;
-            };
-            requestBody?: never;
-            responses: {
-                /** @description 取得成功 */
-                200: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content: {
-                        "application/json": components["schemas"]["Shipment"][];
-                    };
-                };
-            };
-        };
-        put?: never;
-        /**
-         * 出荷登録
-         * @description 出荷情報を登録します。
-         */
-        post: {
-            parameters: {
-                query?: never;
-                header?: never;
-                path?: never;
-                cookie?: never;
-            };
-            requestBody: {
-                content: {
-                    "application/json": components["schemas"]["ShipmentCreate"];
-                };
-            };
-            responses: {
-                /** @description 登録成功 */
-                200: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content: {
-                        "application/json": components["schemas"]["Shipment"];
-                    };
-                };
-                /** @description 入力チェックエラーの場合 */
-                400: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content: {
-                        "application/json": components["schemas"]["Error"];
-                    };
-                };
-            };
-        };
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/shipments/{id}": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        /**
-         * 出荷取得
-         * @description 出荷情報を取得します。
-         */
-        get: {
-            parameters: {
-                query?: {
-                    /** @description 検索パラメータ（カンマ区切りで指定可） */
-                    fields?: string[];
-                };
-                header?: never;
-                path: {
-                    /** @description 出荷ID */
-                    id: string;
-                };
-                cookie?: never;
-            };
-            requestBody?: never;
-            responses: {
-                /** @description 取得成功 */
-                200: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content: {
-                        "application/json": components["schemas"]["Shipment"];
-                    };
-                };
-                /** @description 指定された出荷IDが存在しない場合 */
-                404: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content: {
-                        "application/json": components["schemas"]["Error"];
-                    };
-                };
-            };
-        };
-        put?: never;
-        post?: never;
-        /**
-         * 出荷削除
-         * @description 出荷情報を削除します。
-         */
-        delete: {
-            parameters: {
-                query?: never;
-                header?: never;
-                path: {
-                    /** @description 出荷ID */
-                    id: string;
-                };
-                cookie?: never;
-            };
-            requestBody?: never;
-            responses: {
-                /** @description 削除成功 */
-                200: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content?: never;
-                };
-                /** @description 指定された出荷IDが存在しない場合 */
-                404: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content: {
-                        "application/json": components["schemas"]["Error"];
-                    };
-                };
-            };
-        };
-        options?: never;
-        head?: never;
-        /**
-         * 出荷更新
-         * @description 出荷情報を更新します。
-         */
-        patch: {
-            parameters: {
-                query?: never;
-                header?: never;
-                path: {
-                    /** @description 出荷ID */
-                    id: string;
-                };
-                cookie?: never;
-            };
-            requestBody: {
-                content: {
-                    "application/json": components["schemas"]["ShipmentUpdate"];
-                };
-            };
-            responses: {
-                /** @description 更新成功 */
-                200: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content: {
-                        "application/json": components["schemas"]["Shipment"];
-                    };
-                };
-                /** @description 入力チェックエラーの場合 */
-                400: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content: {
-                        "application/json": components["schemas"]["Error"];
-                    };
-                };
-                /** @description 指定された出荷IDが存在しない場合 */
-                404: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content: {
-                        "application/json": components["schemas"]["Error"];
-                    };
-                };
-            };
-        };
-        trace?: never;
-    };
-    "/shipments/{id}/details": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        /**
-         * 出荷明細取得
-         * @description 出荷明細情報を取得します。
-         */
-        get: {
-            parameters: {
-                query?: {
-                    /** @description 検索パラメータ（カンマ区切りで指定可） */
-                    fields?: string[];
-                    /** @description 並び順（カンマ区切りで指定可） */
-                    sort?: string;
-                    /** @description 上限数 */
-                    limit?: number;
-                    /** @description ページ */
-                    page?: number;
-                };
-                header?: never;
-                path: {
-                    /** @description 出荷ID */
-                    id: string;
-                };
-                cookie?: never;
-            };
-            requestBody?: never;
-            responses: {
-                /** @description 取得成功 */
-                200: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content: {
-                        "application/json": components["schemas"]["ShipmentDetail"][];
-                    };
-                };
-                /** @description 指定された出荷IDが存在しない場合 */
-                404: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content: {
-                        "application/json": components["schemas"]["Error"];
-                    };
-                };
-            };
-        };
-        put?: never;
-        post?: never;
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/incoming_stocks": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        /**
-         * 入庫一覧取得
-         * @description 条件を指定して、入庫情報の一覧を取得します。
-         */
-        get: operations["getIncomingStocks"];
-        put?: never;
-        /**
-         * 入庫登録
-         * @description 入庫情報を登録します。
-         */
-        post: operations["createIncomingStock"];
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/incoming_stocks/{id}": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path: {
-                /** @description 入庫ID */
-                id: number;
-            };
-            cookie?: never;
-        };
-        /**
-         * 入庫取得
-         * @description 入庫情報を取得します。
-         */
-        get: operations["getIncomingStock"];
-        put?: never;
-        post?: never;
-        /**
-         * 入庫削除
-         * @description 入庫情報を削除します。
-         */
-        delete: operations["deleteIncomingStock"];
-        options?: never;
-        head?: never;
-        /**
-         * 入庫更新
-         * @description 入庫情報を更新します。
-         */
-        patch: operations["updateIncomingStock"];
-        trace?: never;
-    };
-    "/incoming_stocks/{id}/details": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path: {
-                /** @description 入庫ID */
-                id: number;
-            };
-            cookie?: never;
-        };
-        /**
-         * 入庫詳細一覧取得
-         * @description 入庫詳細情報の一覧を取得します。
-         */
-        get: operations["getIncomingStockDetails"];
-        put?: never;
-        post?: never;
-        delete?: never;
-        options?: never;
-        head?: never;
-        /**
-         * 入庫詳細更新
-         * @description 入庫詳細情報を更新します。
-         */
-        patch: operations["updateIncomingStockDetails"];
-        trace?: never;
-    };
-    "/outgoing_stocks": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        /**
-         * 出庫一覧取得
-         * @description 条件を指定して、出庫情報の一覧を取得します。
-         */
-        get: operations["getOutgoingStocks"];
-        put?: never;
-        /**
-         * 出庫登録
-         * @description 出庫情報を登録します。
-         */
-        post: operations["createOutgoingStock"];
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/outgoing_stocks/{id}": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path: {
-                /** @description 出庫ID */
-                id: number;
-            };
-            cookie?: never;
-        };
-        /**
-         * 出庫取得
-         * @description 出庫情報を取得します。
-         */
-        get: operations["getOutgoingStock"];
-        put?: never;
-        post?: never;
-        /**
-         * 出庫削除
-         * @description 出庫情報を削除します。
-         */
-        delete: operations["deleteOutgoingStock"];
-        options?: never;
-        head?: never;
-        /**
-         * 出庫更新
-         * @description 出庫情報を更新します。
-         */
-        patch: operations["updateOutgoingStock"];
-        trace?: never;
-    };
-    "/outgoing_stocks/{id}/details": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path: {
-                /** @description 出庫ID */
-                id: number;
-            };
-            cookie?: never;
-        };
-        /**
-         * 出庫詳細一覧取得
-         * @description 出庫詳細情報の一覧を取得します。
-         */
-        get: operations["getOutgoingStockDetails"];
-        put?: never;
-        post?: never;
-        delete?: never;
-        options?: never;
-        head?: never;
-        /**
-         * 出庫詳細更新
-         * @description 出庫詳細情報を更新します。
-         */
-        patch: operations["updateOutgoingStockDetails"];
-        trace?: never;
-    };
-    "/correction_requests/outgoing_stocks": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        /**
-         * 出庫修正申請一覧取得
-         * @description 条件を指定して、出庫修正申請情報の一覧を取得します。
-         */
-        get: operations["getCorrectionOutgoingStocks"];
-        put?: never;
-        /**
-         * 出庫修正申請登録
-         * @description 出庫修正申請情報を登録します。
-         */
-        post: operations["createCorrectionOutgoingStock"];
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/correction_requests/outgoing_stocks/{id}": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path: {
-                /** @description 出庫修正申請ID */
-                id: number;
-            };
-            cookie?: never;
-        };
-        /**
-         * 出庫修正申請取得
-         * @description 出庫修正申請情報を取得します。
-         */
-        get: operations["getCorrectionOutgoingStock"];
-        put?: never;
-        post?: never;
-        /**
-         * 出庫修正申請削除
-         * @description 出庫修正申請情報を削除します。
-         */
-        delete: operations["deleteCorrectionOutgoingStock"];
-        options?: never;
-        head?: never;
-        /**
-         * 出庫修正申請更新（承認・却下）
-         * @description 出庫修正申請情報を更新します。（申請の承認・却下）
-         */
-        patch: operations["updateCorrectionOutgoingStock"];
-        trace?: never;
-    };
-    "/stocktakings": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        /**
-         * 棚卸一覧取得
-         * @description 棚卸情報の一覧を取得します。
-         */
-        get: operations["getStocktakings"];
-        put?: never;
-        /**
-         * 棚卸登録
-         * @description 棚卸情報を登録します。
-         */
-        post: operations["createStocktaking"];
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/stocktakings/categories": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        /**
-         * 棚卸部門一覧取得
-         * @description 棚卸に登録されている部門情報の一覧を取得します。
-         */
-        get: operations["getStocktakingCategories"];
-        put?: never;
-        post?: never;
-        delete?: never;
-        options?: never;
-        head?: never;
-        /**
-         * 棚卸部門更新
-         * @description 棚卸に登録されている部門情報を更新します。
-         */
-        patch: operations["updateStocktakingCategory"];
-        trace?: never;
-    };
-    "/stocktakings/products": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        /**
-         * 棚卸商品一覧取得
-         * @description 棚卸に登録されている商品情報の一覧を取得します。
-         */
-        get: operations["getStocktakingProducts"];
-        put?: never;
-        post?: never;
-        delete?: never;
-        options?: never;
-        head?: never;
-        /**
-         * 棚卸商品更新
-         * @description 棚卸に登録されている商品情報を更新します。
-         */
-        patch: operations["updateStocktakingProduct"];
-        trace?: never;
-    };
-    "/stocktakings/stocks": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        /**
-         * 棚卸在庫一覧取得
-         * @description 棚卸に登録されている在庫情報の一覧を取得します。
-         */
-        get: operations["getStocktakingStocks"];
-        put?: never;
-        /**
-         * 棚卸在庫登録
-         * @description 棚卸在庫情報を登録します。
-         */
-        post: operations["createStocktakingStock"];
-        delete?: never;
-        options?: never;
-        head?: never;
-        /**
-         * 棚卸在庫更新
-         * @description 棚卸在庫情報を更新します。
-         */
-        patch: operations["updateStocktakingStock"];
-        trace?: never;
-    };
-    "/tax_rates": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        /**
-         * 税率一覧取得
-         * @description 税率情報の一覧を取得します。
-         */
-        get: operations["getTaxRates"];
-        put?: never;
-        post?: never;
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/reduce_tax_rates": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        /**
-         * 軽減税率一覧取得
-         * @description 軽減税率情報の一覧を取得します。
-         */
-        get: operations["getReduceTaxRates"];
-        put?: never;
-        post?: never;
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/receipt_remarks": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        /**
-         * レシート備考一覧取得
-         * @description レシート備考情報の一覧を取得します。
-         */
-        get: operations["getReceiptRemarks"];
-        put?: never;
-        /**
-         * レシート備考登録
-         * @description レシート備考情報を登録します。
-         */
-        post: operations["createReceiptRemark"];
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/discount_divisions": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        /**
-         * 値引き区分一覧取得
-         * @description 値引き区分情報の一覧を取得します。
-         */
-        get: operations["getDiscountDivisions"];
-        put?: never;
-        post?: never;
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/cat_cct_card_companies": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        /**
-         * CAT/CCTカード会社一覧取得
-         * @description CAT/CCTカード会社情報の一覧を取得します。
-         */
-        get: operations["getCatCctCardCompanies"];
-        put?: never;
-        post?: never;
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/customer_types": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        /**
-         * 顧客タイプ一覧取得
-         * @description 顧客タイプ情報の一覧を取得します。
-         */
-        get: operations["getCustomerTypes"];
-        put?: never;
-        /**
-         * 顧客タイプ登録
-         * @description 顧客タイプ情報を登録します。
-         */
-        post: operations["createCustomerType"];
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/customer_type_sections": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        /**
-         * 顧客タイプセクション一覧取得
-         * @description 顧客タイプセクション情報の一覧を取得します。
-         */
-        get: operations["getCustomerTypeSections"];
-        put?: never;
-        post?: never;
-        delete?: never;
-        options?: never;
-        head?: never;
-        /**
-         * 顧客タイプセクション更新
-         * @description 顧客タイプセクション情報を更新します。
-         */
-        patch: operations["updateCustomerTypeSection"];
         trace?: never;
     };
 }
@@ -11398,16 +3250,6 @@ export interface components {
                 }[];
             };
         };
-        /** @description 商品一括更新情報 */
-        ProductBulkUpdate: {
-            /** @description 更新する商品の配列 */
-            items: components["schemas"]["ProductUpdate"][];
-        };
-        /** @description 商品一括登録情報 */
-        ProductBulkCreate: {
-            /** @description 登録する商品の配列 */
-            items: components["schemas"]["ProductCreate"][];
-        };
         /** @description 商品価格情報 */
         ProductPrice: {
             /**
@@ -11955,6 +3797,209 @@ export interface components {
         /** @description 取引作成リクエスト */
         TransactionCreate: {
             /**
+             * @description 取引を識別する区分。
+             *     （1:通常、2:入金、3:出金、4:預かり金、 5:預かり金返金、6:ポイント加算、7:ポイント減算、8:ポイント失効、10:取置き、13:マイル加算、14:マイル減算、15:バリューカード入金、16:領収証）
+             *     ※ 10:取置きについては、取置き登録APIをご使用ください。
+             *     ※ 8:ポイント失効、9:回数券、11:チップ、15バリューカード入金、16:領収証は対応しておりません。
+             *
+             * @enum {string}
+             */
+            transactionHeadDivision: "1" | "2" | "3" | "4" | "5" | "6" | "7" | "13" | "14";
+            /**
+             * @description 取引の取消を識別する区分。 (0:通常、1取消）
+             * @default 0
+             * @enum {string}
+             */
+            cancelDivision: "0" | "1";
+            /**
+             * Format: int64
+             * @description 取引明細の値引き後小計の合計。
+             *     ※明細合計と異なる場合エラー
+             *
+             */
+            subtotal: number;
+            /**
+             * Format: int64
+             * @description 小計の値引き金額を設定
+             */
+            subtotalDiscountPrice?: number;
+            /**
+             * Format: int64
+             * @description 小計の割引を設定 （単位％） デフォルトは未設定。
+             *     設定された場合、小計値引は必須。
+             *     ※小計値引率から小計値引は計算しないため小計値引に値引額を設定してください。
+             *
+             */
+            subtotalDiscountRate?: number;
+            /**
+             * Format: int64
+             * @description 小計値引き/割引時に指定された区分を設定。
+             *     管理画面->設定->販売設定->値引区分/割引区分のページで確認できるID。
+             *
+             */
+            subtotalDiscountDivision?: number;
+            /**
+             * Format: int64
+             * @description 使用ポイント * ポイント還元率。
+             *
+             */
+            pointDiscount?: number;
+            /**
+             * Format: int64
+             * @description 小計 - 小計値引き - ポイント値引き - クーポン値引き + 端数値引額 + 外税額 + 手数料 + 送料 - 免税額 を設定
+             *     ※ 端数値引き機能は現在ご利用いただけません
+             *
+             */
+            total: number;
+            /**
+             * Format: int64
+             * @description 内税商品計 / 110 * 10。
+             *     ※税率が10%の場合
+             *     ※小数点以下は税の丸め方式で指定の通り
+             *
+             */
+            taxInclude?: number;
+            /**
+             * Format: int64
+             * @description 外税商品計 / 110 * 10。
+             *     ※税率が10%の場合
+             *     ※小数点以下は税の丸め方式で指定の通り
+             *
+             */
+            taxExclude?: number;
+            /**
+             * @description 販売時の合計金額の端数を丸めるか否かを設定する。
+             *     00:なし
+             *     11:一の位を四捨五入 12:一の位を切捨 13:一の位を切上
+             *     21:十の位を四捨五入 22:十の位を切捨 23:十の位を切上
+             *     31:百の位を四捨五入 32:百の位を切捨 33:百の位を切上
+             *     41:千の位を四捨五入 42:千の位を切捨 43:千の位を切上
+             *     99:手入力
+             *
+             * @enum {string}
+             */
+            roundingDivision?: "00" | "11" | "12" | "13" | "21" | "22" | "23" | "31" | "32" | "33" | "41" | "42" | "43" | "99";
+            /**
+             * Format: int64
+             * @description 端数値引額
+             *
+             */
+            roundingPrice?: number;
+            /**
+             * Format: int64
+             * @description 会計時に預かった金額。（預かり金現金 + 預かり金クレジット + 預かり金その他)
+             *     ※預かり金を正しく設定しないと、日報が正しく表示されません。
+             *
+             */
+            deposit?: number;
+            /**
+             * Format: int64
+             * @description 会計時に預かった現金金額。
+             *     ※現金支払の場合必ず設定。（預かり金現金 - 釣銭)が現金支払額に設定されます。
+             *     ※預かり金を正しく設定しないと、日報が正しく表示されません。
+             *
+             */
+            depositcash?: number;
+            /**
+             * Format: int64
+             * @description 会計時に預かったクレジット金額。
+             *     ※クレジット払いの場合必ず設定。預かり金クレジットが内クレジット支払金額に設定されます。
+             *     ※預かり金を正しく設定しないと、日報が正しく表示されません。
+             *
+             */
+            depositCredit?: number;
+            /**
+             * Format: int64
+             * @description 釣銭。現金の返却金額。
+             *     ※預かり金を正しく設定しないと、日報が正しく表示されません。
+             *
+             */
+            change?: number;
+            /**
+             * Format: int64
+             * @description 取引で付与されるポイント。 合計 * ポイント付与率
+             *     会員IDが設定されている場合、会員ポイント情報を更新。
+             *     ※省略時は0を設定
+             *     スマレジのポイント算出方式について
+             *     1. カード会社・支払方法にポイント付与単位(金額)とポイント付与単位(ポイント)の設定がない場合
+             *     付与されるポイントはポイント対象金額 / ポイント付与単位(金額) * ポイント付与単位(ポイント)で計算されます。(端数切り捨て） スマレジ・アプリから取引登録された時に採用されるポイント付与情報は会員のポイント付与率が未設定だった場合は会員ランクを、 会員ランクも未設定だった場合は店舗のポイント付与単位(金額)及びポイント付与単位(ポイント)が採用されます。
+             *       - 会員ランクのポイント付与単位(金額)及びポイント付与単位(金額)については、スマレジ管理画面の[設定]->[会員設定]->[会員ランク]よりご確認ください。
+             *       - 店舗のポイント付与単位(金額)については店舗登録APIのRequest Body記載のpointCondition.pointGivingUnitPriceをご確認ください。
+             *       - 会員のポイント付与単位(金額)については会員登録APIのRequest Body記載のpointGivingUnitPriceをご確認ください。
+             *
+             * @default 0
+             */
+            newPoint: number;
+            /**
+             * Format: int64
+             * @description 取引で使用したポイント。
+             *     会員IDが設定されている場合、会員ポイント情報を更新。
+             *     ※省略時は0を設定
+             *
+             * @default 0
+             */
+            spendPoint: number;
+            /**
+             * Format: int64
+             * @description 取引前のポイント
+             *
+             * @default 0
+             */
+            point: number;
+            /**
+             * Format: int64
+             * @description 取引後のポイント 現在ポイント + 付与ポイント - 使用ポイント。
+             *
+             * @default 0
+             */
+            totalPoint: number;
+            /**
+             * Format: int64
+             * @description 取引前のマイル
+             *
+             * @default 0
+             */
+            currentMile: number;
+            /**
+             * Format: int64
+             * @description 取引で付与されるマイル
+             *     合計 * ポイント付与率
+             *
+             * @default 0
+             */
+            earnMile: number;
+            /**
+             * Format: int64
+             * @description 取引後のマイル
+             *     現在マイル + 獲得マイル + 調整マイル
+             *
+             * @default 0
+             */
+            totalMile: number;
+            /**
+             * Format: int64
+             * @description 取引で手動で付与されるマイル
+             *
+             * @default 0
+             */
+            adjustmentMile: number;
+            /**
+             * @description 調整マイルの区分
+             *     1:0マイル　（マイルを付与しない。「調整マイル = -1 * 獲得マイル」）
+             *     2:マイル指定（指定したマイルにする。「調整マイル = 入力値 - 獲得マイル」）
+             *     3:マイル加算（マイルを加算/減算する。「調整マイル =入力値」）
+             *     4:マイルｎ倍（指定倍数にする。「調整マイル = 獲得マイル * (n - 1)」
+             *
+             * @enum {string}
+             */
+            adjustmentMileDivision?: "1" | "2" | "3" | "4";
+            /**
+             * Format: int64
+             * @description 調整マイルの入力値
+             *
+             */
+            adjustmentMileValue?: number;
+            /**
              * Format: int64
              * @description 店舗ID
              */
@@ -11969,181 +4014,448 @@ export interface components {
              * @description 会員ID
              */
             customerId?: number | null;
+            /** @description 会員毎に付与する一意のコード。
+             *     ※設定された場合、会員IDは必須。
+             *     ※会員マスタに存在する会員IDが設定されている場合、会員情報の会員コードと一致しないとエラー。
+             *     ※省略時、会員IDが設定されている場合、会員マスタの会員コードを設定。（スマレジ管理画面ver.4.12.0リリース以降）
+             *      */
+            customerCode?: string;
+            /**
+             * Format: int64
+             * @description 端末で設定された取引ID。(連携元システムで任意の連番を設定してください）
+             *
+             */
+            terminalTranId: number;
+            /**
+             * Format: date-time
+             * @description 端末で設定された取引日時。[YYYY-MM-DDThh:mm:ssTZD]（連携元システムで処理日時を設定してください）
+             *
+             */
+            terminalTranDateTime: string;
+            /**
+             * @description 締め処理を実施したかの区分。 （0:未処理、1:精算処理済み、2:締め処理済み）
+             *     ※省略時は、店舗情報の締め方式区分に合わせて設定します。
+             *     ※0:未処理または1:精算処理済みは、店舗の締め方式区分が「手動締め処理」のときのみ設定可能。
+             *     ※存在しない端末IDを設定した場合、2:締め処理済みを設定してください。
+             *
+             * @default 0
+             * @enum {string}
+             */
+            sumDivision: "0" | "1" | "2";
+            /**
+             * Format: date
+             * @description 締めをしたら年月日が入る。 [YYYY-MM-DD]
+             *     ※締め区分を2に設定した場合必須。締め区分を0に設定した場合設定不可。
+             *
+             */
+            sumDate?: string;
+            /** @description 管理画面の[設定]→[会員設定]→[会員ランク]で設定したコードを設定してください。
+             *     存在しないコードを設定するとエラーになります。
+             *      */
+            customerRank?: string;
+            /**
+             * Format: int64
+             * @description 客層ID。客層セクションIDが1の客層IDを設定。
+             *     ※客層情報が存在しない場合エラー
+             *
+             */
+            customerGroupId?: number;
+            /**
+             * Format: int64
+             * @description 客層ID2。客層セクションIDが2の客層IDを設定。
+             *     ※客層情報が存在しない場合エラー
+             *
+             */
+            customerGroupId2?: number;
+            /**
+             * Format: int64
+             * @description 客層ID3。客層セクションIDが3の客層IDを設定。
+             *     ※客層情報が存在しない場合エラー
+             *
+             */
+            customerGroupId3?: number;
+            /**
+             * Format: int64
+             * @description 客層ID4。客層セクションIDが4の客層IDを設定。
+             *     ※客層情報が存在しない場合エラー
+             *
+             */
+            customerGroupId4?: number;
+            /**
+             * Format: int64
+             * @description 客層ID5。客層セクションIDが5の客層IDを設定。
+             *     ※客層情報が存在しない場合エラー
+             *
+             */
+            customerGroupId5?: number;
             /**
              * Format: int64
              * @description スタッフID
              */
-            staffId?: number | null;
+            staffId?: number;
+            /** @description メモ */
+            memo?: string;
+            /** @description レシートに印字するメモ */
+            receiptMemo?: string;
+            /**
+             * Format: int64
+             * @description EC連携用送料。
+             */
+            carriage?: number;
+            /**
+             * Format: int64
+             * @description EC連携用手数料。
+             */
+            commission?: number;
+            /**
+             * Format: int64
+             * @description 客数
+             */
+            guestNumbers?: number;
+            /**
+             * Format: int64
+             * @description 客数(男)
+             */
+            guestNumbersMale?: number;
+            /**
+             * Format: int64
+             * @description 客数(女)
+             */
+            guestNumbersFemale?: number;
+            /**
+             * Format: int64
+             * @description 客数(不明)
+             */
+            guestNumbersUnknown?: number;
             /**
              * Format: date-time
-             * @description 取引日時
+             * @description 入店日時
              */
-            transactionDateTime: string;
+            enterDateTime?: string;
             /**
-             * Format: double
-             * @description 合計金額
+             * @description 免税販売区分 (0:通常販売、1:免税販売(自動計算)、2:免税販売(強制免税適用)、3:免税販売(一般品のみ強制免税適用)、4:免税販売(消耗品のみ強制免税適用)、5:免税販売(自動計算・合算))
+             *     ※未設定の場合、0:通常販売
+             *
+             * @default 0
+             * @enum {string}
              */
-            totalAmount: number;
+            taxFreeSalesDivision: "0" | "1" | "2" | "3" | "4" | "5";
             /**
-             * Format: double
-             * @description 内税額
+             * Format: int64
+             * @description 内税商品の一般品免税額。
              */
-            taxIncludedAmount: number;
+            netTaxFreeGeneralTaxInclude?: number;
             /**
-             * Format: double
-             * @description 外税額
+             * Format: int64
+             * @description 外税商品の一般品免税額。
              */
-            taxExcludedAmount: number;
+            netTaxFreeGeneralTaxExclude?: number;
             /**
-             * Format: double
-             * @description 小計金額
+             * Format: int64
+             * @description 内税商品の消耗般品免税額。
              */
-            subtotalAmount: number;
+            netTaxFreeConsumableTaxInclude?: number;
             /**
-             * Format: double
-             * @description 支払金額
+             * Format: int64
+             * @description 外税商品の消耗般品免税額。
              */
-            paymentAmount: number;
+            netTaxFreeConsumableTaxExclude?: number;
+            /** @description レジ端末よりクイックコマンドを押下した値を設定。 和名を設定する。
+             *     ※1取引タグは最大64文字。複数ある場合は、カンマ区切りで設定。
+             *      */
+            tags?: string;
             /**
-             * Format: double
-             * @description お釣り金額
+             * @description 1:税額を含める + 利用ポイント分を含める、
+             *     2:税額を含めない + 利用ポイント分を含める、
+             *     3:税額を含める + 利用ポイント分を含めない、
+             *     4:税額を含めない + 利用ポイント分を含めない
+             *     ※省略時、店舗マスタから設定。
+             *
+             * @enum {string}
              */
-            changeAmount: number;
+            pointGivingDivision?: "1" | "2" | "3" | "4";
             /**
-             * Format: double
-             * @description ポイント使用額
+             * Format: int64
+             * @description ポイント付与の設定 n円をnポイントの「n円」の部分。 （設定範囲1円～99999円)
+             *     （例10円ごとに2ポイントの場合、10円）
+             *     ※未設定の場合は店舗マスタから設定。
+             *
              */
-            pointAmount?: number | null;
-            /** @description 支払種別
-             *     * 1: 現金
-             *     * 2: クレジットカード
-             *     * 3: 電子マネー
-             *     * 4: 商品券
-             *     * 5: 複合決済
-             *     * 6: その他 */
-            paymentType: number;
-            /** @description 取引ステータス
-             *     * 1: 会計済
-             *     * 2: 返品
-             *     * 3: 取消 */
-            status: number;
-            /** @description レシート番号 */
-            receiptNo: string;
-            /** @description レシートテキスト */
-            receiptText?: string | null;
-            /** @description メモ */
-            memo?: string | null;
+            pointGivingUnitPrice?: number;
+            /**
+             * Format: int64
+             * @description ポイント付与の設定 n円をnポイントの「nポイント」の部分 （設定範囲0.00ポイント～99999.99ポイント)
+             *     （例10円ごとに0.2ポイントの場合、0.2ポイント）
+             *     ※未設定の場合は店舗マスタから設定。
+             *
+             */
+            pointGivingUnit?: number;
+            /**
+             * @description ポイント利用時の税を含む／含まないを判定。
+             *     1:ポイント利用を現金として扱う (税を含む値引き)
+             *     2:ポイント利用を値引として扱う (税を含まない値引き)
+             *     ※未設定の場合は店舗マスタから設定。 初期値:1。
+             *
+             * @enum {string}
+             */
+            pointSpendDivision?: "1" | "2";
+            /**
+             * @description マイレージ機能を利用するか否か。 (0: 利用しない 1: 利用する 2: ポイントの代わりに貯める)
+             *     ※未設定の場合は店舗マスタから設定。 初期値:0。
+             *
+             * @enum {string}
+             */
+            mileageDivision?: "0" | "1" | "2";
+            /** @description マイレージの名称。未設定の場合は「マイル」
+             *      */
+            mileageLabel?: string;
+            /** @description 自由な文字列。 PINコードなど会員を識別する任意の文字列を設定してください。
+             *      */
+            customerPinCode?: string;
+            /**
+             * @description 取引が外税販売、内税販売かを識別する区分。 （0:内税販売、1:外税販売）
+             *     ※省略時は0:内税販売を設定
+             *
+             * @enum {string}
+             */
+            sellDivision?: "0" | "1";
+            /**
+             * Format: float
+             * @description 税率 （単位％）
+             *     ※省略時は、スマレジに設定されている消費税を設定（端末取引日時より算出）
+             *
+             */
+            taxRate?: number;
+            /**
+             * @description 税の丸めを判定。 0:四捨五入、1:切り捨て、2:切り上げ
+             *     ※省略時はスマレジに設定されている税の丸め方式を設定
+             *
+             * @enum {string}
+             */
+            taxRounding?: "0" | "1" | "2";
+            /**
+             * @description 割引の端数を丸める方法を指定する区分。 0:四捨五入、1:切り捨て、2:切り上げ
+             *     ※省略時は店舗マスタに設定されている税の丸め方式を設定
+             *
+             * @enum {string}
+             */
+            discountRoundingDivision?: "0" | "1" | "2";
+            /** @description レシートに印字する番号。ユニークな値を設定してください。
+             *     ※レシート番号が重複するとスマレジ・アプリにて取引データの呼び出しができなくなる可能性があります
+             *     ※省略時は、1970年から計算した現在秒の末尾9桁＋端末IDゼロ詰め4桁
+             *      */
+            transactionUuid?: string;
+            /** @description 引換券番号
+             *      */
+            exchangeTicketNo?: string;
+            /**
+             * Format: int64
+             * @description 有効日数が経過しても、ギフトレシートの引換ができなくなるわけではありません。
+             *
+             */
+            giftReceiptValidDays?: number;
+            /**
+             * @description 小計に対する値引または割引の上にさらに割引を行う際の、割引額の算出方法を指定する区分。
+             *     0:小計（明細から算出された、値引・割引前の小計を一律対象に割引率を乗算したものを割引額とします。）
+             *     1:他の値引割引に追従した小計（小計に対し他の値引・割引で変動した後の金額を都度対象に割引率を乗算したものを割引額とします。小計値引・割引 → クーポン値引・割引 の順番で計算されます。）
+             *     ※割引額計算対象の設定値は取引登録後にスマレジ・アプリにて取引を編集する際の割引額算出に使用します。
+             *     ※（注）取引登録APIでは、自動算出した値ではなくsubtotalDiscountPrice(小計値引き)の設定値を割引額に登録します。そのため、APIで登録される取引の割引額が割引額計算対象の設定値によって変動することはありません。
+             *
+             * @enum {string}
+             */
+            discountCalculateDivision?: "0" | "1";
+            /** @description 仮販売のバーコード。
+             *     ※ 複数ある場合はカンマ区切り。
+             *      */
+            barcode?: string;
+            /**
+             * Format: int64
+             * @description 取置きの取引ID。
+             *     ※ 指定した取置き取引を引取済にします。
+             *
+             */
+            layawayServerTransactionHeadId?: number;
             /** @description 取引詳細 */
-            details: {
+            details?: {
                 /**
                  * Format: int64
-                 * @description 商品ID
+                 * @description ユニーク値 取引毎の明細に付与するID。
+                 *     設定する場合は1〜999まで。
+                 *     取引明細を指定する場合必須。
+                 *
                  */
-                productId?: number | null;
-                /** @description 商品コード */
+                transactionDetailId: number;
+                /**
+                 * Format: int64
+                 * @description 紐付く親の取引明細がある場合、その取引明細IDを設定。
+                 *     ※商品区分が、0（通常販売）, 4（バンドル(親)）の場合は設定できず、2（オプション商品）の場合はオプション元の取引明細IDを、7（バンドル子）, 8（バンドル値引）の時は、バンドル(親)の取引明細IDを設定しなければならない。
+                 *
+                 */
+                parentTransactionDetailId?: number;
+                /**
+                 * @description 取引明細を識別する区分。
+                 *     （1:通常、2:返品、3:部門売り）
+                 *     取引明細を指定する場合必須。
+                 *
+                 * @enum {string}
+                 */
+                transactionDetailDivision: "1" | "2" | "3";
+                /**
+                 * Format: int64
+                 * @description 商品毎に付与するID
+                 *     ※ 存在しない商品IDが設定されている場合、nullを登録。
+                 *     ※ 商品IDで指定された商品の持つ商品区分が 1:回数券 の明細は登録できません。
+                 *     ※ ユーザーアクセストークンを利用する場合、ユーザーの所属する店舗で販売している商品IDを指定してください。
+                 *
+                 */
+                productId?: number;
+                /** @description 商品コード。（半角英数記号 20桁以内）
+                 *     省略時、商品IDが設定されている場合、マスタから設定。その他の場合はnull。
+                 *      */
                 productCode?: string | null;
-                /** @description 商品名 */
-                productName: string;
+                /** @description 商品名
+                 *     省略時、商品区分が0:通常、2:オプション商品、7:バンドル商品(子)、8:バンドル値引(子)で商品IDが設定されている場合、商品マスタから設定。商品区分が4:バンドル (親)で商品バンドルグループIDが設定されている場合、商品バンドルグループマスタから設定。その他の場合はnull。
+                 *      */
+                productName?: string | null;
+                /** @description レシート印字商品名
+                 *     省略時、商品IDが設定されている場合、マスタから設定。その他の場合はnull。
+                 *      */
+                printReceiptProductName?: string | null;
+                /**
+                 * @description 税区分
+                 *     (0:税込、1:税抜、2:非課税)
+                 *     ※設定時そのまま設定
+                 *     ※省略時、商品IDが設定されている場合、マスタから設定。その他の場合は0:税込。
+                 *
+                 * @enum {string}
+                 */
+                taxDivision?: "0" | "1" | "2";
                 /**
                  * Format: int64
-                 * @description 部門ID
-                 */
-                categoryId?: number | null;
-                /**
-                 * Format: double
                  * @description 単価
+                 *     ※設定時そのまま設定
+                 *     ※省略時、商品IDが設定されている場合、マスタから設定。その他の場合は0円。
+                 *
                  */
-                price: number;
+                price?: number;
                 /**
-                 * Format: double
-                 * @description 数量
+                 * Format: int64
+                 * @description 販売単価
+                 *     販売時の単価を設定。
+                 *     取引明細を指定する場合必須。
+                 *
+                 */
+                salesPrice: number;
+                /**
+                 * Format: int64
+                 * @description 単品値引額。販売単価の値引き金額を設定。
+                 */
+                unitDiscountPrice?: number;
+                /**
+                 * Format: int64
+                 * @description 単品の割引率を設定。（単位:％）
+                 *     ※このフィールドはラベルであり、販売単価の値引き金額の算出には利用されません。
+                 *     ※設定された場合、単品値引は必須
+                 *
+                 */
+                unitDiscountRate?: number;
+                /**
+                 * Format: int64
+                 * @description 単品値引き/割引時に指定された割引区分を設定。
+                 *
+                 */
+                unitDiscountDivision?: number;
+                /**
+                 * Format: int64
+                 * @description 購入数。取引明細を指定する場合必須。
                  */
                 quantity: number;
                 /**
-                 * Format: double
-                 * @description 単品値引額
-                 */
-                unitDiscountAmount?: number | null;
-                /**
-                 * Format: double
-                 * @description 単品値引率
-                 */
-                unitDiscountRate?: number | null;
-                /** @description 単品値引種別
-                 *     * 1: 金額値引
-                 *     * 2: 率値引 */
-                unitDiscountType?: number | null;
-                /**
-                 * Format: double
-                 * @description 小計金額
-                 */
-                subtotalAmount: number;
-                /**
-                 * Format: double
-                 * @description 税率
-                 */
-                taxRate: number;
-                /** @description 税種別
-                 *     * 1: 内税
-                 *     * 2: 外税 */
-                taxType: number;
-                /** @description 明細種別
-                 *     * 1: 通常商品
-                 *     * 2: セット親商品
-                 *     * 3: セット子商品
-                 *     * 4: 返品親明細
-                 *     * 5: 返品子明細
-                 *     * 6: 訂正明細
-                 *     * 7: 取引値引
-                 *     * 8: 小計値引
-                 *     * 9: 小計割引
-                 *     * 10: クーポン明細 */
-                detailType: number;
-            }[];
-            /** @description 支払明細 */
-            payments: {
-                /**
                  * Format: int64
-                 * @description 支払方法ID
+                 * @description 商品に紐付く部門毎に付与するID。数字9桁以内。
+                 *     ※部門情報が存在しない場合、エラー
+                 *     ※商品IDが設定されている場合、商品情報の部門IDと一致しないとエラー
+                 *     ※省略時、商品IDが設定されている場合、商品マスタの部門IDを設定
+                 *
                  */
-                paymentMethodId: number;
-                /** @description 支払方法名 */
-                paymentMethodName: string;
-                /**
-                 * Format: double
-                 * @description 支払金額
-                 */
-                amount: number;
-                /** @description 決済番号 */
-                paymentNo?: string | null;
-                /**
-                 * Format: int64
-                 * @description カード会社ID
-                 */
-                cardCompanyId?: number | null;
-                /** @description カード会社名 */
-                cardCompanyName?: string | null;
+                categoryId?: number;
+                /** @description 商品に紐付く部門名。(85文字以内)
+                 *     ※設定時、そのまま設定。
+                 *     ※省略時、部門IDが設定されている場合、マスタから設定。その他の場合はnull。
+                 *      */
+                categoryName?: string;
             }[];
         };
         /** @description 取引更新リクエスト */
         TransactionUpdate: {
             /**
              * Format: int64
-             * @description 会員ID
+             * @description 客層ID。客層セクションIDが1の客層IDを設定。
+             *     ※客層情報が存在しない場合エラー
+             *
              */
-            customerId?: number | null;
+            customerGroupId?: number | null;
+            /**
+             * Format: int64
+             * @description 客層ID2。客層セクションIDが2の客層IDを設定。
+             *     ※客層情報が存在しない場合エラー
+             *
+             */
+            customerGroupId2?: number | null;
+            /**
+             * Format: int64
+             * @description 客層ID3。客層セクションIDが3の客層IDを設定。
+             *     ※客層情報が存在しない場合エラー
+             *
+             */
+            customerGroupId3?: number | null;
+            /**
+             * Format: int64
+             * @description 客層ID4。客層セクションIDが4の客層IDを設定。
+             *     ※客層情報が存在しない場合エラー
+             *
+             */
+            customerGroupId4?: number | null;
+            /**
+             * Format: int64
+             * @description 客層ID5。客層セクションIDが5の客層IDを設定。
+             *     ※客層情報が存在しない場合エラー
+             *
+             */
+            customerGroupId5?: number | null;
             /**
              * Format: int64
              * @description スタッフID
              */
             staffId?: number | null;
-            /** @description 取引ステータス
-             *     * 1: 会計済
-             *     * 2: 返品
-             *     * 3: 取消 */
-            status?: number;
             /** @description メモ */
             memo?: string | null;
+            /** @description レシートに印字するメモ */
+            receiptMemo?: string | null;
+            /**
+             * Format: int64
+             * @description 客数
+             */
+            guestNumbers?: number | null;
+            /**
+             * Format: int64
+             * @description 客数(男)
+             */
+            guestNumbersMale?: number | null;
+            /**
+             * Format: int64
+             * @description 客数(女)
+             */
+            guestNumbersFemale?: number | null;
+            /**
+             * Format: int64
+             * @description 客数(不明)
+             */
+            guestNumbersUnknown?: number | null;
+            /** @description レジ端末よりクイックコマンドを押下した値を設定。 和名を設定する。
+             *     ※1取引タグは最大64文字。複数ある場合は、カンマ区切りで設定。
+             *      */
+            tags?: string | null;
         };
         /** @description 取引詳細情報 */
         TransactionDetail: {
@@ -12292,6 +4604,513 @@ export interface components {
              */
             updatedDateTime: string;
         };
+        /** @description 取引取消リクエスト */
+        TransactionCancel: {
+            /**
+             * Format: date-time
+             * @description 取消／打消しの場合自動設定。[YYYY-MM-DDThh:mm:ssTZD]
+             *     未設定の場合、自動で設定されます。
+             *
+             */
+            cancelDateTime?: string | null;
+            /** @description 個別アプリ専用支払方法IDを指定した決済で取消伝票番号を登録するのに利用します
+             *     ※現状は最大１つしか指定できません
+             *      */
+            depositOthers?: {
+                /**
+                 * @description 個別アプリ専用支払方法IDを設定した項番を指定してください
+                 * @enum {string}
+                 */
+                no?: "1" | "2" | "3";
+                /** @description キャッシュレス決済時の取消伝票番号を設定してください
+                 *     ※個別アプリ専用支払方法登録APIで登録した支払方法IDを指定した場合しか利用できません
+                 *      */
+                cancelSlipNumber?: string;
+            }[];
+        };
+        /** @description 取引打消取消リクエスト */
+        TransactionDispose: {
+            /**
+             * Format: date-time
+             * @description 端末で設定された取引日時。[YYYY-MM-DDThh:mm:ssTZD]
+             *     未設定の場合、自動で設定されます。
+             *
+             */
+            terminalTranDateTime?: string | null;
+            /** @description 個別アプリ専用支払方法IDを指定した決済で取消伝票番号を登録するのに利用します
+             *     ※現状は最大１つしか指定できません
+             *      */
+            depositOthers?: {
+                /**
+                 * @description 個別アプリ専用支払方法IDを設定した項番を指定してください
+                 * @enum {string}
+                 */
+                no?: "1" | "2" | "3";
+                /** @description キャッシュレス決済時の取消伝票番号を設定してください
+                 *     ※個別アプリ専用支払方法登録APIで登録した支払方法IDを指定した場合しか利用できません
+                 *      */
+                cancelSlipNumber?: string;
+            }[];
+        };
+        Customer: {
+            /** @description 会員ID */
+            customerId?: string;
+            /** @description 会員コード */
+            customerCode?: string;
+            /** @description 会員番号 */
+            customerNo?: string;
+            /** @description 会員ランク */
+            rank?: string;
+            /** @description スタッフランク */
+            staffRank?: string;
+            /** @description 名前 */
+            firstName?: string;
+            /** @description 苗字 */
+            lastName?: string;
+            /** @description 名前カナ */
+            firstNameKana?: string;
+            /** @description 苗字カナ */
+            lastNameKana?: string;
+            /**
+             * @description 性別(0:不明, 1:男性, 2:女性)
+             * @enum {string}
+             */
+            sex?: "0" | "1" | "2";
+            /** @description バーコード */
+            barcode?: string;
+            /**
+             * Format: date
+             * @description 生年月日
+             */
+            birthDate?: string;
+            /** @description 郵便番号 */
+            zipCode?: string;
+            /** @description 住所 */
+            address?: string;
+            /** @description 電話番号 */
+            phoneNumber?: string;
+            /** @description FAX番号 */
+            faxNumber?: string;
+            /** @description 携帯電話番号 */
+            mobileNumber?: string;
+            /** @description メールアドレス */
+            mailAddress?: string;
+            /** @description メールアドレス2 */
+            mailAddress2?: string;
+            /** @description メールアドレス3 */
+            mailAddress3?: string;
+            /** @description 会社名 */
+            companyName?: string;
+            /** @description 部署名 */
+            departmentName?: string;
+            /** @description 担当者フラグ */
+            managerFlag?: boolean;
+            /** @description スタッフフラグ */
+            isStaff?: boolean;
+            /** @description ポイント */
+            points?: number;
+            /** @description 店舗ID */
+            storeId?: string;
+            /** @description 備考 */
+            note?: string;
+            /** @description 状態(1:利用, 2:停止) */
+            statusId?: number;
+            /**
+             * Format: date
+             * @description 入会日
+             */
+            enterDate?: string;
+            /**
+             * Format: date
+             * @description 退会日
+             */
+            suspendDate?: string;
+            /**
+             * Format: date
+             * @description ポイント有効期限
+             */
+            pointExpireDate?: string;
+            /**
+             * Format: date-time
+             * @description 登録日時
+             */
+            insDateTime?: string;
+            /**
+             * Format: date-time
+             * @description 更新日時
+             */
+            updDateTime?: string;
+        };
+        CustomerCreate: {
+            /** @description 会員コード */
+            customerCode: string;
+            /** @description 会員番号 */
+            customerNo?: string;
+            /** @description 会員ランク */
+            rank?: string;
+            /** @description スタッフランク */
+            staffRank?: string;
+            /** @description 名前 */
+            firstName: string;
+            /** @description 苗字 */
+            lastName: string;
+            /** @description 名前カナ */
+            firstKana?: string;
+            /** @description 苗字カナ */
+            lastKana?: string;
+            /** @description 郵便番号 */
+            postCode?: string;
+            /** @description 住所 */
+            address?: string;
+            /** @description 電話番号 */
+            phoneNumber?: string;
+            /** @description FAX番号 */
+            faxNumber?: string;
+            /** @description 携帯電話番号 */
+            mobileNumber?: string;
+            /** @description メールアドレス */
+            mailAddress?: string;
+            /** @description メールアドレス2 */
+            mailAddress2?: string;
+            /** @description メールアドレス3 */
+            mailAddress3?: string;
+            /** @description 会社名 */
+            companyName?: string;
+            /** @description 部署名 */
+            departmentName?: string;
+            /** @description 役職 */
+            managerialPosition?: boolean;
+            /**
+             * @description 性別(0:不明, 1:男性, 2:女性)
+             * @enum {string}
+             */
+            sex?: "0" | "1" | "2";
+            /**
+             * Format: date
+             * @description 生年月日
+             */
+            birthDate?: string;
+            /**
+             * Format: date
+             * @description ポイント有効期限
+             */
+            pointExpireDate?: string;
+            /**
+             * Format: date
+             * @description 入会日
+             */
+            entryDate?: string;
+            /**
+             * Format: date
+             * @description 退会日
+             */
+            leaveDate?: string;
+            /** @description ポイント付与単位(金額) */
+            pointGivingUnitPrice?: number;
+            /**
+             * Format: float
+             * @description 値を指定した場合、ポイント付与単位(金額)も必須
+             */
+            pointGivingUnit?: number;
+            /** @description PINコード */
+            pinCode?: string;
+            /** @description 旅券番号 */
+            passportNo?: string;
+            /** @description 国籍 */
+            nationality?: string;
+            /** @description アルファベット氏名 */
+            alphabetName?: string;
+            /**
+             * @description 案内メール受取許可フラグ
+             *     (0:拒否、1:許可)
+             *
+             * @enum {string}
+             */
+            mailReceiveFlag?: "0" | "1";
+            /** @description 備考 */
+            note?: string;
+            /** @description 備考2 */
+            note2?: string;
+            /** @description お気に入りリスト。商品コードをカンマ区切りで設定可能。 */
+            favoriteList?: string;
+            /** @description 閲覧履歴リスト。商品コードをカンマ区切りで設定可能。 */
+            browsingList?: string;
+            /**
+             * @description 状態(0:利用可、1:利用停止、2:紛失、3:退会、4:名寄せ)
+             * @enum {string}
+             */
+            status?: "0" | "1" | "2" | "3" | "4";
+            /** @description 店舗ID */
+            storeId?: string;
+        };
+        CustomerUpdate: {
+            /** @description 会員コード */
+            customerCode?: string;
+            /** @description 会員番号 */
+            customerNo?: string;
+            /** @description 会員ランク */
+            rank?: string;
+            /** @description スタッフランク */
+            staffRank?: string;
+            /** @description 名前 */
+            firstName?: string;
+            /** @description 苗字 */
+            lastName?: string;
+            /** @description 名前カナ */
+            firstKana?: string;
+            /** @description 苗字カナ */
+            lastKana?: string;
+            /** @description 郵便番号 */
+            postCode?: string;
+            /** @description 住所 */
+            address?: string;
+            /** @description 電話番号 */
+            phoneNumber?: string;
+            /** @description FAX番号 */
+            faxNumber?: string;
+            /** @description 携帯電話番号 */
+            mobileNumber?: string;
+            /** @description メールアドレス */
+            mailAddress?: string;
+            /** @description メールアドレス2 */
+            mailAddress2?: string;
+            /** @description メールアドレス3 */
+            mailAddress3?: string;
+            /** @description 会社名 */
+            companyName?: string;
+            /** @description 部署名 */
+            departmentName?: string;
+            /** @description 役職 */
+            managerialPosition?: boolean;
+            /**
+             * @description 性別(0:不明, 1:男性, 2:女性)
+             * @enum {string}
+             */
+            sex?: "0" | "1" | "2";
+            /**
+             * Format: date
+             * @description 生年月日
+             */
+            birthDate?: string;
+            /**
+             * Format: date
+             * @description ポイント有効期限
+             */
+            pointExpireDate?: string;
+            /**
+             * Format: date
+             * @description 入会日
+             */
+            entryDate?: string;
+            /**
+             * Format: date
+             * @description 退会日
+             */
+            leaveDate?: string;
+            /** @description ポイント付与単位(金額) */
+            pointGivingUnitPrice?: number;
+            /**
+             * Format: float
+             * @description 値を指定した場合、ポイント付与単位(金額)も必須
+             */
+            pointGivingUnit?: number;
+            /** @description PINコード */
+            pinCode?: string;
+            /** @description 旅券番号 */
+            passportNo?: string;
+            /** @description 国籍 */
+            nationality?: string;
+            /** @description アルファベット氏名 */
+            alphabetName?: string;
+            /**
+             * @description 案内メール受取許可フラグ
+             *     (0:拒否、1:許可)
+             *
+             * @enum {string}
+             */
+            mailReceiveFlag?: "0" | "1";
+            /** @description 備考 */
+            note?: string;
+            /** @description 備考2 */
+            note2?: string;
+            /** @description お気に入りリスト。商品コードをカンマ区切りで設定可能。 */
+            favoriteList?: string;
+            /** @description 閲覧履歴リスト。商品コードをカンマ区切りで設定可能。 */
+            browsingList?: string;
+            /**
+             * @description 状態(0:利用可、1:利用停止、2:紛失、3:退会、4:名寄せ)
+             * @enum {string}
+             */
+            status?: "0" | "1" | "2" | "3" | "4";
+            /** @description 店舗ID */
+            storeId?: string;
+        };
+        CustomerRequired: {
+            /** @description 名前必須フラグ */
+            firstName?: boolean;
+            /** @description 苗字必須フラグ */
+            lastName?: boolean;
+            /** @description 名前カナ必須フラグ */
+            firstNameKana?: boolean;
+            /** @description 苗字カナ必須フラグ */
+            lastNameKana?: boolean;
+            /** @description 性別必須フラグ */
+            sex?: boolean;
+            /** @description 生年月日必須フラグ */
+            birthDate?: boolean;
+            /** @description 郵便番号必須フラグ */
+            zipCode?: boolean;
+            /** @description 住所必須フラグ */
+            address?: boolean;
+            /** @description 電話番号必須フラグ */
+            phoneNumber?: boolean;
+            /** @description 携帯電話番号必須フラグ */
+            mobileNumber?: boolean;
+            /** @description メールアドレス必須フラグ */
+            mailAddress?: boolean;
+            /** @description 会社名必須フラグ */
+            companyName?: boolean;
+            /** @description 部署名必須フラグ */
+            departmentName?: boolean;
+        };
+        /** @description 在庫情報 */
+        Stock: {
+            /** @description 店舗ID */
+            storeId: number;
+            /** @description 店舗名 */
+            storeName?: string;
+            /** @description 商品ID */
+            productId: number;
+            /** @description 商品コード */
+            productCode?: string;
+            /** @description 商品名 */
+            productName?: string;
+            /** @description バーコード */
+            barcode?: string;
+            /** @description 部門ID */
+            categoryId?: number;
+            /** @description 部門名 */
+            categoryName?: string;
+            /**
+             * Format: float
+             * @description 在庫数
+             */
+            stockAmount: number;
+            /**
+             * Format: float
+             * @description 予約在庫数
+             */
+            layawayStockAmount?: number;
+            /**
+             * Format: float
+             * @description 棚卸前在庫数
+             */
+            originalQuantity?: number;
+            /**
+             * Format: date-time
+             * @description 最終更新日時
+             */
+            upDateTime?: string;
+        };
+        /** @description 在庫更新情報 */
+        StockUpdate: {
+            /** @description 店舗ID */
+            storeId: number;
+            /** @description 商品ID */
+            productId: number;
+            /**
+             * Format: float
+             * @description 在庫数
+             */
+            stockAmount: number;
+            /** @description 在庫履歴情報 */
+            stockHistory?: {
+                /** @description 在庫変動履歴ID */
+                id?: number;
+                /** @description 在庫履歴メモ */
+                memo?: string;
+            };
+        };
+        /** @description 在庫相対更新情報（増減） */
+        StockRelativeUpdate: {
+            /** @description 店舗ID */
+            storeId: number;
+            /**
+             * Format: float
+             * @description 増減数量（正の値で増加、負の値で減少）
+             */
+            stockAmount: number;
+            /** @description 在庫履歴情報 */
+            stockHistory?: {
+                /** @description 在庫履歴メモ */
+                memo?: string;
+            };
+        };
+        /** @description 在庫変動履歴情報 */
+        StockChange: {
+            /** @description 在庫変動ID */
+            id?: number;
+            /**
+             * Format: date-time
+             * @description 更新日時：データ更新時の日時。[YYYY-MM-DDThh:mm:ssTZD]
+             */
+            updDateTime?: string;
+            /**
+             * Format: date-time
+             * @description 対象日時：在庫数を変更した時の日時。[YYYY-MM-DDThh:mm:ssTZD] 棚卸、ロス登録時に日時を指定する場合があります。 通常は更新日時と同じ日時が設定されます。
+             */
+            targetDateTime?: string;
+            /** @description 商品ID */
+            productId?: number;
+            /** @description 店舗ID */
+            storeId?: number;
+            /** @description 数量：入出庫数（相対値で設定） */
+            amount?: number;
+            /** @description 在庫数：処理後の在庫数 */
+            stockAmount?: number;
+            /** @description 取置き在庫数：処理後の取置き在庫数。 */
+            layawayStockAmount?: number;
+            /**
+             * @description 在庫区分：在庫を更新理由となる区分 (01:修正、02:売上、03:仕入、04:出庫、05:入庫、06:レンタル、07:取置き、08:棚卸、09:調整、10:出荷、12:返品、13:販促品、14:ロス、15:スマレジAPI連携、16:売上引当、17:入庫欠品、18:受注在庫引当)
+             * @enum {string}
+             */
+            stockDivision?: "01" | "02" | "03" | "04" | "05" | "06" | "07" | "08" | "09" | "10" | "12" | "13" | "14" | "15" | "16" | "17" | "18";
+            /** @description 配送元店舗ID */
+            fromStoreId?: number;
+            /** @description 配送先店舗ID */
+            toStoreId?: number;
+            /**
+             * @description 税区分：商品単価の税区分 (0：税込、1：税抜、2：非課税)
+             * @enum {string}
+             */
+            taxDivision?: "0" | "1" | "2";
+            /**
+             * Format: float
+             * @description 価格
+             */
+            price?: number;
+            /**
+             * Format: float
+             * @description 原価
+             */
+            cost?: number;
+            /** @description メモ */
+            memo?: string;
+            /** @description 担当スタッフID */
+            staffId?: number;
+            /** @description 担当スタッフ名 */
+            staffName?: string;
+        };
+        /** @description 商品一括登録情報 */
+        ProductBulkCreate: {
+            /** @description 登録する商品の配列 */
+            items: components["schemas"]["ProductCreate"][];
+        };
+        /** @description 商品一括更新情報 */
+        ProductBulkUpdate: {
+            /** @description 更新する商品の配列 */
+            items: components["schemas"]["ProductUpdate"][];
+        };
         /** @description 預かり取引情報 */
         Layaway: {
             /**
@@ -12422,7 +5241,7 @@ export interface components {
              */
             updatedDateTime: string;
         };
-        /** @description 預かり取引作成リクエスト */
+        /** @description 取置作成リクエスト */
         LayawayCreate: {
             /**
              * Format: int64
@@ -12865,248 +5684,9 @@ export interface components {
              */
             updatedDateTime: string;
         };
-        Customer: {
-            /** @description 会員ID */
-            customerId?: string;
-            /** @description 会員コード */
-            customerCode?: string;
-            /** @description 会員番号 */
-            customerNo?: string;
-            /** @description 会員ランク */
-            rank?: string;
-            /** @description スタッフランク */
-            staffRank?: string;
-            /** @description 名前 */
-            firstName?: string;
-            /** @description 苗字 */
-            lastName?: string;
-            /** @description 名前カナ */
-            firstNameKana?: string;
-            /** @description 苗字カナ */
-            lastNameKana?: string;
-            /**
-             * @description 性別(0:不明, 1:男性, 2:女性)
-             * @enum {string}
-             */
-            sex?: "0" | "1" | "2";
-            /** @description バーコード */
-            barcode?: string;
-            /**
-             * Format: date
-             * @description 生年月日
-             */
-            birthDate?: string;
-            /** @description 郵便番号 */
-            zipCode?: string;
-            /** @description 住所 */
-            address?: string;
-            /** @description 電話番号 */
-            phoneNumber?: string;
-            /** @description FAX番号 */
-            faxNumber?: string;
-            /** @description 携帯電話番号 */
-            mobileNumber?: string;
-            /** @description メールアドレス */
-            mailAddress?: string;
-            /** @description メールアドレス2 */
-            mailAddress2?: string;
-            /** @description メールアドレス3 */
-            mailAddress3?: string;
-            /** @description 会社名 */
-            companyName?: string;
-            /** @description 部署名 */
-            departmentName?: string;
-            /** @description 担当者フラグ */
-            managerFlag?: boolean;
-            /** @description スタッフフラグ */
-            isStaff?: boolean;
-            /** @description ポイント */
-            points?: number;
-            /** @description 店舗ID */
-            storeId?: string;
-            /** @description 備考 */
-            note?: string;
-            /** @description 状態(1:利用, 2:停止) */
-            statusId?: number;
-            /**
-             * Format: date
-             * @description 入会日
-             */
-            enterDate?: string;
-            /**
-             * Format: date
-             * @description 退会日
-             */
-            suspendDate?: string;
-            /**
-             * Format: date
-             * @description ポイント有効期限
-             */
-            pointExpireDate?: string;
-            /**
-             * Format: date-time
-             * @description 登録日時
-             */
-            insDateTime?: string;
-            /**
-             * Format: date-time
-             * @description 更新日時
-             */
-            updDateTime?: string;
-        };
-        CustomerCreate: {
-            /** @description 会員コード */
-            customerCode: string;
-            /** @description 会員番号 */
-            customerNo?: string;
-            /** @description 会員ランク */
-            rank?: string;
-            /** @description スタッフランク */
-            staffRank?: string;
-            /** @description 名前 */
-            firstName?: string;
-            /** @description 苗字 */
-            lastName?: string;
-            /** @description 名前カナ */
-            firstNameKana?: string;
-            /** @description 苗字カナ */
-            lastNameKana?: string;
-            /**
-             * @description 性別(0:不明, 1:男性, 2:女性)
-             * @enum {string}
-             */
-            sex?: "0" | "1" | "2";
-            /** @description バーコード */
-            barcode?: string;
-            /**
-             * Format: date
-             * @description 生年月日
-             */
-            birthDate?: string;
-            /** @description 郵便番号 */
-            zipCode?: string;
-            /** @description 住所 */
-            address?: string;
-            /** @description 電話番号 */
-            phoneNumber?: string;
-            /** @description FAX番号 */
-            faxNumber?: string;
-            /** @description 携帯電話番号 */
-            mobileNumber?: string;
-            /** @description メールアドレス */
-            mailAddress?: string;
-            /** @description メールアドレス2 */
-            mailAddress2?: string;
-            /** @description メールアドレス3 */
-            mailAddress3?: string;
-            /** @description 会社名 */
-            companyName?: string;
-            /** @description 部署名 */
-            departmentName?: string;
-            /** @description 担当者フラグ */
-            managerFlag?: boolean;
-            /** @description スタッフフラグ */
-            isStaff?: boolean;
-            /** @description ポイント */
-            points?: number;
-            /** @description 店舗ID */
-            storeId?: string;
-            /** @description 備考 */
-            note?: string;
-            /** @description 状態(1:利用, 2:停止) */
-            statusId?: number;
-            /**
-             * Format: date
-             * @description 入会日
-             */
-            enterDate?: string;
-            /**
-             * Format: date
-             * @description 退会日
-             */
-            suspendDate?: string;
-            /**
-             * Format: date
-             * @description ポイント有効期限
-             */
-            pointExpireDate?: string;
-        };
-        CustomerUpdate: {
-            /** @description 会員コード */
-            customerCode?: string;
-            /** @description 会員番号 */
-            customerNo?: string;
-            /** @description 会員ランク */
-            rank?: string;
-            /** @description スタッフランク */
-            staffRank?: string;
-            /** @description 名前 */
-            firstName?: string;
-            /** @description 苗字 */
-            lastName?: string;
-            /** @description 名前カナ */
-            firstNameKana?: string;
-            /** @description 苗字カナ */
-            lastNameKana?: string;
-            /**
-             * @description 性別(0:不明, 1:男性, 2:女性)
-             * @enum {string}
-             */
-            sex?: "0" | "1" | "2";
-            /** @description バーコード */
-            barcode?: string;
-            /**
-             * Format: date
-             * @description 生年月日
-             */
-            birthDate?: string;
-            /** @description 郵便番号 */
-            zipCode?: string;
-            /** @description 住所 */
-            address?: string;
-            /** @description 電話番号 */
-            phoneNumber?: string;
-            /** @description FAX番号 */
-            faxNumber?: string;
-            /** @description 携帯電話番号 */
-            mobileNumber?: string;
-            /** @description メールアドレス */
-            mailAddress?: string;
-            /** @description メールアドレス2 */
-            mailAddress2?: string;
-            /** @description メールアドレス3 */
-            mailAddress3?: string;
-            /** @description 会社名 */
-            companyName?: string;
-            /** @description 部署名 */
-            departmentName?: string;
-            /** @description 担当者フラグ */
-            managerFlag?: boolean;
-            /** @description スタッフフラグ */
-            isStaff?: boolean;
-            /** @description ポイント */
-            points?: number;
-            /** @description 店舗ID */
-            storeId?: string;
-            /** @description 備考 */
-            note?: string;
-            /** @description 状態(1:利用, 2:停止) */
-            statusId?: number;
-            /**
-             * Format: date
-             * @description 入会日
-             */
-            enterDate?: string;
-            /**
-             * Format: date
-             * @description 退会日
-             */
-            suspendDate?: string;
-            /**
-             * Format: date
-             * @description ポイント有効期限
-             */
-            pointExpireDate?: string;
+        CustomerBulkCreate: {
+            /** @description 会員情報リスト */
+            customers: components["schemas"]["CustomerCreate"][];
         };
         CustomerBulkUpdate: {
             /** @description 会員情報リスト */
@@ -13114,10 +5694,6 @@ export interface components {
                 /** @description 会員ID */
                 customerId: string;
             } & components["schemas"]["CustomerUpdate"])[];
-        };
-        CustomerBulkCreate: {
-            /** @description 会員情報リスト */
-            customers: components["schemas"]["CustomerCreate"][];
         };
         CustomerPoint: {
             /** @description 会員ID */
@@ -13286,137 +5862,19 @@ export interface components {
             /** @description 備考 */
             note?: string;
         };
-        CustomerRequired: {
-            /** @description 名前必須フラグ */
-            firstName?: boolean;
-            /** @description 苗字必須フラグ */
-            lastName?: boolean;
-            /** @description 名前カナ必須フラグ */
-            firstNameKana?: boolean;
-            /** @description 苗字カナ必須フラグ */
-            lastNameKana?: boolean;
-            /** @description 性別必須フラグ */
-            sex?: boolean;
-            /** @description 生年月日必須フラグ */
-            birthDate?: boolean;
-            /** @description 郵便番号必須フラグ */
-            zipCode?: boolean;
-            /** @description 住所必須フラグ */
-            address?: boolean;
-            /** @description 電話番号必須フラグ */
-            phoneNumber?: boolean;
-            /** @description 携帯電話番号必須フラグ */
-            mobileNumber?: boolean;
-            /** @description メールアドレス必須フラグ */
-            mailAddress?: boolean;
-            /** @description 会社名必須フラグ */
-            companyName?: boolean;
-            /** @description 部署名必須フラグ */
-            departmentName?: boolean;
+        /** @description 在庫一括更新情報 */
+        StockBulkUpdate: {
+            /** @description 在庫更新情報の配列 */
+            stocks: components["schemas"]["StockUpdate"][];
+            /** @description コールバックURL */
+            callbackUrl?: string;
         };
-        /** @description 在庫情報 */
-        Stock: {
-            /** @description 店舗ID */
-            storeId: number;
-            /** @description 店舗名 */
-            storeName?: string;
-            /** @description 商品ID */
-            productId: number;
-            /** @description 商品コード */
-            productCode?: string;
-            /** @description 商品名 */
-            productName?: string;
-            /** @description バーコード */
-            barcode?: string;
-            /** @description 部門ID */
-            categoryId?: number;
-            /** @description 部門名 */
-            categoryName?: string;
-            /**
-             * Format: float
-             * @description 在庫数
-             */
-            quantity: number;
-            /**
-             * Format: float
-             * @description 予約在庫数
-             */
-            reservedQuantity?: number;
-            /**
-             * Format: float
-             * @description 棚卸前在庫数
-             */
-            originalQuantity?: number;
-            /**
-             * Format: date-time
-             * @description 最終更新日時
-             */
-            lastUpdateDate?: string;
-        };
-        /** @description 在庫更新情報 */
-        StockUpdate: {
-            /** @description 店舗ID */
-            storeId: number;
-            /** @description 商品ID */
-            productId: number;
-            /**
-             * Format: float
-             * @description 在庫数
-             */
-            quantity: number;
-        };
-        /** @description 在庫変動履歴情報 */
-        StockChange: {
-            /** @description 在庫変動ID */
-            stockChangeId: number;
-            /** @description 店舗ID */
-            storeId: number;
-            /** @description 店舗名 */
-            storeName?: string;
-            /** @description 商品ID */
-            productId: number;
-            /** @description 商品コード */
-            productCode?: string;
-            /** @description 商品名 */
-            productName?: string;
-            /** @description バーコード */
-            barcode?: string;
-            /** @description 部門ID */
-            categoryId?: number;
-            /** @description 部門名 */
-            categoryName?: string;
-            /** @description 区分（1:取引、2:入庫、3:出庫、4:棚卸、5:発注、6:受注、7:ロス、8:その他） */
-            division: number;
-            /** @description 区分名 */
-            divisionName?: string;
-            /**
-             * Format: float
-             * @description 変動前在庫数
-             */
-            beforeQuantity: number;
-            /**
-             * Format: float
-             * @description 変動数
-             */
-            changeQuantity: number;
-            /**
-             * Format: float
-             * @description 変動後在庫数
-             */
-            afterQuantity: number;
-            /**
-             * Format: date
-             * @description 変動日
-             */
-            targetDate: string;
-            /** @description 担当スタッフID */
-            staffId?: number;
-            /** @description 担当スタッフ名 */
-            staffName?: string;
-            /** @description 関連ID（取引ID、入庫ID、出庫ID等） */
-            refId?: number;
-            /** @description メモ */
-            memo?: string;
+        /** @description 在庫相対一括更新情報（増減） */
+        StockBulkRelativeUpdate: {
+            /** @description 在庫相対更新情報の配列 */
+            stocks: components["schemas"]["StockRelativeUpdate"][];
+            /** @description コールバックURL */
+            callbackUrl: string;
         };
         /** @description セール情報 */
         Bargain: {
@@ -14044,6 +6502,46 @@ export interface components {
                 productGroupCode?: string;
             }[];
         };
+        /** @description バンドル販売商品情報 */
+        BundleProduct: {
+            /**
+             * @description バンドル販売商品ID
+             * @example 12345
+             */
+            bundleProductId: string;
+            /**
+             * @description 商品バンドルグループID
+             * @example 1
+             */
+            productBundleGroupId: string;
+            /**
+             * @description 部門ID
+             * @example 101
+             */
+            categoryId?: string;
+            /**
+             * @description 商品ID
+             * @example 10001
+             */
+            productId?: string;
+            /**
+             * @description 商品グループコード
+             * @example SPR2024
+             */
+            productGroupCode?: string;
+            /**
+             * Format: date-time
+             * @description 登録日時
+             * @example 2025-03-15T10:00:00+09:00
+             */
+            insDateTime?: string;
+            /**
+             * Format: date-time
+             * @description 更新日時
+             * @example 2025-03-15T10:00:00+09:00
+             */
+            updDateTime?: string;
+        };
         /** @description 店舗情報 */
         Store: {
             /**
@@ -14422,94 +6920,6 @@ export interface components {
              */
             updDateTime?: string;
         };
-        StaffCreate: {
-            /** @description スタッフコード */
-            staffCode: string;
-            /** @description 名前 */
-            firstName?: string;
-            /** @description 苗字 */
-            lastName?: string;
-            /** @description 名前カナ */
-            firstNameKana?: string;
-            /** @description 苗字カナ */
-            lastNameKana?: string;
-            /** @description 電話番号 */
-            tel?: string;
-            /** @description 携帯電話番号 */
-            mobilePhone?: string;
-            /** @description メールアドレス */
-            mail?: string;
-            /** @description 郵便番号 */
-            zipCode?: string;
-            /** @description 住所 */
-            address?: string;
-            /** @description パスワード */
-            password: string;
-            /**
-             * @description 権限(0:なし, 1:店舗管理者, 2:店舗スタッフ, 3:システム管理者)
-             * @enum {string}
-             */
-            staffAuthorization: "0" | "1" | "2" | "3";
-            /** @description 販売パスワード */
-            salePassword?: string;
-            /** @description 稼働開始時間（HH:mm） */
-            startAtHourOfDay?: string;
-            /** @description 稼働終了時間（HH:mm） */
-            endAtHourOfDay?: string;
-            /** @description 所属店舗IDリスト */
-            storeIds?: string[];
-            /** @description 役割IDリスト */
-            roleIds?: string[];
-            /**
-             * @description ステータス(1:有効, 2:無効)
-             * @enum {string}
-             */
-            status?: "1" | "2";
-        };
-        StaffUpdate: {
-            /** @description スタッフコード */
-            staffCode?: string;
-            /** @description 名前 */
-            firstName?: string;
-            /** @description 苗字 */
-            lastName?: string;
-            /** @description 名前カナ */
-            firstNameKana?: string;
-            /** @description 苗字カナ */
-            lastNameKana?: string;
-            /** @description 電話番号 */
-            tel?: string;
-            /** @description 携帯電話番号 */
-            mobilePhone?: string;
-            /** @description メールアドレス */
-            mail?: string;
-            /** @description 郵便番号 */
-            zipCode?: string;
-            /** @description 住所 */
-            address?: string;
-            /** @description パスワード */
-            password?: string;
-            /**
-             * @description 権限(0:なし, 1:店舗管理者, 2:店舗スタッフ, 3:システム管理者)
-             * @enum {string}
-             */
-            staffAuthorization?: "0" | "1" | "2" | "3";
-            /** @description 販売パスワード */
-            salePassword?: string;
-            /** @description 稼働開始時間（HH:mm） */
-            startAtHourOfDay?: string;
-            /** @description 稼働終了時間（HH:mm） */
-            endAtHourOfDay?: string;
-            /** @description 所属店舗IDリスト */
-            storeIds?: string[];
-            /** @description 役割IDリスト */
-            roleIds?: string[];
-            /**
-             * @description ステータス(1:有効, 2:無効)
-             * @enum {string}
-             */
-            status?: "1" | "2";
-        };
         Role: {
             /** @description 役割ID */
             roleId?: string;
@@ -14830,7 +7240,14 @@ export interface components {
              */
             updDateTime?: string;
         };
-        DailyBudgetUpdate: {
+        DailyBudgetCreate: {
+            /** @description 店舗ID */
+            storeId: string;
+            /**
+             * Format: date
+             * @description 日付
+             */
+            date: string;
             /**
              * Format: float
              * @description 売上予算
@@ -14938,14 +7355,7 @@ export interface components {
                 other?: number;
             };
         };
-        DailyBudgetCreate: {
-            /** @description 店舗ID */
-            storeId: string;
-            /**
-             * Format: date
-             * @description 日付
-             */
-            date: string;
+        DailyBudgetUpdate: {
             /**
              * Format: float
              * @description 売上予算
@@ -15095,7 +7505,16 @@ export interface components {
              */
             updDateTime?: string;
         };
-        StaffBudgetUpdate: {
+        StaffBudgetCreate: {
+            /** @description 店舗ID */
+            storeId: string;
+            /** @description スタッフID */
+            staffId: string;
+            /**
+             * Format: date
+             * @description 年月（YYYY-MM形式）
+             */
+            yearMonth: string;
             /**
              * Format: float
              * @description 売上予算
@@ -15112,16 +7531,7 @@ export interface components {
              */
             averageCustomerPriceBudget?: number;
         };
-        StaffBudgetCreate: {
-            /** @description 店舗ID */
-            storeId: string;
-            /** @description スタッフID */
-            staffId: string;
-            /**
-             * Format: date
-             * @description 年月（YYYY-MM形式）
-             */
-            yearMonth: string;
+        StaffBudgetUpdate: {
             /**
              * Format: float
              * @description 売上予算
@@ -16738,56 +9148,6 @@ export interface components {
              */
             updateDate?: string;
         };
-        /** @description 入庫登録情報 */
-        IncomingStockCreate: {
-            /** @description 入庫区分（1:仕入、2:店舗間移動、3:返品） */
-            division: number;
-            /** @description 入庫ステータス（1:計画中、2:確定済） */
-            status: number;
-            /** @description 店舗ID */
-            storeId: number;
-            /** @description 出庫元店舗ID */
-            supplierStoreId?: number;
-            /** @description 仕入先ID */
-            supplierId?: number;
-            /** @description 入荷ID */
-            arrivalId?: number;
-            /**
-             * Format: date
-             * @description 入荷日
-             */
-            arrivalDate?: string;
-            /** @description 発注ID */
-            orderId?: number;
-            /**
-             * Format: date
-             * @description 入庫日
-             */
-            targetDate: string;
-            /**
-             * Format: date
-             * @description 入庫予定日
-             */
-            estimatedDate?: string;
-            /** @description 担当スタッフID */
-            staffId?: number;
-            /** @description メモ */
-            memo?: string;
-            /** @description 入庫詳細情報 */
-            details: {
-                /** @description 商品ID */
-                productId: number;
-                /**
-                 * Format: float
-                 * @description 数量
-                 */
-                quantity: number;
-                /** @description 仕入単価 */
-                costPrice?: number;
-                /** @description メモ */
-                memo?: string;
-            }[];
-        };
         /** @description 入庫更新情報 */
         IncomingStockUpdate: {
             /** @description 入庫区分（1:仕入、2:店舗間移動、3:返品） */
@@ -16863,25 +9223,6 @@ export interface components {
              * @description 更新日時
              */
             updateDate?: string;
-        };
-        /** @description 入庫詳細更新情報 */
-        IncomingStockDetailUpdate: {
-            /** @description 入庫詳細更新情報の配列 */
-            details: {
-                /** @description 入庫詳細ID */
-                id: number;
-                /** @description 商品ID */
-                productId: number;
-                /**
-                 * Format: float
-                 * @description 数量
-                 */
-                quantity: number;
-                /** @description 仕入単価 */
-                costPrice?: number;
-                /** @description メモ */
-                memo?: string;
-            }[];
         };
         /** @description 出庫情報 */
         OutgoingStock: {
@@ -17067,25 +9408,6 @@ export interface components {
              */
             updateDate?: string;
         };
-        /** @description 出庫詳細更新情報 */
-        OutgoingStockDetailUpdate: {
-            /** @description 出庫詳細更新情報の配列 */
-            details: {
-                /** @description 出庫詳細ID */
-                id: number;
-                /** @description 商品ID */
-                productId: number;
-                /**
-                 * Format: float
-                 * @description 数量
-                 */
-                quantity: number;
-                /** @description 仕入単価 */
-                costPrice?: number;
-                /** @description メモ */
-                memo?: string;
-            }[];
-        };
         /** @description 出庫修正申請情報 */
         CorrectionRequestOutgoingStock: {
             /** @description 出庫修正申請ID */
@@ -17133,36 +9455,6 @@ export interface components {
              */
             updateDate?: string;
         };
-        /** @description 出庫修正申請登録情報 */
-        CorrectionRequestOutgoingStockCreate: {
-            /** @description 出庫ID */
-            outgoingStockId: number;
-            /** @description 店舗ID */
-            storeId: number;
-            /**
-             * Format: date
-             * @description 申請日
-             */
-            requestDate: string;
-            /** @description 申請理由 */
-            requestReason: string;
-            /** @description 申請スタッフID */
-            requestStaffId?: number;
-        };
-        /** @description 出庫修正申請更新情報（承認・却下） */
-        CorrectionRequestOutgoingStockUpdate: {
-            /** @description 申請ステータス（2:承認済、3:却下） */
-            status: number;
-            /**
-             * Format: date
-             * @description 承認/却下日
-             */
-            approvalDate: string;
-            /** @description 承認/却下理由 */
-            approvalReason?: string;
-            /** @description 承認/却下スタッフID */
-            approvalStaffId?: number;
-        };
         /** @description 棚卸情報 */
         Stocktaking: {
             /** @description 棚卸ID */
@@ -17208,37 +9500,6 @@ export interface components {
              */
             updateDate?: string;
         };
-        /** @description 棚卸登録情報 */
-        StocktakingCreate: {
-            /** @description 棚卸名 */
-            stocktakingName: string;
-            /** @description 店舗ID */
-            storeId: number;
-            /** @description 棚卸ステータス（1:集計中、2:完了） */
-            stocktakingStatus: number;
-            /**
-             * Format: date-time
-             * @description 開始日時
-             */
-            startDate: string;
-            /**
-             * Format: date-time
-             * @description 終了日時
-             */
-            endDate?: string;
-            /** @description 合計在庫金額 */
-            stockAmount?: number;
-            /** @description 担当スタッフID */
-            staffId?: number;
-            /** @description メモ */
-            memo?: string;
-            /** @description 在庫なし商品除外フラグ（true:除外する、false:除外しない） */
-            isExcludeOutOfStock?: boolean;
-            /** @description 部門対象（1:全部門、2:指定部門） */
-            categoryTarget?: number;
-            /** @description 対象部門IDリスト（categoryTargetが2の場合に必須） */
-            categoryIds?: number[];
-        };
         /** @description 棚卸部門情報 */
         StocktakingCategory: {
             /** @description 棚卸部門ID */
@@ -17274,17 +9535,6 @@ export interface components {
              * @description 更新日時
              */
             updateDate?: string;
-        };
-        /** @description 棚卸部門更新情報 */
-        StocktakingCategoryUpdate: {
-            /** @description 棚卸ID */
-            stocktakingId: number;
-            /** @description 店舗ID */
-            storeId: number;
-            /** @description 部門ID */
-            categoryId: number;
-            /** @description 棚卸実施済みフラグ（true:実施済み、false:未実施） */
-            isComplete: boolean;
         };
         /** @description 棚卸商品情報 */
         StocktakingProduct: {
@@ -17345,22 +9595,6 @@ export interface components {
              */
             updateDate?: string;
         };
-        /** @description 棚卸商品更新情報 */
-        StocktakingProductUpdate: {
-            /** @description 棚卸ID */
-            stocktakingId: number;
-            /** @description 店舗ID */
-            storeId: number;
-            /** @description 商品ID */
-            productId: number;
-            /**
-             * Format: float
-             * @description 実在庫数
-             */
-            countedQuantity: number;
-            /** @description 商品カウント済みフラグ（true:カウント済み、false:未カウント） */
-            isCounted: boolean;
-        };
         /** @description 棚卸在庫情報 */
         StocktakingStock: {
             /** @description 棚卸在庫ID */
@@ -17408,39 +9642,6 @@ export interface components {
              * @description 更新日時
              */
             updateDate?: string;
-        };
-        /** @description 棚卸在庫登録情報 */
-        StocktakingStockCreate: {
-            /** @description 棚卸ID */
-            stocktakingId: number;
-            /** @description 店舗ID */
-            storeId: number;
-            /** @description 商品ID */
-            productId: number;
-            /**
-             * Format: float
-             * @description システム在庫数
-             */
-            inventoryQuantity: number;
-            /**
-             * Format: float
-             * @description 実在庫数
-             */
-            countedQuantity: number;
-        };
-        /** @description 棚卸在庫更新情報 */
-        StocktakingStockUpdate: {
-            /** @description 棚卸ID */
-            stocktakingId: number;
-            /** @description 店舗ID */
-            storeId: number;
-            /** @description 商品ID */
-            productId: number;
-            /**
-             * Format: float
-             * @description 実在庫数
-             */
-            countedQuantity: number;
         };
         /** @description 税率情報 */
         TaxRate: {
@@ -17614,6 +9815,17 @@ export interface components {
             /** @description 表示順 */
             displayOrder?: number;
         };
+        /** @description 顧客タイプ更新情報 */
+        CustomerTypeUpdate: {
+            /** @description 顧客タイプコード */
+            code?: string;
+            /** @description 顧客タイプ名 */
+            name?: string;
+            /** @description デフォルト設定（true:デフォルト、false:デフォルトでない） */
+            isDefault?: boolean;
+            /** @description 表示順 */
+            displayOrder?: number;
+        };
         /** @description 顧客タイプセクション情報 */
         CustomerTypeSection: {
             /** @description 顧客タイプセクションID */
@@ -17658,83 +9870,6 @@ export interface components {
             /** @description 表示順 */
             displayOrder?: number;
         };
-        /** @description 在庫一括更新情報 */
-        StockBulkUpdate: {
-            /** @description 在庫更新情報の配列 */
-            stocks: components["schemas"]["StockUpdate"][];
-        };
-        /** @description 在庫相対更新情報（増減） */
-        StockRelativeUpdate: {
-            /** @description 店舗ID */
-            storeId: number;
-            /** @description 商品ID */
-            productId: number;
-            /**
-             * Format: float
-             * @description 増減数量（正の値で増加、負の値で減少）
-             */
-            addQuantity: number;
-            /** @description 区分（1:取引、2:入庫、3:出庫、4:棚卸、5:発注、6:受注、7:ロス、8:その他） */
-            division: number;
-            /** @description メモ */
-            memo?: string;
-        };
-        /** @description 在庫相対一括更新情報（増減） */
-        StockBulkRelativeUpdate: {
-            /** @description 在庫相対更新情報の配列 */
-            stocks: components["schemas"]["StockRelativeUpdate"][];
-        };
-        /** @description バンドル販売商品情報 */
-        BundleProduct: {
-            /**
-             * @description バンドル販売商品ID
-             * @example 12345
-             */
-            bundleProductId: string;
-            /**
-             * @description 商品バンドルグループID
-             * @example 1
-             */
-            productBundleGroupId: string;
-            /**
-             * @description 部門ID
-             * @example 101
-             */
-            categoryId?: string;
-            /**
-             * @description 商品ID
-             * @example 10001
-             */
-            productId?: string;
-            /**
-             * @description 商品グループコード
-             * @example SPR2024
-             */
-            productGroupCode?: string;
-            /**
-             * Format: date-time
-             * @description 登録日時
-             * @example 2025-03-15T10:00:00+09:00
-             */
-            insDateTime?: string;
-            /**
-             * Format: date-time
-             * @description 更新日時
-             * @example 2025-03-15T10:00:00+09:00
-             */
-            updDateTime?: string;
-        };
-        /** @description 顧客タイプ更新情報 */
-        CustomerTypeUpdate: {
-            /** @description 顧客タイプコード */
-            code?: string;
-            /** @description 顧客タイプ名 */
-            name?: string;
-            /** @description デフォルト設定（true:デフォルト、false:デフォルトでない） */
-            isDefault?: boolean;
-            /** @description 表示順 */
-            displayOrder?: number;
-        };
     };
     responses: never;
     parameters: never;
@@ -17753,30 +9888,32 @@ export interface operations {
                 page?: number;
                 /** @description ソート順 */
                 sort?: "productId" | "productCode" | "productName" | "categoryId" | "supplierName" | "price" | "cost" | "modified";
-                /** @description ソート順序 */
-                order?: "asc" | "desc";
                 /** @description 商品ID */
-                productId?: number;
+                product_id?: number;
                 /** @description 商品コード */
-                productCode?: string;
-                /** @description JANコード */
-                janCode?: string;
-                /** @description 商品名 */
-                productName?: string;
+                product_code?: string;
+                /** @description グループコード */
+                group_code?: string;
                 /** @description 部門ID */
-                categoryId?: number;
-                /** @description 部門コード */
-                categoryCode?: string;
-                /** @description 仕入先ID */
-                supplierId?: number;
-                /** @description 仕入先コード */
-                supplierCode?: string;
-                /** @description 店舗ID */
-                storeId?: number;
-                /** @description ステータス */
-                status?: 0 | 1;
-                /** @description 商品タイプ */
-                productType?: 0 | 1 | 2 | 9;
+                category_id?: number;
+                /** @description 端末表示（0. 表示しない、1. 表示する） */
+                display_flag?: "0" | "1";
+                /** @description 商品区分 (0：通常商品、1：回数券、2：オプション商品) */
+                division?: "0" | "1" | "2";
+                /** @description 売上区分 (0:売上対象、1:売上対象外) */
+                sales_division?: "0" | "1";
+                /** @description 在庫管理区分 (0:在庫管理対象、1:在庫管理対象外) */
+                stock_control_division?: "0" | "1";
+                /** @description 品番 */
+                supplier_product_no?: string;
+                /** @description 更新日時(From)：登録時・更新時の日時。[YYYY-MM-DDThh:mm:ssTZD]
+                 *     ※ From〜Toの期間は最大31日までの指定でご利用ください
+                 *      */
+                "upd_date_time-from"?: string;
+                /** @description 更新日時(To)：登録時・更新時の日時。[YYYY-MM-DDThh:mm:ssTZD]
+                 *     ※ From〜Toの期間は最大31日までの指定でご利用ください
+                 *      */
+                "upd_date_time-to"?: string;
                 /** @description 取得するフィールド */
                 fields?: string[];
             };
@@ -18092,148 +10229,13 @@ export interface operations {
             };
         };
     };
-    bulkUpdateProducts: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        requestBody: {
-            content: {
-                "application/json": components["schemas"]["ProductBulkUpdate"];
-            };
-        };
-        responses: {
-            /** @description 商品の一括更新に成功 */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": {
-                        items?: components["schemas"]["Product"][];
-                    };
-                };
-            };
-            /** @description リクエストパラメータが不正 */
-            400: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["Error"];
-                };
-            };
-            /** @description 認証エラー */
-            401: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["Error"];
-                };
-            };
-            /** @description 権限エラー */
-            403: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["Error"];
-                };
-            };
-            /** @description 商品が存在しない */
-            404: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["Error"];
-                };
-            };
-            /** @description 既存データとの競合エラー */
-            409: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["Error"];
-                };
-            };
-        };
-    };
-    bulkCreateProducts: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        requestBody: {
-            content: {
-                "application/json": components["schemas"]["ProductBulkCreate"];
-            };
-        };
-        responses: {
-            /** @description 商品の一括登録に成功 */
-            201: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": {
-                        items?: components["schemas"]["Product"][];
-                    };
-                };
-            };
-            /** @description リクエストパラメータが不正 */
-            400: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["Error"];
-                };
-            };
-            /** @description 認証エラー */
-            401: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["Error"];
-                };
-            };
-            /** @description 権限エラー */
-            403: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["Error"];
-                };
-            };
-            /** @description 既存データとの競合エラー */
-            409: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["Error"];
-                };
-            };
-        };
-    };
     getProductPrices: {
         parameters: {
             query?: {
                 /** @description 店舗ID */
-                storeId?: number;
+                store_id?: number;
                 /** @description 価格区分 */
-                priceDivision?: number;
-                /** @description 適用開始日 */
-                startDate?: string;
+                price_division?: number;
                 /** @description 取得するフィールド */
                 fields?: string[];
             };
@@ -18288,82 +10290,6 @@ export interface operations {
             };
             /** @description 商品が存在しない */
             404: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["Error"];
-                };
-            };
-        };
-    };
-    updateProductPrices: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path: {
-                /** @description 商品ID */
-                id: number;
-            };
-            cookie?: never;
-        };
-        requestBody: {
-            content: {
-                "application/json": {
-                    items?: components["schemas"]["ProductPrice"][];
-                };
-            };
-        };
-        responses: {
-            /** @description 商品価格情報の更新に成功 */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": {
-                        items?: components["schemas"]["ProductPrice"][];
-                    };
-                };
-            };
-            /** @description リクエストパラメータが不正 */
-            400: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["Error"];
-                };
-            };
-            /** @description 認証エラー */
-            401: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["Error"];
-                };
-            };
-            /** @description 権限エラー */
-            403: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["Error"];
-                };
-            };
-            /** @description 商品が存在しない */
-            404: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["Error"];
-                };
-            };
-            /** @description 既存データとの競合エラー */
-            409: {
                 headers: {
                     [name: string]: unknown;
                 };
@@ -18448,10 +10374,8 @@ export interface operations {
     getProductPriceChanges: {
         parameters: {
             query?: {
-                /** @description 店舗ID */
-                storeId?: number;
-                /** @description 価格区分 */
-                priceDivision?: number;
+                /** @description 価格区分(1：商品単価、2：会員価格、3：原価、4：商品単価詳細、5：会員価格詳細) */
+                price_division?: "1" | "2" | "3" | "4" | "5";
                 /** @description 取得件数 */
                 limit?: number;
                 /** @description ページ番号 */
@@ -18523,9 +10447,87 @@ export interface operations {
             };
         };
     };
+    deleteProductPrice: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                /** @description 商品ID */
+                product_id: number;
+                /** @description 価格区分 */
+                price_division: number;
+                /** @description 店舗ID */
+                store_id: number;
+                /** @description 適用開始日(YYYY-MM-DD形式) */
+                start_date: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description 商品価格情報の削除に成功 */
+            204: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description リクエストパラメータが不正 */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+            /** @description 認証エラー */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+            /** @description 権限エラー */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+            /** @description 商品価格情報が存在しない */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+            /** @description 削除できない状態（他のデータから参照されているなど） */
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+        };
+    };
     getProductReserveItems: {
         parameters: {
             query?: {
+                /** @description 取得件数 */
+                limit?: number;
+                /** @description ページ番号 */
+                page?: number;
+                /** @description ソート順 */
+                sort?: "no";
                 /** @description 取得するフィールド */
                 fields?: string[];
             };
@@ -18589,154 +10591,6 @@ export interface operations {
             };
         };
     };
-    updateProductReserveItems: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path: {
-                /** @description 商品ID */
-                id: number;
-            };
-            cookie?: never;
-        };
-        requestBody: {
-            content: {
-                "application/json": {
-                    items?: components["schemas"]["ProductReserveItem"][];
-                };
-            };
-        };
-        responses: {
-            /** @description 商品予約項目情報の更新に成功 */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": {
-                        items?: components["schemas"]["ProductReserveItem"][];
-                    };
-                };
-            };
-            /** @description リクエストパラメータが不正 */
-            400: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["Error"];
-                };
-            };
-            /** @description 認証エラー */
-            401: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["Error"];
-                };
-            };
-            /** @description 権限エラー */
-            403: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["Error"];
-                };
-            };
-            /** @description 商品が存在しない */
-            404: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["Error"];
-                };
-            };
-            /** @description 既存データとの競合エラー */
-            409: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["Error"];
-                };
-            };
-        };
-    };
-    createProductReserveItem: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path: {
-                /** @description 商品ID */
-                id: number;
-            };
-            cookie?: never;
-        };
-        requestBody: {
-            content: {
-                "application/json": components["schemas"]["ProductReserveItem"];
-            };
-        };
-        responses: {
-            /** @description 商品予約項目の登録に成功 */
-            201: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["ProductReserveItem"];
-                };
-            };
-            /** @description リクエストパラメータが不正 */
-            400: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["Error"];
-                };
-            };
-            /** @description 認証エラー */
-            401: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["Error"];
-                };
-            };
-            /** @description 権限エラー */
-            403: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["Error"];
-                };
-            };
-            /** @description 商品が存在しない */
-            404: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["Error"];
-                };
-            };
-            /** @description 既存データとの競合エラー */
-            409: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["Error"];
-                };
-            };
-        };
-    };
     getProductAttributes: {
         parameters: {
             query?: {
@@ -18744,10 +10598,6 @@ export interface operations {
                 limit?: number;
                 /** @description ページ番号 */
                 page?: number;
-                /** @description 属性番号 */
-                attributeNo?: number;
-                /** @description 属性名称 */
-                attributeName?: string;
                 /** @description 取得するフィールド */
                 fields?: string[];
             };
@@ -18870,12 +10720,10 @@ export interface operations {
                 limit?: number;
                 /** @description ページ番号 */
                 page?: number;
-                /** @description 属性番号 */
-                attributeNo?: number;
-                /** @description 属性項目コード */
-                attributeItemCode?: string;
-                /** @description 属性項目名称 */
-                attributeItemName?: string;
+                /** @description 項目番号：商品属性に付与されている連番 */
+                no?: number;
+                /** @description コード：商品属性項目を一意にする項目 */
+                code?: string;
                 /** @description 取得するフィールド */
                 fields?: string[];
             };
@@ -18991,11 +10839,287 @@ export interface operations {
             };
         };
     };
+    updateProductAttribute: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                /** @description 属性番号 */
+                no: number;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["ProductAttribute"];
+            };
+        };
+        responses: {
+            /** @description 商品属性の更新に成功 */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ProductAttribute"];
+                };
+            };
+            /** @description リクエストパラメータが不正 */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+            /** @description 認証エラー */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+            /** @description 権限エラー */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+            /** @description 商品属性が存在しない */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+            /** @description 既存データとの競合エラー */
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+        };
+    };
+    deleteProductAttribute: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                /** @description 属性番号 */
+                no: number;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description 商品属性の削除に成功 */
+            204: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description リクエストパラメータが不正 */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+            /** @description 認証エラー */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+            /** @description 権限エラー */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+            /** @description 商品属性が存在しない */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+            /** @description 削除できない状態（他のデータから参照されているなど） */
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+        };
+    };
+    deleteProductAttributeItem: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                /** @description 属性項目コード */
+                code: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description 商品属性項目の削除に成功 */
+            204: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description リクエストパラメータが不正 */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+            /** @description 認証エラー */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+            /** @description 権限エラー */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+            /** @description 商品属性項目が存在しない */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+            /** @description 削除できない状態（他のデータから参照されているなど） */
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+        };
+    };
+    updateProductAttributeItem: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                /** @description 属性項目コード */
+                code: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["ProductAttributeItem"];
+            };
+        };
+        responses: {
+            /** @description 商品属性項目の更新に成功 */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ProductAttributeItem"];
+                };
+            };
+            /** @description リクエストパラメータが不正 */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+            /** @description 認証エラー */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+            /** @description 権限エラー */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+            /** @description 商品属性項目が存在しない */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+            /** @description 既存データとの競合エラー */
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+        };
+    };
     getProductStores: {
         parameters: {
             query?: {
                 /** @description 店舗ID */
-                storeId?: number;
+                store_id?: number;
                 /** @description 取得するフィールド */
                 fields?: string[];
             };
@@ -19210,8 +11334,6 @@ export interface operations {
     getProductInventoryReservations: {
         parameters: {
             query?: {
-                /** @description 引当商品ID */
-                reservationProductId?: number;
                 /** @description 取得するフィールド */
                 fields?: string[];
             };
@@ -19423,6 +11545,74 @@ export interface operations {
             };
         };
     };
+    deleteProductInventoryReservation: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                /** @description 商品ID */
+                id: number;
+                /** @description 引当商品ID */
+                reservation_product_id: number;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description 商品の在庫引当情報の削除に成功 */
+            204: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description リクエストパラメータが不正 */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+            /** @description 認証エラー */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+            /** @description 権限エラー */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+            /** @description 商品または在庫引当情報が存在しない */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+            /** @description 削除できない状態（他のデータから参照されているなど） */
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+        };
+    };
     getProductReserveItemLabels: {
         parameters: {
             query?: {
@@ -19430,8 +11620,6 @@ export interface operations {
                 limit?: number;
                 /** @description ページ番号 */
                 page?: number;
-                /** @description 予約項目ラベル番号 */
-                no?: number;
                 /** @description 予約項目ラベル名 */
                 name?: string;
                 /** @description 取得するフィールド */
@@ -19549,6 +11737,212 @@ export interface operations {
             };
         };
     };
+    deleteProductReserveItem: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                /** @description 商品ID */
+                product_id: number;
+                /** @description 予約項目番号 */
+                no: number;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description 商品予約項目の削除に成功 */
+            204: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description リクエストパラメータが不正 */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+            /** @description 認証エラー */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+            /** @description 権限エラー */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+            /** @description 商品または予約項目が存在しない */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+            /** @description 削除できない状態（他のデータから参照されているなど） */
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+        };
+    };
+    updateProductReserveItemLabel: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                /** @description 予約項目ラベル番号 */
+                no: number;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["ProductReserveItemLabel"];
+            };
+        };
+        responses: {
+            /** @description 予約項目ラベルの更新に成功 */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ProductReserveItemLabel"];
+                };
+            };
+            /** @description リクエストパラメータが不正 */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+            /** @description 認証エラー */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+            /** @description 権限エラー */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+            /** @description 予約項目ラベルが存在しない */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+            /** @description 既存データとの競合エラー */
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+        };
+    };
+    deleteProductReserveItemLabel: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                /** @description 予約項目ラベル番号 */
+                no: number;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description 予約項目ラベルの削除に成功 */
+            204: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description リクエストパラメータが不正 */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+            /** @description 認証エラー */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+            /** @description 権限エラー */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+            /** @description 予約項目ラベルが存在しない */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+            /** @description 削除できない状態（他のデータから参照されているなど） */
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+        };
+    };
     getProductImages: {
         parameters: {
             query?: {
@@ -19557,7 +11951,7 @@ export interface operations {
                 /** @description ページ番号 */
                 page?: number;
                 /** @description 商品ID */
-                productId?: number;
+                product_id?: number;
                 /** @description 取得するフィールド */
                 fields?: string[];
             };
@@ -19682,66 +12076,6 @@ export interface operations {
             };
             /** @description サポートされていないファイル形式 */
             415: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["Error"];
-                };
-            };
-        };
-    };
-    getProductImage: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path: {
-                /** @description 商品ID */
-                id: number;
-            };
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            /** @description 商品メイン画像を返却 */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "image/jpeg": string;
-                    "image/png": string;
-                };
-            };
-            /** @description リクエストパラメータが不正 */
-            400: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["Error"];
-                };
-            };
-            /** @description 認証エラー */
-            401: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["Error"];
-                };
-            };
-            /** @description 権限エラー */
-            403: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["Error"];
-                };
-            };
-            /** @description 商品またはメイン画像が存在しない */
-            404: {
                 headers: {
                     [name: string]: unknown;
                 };
@@ -19885,66 +12219,6 @@ export interface operations {
                 };
             };
             /** @description 商品またはメイン画像が存在しない */
-            404: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["Error"];
-                };
-            };
-        };
-    };
-    getProductIconImage: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path: {
-                /** @description 商品ID */
-                id: number;
-            };
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            /** @description 商品アイコン画像を返却 */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "image/jpeg": string;
-                    "image/png": string;
-                };
-            };
-            /** @description リクエストパラメータが不正 */
-            400: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["Error"];
-                };
-            };
-            /** @description 認証エラー */
-            401: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["Error"];
-                };
-            };
-            /** @description 権限エラー */
-            403: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["Error"];
-                };
-            };
-            /** @description 商品またはアイコン画像が存在しない */
             404: {
                 headers: {
                     [name: string]: unknown;
@@ -20099,1109 +12373,25 @@ export interface operations {
             };
         };
     };
-    deleteProductPrice: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path: {
-                /** @description 商品ID */
-                product_id: number;
-                /** @description 価格区分 */
-                price_division: number;
-                /** @description 店舗ID */
-                store_id: number;
-                /** @description 適用開始日(YYYY-MM-DD形式) */
-                start_date: string;
-            };
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            /** @description 商品価格情報の削除に成功 */
-            204: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content?: never;
-            };
-            /** @description リクエストパラメータが不正 */
-            400: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["Error"];
-                };
-            };
-            /** @description 認証エラー */
-            401: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["Error"];
-                };
-            };
-            /** @description 権限エラー */
-            403: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["Error"];
-                };
-            };
-            /** @description 商品価格情報が存在しない */
-            404: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["Error"];
-                };
-            };
-            /** @description 削除できない状態（他のデータから参照されているなど） */
-            409: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["Error"];
-                };
-            };
-        };
-    };
-    getProductReserveItem: {
-        parameters: {
-            query?: {
-                /** @description 取得するフィールド */
-                fields?: string[];
-            };
-            header?: never;
-            path: {
-                /** @description 商品ID */
-                product_id: number;
-                /** @description 予約項目番号 */
-                no: number;
-            };
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            /** @description 商品の予約項目情報を返却 */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["ProductReserveItem"];
-                };
-            };
-            /** @description リクエストパラメータが不正 */
-            400: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["Error"];
-                };
-            };
-            /** @description 認証エラー */
-            401: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["Error"];
-                };
-            };
-            /** @description 権限エラー */
-            403: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["Error"];
-                };
-            };
-            /** @description 商品または予約項目が存在しない */
-            404: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["Error"];
-                };
-            };
-        };
-    };
-    updateProductReserveItem: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path: {
-                /** @description 商品ID */
-                product_id: number;
-                /** @description 予約項目番号 */
-                no: number;
-            };
-            cookie?: never;
-        };
-        requestBody: {
-            content: {
-                "application/json": components["schemas"]["ProductReserveItem"];
-            };
-        };
-        responses: {
-            /** @description 商品予約項目の更新に成功 */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["ProductReserveItem"];
-                };
-            };
-            /** @description リクエストパラメータが不正 */
-            400: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["Error"];
-                };
-            };
-            /** @description 認証エラー */
-            401: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["Error"];
-                };
-            };
-            /** @description 権限エラー */
-            403: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["Error"];
-                };
-            };
-            /** @description 商品または予約項目が存在しない */
-            404: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["Error"];
-                };
-            };
-            /** @description 既存データとの競合エラー */
-            409: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["Error"];
-                };
-            };
-        };
-    };
-    deleteProductReserveItem: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path: {
-                /** @description 商品ID */
-                product_id: number;
-                /** @description 予約項目番号 */
-                no: number;
-            };
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            /** @description 商品予約項目の削除に成功 */
-            204: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content?: never;
-            };
-            /** @description リクエストパラメータが不正 */
-            400: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["Error"];
-                };
-            };
-            /** @description 認証エラー */
-            401: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["Error"];
-                };
-            };
-            /** @description 権限エラー */
-            403: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["Error"];
-                };
-            };
-            /** @description 商品または予約項目が存在しない */
-            404: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["Error"];
-                };
-            };
-            /** @description 削除できない状態（他のデータから参照されているなど） */
-            409: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["Error"];
-                };
-            };
-        };
-    };
-    getProductAttribute: {
-        parameters: {
-            query?: {
-                /** @description 取得するフィールド */
-                fields?: string[];
-            };
-            header?: never;
-            path: {
-                /** @description 属性番号 */
-                no: number;
-            };
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            /** @description 商品属性情報を返却 */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["ProductAttribute"];
-                };
-            };
-            /** @description リクエストパラメータが不正 */
-            400: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["Error"];
-                };
-            };
-            /** @description 認証エラー */
-            401: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["Error"];
-                };
-            };
-            /** @description 権限エラー */
-            403: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["Error"];
-                };
-            };
-            /** @description 商品属性が存在しない */
-            404: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["Error"];
-                };
-            };
-        };
-    };
-    updateProductAttribute: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path: {
-                /** @description 属性番号 */
-                no: number;
-            };
-            cookie?: never;
-        };
-        requestBody: {
-            content: {
-                "application/json": components["schemas"]["ProductAttribute"];
-            };
-        };
-        responses: {
-            /** @description 商品属性の更新に成功 */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["ProductAttribute"];
-                };
-            };
-            /** @description リクエストパラメータが不正 */
-            400: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["Error"];
-                };
-            };
-            /** @description 認証エラー */
-            401: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["Error"];
-                };
-            };
-            /** @description 権限エラー */
-            403: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["Error"];
-                };
-            };
-            /** @description 商品属性が存在しない */
-            404: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["Error"];
-                };
-            };
-            /** @description 既存データとの競合エラー */
-            409: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["Error"];
-                };
-            };
-        };
-    };
-    deleteProductAttribute: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path: {
-                /** @description 属性番号 */
-                no: number;
-            };
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            /** @description 商品属性の削除に成功 */
-            204: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content?: never;
-            };
-            /** @description リクエストパラメータが不正 */
-            400: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["Error"];
-                };
-            };
-            /** @description 認証エラー */
-            401: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["Error"];
-                };
-            };
-            /** @description 権限エラー */
-            403: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["Error"];
-                };
-            };
-            /** @description 商品属性が存在しない */
-            404: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["Error"];
-                };
-            };
-            /** @description 削除できない状態（他のデータから参照されているなど） */
-            409: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["Error"];
-                };
-            };
-        };
-    };
-    getProductAttributeItem: {
-        parameters: {
-            query?: {
-                /** @description 取得するフィールド */
-                fields?: string[];
-            };
-            header?: never;
-            path: {
-                /** @description 属性項目コード */
-                code: string;
-            };
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            /** @description 商品属性項目情報を返却 */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["ProductAttributeItem"];
-                };
-            };
-            /** @description リクエストパラメータが不正 */
-            400: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["Error"];
-                };
-            };
-            /** @description 認証エラー */
-            401: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["Error"];
-                };
-            };
-            /** @description 権限エラー */
-            403: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["Error"];
-                };
-            };
-            /** @description 商品属性項目が存在しない */
-            404: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["Error"];
-                };
-            };
-        };
-    };
-    updateProductAttributeItem: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path: {
-                /** @description 属性項目コード */
-                code: string;
-            };
-            cookie?: never;
-        };
-        requestBody: {
-            content: {
-                "application/json": components["schemas"]["ProductAttributeItem"];
-            };
-        };
-        responses: {
-            /** @description 商品属性項目の更新に成功 */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["ProductAttributeItem"];
-                };
-            };
-            /** @description リクエストパラメータが不正 */
-            400: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["Error"];
-                };
-            };
-            /** @description 認証エラー */
-            401: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["Error"];
-                };
-            };
-            /** @description 権限エラー */
-            403: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["Error"];
-                };
-            };
-            /** @description 商品属性項目が存在しない */
-            404: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["Error"];
-                };
-            };
-            /** @description 既存データとの競合エラー */
-            409: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["Error"];
-                };
-            };
-        };
-    };
-    deleteProductAttributeItem: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path: {
-                /** @description 属性項目コード */
-                code: string;
-            };
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            /** @description 商品属性項目の削除に成功 */
-            204: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content?: never;
-            };
-            /** @description リクエストパラメータが不正 */
-            400: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["Error"];
-                };
-            };
-            /** @description 認証エラー */
-            401: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["Error"];
-                };
-            };
-            /** @description 権限エラー */
-            403: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["Error"];
-                };
-            };
-            /** @description 商品属性項目が存在しない */
-            404: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["Error"];
-                };
-            };
-            /** @description 削除できない状態（他のデータから参照されているなど） */
-            409: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["Error"];
-                };
-            };
-        };
-    };
-    getProductInventoryReservation: {
-        parameters: {
-            query?: {
-                /** @description 取得するフィールド */
-                fields?: string[];
-            };
-            header?: never;
-            path: {
-                /** @description 商品ID */
-                id: number;
-                /** @description 引当商品ID */
-                reservation_product_id: number;
-            };
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            /** @description 商品の在庫引当情報を返却 */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["ProductInventoryReservation"];
-                };
-            };
-            /** @description リクエストパラメータが不正 */
-            400: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["Error"];
-                };
-            };
-            /** @description 認証エラー */
-            401: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["Error"];
-                };
-            };
-            /** @description 権限エラー */
-            403: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["Error"];
-                };
-            };
-            /** @description 商品または在庫引当情報が存在しない */
-            404: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["Error"];
-                };
-            };
-        };
-    };
-    updateProductInventoryReservation: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path: {
-                /** @description 商品ID */
-                id: number;
-                /** @description 引当商品ID */
-                reservation_product_id: number;
-            };
-            cookie?: never;
-        };
-        requestBody: {
-            content: {
-                "application/json": components["schemas"]["ProductInventoryReservation"];
-            };
-        };
-        responses: {
-            /** @description 商品の在庫引当情報の更新に成功 */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["ProductInventoryReservation"];
-                };
-            };
-            /** @description リクエストパラメータが不正 */
-            400: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["Error"];
-                };
-            };
-            /** @description 認証エラー */
-            401: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["Error"];
-                };
-            };
-            /** @description 権限エラー */
-            403: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["Error"];
-                };
-            };
-            /** @description 商品または在庫引当情報が存在しない */
-            404: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["Error"];
-                };
-            };
-            /** @description 既存データとの競合エラー */
-            409: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["Error"];
-                };
-            };
-        };
-    };
-    deleteProductInventoryReservation: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path: {
-                /** @description 商品ID */
-                id: number;
-                /** @description 引当商品ID */
-                reservation_product_id: number;
-            };
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            /** @description 商品の在庫引当情報の削除に成功 */
-            204: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content?: never;
-            };
-            /** @description リクエストパラメータが不正 */
-            400: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["Error"];
-                };
-            };
-            /** @description 認証エラー */
-            401: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["Error"];
-                };
-            };
-            /** @description 権限エラー */
-            403: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["Error"];
-                };
-            };
-            /** @description 商品または在庫引当情報が存在しない */
-            404: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["Error"];
-                };
-            };
-            /** @description 削除できない状態（他のデータから参照されているなど） */
-            409: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["Error"];
-                };
-            };
-        };
-    };
-    getProductReserveItemLabel: {
-        parameters: {
-            query?: {
-                /** @description 取得するフィールド */
-                fields?: string[];
-            };
-            header?: never;
-            path: {
-                /** @description 予約項目ラベル番号 */
-                no: number;
-            };
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            /** @description 予約項目ラベル情報を返却 */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["ProductReserveItemLabel"];
-                };
-            };
-            /** @description リクエストパラメータが不正 */
-            400: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["Error"];
-                };
-            };
-            /** @description 認証エラー */
-            401: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["Error"];
-                };
-            };
-            /** @description 権限エラー */
-            403: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["Error"];
-                };
-            };
-            /** @description 予約項目ラベルが存在しない */
-            404: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["Error"];
-                };
-            };
-        };
-    };
-    updateProductReserveItemLabel: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path: {
-                /** @description 予約項目ラベル番号 */
-                no: number;
-            };
-            cookie?: never;
-        };
-        requestBody: {
-            content: {
-                "application/json": components["schemas"]["ProductReserveItemLabel"];
-            };
-        };
-        responses: {
-            /** @description 予約項目ラベルの更新に成功 */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["ProductReserveItemLabel"];
-                };
-            };
-            /** @description リクエストパラメータが不正 */
-            400: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["Error"];
-                };
-            };
-            /** @description 認証エラー */
-            401: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["Error"];
-                };
-            };
-            /** @description 権限エラー */
-            403: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["Error"];
-                };
-            };
-            /** @description 予約項目ラベルが存在しない */
-            404: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["Error"];
-                };
-            };
-            /** @description 既存データとの競合エラー */
-            409: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["Error"];
-                };
-            };
-        };
-    };
-    deleteProductReserveItemLabel: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path: {
-                /** @description 予約項目ラベル番号 */
-                no: number;
-            };
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            /** @description 予約項目ラベルの削除に成功 */
-            204: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content?: never;
-            };
-            /** @description リクエストパラメータが不正 */
-            400: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["Error"];
-                };
-            };
-            /** @description 認証エラー */
-            401: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["Error"];
-                };
-            };
-            /** @description 権限エラー */
-            403: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["Error"];
-                };
-            };
-            /** @description 予約項目ラベルが存在しない */
-            404: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["Error"];
-                };
-            };
-            /** @description 削除できない状態（他のデータから参照されているなど） */
-            409: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["Error"];
-                };
-            };
-        };
-    };
     getStocks: {
         parameters: {
             query?: {
-                /** @description 店舗ID */
-                store_id?: number;
-                /** @description 商品ID */
-                product_id?: number;
-                /** @description 商品コード */
-                product_code?: string;
-                /** @description 商品名 */
-                product_name?: string;
-                /** @description 部門ID */
-                category_id?: number;
-                /** @description バーコード */
-                barcode?: string;
                 /** @description 取得件数 */
                 limit?: number;
                 /** @description ページ番号 */
                 page?: number;
+                /** @description 店舗ID */
+                store_id?: number;
+                /** @description 商品ID */
+                product_id?: number;
+                /** @description 更新日時(from)：登録時・更新時の日時。[YYYY-MM-DDThh:mm:ssTZD]
+                 *     ※ From〜Toの期間は最大31日までの指定でご利用ください
+                 *      */
+                "upd_date_time-from"?: string;
+                /** @description 更新日時(to)：登録時・更新時の日時。[YYYY-MM-DDThh:mm:ssTZD]
+                 *     ※ From〜Toの期間は最大31日までの指定でご利用ください
+                 *      */
+                "upd_date_time-to"?: string;
             };
             header?: never;
             path?: never;
@@ -21241,14 +12431,17 @@ export interface operations {
             };
         };
     };
-    updateStock: {
+    patchProductStock: {
         parameters: {
             query?: never;
             header?: never;
-            path?: never;
+            path: {
+                /** @description 商品ID */
+                product_id: number;
+            };
             cookie?: never;
         };
-        requestBody: {
+        requestBody?: {
             content: {
                 "application/json": components["schemas"]["StockUpdate"];
             };
@@ -21259,7 +12452,54 @@ export interface operations {
                 headers: {
                     [name: string]: unknown;
                 };
-                content?: never;
+                content: {
+                    "application/json": components["schemas"]["StockUpdate"];
+                };
+            };
+            /** @description バリデーションエラー */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+            /** @description 認証エラー */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+        };
+    };
+    updateStockRelative: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                /** @description 商品ID */
+                product_id: number;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["StockRelativeUpdate"];
+            };
+        };
+        responses: {
+            /** @description 成功 */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["StockUpdate"];
+                };
             };
             /** @description バリデーションエラー */
             400: {
@@ -21293,81 +12533,27 @@ export interface operations {
     getStockChanges: {
         parameters: {
             query?: {
-                /** @description 店舗ID */
-                store_id?: number;
-                /** @description 商品ID */
-                product_id?: number;
-                /** @description 商品コード */
-                product_code?: string;
-                /** @description 商品名 */
-                product_name?: string;
-                /** @description 変動区分（1:取引、2:入庫、3:出庫、4:棚卸、5:発注、6:受注、7:ロス、8:その他） */
-                division?: number;
-                /** @description 変動日（FROM）（Y-m-d） */
-                target_date_from?: string;
-                /** @description 変動日（TO）（Y-m-d） */
-                target_date_to?: string;
                 /** @description 取得件数 */
                 limit?: number;
                 /** @description ページ番号 */
                 page?: number;
-            };
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            /** @description 成功 */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": {
-                        stockChanges?: components["schemas"]["StockChange"][];
-                        pagination?: components["schemas"]["Pagination"];
-                    };
-                };
-            };
-            /** @description バリデーションエラー */
-            400: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["Error"];
-                };
-            };
-            /** @description 認証エラー */
-            401: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["Error"];
-                };
-            };
-        };
-    };
-    getStoreProductPrices: {
-        parameters: {
-            query?: {
-                /** @description 商品ID */
-                productId?: number;
-                /** @description 価格区分 (1:商品単価、2:会員単価) */
-                priceDivision?: 1 | 2;
-                /** @description 適用開始日 */
-                startDate?: string;
-                /** @description 取得件数 */
-                limit?: number;
-                /** @description ページ番号 */
-                page?: number;
-                /** @description 取得するフィールド */
-                fields?: string[];
+                /** @description 在庫変動履歴ID */
+                id?: number;
+                /** @description 対象日：在庫履歴集計画面用に日付を保持する。 入庫と入荷の時は検品日を設定する。 */
+                target_date?: string;
+                /** @description 在庫数：処理後の在庫数 */
+                stock_amount?: number;
+                /** @description 在庫区分：在庫を更新理由となる区分 (01:修正、02:売上、03:仕入、04:出庫、05:入庫、06:レンタル、07:取置き、08:棚卸、09:調整、10:出荷、12:返品、13:販促品、14:ロス、15:スマレジAPI連携、16:売上引当、17:入庫欠品、18:受注在庫引当) */
+                stock_division?: "01" | "02" | "03" | "04" | "05" | "06" | "07" | "08" | "09" | "10" | "12" | "13" | "14" | "15" | "16" | "17" | "18";
+                /** @description 配送元店舗ID：入出庫時の配送元店舗の店舗ID */
+                from_store_id?: number;
+                /** @description 配送先店舗ID：入出庫時の配送先店舗の店舗ID */
+                to_store_id?: number;
             };
             header?: never;
             path: {
+                /** @description 商品ID */
+                product_id: number;
                 /** @description 店舗ID */
                 store_id: number;
             };
@@ -21375,173 +12561,13 @@ export interface operations {
         };
         requestBody?: never;
         responses: {
-            /** @description 店舗の商品価格一覧を返却 */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": {
-                        items?: components["schemas"]["ProductPrice"][];
-                        /** @description 総件数 */
-                        total?: number;
-                        /** @description 取得件数 */
-                        limit?: number;
-                        /** @description ページ番号 */
-                        page?: number;
-                    };
-                };
-            };
-            /** @description リクエストパラメータが不正 */
-            400: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["Error"];
-                };
-            };
-            /** @description 認証エラー */
-            401: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["Error"];
-                };
-            };
-            /** @description 権限エラー */
-            403: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["Error"];
-                };
-            };
-            /** @description 店舗が存在しない */
-            404: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["Error"];
-                };
-            };
-        };
-    };
-    createOrUpdateStoreProductPrice: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path: {
-                /** @description 店舗ID */
-                store_id: number;
-            };
-            cookie?: never;
-        };
-        requestBody: {
-            content: {
-                "application/json": {
-                    items: components["schemas"]["ProductPrice"][];
-                };
-            };
-        };
-        responses: {
-            /** @description 商品価格情報の登録・更新に成功 */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": {
-                        items?: components["schemas"]["ProductPrice"][];
-                    };
-                };
-            };
-            /** @description リクエストパラメータが不正 */
-            400: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["Error"];
-                };
-            };
-            /** @description 認証エラー */
-            401: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["Error"];
-                };
-            };
-            /** @description 権限エラー */
-            403: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["Error"];
-                };
-            };
-            /** @description 店舗が存在しない */
-            404: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["Error"];
-                };
-            };
-            /** @description 既存データとの競合エラー */
-            409: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["Error"];
-                };
-            };
-        };
-    };
-    getCoupons: {
-        parameters: {
-            query?: {
-                /** @description クーポンID */
-                coupon_id?: number;
-                /** @description クーポン名 */
-                coupon_name?: string;
-                /** @description 開始日（FROM）（YYYY-MM-DD） */
-                start_date_from?: string;
-                /** @description 開始日（TO）（YYYY-MM-DD） */
-                start_date_to?: string;
-                /** @description 終了日（FROM）（YYYY-MM-DD） */
-                end_date_from?: string;
-                /** @description 終了日（TO）（YYYY-MM-DD） */
-                end_date_to?: string;
-                /** @description 取得件数 */
-                limit?: number;
-                /** @description ページ番号 */
-                page?: number;
-            };
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
             /** @description 成功 */
             200: {
                 headers: {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json": {
-                        couponInfos?: components["schemas"]["Coupon"][];
-                        pagination?: components["schemas"]["Pagination"];
-                    };
+                    "application/json": components["schemas"]["StockChange"][];
                 };
             };
             /** @description バリデーションエラー */
@@ -21562,2175 +12588,7 @@ export interface operations {
                     "application/json": components["schemas"]["Error"];
                 };
             };
-        };
-    };
-    createCoupon: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        requestBody: {
-            content: {
-                "application/json": components["schemas"]["CouponCreate"];
-            };
-        };
-        responses: {
-            /** @description 成功 */
-            201: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": {
-                        /** @description クーポンID */
-                        id?: number;
-                    };
-                };
-            };
-            /** @description バリデーションエラー */
-            400: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["Error"];
-                };
-            };
-            /** @description 認証エラー */
-            401: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["Error"];
-                };
-            };
-        };
-    };
-    getCoupon: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path: {
-                /** @description クーポンID */
-                id: number;
-            };
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            /** @description 成功 */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["Coupon"];
-                };
-            };
-            /** @description 認証エラー */
-            401: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["Error"];
-                };
-            };
-            /** @description 指定されたIDのクーポンが存在しない */
-            404: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["Error"];
-                };
-            };
-        };
-    };
-    deleteCoupon: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path: {
-                /** @description クーポンID */
-                id: number;
-            };
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            /** @description 成功 */
-            204: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content?: never;
-            };
-            /** @description 認証エラー */
-            401: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["Error"];
-                };
-            };
-            /** @description 指定されたIDのクーポンが存在しない */
-            404: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["Error"];
-                };
-            };
-        };
-    };
-    updateCoupon: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path: {
-                /** @description クーポンID */
-                id: number;
-            };
-            cookie?: never;
-        };
-        requestBody: {
-            content: {
-                "application/json": components["schemas"]["CouponUpdate"];
-            };
-        };
-        responses: {
-            /** @description 成功 */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content?: never;
-            };
-            /** @description バリデーションエラー */
-            400: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["Error"];
-                };
-            };
-            /** @description 認証エラー */
-            401: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["Error"];
-                };
-            };
-            /** @description 指定されたIDのクーポンが存在しない */
-            404: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["Error"];
-                };
-            };
-        };
-    };
-    getCouponProducts: {
-        parameters: {
-            query?: {
-                /** @description 取得件数 */
-                limit?: number;
-                /** @description ページ番号 */
-                page?: number;
-            };
-            header?: never;
-            path: {
-                /** @description クーポンID */
-                id: number;
-            };
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            /** @description 成功 */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": {
-                        couponProducts?: components["schemas"]["CouponProduct"][];
-                        pagination?: components["schemas"]["Pagination"];
-                    };
-                };
-            };
-            /** @description 認証エラー */
-            401: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["Error"];
-                };
-            };
-            /** @description 指定されたIDのクーポンが存在しない */
-            404: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["Error"];
-                };
-            };
-        };
-    };
-    createCouponProduct: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path: {
-                /** @description クーポンID */
-                id: number;
-            };
-            cookie?: never;
-        };
-        requestBody: {
-            content: {
-                "application/json": components["schemas"]["CouponProductCreate"];
-            };
-        };
-        responses: {
-            /** @description 成功 */
-            201: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": {
-                        /** @description クーポン適用商品ID */
-                        id?: number;
-                    };
-                };
-            };
-            /** @description バリデーションエラー */
-            400: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["Error"];
-                };
-            };
-            /** @description 認証エラー */
-            401: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["Error"];
-                };
-            };
-            /** @description 指定されたIDのクーポンが存在しない */
-            404: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["Error"];
-                };
-            };
-        };
-    };
-    getCouponProduct: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path: {
-                /** @description クーポンID */
-                id: number;
-                /** @description クーポン適用商品ID */
-                couponProductId: number;
-            };
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            /** @description 成功 */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["CouponProduct"];
-                };
-            };
-            /** @description 認証エラー */
-            401: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["Error"];
-                };
-            };
-            /** @description 指定されたIDのクーポンまたはクーポン適用商品が存在しない */
-            404: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["Error"];
-                };
-            };
-        };
-    };
-    deleteCouponProduct: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path: {
-                /** @description クーポンID */
-                id: number;
-                /** @description クーポン適用商品ID */
-                couponProductId: number;
-            };
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            /** @description 成功 */
-            204: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content?: never;
-            };
-            /** @description 認証エラー */
-            401: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["Error"];
-                };
-            };
-            /** @description 指定されたIDのクーポンまたはクーポン適用商品が存在しない */
-            404: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["Error"];
-                };
-            };
-        };
-    };
-    updateCouponProduct: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path: {
-                /** @description クーポンID */
-                id: number;
-                /** @description クーポン適用商品ID */
-                couponProductId: number;
-            };
-            cookie?: never;
-        };
-        requestBody: {
-            content: {
-                "application/json": components["schemas"]["CouponProductUpdate"];
-            };
-        };
-        responses: {
-            /** @description 成功 */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content?: never;
-            };
-            /** @description バリデーションエラー */
-            400: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["Error"];
-                };
-            };
-            /** @description 認証エラー */
-            401: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["Error"];
-                };
-            };
-            /** @description 指定されたIDのクーポンまたはクーポン適用商品が存在しない */
-            404: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["Error"];
-                };
-            };
-        };
-    };
-    getIncomingStocks: {
-        parameters: {
-            query?: {
-                /** @description 入庫ID */
-                incoming_stock_id?: number;
-                /** @description 店舗ID */
-                store_id?: number;
-                /** @description 入庫区分（1:仕入、2:店舗間移動、3:返品） */
-                division?: number;
-                /** @description 入庫ステータス（1:計画中、2:確定済） */
-                status?: number;
-                /** @description 入庫日（FROM）（Y-m-d） */
-                target_date_from?: string;
-                /** @description 入庫日（TO）（Y-m-d） */
-                target_date_to?: string;
-                /** @description 取得件数 */
-                limit?: number;
-                /** @description ページ番号 */
-                page?: number;
-            };
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            /** @description 成功 */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": {
-                        incomingStocks?: components["schemas"]["IncomingStock"][];
-                        pagination?: components["schemas"]["Pagination"];
-                    };
-                };
-            };
-            /** @description バリデーションエラー */
-            400: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["Error"];
-                };
-            };
-            /** @description 認証エラー */
-            401: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["Error"];
-                };
-            };
-        };
-    };
-    createIncomingStock: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        requestBody: {
-            content: {
-                "application/json": components["schemas"]["IncomingStockCreate"];
-            };
-        };
-        responses: {
-            /** @description 成功 */
-            201: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": {
-                        /** @description 入庫ID */
-                        id?: number;
-                    };
-                };
-            };
-            /** @description バリデーションエラー */
-            400: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["Error"];
-                };
-            };
-            /** @description 認証エラー */
-            401: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["Error"];
-                };
-            };
-        };
-    };
-    getIncomingStock: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path: {
-                /** @description 入庫ID */
-                id: number;
-            };
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            /** @description 成功 */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["IncomingStock"];
-                };
-            };
-            /** @description 認証エラー */
-            401: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["Error"];
-                };
-            };
-            /** @description 指定されたIDの入庫情報が存在しない */
-            404: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["Error"];
-                };
-            };
-        };
-    };
-    deleteIncomingStock: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path: {
-                /** @description 入庫ID */
-                id: number;
-            };
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            /** @description 成功 */
-            204: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content?: never;
-            };
-            /** @description 認証エラー */
-            401: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["Error"];
-                };
-            };
-            /** @description 指定されたIDの入庫情報が存在しない */
-            404: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["Error"];
-                };
-            };
-        };
-    };
-    updateIncomingStock: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path: {
-                /** @description 入庫ID */
-                id: number;
-            };
-            cookie?: never;
-        };
-        requestBody: {
-            content: {
-                "application/json": components["schemas"]["IncomingStockUpdate"];
-            };
-        };
-        responses: {
-            /** @description 成功 */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content?: never;
-            };
-            /** @description バリデーションエラー */
-            400: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["Error"];
-                };
-            };
-            /** @description 認証エラー */
-            401: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["Error"];
-                };
-            };
-            /** @description 指定されたIDの入庫情報が存在しない */
-            404: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["Error"];
-                };
-            };
-        };
-    };
-    getIncomingStockDetails: {
-        parameters: {
-            query?: {
-                /** @description 取得件数 */
-                limit?: number;
-                /** @description ページ番号 */
-                page?: number;
-            };
-            header?: never;
-            path: {
-                /** @description 入庫ID */
-                id: number;
-            };
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            /** @description 成功 */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": {
-                        incomingStockDetails?: components["schemas"]["IncomingStockDetail"][];
-                        pagination?: components["schemas"]["Pagination"];
-                    };
-                };
-            };
-            /** @description 認証エラー */
-            401: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["Error"];
-                };
-            };
-            /** @description 指定されたIDの入庫情報が存在しない */
-            404: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["Error"];
-                };
-            };
-        };
-    };
-    updateIncomingStockDetails: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path: {
-                /** @description 入庫ID */
-                id: number;
-            };
-            cookie?: never;
-        };
-        requestBody: {
-            content: {
-                "application/json": components["schemas"]["IncomingStockDetailUpdate"];
-            };
-        };
-        responses: {
-            /** @description 成功 */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content?: never;
-            };
-            /** @description バリデーションエラー */
-            400: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["Error"];
-                };
-            };
-            /** @description 認証エラー */
-            401: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["Error"];
-                };
-            };
-            /** @description 指定されたIDの入庫情報が存在しない */
-            404: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["Error"];
-                };
-            };
-        };
-    };
-    getOutgoingStocks: {
-        parameters: {
-            query?: {
-                /** @description 出庫ID */
-                outgoing_stock_id?: number;
-                /** @description 店舗ID */
-                store_id?: number;
-                /** @description 出庫区分（1:店舗間移動、2:返品、3:その他） */
-                division?: number;
-                /** @description 出庫ステータス（1:計画中、2:確定済） */
-                status?: number;
-                /** @description 出庫日（FROM）（Y-m-d） */
-                target_date_from?: string;
-                /** @description 出庫日（TO）（Y-m-d） */
-                target_date_to?: string;
-                /** @description 取得件数 */
-                limit?: number;
-                /** @description ページ番号 */
-                page?: number;
-            };
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            /** @description 成功 */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": {
-                        outgoingStocks?: components["schemas"]["OutgoingStock"][];
-                        pagination?: components["schemas"]["Pagination"];
-                    };
-                };
-            };
-            /** @description バリデーションエラー */
-            400: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["Error"];
-                };
-            };
-            /** @description 認証エラー */
-            401: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["Error"];
-                };
-            };
-        };
-    };
-    createOutgoingStock: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        requestBody: {
-            content: {
-                "application/json": components["schemas"]["OutgoingStockCreate"];
-            };
-        };
-        responses: {
-            /** @description 成功 */
-            201: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": {
-                        /** @description 出庫ID */
-                        id?: number;
-                    };
-                };
-            };
-            /** @description バリデーションエラー */
-            400: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["Error"];
-                };
-            };
-            /** @description 認証エラー */
-            401: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["Error"];
-                };
-            };
-        };
-    };
-    getOutgoingStock: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path: {
-                /** @description 出庫ID */
-                id: number;
-            };
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            /** @description 成功 */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["OutgoingStock"];
-                };
-            };
-            /** @description 認証エラー */
-            401: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["Error"];
-                };
-            };
-            /** @description 指定されたIDの出庫情報が存在しない */
-            404: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["Error"];
-                };
-            };
-        };
-    };
-    deleteOutgoingStock: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path: {
-                /** @description 出庫ID */
-                id: number;
-            };
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            /** @description 成功 */
-            204: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content?: never;
-            };
-            /** @description 認証エラー */
-            401: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["Error"];
-                };
-            };
-            /** @description 指定されたIDの出庫情報が存在しない */
-            404: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["Error"];
-                };
-            };
-        };
-    };
-    updateOutgoingStock: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path: {
-                /** @description 出庫ID */
-                id: number;
-            };
-            cookie?: never;
-        };
-        requestBody: {
-            content: {
-                "application/json": components["schemas"]["OutgoingStockUpdate"];
-            };
-        };
-        responses: {
-            /** @description 成功 */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content?: never;
-            };
-            /** @description バリデーションエラー */
-            400: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["Error"];
-                };
-            };
-            /** @description 認証エラー */
-            401: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["Error"];
-                };
-            };
-            /** @description 指定されたIDの出庫情報が存在しない */
-            404: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["Error"];
-                };
-            };
-        };
-    };
-    getOutgoingStockDetails: {
-        parameters: {
-            query?: {
-                /** @description 取得件数 */
-                limit?: number;
-                /** @description ページ番号 */
-                page?: number;
-            };
-            header?: never;
-            path: {
-                /** @description 出庫ID */
-                id: number;
-            };
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            /** @description 成功 */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": {
-                        outgoingStockDetails?: components["schemas"]["OutgoingStockDetail"][];
-                        pagination?: components["schemas"]["Pagination"];
-                    };
-                };
-            };
-            /** @description 認証エラー */
-            401: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["Error"];
-                };
-            };
-            /** @description 指定されたIDの出庫情報が存在しない */
-            404: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["Error"];
-                };
-            };
-        };
-    };
-    updateOutgoingStockDetails: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path: {
-                /** @description 出庫ID */
-                id: number;
-            };
-            cookie?: never;
-        };
-        requestBody: {
-            content: {
-                "application/json": components["schemas"]["OutgoingStockDetailUpdate"];
-            };
-        };
-        responses: {
-            /** @description 成功 */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content?: never;
-            };
-            /** @description バリデーションエラー */
-            400: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["Error"];
-                };
-            };
-            /** @description 認証エラー */
-            401: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["Error"];
-                };
-            };
-            /** @description 指定されたIDの出庫情報が存在しない */
-            404: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["Error"];
-                };
-            };
-        };
-    };
-    getCorrectionOutgoingStocks: {
-        parameters: {
-            query?: {
-                /** @description 出庫修正申請ID */
-                correction_outgoing_stock_id?: number;
-                /** @description 店舗ID */
-                store_id?: number;
-                /** @description 申請ステータス（1:申請中、2:承認済、3:却下） */
-                status?: number;
-                /** @description 申請日（FROM）（Y-m-d） */
-                target_date_from?: string;
-                /** @description 申請日（TO）（Y-m-d） */
-                target_date_to?: string;
-                /** @description 取得件数 */
-                limit?: number;
-                /** @description ページ番号 */
-                page?: number;
-            };
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            /** @description 成功 */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": {
-                        correctionOutgoingStocks?: components["schemas"]["CorrectionRequestOutgoingStock"][];
-                        pagination?: components["schemas"]["Pagination"];
-                    };
-                };
-            };
-            /** @description バリデーションエラー */
-            400: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["Error"];
-                };
-            };
-            /** @description 認証エラー */
-            401: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["Error"];
-                };
-            };
-        };
-    };
-    createCorrectionOutgoingStock: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        requestBody: {
-            content: {
-                "application/json": components["schemas"]["CorrectionRequestOutgoingStockCreate"];
-            };
-        };
-        responses: {
-            /** @description 成功 */
-            201: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": {
-                        /** @description 出庫修正申請ID */
-                        id?: number;
-                    };
-                };
-            };
-            /** @description バリデーションエラー */
-            400: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["Error"];
-                };
-            };
-            /** @description 認証エラー */
-            401: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["Error"];
-                };
-            };
-        };
-    };
-    getCorrectionOutgoingStock: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path: {
-                /** @description 出庫修正申請ID */
-                id: number;
-            };
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            /** @description 成功 */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["CorrectionRequestOutgoingStock"];
-                };
-            };
-            /** @description 認証エラー */
-            401: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["Error"];
-                };
-            };
-            /** @description 指定されたIDの出庫修正申請情報が存在しない */
-            404: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["Error"];
-                };
-            };
-        };
-    };
-    deleteCorrectionOutgoingStock: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path: {
-                /** @description 出庫修正申請ID */
-                id: number;
-            };
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            /** @description 成功 */
-            204: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content?: never;
-            };
-            /** @description 認証エラー */
-            401: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["Error"];
-                };
-            };
-            /** @description 指定されたIDの出庫修正申請情報が存在しない */
-            404: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["Error"];
-                };
-            };
-        };
-    };
-    updateCorrectionOutgoingStock: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path: {
-                /** @description 出庫修正申請ID */
-                id: number;
-            };
-            cookie?: never;
-        };
-        requestBody: {
-            content: {
-                "application/json": components["schemas"]["CorrectionRequestOutgoingStockUpdate"];
-            };
-        };
-        responses: {
-            /** @description 成功 */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content?: never;
-            };
-            /** @description バリデーションエラー */
-            400: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["Error"];
-                };
-            };
-            /** @description 認証エラー */
-            401: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["Error"];
-                };
-            };
-            /** @description 指定されたIDの出庫修正申請情報が存在しない */
-            404: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["Error"];
-                };
-            };
-        };
-    };
-    getStocktakings: {
-        parameters: {
-            query?: {
-                /** @description 棚卸ID */
-                stocktaking_id?: number;
-                /** @description 店舗ID */
-                store_id?: number;
-                /** @description 棚卸名 */
-                stocktaking_name?: string;
-                /** @description 棚卸ステータス（1:集計中、2:完了） */
-                stocktaking_status?: number;
-                /** @description 開始日時（FROM）（Y-m-d H:i:s） */
-                start_date_from?: string;
-                /** @description 開始日時（TO）（Y-m-d H:i:s） */
-                start_date_to?: string;
-                /** @description 終了日時（FROM）（Y-m-d H:i:s） */
-                end_date_from?: string;
-                /** @description 終了日時（TO）（Y-m-d H:i:s） */
-                end_date_to?: string;
-                /** @description 取得件数 */
-                limit?: number;
-                /** @description ページ番号 */
-                page?: number;
-            };
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            /** @description 成功 */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": {
-                        stocktakings?: components["schemas"]["Stocktaking"][];
-                        pagination?: components["schemas"]["Pagination"];
-                    };
-                };
-            };
-            /** @description バリデーションエラー */
-            400: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["Error"];
-                };
-            };
-            /** @description 認証エラー */
-            401: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["Error"];
-                };
-            };
-        };
-    };
-    createStocktaking: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        requestBody: {
-            content: {
-                "application/json": components["schemas"]["StocktakingCreate"];
-            };
-        };
-        responses: {
-            /** @description 成功 */
-            201: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": {
-                        /** @description 棚卸ID */
-                        id?: number;
-                    };
-                };
-            };
-            /** @description バリデーションエラー */
-            400: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["Error"];
-                };
-            };
-            /** @description 認証エラー */
-            401: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["Error"];
-                };
-            };
-        };
-    };
-    getStocktakingCategories: {
-        parameters: {
-            query?: {
-                /** @description 棚卸ID */
-                stocktaking_id?: number;
-                /** @description 店舗ID */
-                store_id?: number;
-                /** @description 部門ID */
-                category_id?: number;
-                /** @description 部門コード */
-                category_code?: string;
-                /** @description 部門名 */
-                category_name?: string;
-                /** @description 棚卸実施済みフラグ（0:未実施、1:実施済み） */
-                is_complete?: number;
-                /** @description 取得件数 */
-                limit?: number;
-                /** @description ページ番号 */
-                page?: number;
-            };
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            /** @description 成功 */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": {
-                        stocktakingCategories?: components["schemas"]["StocktakingCategory"][];
-                        pagination?: components["schemas"]["Pagination"];
-                    };
-                };
-            };
-            /** @description バリデーションエラー */
-            400: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["Error"];
-                };
-            };
-            /** @description 認証エラー */
-            401: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["Error"];
-                };
-            };
-        };
-    };
-    updateStocktakingCategory: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        requestBody: {
-            content: {
-                "application/json": components["schemas"]["StocktakingCategoryUpdate"];
-            };
-        };
-        responses: {
-            /** @description 成功 */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content?: never;
-            };
-            /** @description バリデーションエラー */
-            400: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["Error"];
-                };
-            };
-            /** @description 認証エラー */
-            401: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["Error"];
-                };
-            };
-            /** @description 指定された棚卸部門が存在しない */
-            404: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["Error"];
-                };
-            };
-        };
-    };
-    getStocktakingProducts: {
-        parameters: {
-            query?: {
-                /** @description 棚卸ID */
-                stocktaking_id?: number;
-                /** @description 店舗ID */
-                store_id?: number;
-                /** @description 部門ID */
-                category_id?: number;
-                /** @description 商品ID */
-                product_id?: number;
-                /** @description 商品コード */
-                product_code?: string;
-                /** @description 商品名 */
-                product_name?: string;
-                /** @description バーコード */
-                barcode?: string;
-                /** @description 商品カウント済みフラグ（0:未カウント、1:カウント済み） */
-                is_counted?: number;
-                /** @description 取得件数 */
-                limit?: number;
-                /** @description ページ番号 */
-                page?: number;
-            };
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            /** @description 成功 */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": {
-                        stocktakingProducts?: components["schemas"]["StocktakingProduct"][];
-                        pagination?: components["schemas"]["Pagination"];
-                    };
-                };
-            };
-            /** @description バリデーションエラー */
-            400: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["Error"];
-                };
-            };
-            /** @description 認証エラー */
-            401: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["Error"];
-                };
-            };
-        };
-    };
-    updateStocktakingProduct: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        requestBody: {
-            content: {
-                "application/json": components["schemas"]["StocktakingProductUpdate"];
-            };
-        };
-        responses: {
-            /** @description 成功 */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content?: never;
-            };
-            /** @description バリデーションエラー */
-            400: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["Error"];
-                };
-            };
-            /** @description 認証エラー */
-            401: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["Error"];
-                };
-            };
-            /** @description 指定された棚卸商品が存在しない */
-            404: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["Error"];
-                };
-            };
-        };
-    };
-    getStocktakingStocks: {
-        parameters: {
-            query?: {
-                /** @description 棚卸ID */
-                stocktaking_id?: number;
-                /** @description 店舗ID */
-                store_id?: number;
-                /** @description 商品ID */
-                product_id?: number;
-                /** @description 取得件数 */
-                limit?: number;
-                /** @description ページ番号 */
-                page?: number;
-            };
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            /** @description 成功 */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": {
-                        stocktakingStocks?: components["schemas"]["StocktakingStock"][];
-                        pagination?: components["schemas"]["Pagination"];
-                    };
-                };
-            };
-            /** @description バリデーションエラー */
-            400: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["Error"];
-                };
-            };
-            /** @description 認証エラー */
-            401: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["Error"];
-                };
-            };
-        };
-    };
-    createStocktakingStock: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        requestBody: {
-            content: {
-                "application/json": components["schemas"]["StocktakingStockCreate"];
-            };
-        };
-        responses: {
-            /** @description 成功 */
-            201: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": {
-                        /** @description 棚卸在庫ID */
-                        id?: number;
-                    };
-                };
-            };
-            /** @description バリデーションエラー */
-            400: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["Error"];
-                };
-            };
-            /** @description 認証エラー */
-            401: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["Error"];
-                };
-            };
-        };
-    };
-    updateStocktakingStock: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        requestBody: {
-            content: {
-                "application/json": components["schemas"]["StocktakingStockUpdate"];
-            };
-        };
-        responses: {
-            /** @description 成功 */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content?: never;
-            };
-            /** @description バリデーションエラー */
-            400: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["Error"];
-                };
-            };
-            /** @description 認証エラー */
-            401: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["Error"];
-                };
-            };
-            /** @description 指定された棚卸在庫が存在しない */
-            404: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["Error"];
-                };
-            };
-        };
-    };
-    getTaxRates: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            /** @description 成功 */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": {
-                        taxRates?: components["schemas"]["TaxRate"][];
-                    };
-                };
-            };
-            /** @description 認証エラー */
-            401: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["Error"];
-                };
-            };
-        };
-    };
-    getReduceTaxRates: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            /** @description 成功 */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": {
-                        reduceTaxRates?: components["schemas"]["ReduceTaxRate"][];
-                    };
-                };
-            };
-            /** @description 認証エラー */
-            401: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["Error"];
-                };
-            };
-        };
-    };
-    getReceiptRemarks: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            /** @description 成功 */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": {
-                        receiptRemarks?: components["schemas"]["ReceiptRemark"][];
-                    };
-                };
-            };
-            /** @description 認証エラー */
-            401: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["Error"];
-                };
-            };
-        };
-    };
-    createReceiptRemark: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        requestBody: {
-            content: {
-                "application/json": components["schemas"]["ReceiptRemarkCreate"];
-            };
-        };
-        responses: {
-            /** @description 成功 */
-            201: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": {
-                        /** @description レシート備考ID */
-                        id?: number;
-                    };
-                };
-            };
-            /** @description バリデーションエラー */
-            400: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["Error"];
-                };
-            };
-            /** @description 認証エラー */
-            401: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["Error"];
-                };
-            };
-        };
-    };
-    getDiscountDivisions: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            /** @description 成功 */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": {
-                        discountDivisions?: components["schemas"]["DiscountDivision"][];
-                    };
-                };
-            };
-            /** @description 認証エラー */
-            401: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["Error"];
-                };
-            };
-        };
-    };
-    getCatCctCardCompanies: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            /** @description 成功 */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": {
-                        catCctCardCompanies?: components["schemas"]["CatCctCardCompany"][];
-                    };
-                };
-            };
-            /** @description 認証エラー */
-            401: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["Error"];
-                };
-            };
-        };
-    };
-    getCustomerTypes: {
-        parameters: {
-            query?: {
-                /** @description 顧客タイプID */
-                customer_type_id?: number;
-                /** @description 顧客タイプコード */
-                code?: string;
-                /** @description 顧客タイプ名 */
-                name?: string;
-                /** @description 取得件数 */
-                limit?: number;
-                /** @description ページ番号 */
-                page?: number;
-            };
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            /** @description 成功 */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": {
-                        customerTypes?: components["schemas"]["CustomerType"][];
-                        pagination?: components["schemas"]["Pagination"];
-                    };
-                };
-            };
-            /** @description 認証エラー */
-            401: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["Error"];
-                };
-            };
-        };
-    };
-    createCustomerType: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        requestBody: {
-            content: {
-                "application/json": components["schemas"]["CustomerTypeCreate"];
-            };
-        };
-        responses: {
-            /** @description 成功 */
-            201: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": {
-                        /** @description 顧客タイプID */
-                        id?: number;
-                    };
-                };
-            };
-            /** @description バリデーションエラー */
-            400: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["Error"];
-                };
-            };
-            /** @description 認証エラー */
-            401: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["Error"];
-                };
-            };
-        };
-    };
-    getCustomerTypeSections: {
-        parameters: {
-            query?: {
-                /** @description 顧客タイプセクションID */
-                customer_type_section_id?: number;
-                /** @description 顧客タイプID */
-                customer_type_id?: number;
-                /** @description セクション名 */
-                name?: string;
-                /** @description 取得件数 */
-                limit?: number;
-                /** @description ページ番号 */
-                page?: number;
-            };
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            /** @description 成功 */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": {
-                        customerTypeSections?: components["schemas"]["CustomerTypeSection"][];
-                        pagination?: components["schemas"]["Pagination"];
-                    };
-                };
-            };
-            /** @description 認証エラー */
-            401: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["Error"];
-                };
-            };
-        };
-    };
-    updateCustomerTypeSection: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        requestBody: {
-            content: {
-                "application/json": components["schemas"]["CustomerTypeSectionUpdate"];
-            };
-        };
-        responses: {
-            /** @description 成功 */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content?: never;
-            };
-            /** @description バリデーションエラー */
-            400: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["Error"];
-                };
-            };
-            /** @description 認証エラー */
-            401: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["Error"];
-                };
-            };
-            /** @description 指定されたセクションが存在しない */
+            /** @description 指定された在庫情報が存在しない */
             404: {
                 headers: {
                     [name: string]: unknown;

@@ -15,6 +15,9 @@ properties:
     type: object
     description: 在庫履歴情報
     properties:
+      id:
+        type: integer
+        description: 在庫変動履歴ID
       memo:
         type: string
         description: 在庫履歴メモ

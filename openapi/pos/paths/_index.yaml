@@ -17,6 +17,8 @@
   $ref: './products/products_prices.yaml'
 /products/{id}/prices/changes:
   $ref: './products/products_prices_changes.yaml'
+/products/{product_id}/prices/{price_division}/{store_id}/{start_date}:
+  $ref: './products/products_prices_delete.yaml'
 /products/{id}/reserve_items:
   $ref: './products/products_reserve_items.yaml'
 /products/attributes:
@@ -35,18 +37,16 @@
   $ref: './products/products_inventory_reservations_id.yaml'
 /products/reserve_item_labels:
   $ref: './products/products_reserve_item_labels.yaml'
+/products/{product_id}/reserve_items/{no}:
+  $ref: './products/products_reserve_items_no.yaml'
+/products/reserve_item_labels/{no}:
+  $ref: './products/products_reserve_item_labels_no.yaml'
 /products/images:
   $ref: './products/products_images.yaml'
 /products/{id}/image:
   $ref: './products/products_image_id.yaml'
 /products/{id}/icon_image:
   $ref: './products/products_icon_image.yaml'
-/products/{product_id}/prices/{price_division}/{store_id}/{start_date}:
-  $ref: './products/products_prices_delete.yaml'
-/products/{product_id}/reserve_items/{no}:
-  $ref: './products/products_reserve_items_no.yaml'
-/products/reserve_item_labels/{no}:
-  $ref: './products/products_reserve_item_labels_no.yaml'
 
 # 取引系API
 /transactions:
@@ -56,51 +56,57 @@
 /transactions/{id}/details:
   $ref: './transactions/transactions_details.yaml'
 /transactions/{id}/cancel:
-  $ref: './transactions/transactions_cancels.yaml'
+  $ref: './transactions/transactions_cancel.yaml'
 /transactions/{id}/dispose:
   $ref: './transactions/transactions_dispose.yaml'
-/transactions/{id}/customer:
-  $ref: './transactions/transactions_customer.yaml'
-/transactions/layaways:
-  $ref: './transactions/layaways.yaml'
-/transactions/layaways/{id}:
-  $ref: './transactions/layaways_id.yaml'
-/transactions/layaways/{id}/dispose:
-  $ref: './transactions/layaways_dispose.yaml'
-/transactions/temporaries:
-  $ref: './transactions/temporaries.yaml'
-/transactions/temporaries/{id}:
-  $ref: './transactions/temporaries_id.yaml'
-/transactions/temporaries/{id}/status:
-  $ref: './transactions/temporaries_status.yaml'
-/transactions/product_sets:
-  $ref: './transactions/product_sets.yaml'
-/transactions/product_sets/{id}:
-  $ref: './transactions/product_sets_id.yaml'
+# /transactions/{id}/customer:
+#   $ref: './transactions/transactions_customer.yaml'
+# /transactions/layaways:
+#   $ref: './transactions/layaways.yaml'
+# /transactions/layaways/{id}:
+#   $ref: './transactions/layaways_id.yaml'
+# /transactions/layaways/{id}/dispose:
+#   $ref: './transactions/layaways_dispose.yaml'
+# /transactions/temporaries:
+#   $ref: './transactions/temporaries.yaml'
+# /transactions/temporaries/{id}:
+#   $ref: './transactions/temporaries_id.yaml'
+# /transactions/temporaries/{id}/status:
+#   $ref: './transactions/temporaries_status.yaml'
+# /transactions/product_sets:
+#   $ref: './transactions/product_sets.yaml'
+# /transactions/product_sets/{id}:
+#   $ref: './transactions/product_sets_id.yaml'
 
 # 会員系API
 /customers:
   $ref: './customers/customers.yaml'
 /customers/{id}:
   $ref: './customers/customers_id.yaml'
-/customers/bulk:
-  $ref: './customers/customers_bulk.yaml'
-/customers/point:
-  $ref: './customers/customers_point.yaml'
-/customers/{id}/point:
-  $ref: './customers/customers_id_point.yaml'
-/customers/{id}/point/add:
-  $ref: './customers/customers_id_point_add.yaml'
+# /customers/bulk:
+#   $ref: './customers/customers_bulk.yaml'
+# /customers/point:
+#   $ref: './customers/customers_point.yaml'
+# /customers/{id}/point:
+#   $ref: './customers/customers_id_point.yaml'
+# /customers/{id}/point/add:
+#   $ref: './customers/customers_id_point_add.yaml'
 /customer_required_column_setting:
-  $ref: './customers/customer_required.yaml'
-/customer_ranks:
-  $ref: './customers/customer_ranks.yaml'
-/customer_ranks/{id}:
-  $ref: './customers/customer_ranks_id.yaml'
-/staff_ranks:
-  $ref: './customers/staff_ranks.yaml'
-/staff_ranks/{id}:
-  $ref: './customers/staff_ranks_id.yaml'
+  $ref: './customers/customers_required.yaml'
+# /customer_ranks:
+#   $ref: './customers/customer_ranks.yaml'
+# /customer_ranks/{id}:
+#   $ref: './customers/customer_ranks_id.yaml'
+
+# 顧客区分系API
+# /customer_groups:
+#   $ref: './customer_classification/customer_types.yaml'
+# /customer_groups/{id}:
+#   $ref: './customer_classification/customer_types_id.yaml'
+# /customer_group_sections:
+#   $ref: './customer_classification/customer_type_sections.yaml'
+# /customer_group_sections/{id}:
+#   $ref: './customer_classification/customer_type_sections_id.yaml'
 
 # 在庫系API
 /stock:
@@ -113,228 +119,223 @@
   $ref: './stock/stock_changes_product_id_store_id.yaml'
 
 # セール系API
-/bargain:
-  $ref: './sales/bargain.yaml'
-/bargain/{id}:
-  $ref: './sales/bargain_id.yaml'
-/bargain/{id}/stores:
-  $ref: './sales/bargain_stores.yaml'
-/bargain/{id}/stores/{bargainStoreId}:
-  $ref: './sales/bargain_stores_id.yaml'
-/bargain/{id}/products:
-  $ref: './sales/bargain_products.yaml'
-/bargain/{id}/products/{bargainProductId}:
-  $ref: './sales/bargain_products_id.yaml'
+# /bargain:
+#   $ref: './sales/bargain.yaml'
+# /bargain/{id}:
+#   $ref: './sales/bargain_id.yaml'
+# /bargain/{id}/stores:
+#   $ref: './sales/bargain_stores.yaml'
+# /bargain/{id}/stores/{bargainStoreId}:
+#   $ref: './sales/bargain_stores_id.yaml'
+# /bargain/{id}/products:
+#   $ref: './sales/bargain_products.yaml'
+# /bargain/{id}/products/{bargainProductId}:
+#   $ref: './sales/bargain_products_id.yaml'
 
 # オプショングループAPI
-/product_option_groups:
-  $ref: './options/product_option_groups.yaml'
-/product_option_groups/{id}:
-  $ref: './options/product_option_groups_id.yaml'
-/product_option_groups/{id}/products/{product_id}:
-  $ref: './options/product_option_groups_products_id.yaml'
+# /product_option_groups:
+#   $ref: './options/product_option_groups.yaml'
+# /product_option_groups/{id}:
+#   $ref: './options/product_option_groups_id.yaml'
+# /product_option_groups/{id}/products/{product_id}:
+#   $ref: './options/product_option_groups_products_id.yaml'
 
 # バンドル販売API
-/bundles:
-  $ref: './bundles/bundles.yaml'
-/bundles/{id}:
-  $ref: './bundles/bundles_id.yaml'
-/bundles/{id}/products/{bundleProductId}:
-  $ref: './bundles/bundles_products_id.yaml'
+# /bundles:
+#   $ref: './bundles/bundles.yaml'
+# /bundles/{id}:
+#   $ref: './bundles/bundles_id.yaml'
+# /bundles/{id}/products/{bundleProductId}:
+#   $ref: './bundles/bundles_products_id.yaml'
 
 # 店舗系API
-/stores:
-  $ref: './stores/stores.yaml'
-/stores/{id}:
-  $ref: './stores/stores_id.yaml'
-/stores/{store_id}/class_item_relations:
-  $ref: './stores/stores_class_item_relations.yaml'
-/stores/{store_id}/class_item_relations/{store_class_id}:
-  $ref: './stores/stores_class_item_relations_id.yaml'
-/stores/{store_id}/product_order_points:
-  $ref: './stores/stores_product_order_points.yaml'
-/stores/{store_id}/product_order_points/bulk:
-  $ref: './stores/stores_product_order_points_bulk.yaml'
-/store_classes:
-  $ref: './stores/store_classes.yaml'
-/store_classes/{id}:
-  $ref: './stores/store_classes_id.yaml'
-/store_classes/{id}/items:
-  $ref: './stores/store_classes_items.yaml'
-/store_classes/{id}/items/{idem_id}:
-  $ref: './stores/store_classes_items_id.yaml'
+# /stores:
+#   $ref: './stores/stores.yaml'
+# /stores/{id}:
+#   $ref: './stores/stores_id.yaml'
+# /stores/{store_id}/class_item_relations:
+#   $ref: './stores/stores_class_item_relations.yaml'
+# /stores/{store_id}/class_item_relations/{store_class_id}:
+#   $ref: './stores/stores_class_item_relations_id.yaml'
+# /stores/{store_id}/product_order_points:
+#   $ref: './stores/stores_product_order_points.yaml'
+# /stores/{store_id}/product_order_points/bulk:
+#   $ref: './stores/stores_product_order_points_bulk.yaml'
+# /store_classes:
+#   $ref: './stores/store_classes.yaml'
+# /store_classes/{id}:
+#   $ref: './stores/store_classes_id.yaml'
+# /store_classes/{id}/items:
+#   $ref: './stores/store_classes_items.yaml'
+# /store_classes/{id}/items/{idem_id}:
+#   $ref: './stores/store_classes_items_id.yaml'
 
 # スタッフ系API
-/staffs:
-  $ref: './staffs/staffs.yaml'
-/staffs/{id}:
-  $ref: './staffs/staffs_id.yaml'
-/roles:
-  $ref: './staffs/roles.yaml'
-/roles/{id}:
-  $ref: './staffs/roles_id.yaml'
+# /staffs:
+#   $ref: './staffs/staffs.yaml'
+# /staffs/{id}:
+#   $ref: './staffs/staffs_id.yaml'
+# /roles:
+#   $ref: './staffs/roles.yaml'
+# /roles/{id}:
+#   $ref: './staffs/roles_id.yaml'
+# /staff_ranks:
+#   $ref: './staffs/staff_ranks.yaml'
+# /staff_ranks/{id}:
+#   $ref: './staffs/staff_ranks_id.yaml'
+
 
 # 予算系API
-/budget/{store_id}:
-  $ref: './budgets/budget_id.yaml'
-/budget/{id}/{year}/{month}:
-  $ref: './budgets/budgets_daily.yaml'
-/budget/{id}/{year}/{month}/staffs:
-  $ref: './budgets/budgets_staff.yaml'
-/budget/{id}/{year}/{month}/staffs/{staff_id}:
-  $ref: './budgets/budgets_staff_id.yaml'
+# /budget/{store_id}:
+#   $ref: './budgets/budget_id.yaml'
+# /budget/{id}/{year}/{month}:
+#   $ref: './budgets/budgets_daily.yaml'
+# /budget/{id}/{year}/{month}/staffs:
+#   $ref: './budgets/budgets_staff.yaml'
+# /budget/{id}/{year}/{month}/staffs/{staff_id}:
+#   $ref: './budgets/budgets_staff_id.yaml'
 
 # 仕入先系API
-/suppliers:
-  $ref: './suppliers/suppliers.yaml'
-/suppliers/{id}:
-  $ref: './suppliers/suppliers_id.yaml'
-/suppliers/{id}/products:
-  $ref: './suppliers/suppliers_products.yaml'
-/suppliers/{id}/division/{division}/products/{target_id}:
-  $ref: './suppliers/supplier_division_products.yaml'
-/supplier_divisions:
-  $ref: './suppliers/supplier_divisions.yaml'
-/supplier_divisions/{id}:
-  $ref: './suppliers/supplier_divisions_id.yaml'
+# /suppliers:
+#   $ref: './suppliers/suppliers.yaml'
+# /suppliers/{id}:
+#   $ref: './suppliers/suppliers_id.yaml'
+# /suppliers/{id}/products:
+#   $ref: './suppliers/suppliers_products.yaml'
+# /suppliers/{id}/division/{division}/products/{target_id}:
+#   $ref: './suppliers/supplier_division_products.yaml'
+# /supplier_divisions:
+#   $ref: './suppliers/supplier_divisions.yaml'
+# /supplier_divisions/{id}:
+#   $ref: './suppliers/supplier_divisions_id.yaml'
 
 # レジ端末系API
-/terminals:
-  $ref: './terminals/terminals.yaml'
-/terminals/{id}:
-  $ref: './terminals/terminals_id.yaml'
+# /terminals:
+#   $ref: './terminals/terminals.yaml'
+# /terminals/{id}:
+#   $ref: './terminals/terminals_id.yaml'
 
 # 精算系API
-/adjustments:
-  $ref: './settlements/adjustments.yaml'
-/daily_summaries:
-  $ref: './settlements/daily_summaries.yaml'
+# /adjustments:
+#   $ref: './settlements/adjustments.yaml'
+# /daily_summaries:
+#   $ref: './settlements/daily_summaries.yaml'
 
 # 支払方法系API
-/payment_methods:
-  $ref: './payments/payment_methods.yaml'
-/payment_methods/{id}:
-  $ref: './payments/payment_methods_id.yaml'
-/stores/{store_id}/payment_methods:
-  $ref: './payments/store_payment_methods.yaml'
-/payment_method_groups:
-  $ref: './payments/payment_method_groups.yaml'
-/payment_method_groups/{id}:
-  $ref: './payments/payment_method_groups_id.yaml'
-/app_payment_methods:
-  $ref: './payments/app_payment_methods.yaml'
-/app_payment_methods/{id}:
-  $ref: './payments/app_payment_methods_id.yaml'
+# /payment_methods:
+#   $ref: './payments/payment_methods.yaml'
+# /payment_methods/{id}:
+#   $ref: './payments/payment_methods_id.yaml'
+# /stores/{store_id}/payment_methods:
+#   $ref: './payments/store_payment_methods.yaml'
+# /payment_method_groups:
+#   $ref: './payments/payment_method_groups.yaml'
+# /payment_method_groups/{id}:
+#   $ref: './payments/payment_method_groups_id.yaml'
+# /app_payment_methods:
+#   $ref: './payments/app_payment_methods.yaml'
+# /app_payment_methods/{id}:
+#   $ref: './payments/app_payment_methods_id.yaml'
 
 # クーポン系API
-/coupons:
-  $ref: './coupons/coupons.yaml'
-/coupons/{id}:
-  $ref: './coupons/coupons_id.yaml'
-/coupons/{id}/products:
-  $ref: './coupons/coupons_products.yaml'
-/coupons/{id}/type/{type}/division/{division}/products/{item_id}:
-  $ref: './coupons/coupons_products_id.yaml'
+# /coupons:
+#   $ref: './coupons/coupons.yaml'
+# /coupons/{id}:
+#   $ref: './coupons/coupons_id.yaml'
+# /coupons/{id}/products:
+#   $ref: './coupons/coupons_products.yaml'
+# /coupons/{id}/type/{type}/division/{division}/products/{item_id}:
+#   $ref: './coupons/coupons_products_id.yaml'
 
 # ロス系API
-/losses:
-  $ref: './losses/losses.yaml'
-/losses/{id}:
-  $ref: './losses/losses_id.yaml'
-/losses/{id}/details:
-  $ref: './losses/losses_details.yaml'
-/losses/divisions:
-  $ref: './losses/loss_divisions.yaml'
-/losses/divisions/{id}:
-  $ref: './losses/loss_divisions_id.yaml'
+# /losses:
+#   $ref: './losses/losses.yaml'
+# /losses/{id}:
+#   $ref: './losses/losses_id.yaml'
+# /losses/{id}/details:
+#   $ref: './losses/losses_details.yaml'
+# /losses/divisions:
+#   $ref: './losses/loss_divisions.yaml'
+# /losses/divisions/{id}:
+#   $ref: './losses/loss_divisions_id.yaml'
 
 # 発注系API
-/purchase_orders:
-  $ref: './orders/orders.yaml'
-/purchase_orders/{id}:
-  $ref: './orders/orders_id.yaml'
-/purchase_orders/products:
-  $ref: './orders/orders_products.yaml'
-/purchase_orders/stores:
-  $ref: './orders/orders_stores.yaml'
+# /purchase_orders:
+#   $ref: './orders/orders.yaml'
+# /purchase_orders/{id}:
+#   $ref: './orders/orders_id.yaml'
+# /purchase_orders/products:
+#   $ref: './orders/orders_products.yaml'
+# /purchase_orders/stores:
+#   $ref: './orders/orders_stores.yaml'
 
 # 入荷系API
-/storage:
-  $ref: './arrivals/arrivals.yaml'
-/storage/{id}:
-  $ref: './arrivals/arrivals_id.yaml'
-/storage/{id}/details:
-  $ref: './arrivals/arrivals_details.yaml'
+# /storage:
+#   $ref: './arrivals/arrivals.yaml'
+# /storage/{id}:
+#   $ref: './arrivals/arrivals_id.yaml'
+# /storage/{id}/details:
+#   $ref: './arrivals/arrivals_details.yaml'
 
 # 出荷系API
-/shipments:
-  $ref: './shipments/shipments.yaml'
-/shipments/{id}:
-  $ref: './shipments/shipments_id.yaml'
-/shipments/{id}/details:
-  $ref: './shipments/shipments_details.yaml'
+# /shipments:
+#   $ref: './shipments/shipments.yaml'
+# /shipments/{id}:
+#   $ref: './shipments/shipments_id.yaml'
+# /shipments/{id}/details:
+#   $ref: './shipments/shipments_details.yaml'
 
 # 入庫系API
-/receiving:
-  $ref: './stocks/incoming_stocks.yaml'
-/receiving/{id}:
-  $ref: './stocks/incoming_stocks_id.yaml'
-/receiving/{id}/details:
-  $ref: './stocks/incoming_stocks_details.yaml'
+# /receiving:
+#   $ref: './stocks/incoming_stocks.yaml'
+# /receiving/{id}:
+#   $ref: './stocks/incoming_stocks_id.yaml'
+# /receiving/{id}/details:
+#   $ref: './stocks/incoming_stocks_details.yaml'
 
 # 出庫系API
-/shipping:
-  $ref: './stocks/outgoing_stocks.yaml'
-/shipping/{id}:
-  $ref: './stocks/outgoing_stocks_id.yaml'
-/shipping/request:
-  $ref: './stocks/outgoing_stocks_request.yaml'
-/shipping/{id}/details:
-  $ref: './stocks/outgoing_stocks_details.yaml'
-/shipping/{id}/approval:
-  $ref: './stocks/outgoing_stocks_approval.yaml'
-/shipping/{id}/modification_request:
-  $ref: './stocks/outgoing_stocks_modification_request.yaml'
-/shipping_modification_requests/{id}:
-  $ref: './stocks/outgoing_stocks_modification_request_id.yaml'
-/shipping_modification_requests/{id}/complete:
-  $ref: './stocks/outgoing_stocks_modification_request_complete.yaml'
+# /shipping:
+#   $ref: './stocks/outgoing_stocks.yaml'
+# /shipping/{id}:
+#   $ref: './stocks/outgoing_stocks_id.yaml'
+# /shipping/request:
+#   $ref: './stocks/outgoing_stocks_request.yaml'
+# /shipping/{id}/details:
+#   $ref: './stocks/outgoing_stocks_details.yaml'
+# /shipping/{id}/approval:
+#   $ref: './stocks/outgoing_stocks_approval.yaml'
+# /shipping/{id}/modification_request:
+#   $ref: './stocks/outgoing_stocks_modification_request.yaml'
+# /shipping_modification_requests/{id}:
+#   $ref: './stocks/outgoing_stocks_modification_request_id.yaml'
+# /shipping_modification_requests/{id}/complete:
+#   $ref: './stocks/outgoing_stocks_modification_request_complete.yaml'
 
 # 棚卸系API
-/stocktaking:
-  $ref: './stocktakings/stocktakings.yaml'
-/stocktaking/{id}/categories:
-  $ref: './stocktakings/stocktakings_categories.yaml'
-/stocktaking/{id}/products:
-  $ref: './stocktakings/stocktakings_products.yaml'
-/stocktaking/{id}/details/{base_date}:
-  $ref: './stocktakings/stocktakings_details.yaml'
+# /stocktaking:
+#   $ref: './stocktakings/stocktakings.yaml'
+# /stocktaking/{id}/categories:
+#   $ref: './stocktakings/stocktakings_categories.yaml'
+# /stocktaking/{id}/products:
+#   $ref: './stocktakings/stocktakings_products.yaml'
+# /stocktaking/{id}/details/{base_date}:
+#   $ref: './stocktakings/stocktakings_details.yaml'
 
 # 税率系API
-/consumption_tax_rates:
-  $ref: './tax_system/tax_rates.yaml'
-/reduce_tax_rates:
-  $ref: './tax_system/reduce_tax_rates.yaml'
+# /consumption_tax_rates:
+#   $ref: './tax_system/tax_rates.yaml'
+# /reduce_tax_rates:
+#   $ref: './tax_system/reduce_tax_rates.yaml'
 
 # レシート系API
-/receipt_provisoes:
-  $ref: './receipt/receipt_remarks.yaml'
+# /receipt_provisoes:
+#   $ref: './receipt/receipt_remarks.yaml'
 
 # 値引き系API
-/discount_divisions:
-  $ref: './discount/discount_divisions.yaml'
+# /discount_divisions:
+#   $ref: './discount/discount_divisions.yaml'
 
 # 決済ハードウェア系API
-/cat_card_companies:
-  $ref: './payment_hardware/cat_cct_card_companies.yaml'
-
-# 顧客区分系API
-/customer_groups:
-  $ref: './customer_classification/customer_types.yaml'
-/customer_groups/{id}:
-  $ref: './customer_classification/customer_types_id.yaml'
-/customer_group_sections:
-  $ref: './customer_classification/customer_type_sections.yaml'
-/customer_group_sections/{id}:
-  $ref: './customer_classification/customer_type_sections_id.yaml'
+# /cat_card_companies:
+#   $ref: './payment_hardware/cat_cct_card_companies.yaml'
 

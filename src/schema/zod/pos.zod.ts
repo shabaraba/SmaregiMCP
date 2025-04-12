@@ -528,58 +528,163 @@ export const Transaction = z.object({
 
 export type TransactionCreate = z.infer<typeof TransactionCreate>;
 export const TransactionCreate = z.object({
+  transactionHeadDivision: z.union([
+    z.literal("1"),
+    z.literal("2"),
+    z.literal("3"),
+    z.literal("4"),
+    z.literal("5"),
+    z.literal("6"),
+    z.literal("7"),
+    z.literal("13"),
+    z.literal("14"),
+  ]),
+  cancelDivision: z.union([z.literal("0"), z.literal("1"), z.undefined()]).optional(),
+  subtotal: z.number(),
+  subtotalDiscountPrice: z.union([z.number(), z.undefined()]).optional(),
+  subtotalDiscountRate: z.union([z.number(), z.undefined()]).optional(),
+  subtotalDiscountDivision: z.union([z.number(), z.undefined()]).optional(),
+  pointDiscount: z.union([z.number(), z.undefined()]).optional(),
+  total: z.number(),
+  taxInclude: z.union([z.number(), z.undefined()]).optional(),
+  taxExclude: z.union([z.number(), z.undefined()]).optional(),
+  roundingDivision: z
+    .union([
+      z.literal("00"),
+      z.literal("11"),
+      z.literal("12"),
+      z.literal("13"),
+      z.literal("21"),
+      z.literal("22"),
+      z.literal("23"),
+      z.literal("31"),
+      z.literal("32"),
+      z.literal("33"),
+      z.literal("41"),
+      z.literal("42"),
+      z.literal("43"),
+      z.literal("99"),
+      z.undefined(),
+    ])
+    .optional(),
+  roundingPrice: z.union([z.number(), z.undefined()]).optional(),
+  deposit: z.union([z.number(), z.undefined()]).optional(),
+  depositcash: z.union([z.number(), z.undefined()]).optional(),
+  depositCredit: z.union([z.number(), z.undefined()]).optional(),
+  change: z.union([z.number(), z.undefined()]).optional(),
+  newPoint: z.union([z.number(), z.undefined()]).optional(),
+  spendPoint: z.union([z.number(), z.undefined()]).optional(),
+  point: z.union([z.number(), z.undefined()]).optional(),
+  totalPoint: z.union([z.number(), z.undefined()]).optional(),
+  currentMile: z.union([z.number(), z.undefined()]).optional(),
+  earnMile: z.union([z.number(), z.undefined()]).optional(),
+  totalMile: z.union([z.number(), z.undefined()]).optional(),
+  adjustmentMile: z.union([z.number(), z.undefined()]).optional(),
+  adjustmentMileDivision: z
+    .union([z.literal("1"), z.literal("2"), z.literal("3"), z.literal("4"), z.undefined()])
+    .optional(),
+  adjustmentMileValue: z.union([z.number(), z.undefined()]).optional(),
   storeId: z.number(),
   terminalId: z.number(),
   customerId: z.union([z.number(), z.null(), z.undefined()]).optional(),
-  staffId: z.union([z.number(), z.null(), z.undefined()]).optional(),
-  transactionDateTime: z.string(),
-  totalAmount: z.number(),
-  taxIncludedAmount: z.number(),
-  taxExcludedAmount: z.number(),
-  subtotalAmount: z.number(),
-  paymentAmount: z.number(),
-  changeAmount: z.number(),
-  pointAmount: z.union([z.number(), z.null(), z.undefined()]).optional(),
-  paymentType: z.number(),
-  status: z.number(),
-  receiptNo: z.string(),
-  receiptText: z.union([z.string(), z.null(), z.undefined()]).optional(),
-  memo: z.union([z.string(), z.null(), z.undefined()]).optional(),
-  details: z.array(
-    z.object({
-      productId: z.union([z.number(), z.null(), z.undefined()]).optional(),
-      productCode: z.union([z.string(), z.null(), z.undefined()]).optional(),
-      productName: z.string(),
-      categoryId: z.union([z.number(), z.null(), z.undefined()]).optional(),
-      price: z.number(),
-      quantity: z.number(),
-      unitDiscountAmount: z.union([z.number(), z.null(), z.undefined()]).optional(),
-      unitDiscountRate: z.union([z.number(), z.null(), z.undefined()]).optional(),
-      unitDiscountType: z.union([z.number(), z.null(), z.undefined()]).optional(),
-      subtotalAmount: z.number(),
-      taxRate: z.number(),
-      taxType: z.number(),
-      detailType: z.number(),
-    }),
-  ),
-  payments: z.array(
-    z.object({
-      paymentMethodId: z.number(),
-      paymentMethodName: z.string(),
-      amount: z.number(),
-      paymentNo: z.union([z.string(), z.null(), z.undefined()]).optional(),
-      cardCompanyId: z.union([z.number(), z.null(), z.undefined()]).optional(),
-      cardCompanyName: z.union([z.string(), z.null(), z.undefined()]).optional(),
-    }),
-  ),
+  customerCode: z.union([z.string(), z.undefined()]).optional(),
+  terminalTranId: z.number(),
+  terminalTranDateTime: z.string(),
+  sumDivision: z.union([z.literal("0"), z.literal("1"), z.literal("2"), z.undefined()]).optional(),
+  sumDate: z.union([z.string(), z.undefined()]).optional(),
+  customerRank: z.union([z.string(), z.undefined()]).optional(),
+  customerGroupId: z.union([z.number(), z.undefined()]).optional(),
+  customerGroupId2: z.union([z.number(), z.undefined()]).optional(),
+  customerGroupId3: z.union([z.number(), z.undefined()]).optional(),
+  customerGroupId4: z.union([z.number(), z.undefined()]).optional(),
+  customerGroupId5: z.union([z.number(), z.undefined()]).optional(),
+  staffId: z.union([z.number(), z.undefined()]).optional(),
+  memo: z.union([z.string(), z.undefined()]).optional(),
+  receiptMemo: z.union([z.string(), z.undefined()]).optional(),
+  carriage: z.union([z.number(), z.undefined()]).optional(),
+  commission: z.union([z.number(), z.undefined()]).optional(),
+  guestNumbers: z.union([z.number(), z.undefined()]).optional(),
+  guestNumbersMale: z.union([z.number(), z.undefined()]).optional(),
+  guestNumbersFemale: z.union([z.number(), z.undefined()]).optional(),
+  guestNumbersUnknown: z.union([z.number(), z.undefined()]).optional(),
+  enterDateTime: z.union([z.string(), z.undefined()]).optional(),
+  taxFreeSalesDivision: z
+    .union([
+      z.literal("0"),
+      z.literal("1"),
+      z.literal("2"),
+      z.literal("3"),
+      z.literal("4"),
+      z.literal("5"),
+      z.undefined(),
+    ])
+    .optional(),
+  netTaxFreeGeneralTaxInclude: z.union([z.number(), z.undefined()]).optional(),
+  netTaxFreeGeneralTaxExclude: z.union([z.number(), z.undefined()]).optional(),
+  netTaxFreeConsumableTaxInclude: z.union([z.number(), z.undefined()]).optional(),
+  netTaxFreeConsumableTaxExclude: z.union([z.number(), z.undefined()]).optional(),
+  tags: z.union([z.string(), z.undefined()]).optional(),
+  pointGivingDivision: z
+    .union([z.literal("1"), z.literal("2"), z.literal("3"), z.literal("4"), z.undefined()])
+    .optional(),
+  pointGivingUnitPrice: z.union([z.number(), z.undefined()]).optional(),
+  pointGivingUnit: z.union([z.number(), z.undefined()]).optional(),
+  pointSpendDivision: z.union([z.literal("1"), z.literal("2"), z.undefined()]).optional(),
+  mileageDivision: z.union([z.literal("0"), z.literal("1"), z.literal("2"), z.undefined()]).optional(),
+  mileageLabel: z.union([z.string(), z.undefined()]).optional(),
+  customerPinCode: z.union([z.string(), z.undefined()]).optional(),
+  sellDivision: z.union([z.literal("0"), z.literal("1"), z.undefined()]).optional(),
+  taxRate: z.union([z.number(), z.undefined()]).optional(),
+  taxRounding: z.union([z.literal("0"), z.literal("1"), z.literal("2"), z.undefined()]).optional(),
+  discountRoundingDivision: z.union([z.literal("0"), z.literal("1"), z.literal("2"), z.undefined()]).optional(),
+  transactionUuid: z.union([z.string(), z.undefined()]).optional(),
+  exchangeTicketNo: z.union([z.string(), z.undefined()]).optional(),
+  giftReceiptValidDays: z.union([z.number(), z.undefined()]).optional(),
+  discountCalculateDivision: z.union([z.literal("0"), z.literal("1"), z.undefined()]).optional(),
+  barcode: z.union([z.string(), z.undefined()]).optional(),
+  layawayServerTransactionHeadId: z.union([z.number(), z.undefined()]).optional(),
+  details: z
+    .union([
+      z.array(
+        z.object({
+          transactionDetailId: z.number(),
+          parentTransactionDetailId: z.union([z.number(), z.undefined()]).optional(),
+          transactionDetailDivision: z.union([z.literal("1"), z.literal("2"), z.literal("3")]),
+          productId: z.union([z.number(), z.undefined()]).optional(),
+          productCode: z.union([z.string(), z.null(), z.undefined()]).optional(),
+          productName: z.union([z.string(), z.null(), z.undefined()]).optional(),
+          printReceiptProductName: z.union([z.string(), z.null(), z.undefined()]).optional(),
+          taxDivision: z.union([z.literal("0"), z.literal("1"), z.literal("2"), z.undefined()]).optional(),
+          price: z.union([z.number(), z.undefined()]).optional(),
+          salesPrice: z.number(),
+          unitDiscountPrice: z.union([z.number(), z.undefined()]).optional(),
+          unitDiscountRate: z.union([z.number(), z.undefined()]).optional(),
+          unitDiscountDivision: z.union([z.number(), z.undefined()]).optional(),
+          quantity: z.number(),
+          categoryId: z.union([z.number(), z.undefined()]).optional(),
+          categoryName: z.union([z.string(), z.undefined()]).optional(),
+        }),
+      ),
+      z.undefined(),
+    ])
+    .optional(),
 });
 
 export type TransactionUpdate = z.infer<typeof TransactionUpdate>;
 export const TransactionUpdate = z.object({
-  customerId: z.union([z.number(), z.null()]).optional(),
+  customerGroupId: z.union([z.number(), z.null()]).optional(),
+  customerGroupId2: z.union([z.number(), z.null()]).optional(),
+  customerGroupId3: z.union([z.number(), z.null()]).optional(),
+  customerGroupId4: z.union([z.number(), z.null()]).optional(),
+  customerGroupId5: z.union([z.number(), z.null()]).optional(),
   staffId: z.union([z.number(), z.null()]).optional(),
-  status: z.number().optional(),
   memo: z.union([z.string(), z.null()]).optional(),
+  receiptMemo: z.union([z.string(), z.null()]).optional(),
+  guestNumbers: z.union([z.number(), z.null()]).optional(),
+  guestNumbersMale: z.union([z.number(), z.null()]).optional(),
+  guestNumbersFemale: z.union([z.number(), z.null()]).optional(),
+  guestNumbersUnknown: z.union([z.number(), z.null()]).optional(),
+  tags: z.union([z.string(), z.null()]).optional(),
 });
 
 export type TransactionDetail = z.infer<typeof TransactionDetail>;
@@ -832,14 +937,11 @@ export const CustomerCreate = z.object({
   customerNo: z.union([z.string(), z.undefined()]).optional(),
   rank: z.union([z.string(), z.undefined()]).optional(),
   staffRank: z.union([z.string(), z.undefined()]).optional(),
-  firstName: z.union([z.string(), z.undefined()]).optional(),
-  lastName: z.union([z.string(), z.undefined()]).optional(),
-  firstNameKana: z.union([z.string(), z.undefined()]).optional(),
-  lastNameKana: z.union([z.string(), z.undefined()]).optional(),
-  sex: z.union([z.literal("0"), z.literal("1"), z.literal("2"), z.undefined()]).optional(),
-  barcode: z.union([z.string(), z.undefined()]).optional(),
-  birthDate: z.union([z.string(), z.undefined()]).optional(),
-  zipCode: z.union([z.string(), z.undefined()]).optional(),
+  firstName: z.string(),
+  lastName: z.string(),
+  firstKana: z.union([z.string(), z.undefined()]).optional(),
+  lastKana: z.union([z.string(), z.undefined()]).optional(),
+  postCode: z.union([z.string(), z.undefined()]).optional(),
   address: z.union([z.string(), z.undefined()]).optional(),
   phoneNumber: z.union([z.string(), z.undefined()]).optional(),
   faxNumber: z.union([z.string(), z.undefined()]).optional(),
@@ -849,15 +951,27 @@ export const CustomerCreate = z.object({
   mailAddress3: z.union([z.string(), z.undefined()]).optional(),
   companyName: z.union([z.string(), z.undefined()]).optional(),
   departmentName: z.union([z.string(), z.undefined()]).optional(),
-  managerFlag: z.union([z.boolean(), z.undefined()]).optional(),
-  isStaff: z.union([z.boolean(), z.undefined()]).optional(),
-  points: z.union([z.number(), z.undefined()]).optional(),
-  storeId: z.union([z.string(), z.undefined()]).optional(),
-  note: z.union([z.string(), z.undefined()]).optional(),
-  statusId: z.union([z.number(), z.undefined()]).optional(),
-  enterDate: z.union([z.string(), z.undefined()]).optional(),
-  suspendDate: z.union([z.string(), z.undefined()]).optional(),
+  managerialPosition: z.union([z.boolean(), z.undefined()]).optional(),
+  sex: z.union([z.literal("0"), z.literal("1"), z.literal("2"), z.undefined()]).optional(),
+  birthDate: z.union([z.string(), z.undefined()]).optional(),
   pointExpireDate: z.union([z.string(), z.undefined()]).optional(),
+  entryDate: z.union([z.string(), z.undefined()]).optional(),
+  leaveDate: z.union([z.string(), z.undefined()]).optional(),
+  pointGivingUnitPrice: z.union([z.number(), z.undefined()]).optional(),
+  pointGivingUnit: z.union([z.number(), z.undefined()]).optional(),
+  pinCode: z.union([z.string(), z.undefined()]).optional(),
+  passportNo: z.union([z.string(), z.undefined()]).optional(),
+  nationality: z.union([z.string(), z.undefined()]).optional(),
+  alphabetName: z.union([z.string(), z.undefined()]).optional(),
+  mailReceiveFlag: z.union([z.literal("0"), z.literal("1"), z.undefined()]).optional(),
+  note: z.union([z.string(), z.undefined()]).optional(),
+  note2: z.union([z.string(), z.undefined()]).optional(),
+  favoriteList: z.union([z.string(), z.undefined()]).optional(),
+  browsingList: z.union([z.string(), z.undefined()]).optional(),
+  status: z
+    .union([z.literal("0"), z.literal("1"), z.literal("2"), z.literal("3"), z.literal("4"), z.undefined()])
+    .optional(),
+  storeId: z.union([z.string(), z.undefined()]).optional(),
 });
 
 export type CustomerUpdate = z.infer<typeof CustomerUpdate>;
@@ -868,12 +982,9 @@ export const CustomerUpdate = z.object({
   staffRank: z.string().optional(),
   firstName: z.string().optional(),
   lastName: z.string().optional(),
-  firstNameKana: z.string().optional(),
-  lastNameKana: z.string().optional(),
-  sex: z.union([z.literal("0"), z.literal("1"), z.literal("2")]).optional(),
-  barcode: z.string().optional(),
-  birthDate: z.string().optional(),
-  zipCode: z.string().optional(),
+  firstKana: z.string().optional(),
+  lastKana: z.string().optional(),
+  postCode: z.string().optional(),
   address: z.string().optional(),
   phoneNumber: z.string().optional(),
   faxNumber: z.string().optional(),
@@ -883,15 +994,25 @@ export const CustomerUpdate = z.object({
   mailAddress3: z.string().optional(),
   companyName: z.string().optional(),
   departmentName: z.string().optional(),
-  managerFlag: z.boolean().optional(),
-  isStaff: z.boolean().optional(),
-  points: z.number().optional(),
-  storeId: z.string().optional(),
-  note: z.string().optional(),
-  statusId: z.number().optional(),
-  enterDate: z.string().optional(),
-  suspendDate: z.string().optional(),
+  managerialPosition: z.boolean().optional(),
+  sex: z.union([z.literal("0"), z.literal("1"), z.literal("2")]).optional(),
+  birthDate: z.string().optional(),
   pointExpireDate: z.string().optional(),
+  entryDate: z.string().optional(),
+  leaveDate: z.string().optional(),
+  pointGivingUnitPrice: z.number().optional(),
+  pointGivingUnit: z.number().optional(),
+  pinCode: z.string().optional(),
+  passportNo: z.string().optional(),
+  nationality: z.string().optional(),
+  alphabetName: z.string().optional(),
+  mailReceiveFlag: z.union([z.literal("0"), z.literal("1")]).optional(),
+  note: z.string().optional(),
+  note2: z.string().optional(),
+  favoriteList: z.string().optional(),
+  browsingList: z.string().optional(),
+  status: z.union([z.literal("0"), z.literal("1"), z.literal("2"), z.literal("3"), z.literal("4")]).optional(),
+  storeId: z.string().optional(),
 });
 
 export type CustomerBulkCreate = z.infer<typeof CustomerBulkCreate>;
@@ -1020,59 +1141,93 @@ export const Stock = z.object({
   barcode: z.union([z.string(), z.undefined()]).optional(),
   categoryId: z.union([z.number(), z.undefined()]).optional(),
   categoryName: z.union([z.string(), z.undefined()]).optional(),
-  quantity: z.number(),
-  reservedQuantity: z.union([z.number(), z.undefined()]).optional(),
+  stockAmount: z.number(),
+  layawayStockAmount: z.union([z.number(), z.undefined()]).optional(),
   originalQuantity: z.union([z.number(), z.undefined()]).optional(),
-  lastUpdateDate: z.union([z.string(), z.undefined()]).optional(),
+  upDateTime: z.union([z.string(), z.undefined()]).optional(),
 });
 
 export type StockUpdate = z.infer<typeof StockUpdate>;
 export const StockUpdate = z.object({
   storeId: z.number(),
   productId: z.number(),
-  quantity: z.number(),
+  stockAmount: z.number(),
+  stockHistory: z
+    .union([
+      z.object({
+        id: z.number().optional(),
+        memo: z.string().optional(),
+      }),
+      z.undefined(),
+    ])
+    .optional(),
 });
 
 export type StockBulkUpdate = z.infer<typeof StockBulkUpdate>;
 export const StockBulkUpdate = z.object({
   stocks: z.array(StockUpdate),
+  callbackUrl: z.union([z.string(), z.undefined()]).optional(),
 });
 
 export type StockRelativeUpdate = z.infer<typeof StockRelativeUpdate>;
 export const StockRelativeUpdate = z.object({
   storeId: z.number(),
-  productId: z.number(),
-  addQuantity: z.number(),
-  division: z.number(),
-  memo: z.union([z.string(), z.undefined()]).optional(),
+  stockAmount: z.number(),
+  stockHistory: z
+    .union([
+      z.object({
+        memo: z.string().optional(),
+      }),
+      z.undefined(),
+    ])
+    .optional(),
 });
 
 export type StockBulkRelativeUpdate = z.infer<typeof StockBulkRelativeUpdate>;
 export const StockBulkRelativeUpdate = z.object({
   stocks: z.array(StockRelativeUpdate),
+  callbackUrl: z.string(),
 });
 
 export type StockChange = z.infer<typeof StockChange>;
 export const StockChange = z.object({
-  stockChangeId: z.number(),
-  storeId: z.number(),
-  storeName: z.union([z.string(), z.undefined()]).optional(),
-  productId: z.number(),
-  productCode: z.union([z.string(), z.undefined()]).optional(),
-  productName: z.union([z.string(), z.undefined()]).optional(),
-  barcode: z.union([z.string(), z.undefined()]).optional(),
-  categoryId: z.union([z.number(), z.undefined()]).optional(),
-  categoryName: z.union([z.string(), z.undefined()]).optional(),
-  division: z.number(),
-  divisionName: z.union([z.string(), z.undefined()]).optional(),
-  beforeQuantity: z.number(),
-  changeQuantity: z.number(),
-  afterQuantity: z.number(),
-  targetDate: z.string(),
-  staffId: z.union([z.number(), z.undefined()]).optional(),
-  staffName: z.union([z.string(), z.undefined()]).optional(),
-  refId: z.union([z.number(), z.undefined()]).optional(),
-  memo: z.union([z.string(), z.undefined()]).optional(),
+  id: z.number().optional(),
+  updDateTime: z.string().optional(),
+  targetDateTime: z.string().optional(),
+  productId: z.number().optional(),
+  storeId: z.number().optional(),
+  amount: z.number().optional(),
+  stockAmount: z.number().optional(),
+  layawayStockAmount: z.number().optional(),
+  stockDivision: z
+    .union([
+      z.literal("01"),
+      z.literal("02"),
+      z.literal("03"),
+      z.literal("04"),
+      z.literal("05"),
+      z.literal("06"),
+      z.literal("07"),
+      z.literal("08"),
+      z.literal("09"),
+      z.literal("10"),
+      z.literal("12"),
+      z.literal("13"),
+      z.literal("14"),
+      z.literal("15"),
+      z.literal("16"),
+      z.literal("17"),
+      z.literal("18"),
+    ])
+    .optional(),
+  fromStoreId: z.number().optional(),
+  toStoreId: z.number().optional(),
+  taxDivision: z.union([z.literal("0"), z.literal("1"), z.literal("2")]).optional(),
+  price: z.number().optional(),
+  cost: z.number().optional(),
+  memo: z.string().optional(),
+  staffId: z.number().optional(),
+  staffName: z.string().optional(),
 });
 
 export type Bargain = z.infer<typeof Bargain>;
@@ -2885,18 +3040,17 @@ export const get_GetProducts = {
           z.literal("modified"),
         ])
         .optional(),
-      order: z.union([z.literal("asc"), z.literal("desc")]).optional(),
-      productId: z.number().optional(),
-      productCode: z.string().optional(),
-      janCode: z.string().optional(),
-      productName: z.string().optional(),
-      categoryId: z.number().optional(),
-      categoryCode: z.string().optional(),
-      supplierId: z.number().optional(),
-      supplierCode: z.string().optional(),
-      storeId: z.number().optional(),
-      status: z.union([z.literal(0), z.literal(1)]).optional(),
-      productType: z.union([z.literal(0), z.literal(1), z.literal(2), z.literal(9)]).optional(),
+      product_id: z.number().optional(),
+      product_code: z.string().optional(),
+      group_code: z.string().optional(),
+      category_id: z.number().optional(),
+      display_flag: z.union([z.literal("0"), z.literal("1")]).optional(),
+      division: z.union([z.literal("0"), z.literal("1"), z.literal("2")]).optional(),
+      sales_division: z.union([z.literal("0"), z.literal("1")]).optional(),
+      stock_control_division: z.union([z.literal("0"), z.literal("1")]).optional(),
+      supplier_product_no: z.string().optional(),
+      "upd_date_time-from": z.string().optional(),
+      "upd_date_time-to": z.string().optional(),
       fields: z.array(z.string()).optional(),
     }),
   }),
@@ -2962,32 +3116,6 @@ export const delete_DeleteProduct = {
   response: z.unknown(),
 };
 
-export type post_BulkCreateProducts = typeof post_BulkCreateProducts;
-export const post_BulkCreateProducts = {
-  method: z.literal("POST"),
-  path: z.literal("/products/bulk"),
-  requestFormat: z.literal("json"),
-  parameters: z.object({
-    body: ProductBulkCreate,
-  }),
-  response: z.object({
-    items: z.array(Product).optional(),
-  }),
-};
-
-export type put_BulkUpdateProducts = typeof put_BulkUpdateProducts;
-export const put_BulkUpdateProducts = {
-  method: z.literal("PUT"),
-  path: z.literal("/products/bulk"),
-  requestFormat: z.literal("json"),
-  parameters: z.object({
-    body: ProductBulkUpdate,
-  }),
-  response: z.object({
-    items: z.array(Product).optional(),
-  }),
-};
-
 export type get_GetProductPrices = typeof get_GetProductPrices;
 export const get_GetProductPrices = {
   method: z.literal("GET"),
@@ -2995,9 +3123,8 @@ export const get_GetProductPrices = {
   requestFormat: z.literal("json"),
   parameters: z.object({
     query: z.object({
-      storeId: z.number().optional(),
-      priceDivision: z.number().optional(),
-      startDate: z.string().optional(),
+      store_id: z.number().optional(),
+      price_division: z.number().optional(),
       fields: z.array(z.string()).optional(),
     }),
     path: z.object({
@@ -3024,24 +3151,6 @@ export const post_CreateProductPrice = {
   response: ProductPrice,
 };
 
-export type put_UpdateProductPrices = typeof put_UpdateProductPrices;
-export const put_UpdateProductPrices = {
-  method: z.literal("PUT"),
-  path: z.literal("/products/{id}/prices"),
-  requestFormat: z.literal("json"),
-  parameters: z.object({
-    path: z.object({
-      id: z.number(),
-    }),
-    body: z.object({
-      items: z.array(ProductPrice).optional(),
-    }),
-  }),
-  response: z.object({
-    items: z.array(ProductPrice).optional(),
-  }),
-};
-
 export type get_GetProductPriceChanges = typeof get_GetProductPriceChanges;
 export const get_GetProductPriceChanges = {
   method: z.literal("GET"),
@@ -3049,8 +3158,7 @@ export const get_GetProductPriceChanges = {
   requestFormat: z.literal("json"),
   parameters: z.object({
     query: z.object({
-      storeId: z.number().optional(),
-      priceDivision: z.number().optional(),
+      price_division: z.never().optional(),
       limit: z.number().optional(),
       page: z.number().optional(),
       fields: z.array(z.string()).optional(),
@@ -3067,6 +3175,22 @@ export const get_GetProductPriceChanges = {
   }),
 };
 
+export type delete_DeleteProductPrice = typeof delete_DeleteProductPrice;
+export const delete_DeleteProductPrice = {
+  method: z.literal("DELETE"),
+  path: z.literal("/products/{product_id}/prices/{price_division}/{store_id}/{start_date}"),
+  requestFormat: z.literal("json"),
+  parameters: z.object({
+    path: z.object({
+      product_id: z.number(),
+      price_division: z.number(),
+      store_id: z.number(),
+      start_date: z.string(),
+    }),
+  }),
+  response: z.unknown(),
+};
+
 export type get_GetProductReserveItems = typeof get_GetProductReserveItems;
 export const get_GetProductReserveItems = {
   method: z.literal("GET"),
@@ -3074,6 +3198,9 @@ export const get_GetProductReserveItems = {
   requestFormat: z.literal("json"),
   parameters: z.object({
     query: z.object({
+      limit: z.number().optional(),
+      page: z.number().optional(),
+      sort: z.literal("no").optional(),
       fields: z.array(z.string()).optional(),
     }),
     path: z.object({
@@ -3086,38 +3213,6 @@ export const get_GetProductReserveItems = {
   }),
 };
 
-export type post_CreateProductReserveItem = typeof post_CreateProductReserveItem;
-export const post_CreateProductReserveItem = {
-  method: z.literal("POST"),
-  path: z.literal("/products/{id}/reserve_items"),
-  requestFormat: z.literal("json"),
-  parameters: z.object({
-    path: z.object({
-      id: z.number(),
-    }),
-    body: ProductReserveItem,
-  }),
-  response: ProductReserveItem,
-};
-
-export type put_UpdateProductReserveItems = typeof put_UpdateProductReserveItems;
-export const put_UpdateProductReserveItems = {
-  method: z.literal("PUT"),
-  path: z.literal("/products/{id}/reserve_items"),
-  requestFormat: z.literal("json"),
-  parameters: z.object({
-    path: z.object({
-      id: z.number(),
-    }),
-    body: z.object({
-      items: z.array(ProductReserveItem).optional(),
-    }),
-  }),
-  response: z.object({
-    items: z.array(ProductReserveItem).optional(),
-  }),
-};
-
 export type get_GetProductAttributes = typeof get_GetProductAttributes;
 export const get_GetProductAttributes = {
   method: z.literal("GET"),
@@ -3127,8 +3222,6 @@ export const get_GetProductAttributes = {
     query: z.object({
       limit: z.number().optional(),
       page: z.number().optional(),
-      attributeNo: z.number().optional(),
-      attributeName: z.string().optional(),
       fields: z.array(z.string()).optional(),
     }),
   }),
@@ -3160,9 +3253,8 @@ export const get_GetProductAttributeItems = {
     query: z.object({
       limit: z.number().optional(),
       page: z.number().optional(),
-      attributeNo: z.number().optional(),
-      attributeItemCode: z.string().optional(),
-      attributeItemName: z.string().optional(),
+      no: z.number().optional(),
+      code: z.string().optional(),
       fields: z.array(z.string()).optional(),
     }),
   }),
@@ -3185,6 +3277,60 @@ export const post_CreateProductAttributeItem = {
   response: ProductAttributeItem,
 };
 
+export type put_UpdateProductAttribute = typeof put_UpdateProductAttribute;
+export const put_UpdateProductAttribute = {
+  method: z.literal("PUT"),
+  path: z.literal("/products/attributes/{no}"),
+  requestFormat: z.literal("json"),
+  parameters: z.object({
+    path: z.object({
+      no: z.number(),
+    }),
+    body: ProductAttribute,
+  }),
+  response: ProductAttribute,
+};
+
+export type delete_DeleteProductAttribute = typeof delete_DeleteProductAttribute;
+export const delete_DeleteProductAttribute = {
+  method: z.literal("DELETE"),
+  path: z.literal("/products/attributes/{no}"),
+  requestFormat: z.literal("json"),
+  parameters: z.object({
+    path: z.object({
+      no: z.number(),
+    }),
+  }),
+  response: z.unknown(),
+};
+
+export type patch_UpdateProductAttributeItem = typeof patch_UpdateProductAttributeItem;
+export const patch_UpdateProductAttributeItem = {
+  method: z.literal("PATCH"),
+  path: z.literal("/products/attribute_items/{code}"),
+  requestFormat: z.literal("json"),
+  parameters: z.object({
+    path: z.object({
+      code: z.string(),
+    }),
+    body: ProductAttributeItem,
+  }),
+  response: ProductAttributeItem,
+};
+
+export type delete_DeleteProductAttributeItem = typeof delete_DeleteProductAttributeItem;
+export const delete_DeleteProductAttributeItem = {
+  method: z.literal("DELETE"),
+  path: z.literal("/products/attribute_items/{code}"),
+  requestFormat: z.literal("json"),
+  parameters: z.object({
+    path: z.object({
+      code: z.string(),
+    }),
+  }),
+  response: z.unknown(),
+};
+
 export type get_GetProductStores = typeof get_GetProductStores;
 export const get_GetProductStores = {
   method: z.literal("GET"),
@@ -3192,7 +3338,7 @@ export const get_GetProductStores = {
   requestFormat: z.literal("json"),
   parameters: z.object({
     query: z.object({
-      storeId: z.number().optional(),
+      store_id: z.number().optional(),
       fields: z.array(z.string()).optional(),
     }),
     path: z.object({
@@ -3244,7 +3390,6 @@ export const get_GetProductInventoryReservations = {
   requestFormat: z.literal("json"),
   parameters: z.object({
     query: z.object({
-      reservationProductId: z.number().optional(),
       fields: z.array(z.string()).optional(),
     }),
     path: z.object({
@@ -3289,6 +3434,20 @@ export const put_UpdateProductInventoryReservations = {
   }),
 };
 
+export type delete_DeleteProductInventoryReservation = typeof delete_DeleteProductInventoryReservation;
+export const delete_DeleteProductInventoryReservation = {
+  method: z.literal("DELETE"),
+  path: z.literal("/products/{id}/inventory_reservations/{reservation_product_id}"),
+  requestFormat: z.literal("json"),
+  parameters: z.object({
+    path: z.object({
+      id: z.number(),
+      reservation_product_id: z.number(),
+    }),
+  }),
+  response: z.unknown(),
+};
+
 export type get_GetProductReserveItemLabels = typeof get_GetProductReserveItemLabels;
 export const get_GetProductReserveItemLabels = {
   method: z.literal("GET"),
@@ -3298,7 +3457,6 @@ export const get_GetProductReserveItemLabels = {
     query: z.object({
       limit: z.number().optional(),
       page: z.number().optional(),
-      no: z.number().optional(),
       name: z.string().optional(),
       fields: z.array(z.string()).optional(),
     }),
@@ -3322,6 +3480,47 @@ export const post_CreateProductReserveItemLabel = {
   response: ProductReserveItemLabel,
 };
 
+export type delete_DeleteProductReserveItem = typeof delete_DeleteProductReserveItem;
+export const delete_DeleteProductReserveItem = {
+  method: z.literal("DELETE"),
+  path: z.literal("/products/{product_id}/reserve_items/{no}"),
+  requestFormat: z.literal("json"),
+  parameters: z.object({
+    path: z.object({
+      product_id: z.number(),
+      no: z.number(),
+    }),
+  }),
+  response: z.unknown(),
+};
+
+export type put_UpdateProductReserveItemLabel = typeof put_UpdateProductReserveItemLabel;
+export const put_UpdateProductReserveItemLabel = {
+  method: z.literal("PUT"),
+  path: z.literal("/products/reserve_item_labels/{no}"),
+  requestFormat: z.literal("json"),
+  parameters: z.object({
+    path: z.object({
+      no: z.number(),
+    }),
+    body: ProductReserveItemLabel,
+  }),
+  response: ProductReserveItemLabel,
+};
+
+export type delete_DeleteProductReserveItemLabel = typeof delete_DeleteProductReserveItemLabel;
+export const delete_DeleteProductReserveItemLabel = {
+  method: z.literal("DELETE"),
+  path: z.literal("/products/reserve_item_labels/{no}"),
+  requestFormat: z.literal("json"),
+  parameters: z.object({
+    path: z.object({
+      no: z.number(),
+    }),
+  }),
+  response: z.unknown(),
+};
+
 export type get_GetProductImages = typeof get_GetProductImages;
 export const get_GetProductImages = {
   method: z.literal("GET"),
@@ -3331,7 +3530,7 @@ export const get_GetProductImages = {
     query: z.object({
       limit: z.number().optional(),
       page: z.number().optional(),
-      productId: z.number().optional(),
+      product_id: z.number().optional(),
       fields: z.array(z.string()).optional(),
     }),
   }),
@@ -3354,19 +3553,6 @@ export const post_UploadProductImage = {
   response: ProductImage,
 };
 
-export type get_GetProductImage = typeof get_GetProductImage;
-export const get_GetProductImage = {
-  method: z.literal("GET"),
-  path: z.literal("/products/{id}/image"),
-  requestFormat: z.literal("json"),
-  parameters: z.object({
-    path: z.object({
-      id: z.number(),
-    }),
-  }),
-  response: z.unknown(),
-};
-
 export type put_UpdateProductImage = typeof put_UpdateProductImage;
 export const put_UpdateProductImage = {
   method: z.literal("PUT"),
@@ -3387,19 +3573,6 @@ export type delete_DeleteProductImage = typeof delete_DeleteProductImage;
 export const delete_DeleteProductImage = {
   method: z.literal("DELETE"),
   path: z.literal("/products/{id}/image"),
-  requestFormat: z.literal("json"),
-  parameters: z.object({
-    path: z.object({
-      id: z.number(),
-    }),
-  }),
-  response: z.unknown(),
-};
-
-export type get_GetProductIconImage = typeof get_GetProductIconImage;
-export const get_GetProductIconImage = {
-  method: z.literal("GET"),
-  path: z.literal("/products/{id}/icon_image"),
   requestFormat: z.literal("json"),
   parameters: z.object({
     path: z.object({
@@ -3438,243 +3611,6 @@ export const delete_DeleteProductIconImage = {
   response: z.unknown(),
 };
 
-export type delete_DeleteProductPrice = typeof delete_DeleteProductPrice;
-export const delete_DeleteProductPrice = {
-  method: z.literal("DELETE"),
-  path: z.literal("/products/{product_id}/prices/{price_division}/{store_id}/{start_date}"),
-  requestFormat: z.literal("json"),
-  parameters: z.object({
-    path: z.object({
-      product_id: z.number(),
-      price_division: z.number(),
-      store_id: z.number(),
-      start_date: z.string(),
-    }),
-  }),
-  response: z.unknown(),
-};
-
-export type get_GetProductReserveItem = typeof get_GetProductReserveItem;
-export const get_GetProductReserveItem = {
-  method: z.literal("GET"),
-  path: z.literal("/products/{product_id}/reserve_items/{no}"),
-  requestFormat: z.literal("json"),
-  parameters: z.object({
-    query: z.object({
-      fields: z.array(z.string()).optional(),
-    }),
-    path: z.object({
-      product_id: z.number(),
-      no: z.number(),
-    }),
-  }),
-  response: ProductReserveItem,
-};
-
-export type put_UpdateProductReserveItem = typeof put_UpdateProductReserveItem;
-export const put_UpdateProductReserveItem = {
-  method: z.literal("PUT"),
-  path: z.literal("/products/{product_id}/reserve_items/{no}"),
-  requestFormat: z.literal("json"),
-  parameters: z.object({
-    path: z.object({
-      product_id: z.number(),
-      no: z.number(),
-    }),
-    body: ProductReserveItem,
-  }),
-  response: ProductReserveItem,
-};
-
-export type delete_DeleteProductReserveItem = typeof delete_DeleteProductReserveItem;
-export const delete_DeleteProductReserveItem = {
-  method: z.literal("DELETE"),
-  path: z.literal("/products/{product_id}/reserve_items/{no}"),
-  requestFormat: z.literal("json"),
-  parameters: z.object({
-    path: z.object({
-      product_id: z.number(),
-      no: z.number(),
-    }),
-  }),
-  response: z.unknown(),
-};
-
-export type get_GetProductAttribute = typeof get_GetProductAttribute;
-export const get_GetProductAttribute = {
-  method: z.literal("GET"),
-  path: z.literal("/products/attributes/{no}"),
-  requestFormat: z.literal("json"),
-  parameters: z.object({
-    query: z.object({
-      fields: z.array(z.string()).optional(),
-    }),
-    path: z.object({
-      no: z.number(),
-    }),
-  }),
-  response: ProductAttribute,
-};
-
-export type put_UpdateProductAttribute = typeof put_UpdateProductAttribute;
-export const put_UpdateProductAttribute = {
-  method: z.literal("PUT"),
-  path: z.literal("/products/attributes/{no}"),
-  requestFormat: z.literal("json"),
-  parameters: z.object({
-    path: z.object({
-      no: z.number(),
-    }),
-    body: ProductAttribute,
-  }),
-  response: ProductAttribute,
-};
-
-export type delete_DeleteProductAttribute = typeof delete_DeleteProductAttribute;
-export const delete_DeleteProductAttribute = {
-  method: z.literal("DELETE"),
-  path: z.literal("/products/attributes/{no}"),
-  requestFormat: z.literal("json"),
-  parameters: z.object({
-    path: z.object({
-      no: z.number(),
-    }),
-  }),
-  response: z.unknown(),
-};
-
-export type get_GetProductAttributeItem = typeof get_GetProductAttributeItem;
-export const get_GetProductAttributeItem = {
-  method: z.literal("GET"),
-  path: z.literal("/products/attribute_items/{code}"),
-  requestFormat: z.literal("json"),
-  parameters: z.object({
-    query: z.object({
-      fields: z.array(z.string()).optional(),
-    }),
-    path: z.object({
-      code: z.string(),
-    }),
-  }),
-  response: ProductAttributeItem,
-};
-
-export type put_UpdateProductAttributeItem = typeof put_UpdateProductAttributeItem;
-export const put_UpdateProductAttributeItem = {
-  method: z.literal("PUT"),
-  path: z.literal("/products/attribute_items/{code}"),
-  requestFormat: z.literal("json"),
-  parameters: z.object({
-    path: z.object({
-      code: z.string(),
-    }),
-    body: ProductAttributeItem,
-  }),
-  response: ProductAttributeItem,
-};
-
-export type delete_DeleteProductAttributeItem = typeof delete_DeleteProductAttributeItem;
-export const delete_DeleteProductAttributeItem = {
-  method: z.literal("DELETE"),
-  path: z.literal("/products/attribute_items/{code}"),
-  requestFormat: z.literal("json"),
-  parameters: z.object({
-    path: z.object({
-      code: z.string(),
-    }),
-  }),
-  response: z.unknown(),
-};
-
-export type get_GetProductInventoryReservation = typeof get_GetProductInventoryReservation;
-export const get_GetProductInventoryReservation = {
-  method: z.literal("GET"),
-  path: z.literal("/products/{id}/inventory_reservations/{reservation_product_id}"),
-  requestFormat: z.literal("json"),
-  parameters: z.object({
-    query: z.object({
-      fields: z.array(z.string()).optional(),
-    }),
-    path: z.object({
-      id: z.number(),
-      reservation_product_id: z.number(),
-    }),
-  }),
-  response: ProductInventoryReservation,
-};
-
-export type put_UpdateProductInventoryReservation = typeof put_UpdateProductInventoryReservation;
-export const put_UpdateProductInventoryReservation = {
-  method: z.literal("PUT"),
-  path: z.literal("/products/{id}/inventory_reservations/{reservation_product_id}"),
-  requestFormat: z.literal("json"),
-  parameters: z.object({
-    path: z.object({
-      id: z.number(),
-      reservation_product_id: z.number(),
-    }),
-    body: ProductInventoryReservation,
-  }),
-  response: ProductInventoryReservation,
-};
-
-export type delete_DeleteProductInventoryReservation = typeof delete_DeleteProductInventoryReservation;
-export const delete_DeleteProductInventoryReservation = {
-  method: z.literal("DELETE"),
-  path: z.literal("/products/{id}/inventory_reservations/{reservation_product_id}"),
-  requestFormat: z.literal("json"),
-  parameters: z.object({
-    path: z.object({
-      id: z.number(),
-      reservation_product_id: z.number(),
-    }),
-  }),
-  response: z.unknown(),
-};
-
-export type get_GetProductReserveItemLabel = typeof get_GetProductReserveItemLabel;
-export const get_GetProductReserveItemLabel = {
-  method: z.literal("GET"),
-  path: z.literal("/products/reserve_item_labels/{no}"),
-  requestFormat: z.literal("json"),
-  parameters: z.object({
-    query: z.object({
-      fields: z.array(z.string()).optional(),
-    }),
-    path: z.object({
-      no: z.number(),
-    }),
-  }),
-  response: ProductReserveItemLabel,
-};
-
-export type put_UpdateProductReserveItemLabel = typeof put_UpdateProductReserveItemLabel;
-export const put_UpdateProductReserveItemLabel = {
-  method: z.literal("PUT"),
-  path: z.literal("/products/reserve_item_labels/{no}"),
-  requestFormat: z.literal("json"),
-  parameters: z.object({
-    path: z.object({
-      no: z.number(),
-    }),
-    body: ProductReserveItemLabel,
-  }),
-  response: ProductReserveItemLabel,
-};
-
-export type delete_DeleteProductReserveItemLabel = typeof delete_DeleteProductReserveItemLabel;
-export const delete_DeleteProductReserveItemLabel = {
-  method: z.literal("DELETE"),
-  path: z.literal("/products/reserve_item_labels/{no}"),
-  requestFormat: z.literal("json"),
-  parameters: z.object({
-    path: z.object({
-      no: z.number(),
-    }),
-  }),
-  response: z.unknown(),
-};
-
 export type get_Transactions = typeof get_Transactions;
 export const get_Transactions = {
   method: z.literal("GET"),
@@ -3682,17 +3618,48 @@ export const get_Transactions = {
   requestFormat: z.literal("json"),
   parameters: z.object({
     query: z.object({
-      storeId: z.number().optional(),
-      customerId: z.number().optional(),
-      customerCode: z.string().optional(),
-      "transactionHead.transactionDateTime": z.string().optional(),
-      "transactionHead.transactionDateTimeFrom": z.string().optional(),
-      "transactionHead.transactionDateTimeTo": z.string().optional(),
-      "transactionHead.transactionHeadId": z.number().optional(),
-      terminal: z.number().optional(),
-      paymentMethod: z.number().optional(),
       limit: z.number().optional(),
       page: z.number().optional(),
+      "transaction_head_id-from": z.string().optional(),
+      "transaction_head_id-to": z.string().optional(),
+      "transaction_date_time-from": z.string().optional(),
+      "transaction_date_time-to": z.string().optional(),
+      transaction_head_division: z
+        .union([
+          z.literal("1"),
+          z.literal("2"),
+          z.literal("3"),
+          z.literal("4"),
+          z.literal("5"),
+          z.literal("6"),
+          z.literal("7"),
+          z.literal("8"),
+          z.literal("9"),
+          z.literal("11"),
+          z.literal("13"),
+          z.literal("14"),
+          z.literal("15"),
+          z.literal("16"),
+        ])
+        .optional(),
+      store_id: z.number().optional(),
+      "terminal_tran_date_time-from": z.string().optional(),
+      "terminal_tran_date_time-to": z.string().optional(),
+      adjustment_date_time: z.string().optional(),
+      sum_date: z.string().optional(),
+      "sum_date-from": z.string().optional(),
+      "sum_date-to": z.string().optional(),
+      customer_code: z.string().optional(),
+      transaction_uuid: z.string().optional(),
+      barcode: z.string().optional(),
+      "upd_date_time-from": z.string().optional(),
+      "upd_date_time-to": z.string().optional(),
+      with_details: z.union([z.literal("none"), z.literal("all"), z.literal("summary")]).optional(),
+      with_deposit_others: z.union([z.literal("none"), z.literal("all")]).optional(),
+      with_layaways: z.union([z.literal("none"), z.literal("all")]).optional(),
+      with_layaway_pick_ups: z.union([z.literal("none"), z.literal("all")]).optional(),
+      with_money_control: z.union([z.literal("none"), z.literal("all")]).optional(),
+      with_detail_product_attributes: z.union([z.literal("none"), z.literal("all")]).optional(),
     }),
   }),
   response: z.object({
@@ -3720,6 +3687,22 @@ export const get_TransactionsId = {
   path: z.literal("/transactions/{id}"),
   requestFormat: z.literal("json"),
   parameters: z.object({
+    query: z.object({
+      with_details: z.union([z.literal("none"), z.literal("all"), z.literal("summary")]).optional(),
+      with_deposit_others: z.union([z.literal("none"), z.literal("all")]).optional(),
+      with_coupons: z.union([z.literal("none"), z.literal("all")]).optional(),
+      with_coupon_items: z.union([z.literal("none"), z.literal("all")]).optional(),
+      with_discounts: z.union([z.literal("none"), z.literal("all")]).optional(),
+      with_store: z.union([z.literal("none"), z.literal("all")]).optional(),
+      with_customer: z.union([z.literal("none"), z.literal("all")]).optional(),
+      with_customer_groups: z.union([z.literal("none"), z.literal("all")]).optional(),
+      with_staff: z.union([z.literal("none"), z.literal("all")]).optional(),
+      with_recorded_staff: z.union([z.literal("none"), z.literal("all")]).optional(),
+      with_layaways: z.union([z.literal("none"), z.literal("all")]).optional(),
+      with_layaway_pick_ups: z.union([z.literal("none"), z.literal("all")]).optional(),
+      with_money_control: z.union([z.literal("none"), z.literal("all")]).optional(),
+      with_detail_product_attributes: z.union([z.literal("none"), z.literal("all")]).optional(),
+    }),
     path: z.object({
       id: z.number(),
     }),
@@ -3727,9 +3710,9 @@ export const get_TransactionsId = {
   response: Transaction,
 };
 
-export type put_TransactionsId = typeof put_TransactionsId;
-export const put_TransactionsId = {
-  method: z.literal("PUT"),
+export type patch_TransactionsId = typeof patch_TransactionsId;
+export const patch_TransactionsId = {
+  method: z.literal("PATCH"),
   path: z.literal("/transactions/{id}"),
   requestFormat: z.literal("json"),
   parameters: z.object({
@@ -3762,6 +3745,12 @@ export const get_TransactionsIddetails = {
   path: z.literal("/transactions/{id}/details"),
   requestFormat: z.literal("json"),
   parameters: z.object({
+    query: z.object({
+      limit: z.number().optional(),
+      page: z.number().optional(),
+      with_discounts: z.union([z.literal("none"), z.literal("all")]).optional(),
+      with_detail_product_attributes: z.union([z.literal("none"), z.literal("all")]).optional(),
+    }),
     path: z.object({
       id: z.number(),
     }),
@@ -3771,188 +3760,51 @@ export const get_TransactionsIddetails = {
   }),
 };
 
-export type get_Layaways = typeof get_Layaways;
-export const get_Layaways = {
-  method: z.literal("GET"),
-  path: z.literal("/layaways"),
-  requestFormat: z.literal("json"),
-  parameters: z.object({
-    query: z.object({
-      storeId: z.number().optional(),
-      status: z.union([z.literal(1), z.literal(2)]).optional(),
-      "layaway.layawayDateTimeFrom": z.string().optional(),
-      "layaway.layawayDateTimeTo": z.string().optional(),
-      limit: z.number().optional(),
-      page: z.number().optional(),
-    }),
-  }),
-  response: z.object({
-    layaways: z.array(Layaway).optional(),
-    pagination: Pagination.optional(),
-  }),
-};
-
-export type post_Layaways = typeof post_Layaways;
-export const post_Layaways = {
+export type post_TransactionsIdcancel = typeof post_TransactionsIdcancel;
+export const post_TransactionsIdcancel = {
   method: z.literal("POST"),
-  path: z.literal("/layaways"),
-  requestFormat: z.literal("json"),
-  parameters: z.object({
-    body: LayawayCreate,
-  }),
-  response: z.object({
-    id: z.number().optional(),
-  }),
-};
-
-export type get_LayawaysId = typeof get_LayawaysId;
-export const get_LayawaysId = {
-  method: z.literal("GET"),
-  path: z.literal("/layaways/{id}"),
-  requestFormat: z.literal("json"),
-  parameters: z.object({
-    path: z.object({
-      id: z.number(),
-    }),
-  }),
-  response: Layaway,
-};
-
-export type delete_LayawaysId = typeof delete_LayawaysId;
-export const delete_LayawaysId = {
-  method: z.literal("DELETE"),
-  path: z.literal("/layaways/{id}"),
-  requestFormat: z.literal("json"),
-  parameters: z.object({
-    path: z.object({
-      id: z.number(),
-    }),
-  }),
-  response: z.unknown(),
-};
-
-export type get_Pre_sales = typeof get_Pre_sales;
-export const get_Pre_sales = {
-  method: z.literal("GET"),
-  path: z.literal("/pre_sales"),
-  requestFormat: z.literal("json"),
-  parameters: z.object({
-    query: z.object({
-      storeId: z.number().optional(),
-      status: z.union([z.literal(1), z.literal(2)]).optional(),
-      "preSale.preSaleDateTimeFrom": z.string().optional(),
-      "preSale.preSaleDateTimeTo": z.string().optional(),
-      limit: z.number().optional(),
-      page: z.number().optional(),
-    }),
-  }),
-  response: z.object({
-    preSales: z.array(PreSale).optional(),
-    pagination: Pagination.optional(),
-  }),
-};
-
-export type post_Pre_sales = typeof post_Pre_sales;
-export const post_Pre_sales = {
-  method: z.literal("POST"),
-  path: z.literal("/pre_sales"),
-  requestFormat: z.literal("json"),
-  parameters: z.object({
-    body: PreSaleCreate,
-  }),
-  response: z.object({
-    id: z.number().optional(),
-  }),
-};
-
-export type get_Pre_salesId = typeof get_Pre_salesId;
-export const get_Pre_salesId = {
-  method: z.literal("GET"),
-  path: z.literal("/pre_sales/{id}"),
-  requestFormat: z.literal("json"),
-  parameters: z.object({
-    path: z.object({
-      id: z.number(),
-    }),
-  }),
-  response: PreSale,
-};
-
-export type put_Pre_salesId = typeof put_Pre_salesId;
-export const put_Pre_salesId = {
-  method: z.literal("PUT"),
-  path: z.literal("/pre_sales/{id}"),
-  requestFormat: z.literal("json"),
-  parameters: z.object({
-    path: z.object({
-      id: z.number(),
-    }),
-    body: PreSaleUpdate,
-  }),
-  response: z.object({
-    message: z.string().optional(),
-  }),
-};
-
-export type delete_Pre_salesId = typeof delete_Pre_salesId;
-export const delete_Pre_salesId = {
-  method: z.literal("DELETE"),
-  path: z.literal("/pre_sales/{id}"),
-  requestFormat: z.literal("json"),
-  parameters: z.object({
-    path: z.object({
-      id: z.number(),
-    }),
-  }),
-  response: z.unknown(),
-};
-
-export type get_Ticket_transactions = typeof get_Ticket_transactions;
-export const get_Ticket_transactions = {
-  method: z.literal("GET"),
-  path: z.literal("/ticket_transactions"),
-  requestFormat: z.literal("json"),
-  parameters: z.object({
-    query: z.object({
-      storeId: z.number().optional(),
-      statusType: z.union([z.literal(1), z.literal(2), z.literal(3), z.literal(4)]).optional(),
-      "ticketTransaction.ticketDateTimeFrom": z.string().optional(),
-      "ticketTransaction.ticketDateTimeTo": z.string().optional(),
-      "ticketTransaction.ticketCode": z.string().optional(),
-      limit: z.number().optional(),
-      page: z.number().optional(),
-    }),
-  }),
-  response: z.object({
-    ticketTransactions: z.array(TicketTransaction).optional(),
-    pagination: Pagination.optional(),
-  }),
-};
-
-export type get_Ticket_transactionsId = typeof get_Ticket_transactionsId;
-export const get_Ticket_transactionsId = {
-  method: z.literal("GET"),
-  path: z.literal("/ticket_transactions/{id}"),
-  requestFormat: z.literal("json"),
-  parameters: z.object({
-    path: z.object({
-      id: z.number(),
-    }),
-  }),
-  response: TicketTransaction,
-};
-
-export type put_Ticket_transactionsId = typeof put_Ticket_transactionsId;
-export const put_Ticket_transactionsId = {
-  method: z.literal("PUT"),
-  path: z.literal("/ticket_transactions/{id}"),
+  path: z.literal("/transactions/{id}/cancel"),
   requestFormat: z.literal("json"),
   parameters: z.object({
     path: z.object({
       id: z.number(),
     }),
     body: z.object({
-      statusType: z.union([z.literal(1), z.literal(2), z.literal(3), z.literal(4)]),
+      cancelDateTime: z.union([z.string(), z.null()]).optional(),
+      depositOthers: z
+        .array(
+          z.object({
+            no: z.union([z.literal("1"), z.literal("2"), z.literal("3")]).optional(),
+            cancelSlipNumber: z.string().optional(),
+          }),
+        )
+        .optional(),
+    }),
+  }),
+  response: z.object({
+    message: z.string().optional(),
+  }),
+};
+
+export type post_TransactionsIddispose = typeof post_TransactionsIddispose;
+export const post_TransactionsIddispose = {
+  method: z.literal("POST"),
+  path: z.literal("/transactions/{id}/dispose"),
+  requestFormat: z.literal("json"),
+  parameters: z.object({
+    path: z.object({
+      id: z.number(),
+    }),
+    body: z.object({
+      terminalTranDateTime: z.union([z.string(), z.null()]).optional(),
+      depositOthers: z
+        .array(
+          z.object({
+            no: z.union([z.literal("1"), z.literal("2"), z.literal("3")]).optional(),
+            cancelSlipNumber: z.string().optional(),
+          }),
+        )
+        .optional(),
     }),
   }),
   response: z.object({
@@ -3971,42 +3823,10 @@ export const get_Customers = {
       sort: z.string().optional(),
       limit: z.number().optional(),
       page: z.number().optional(),
-      customer_id: z.string().optional(),
       customer_code: z.string().optional(),
+      "customer_id-from": z.string().optional(),
+      "customer_id-to": z.string().optional(),
       customer_no: z.string().optional(),
-      rank: z.string().optional(),
-      staff_rank: z.string().optional(),
-      first_name: z.string().optional(),
-      last_name: z.string().optional(),
-      first_name_kana: z.string().optional(),
-      last_name_kana: z.string().optional(),
-      sex: z.union([z.literal("0"), z.literal("1"), z.literal("2")]).optional(),
-      barcode: z.string().optional(),
-      "birth_date-from": z.string().optional(),
-      "birth_date-to": z.string().optional(),
-      zip_code: z.string().optional(),
-      address: z.string().optional(),
-      phone_number: z.string().optional(),
-      fax_number: z.string().optional(),
-      mobile_number: z.string().optional(),
-      mail_address: z.string().optional(),
-      company_name: z.string().optional(),
-      department_name: z.string().optional(),
-      manager_flag: z.boolean().optional(),
-      is_staff: z.boolean().optional(),
-      "points-from": z.number().optional(),
-      "points-to": z.number().optional(),
-      store_id: z.string().optional(),
-      note: z.string().optional(),
-      status_id: z.union([z.literal(1), z.literal(2)]).optional(),
-      "enter_date-from": z.string().optional(),
-      "enter_date-to": z.string().optional(),
-      "suspend_date-from": z.string().optional(),
-      "suspend_date-to": z.string().optional(),
-      "point_expire_date-from": z.string().optional(),
-      "point_expire_date-to": z.string().optional(),
-      "ins_date_time-from": z.string().optional(),
-      "ins_date_time-to": z.string().optional(),
       "upd_date_time-from": z.string().optional(),
       "upd_date_time-to": z.string().optional(),
     }),
@@ -4065,73 +3885,10 @@ export const delete_CustomersId = {
   response: z.unknown(),
 };
 
-export type post_Customersbulk = typeof post_Customersbulk;
-export const post_Customersbulk = {
-  method: z.literal("POST"),
-  path: z.literal("/customers/bulk"),
-  requestFormat: z.literal("json"),
-  parameters: z.object({
-    body: CustomerBulkCreate,
-  }),
-  response: z.array(Customer),
-};
-
-export type put_Customersbulk = typeof put_Customersbulk;
-export const put_Customersbulk = {
-  method: z.literal("PUT"),
-  path: z.literal("/customers/bulk"),
-  requestFormat: z.literal("json"),
-  parameters: z.object({
-    body: CustomerBulkUpdate,
-  }),
-  response: z.array(Customer),
-};
-
-export type get_CustomersIdpoints = typeof get_CustomersIdpoints;
-export const get_CustomersIdpoints = {
+export type get_Customer_required_column_setting = typeof get_Customer_required_column_setting;
+export const get_Customer_required_column_setting = {
   method: z.literal("GET"),
-  path: z.literal("/customers/{id}/points"),
-  requestFormat: z.literal("json"),
-  parameters: z.object({
-    path: z.object({
-      id: z.string(),
-    }),
-  }),
-  response: CustomerPoint,
-};
-
-export type put_CustomersIdpoints = typeof put_CustomersIdpoints;
-export const put_CustomersIdpoints = {
-  method: z.literal("PUT"),
-  path: z.literal("/customers/{id}/points"),
-  requestFormat: z.literal("json"),
-  parameters: z.object({
-    path: z.object({
-      id: z.string(),
-    }),
-    body: CustomerPointUpdate,
-  }),
-  response: CustomerPoint,
-};
-
-export type patch_CustomersIdpoints = typeof patch_CustomersIdpoints;
-export const patch_CustomersIdpoints = {
-  method: z.literal("PATCH"),
-  path: z.literal("/customers/{id}/points"),
-  requestFormat: z.literal("json"),
-  parameters: z.object({
-    path: z.object({
-      id: z.string(),
-    }),
-    body: CustomerPointRelativeUpdate,
-  }),
-  response: CustomerPoint,
-};
-
-export type get_Customer_ranks = typeof get_Customer_ranks;
-export const get_Customer_ranks = {
-  method: z.literal("GET"),
-  path: z.literal("/customer_ranks"),
+  path: z.literal("/customer_required_column_setting"),
   requestFormat: z.literal("json"),
   parameters: z.object({
     query: z.object({
@@ -4139,172 +3896,26 @@ export const get_Customer_ranks = {
       sort: z.string().optional(),
       limit: z.number().optional(),
       page: z.number().optional(),
-      rank_id: z.string().optional(),
-      rank_name: z.string().optional(),
-      "point_rate-from": z.number().optional(),
-      "point_rate-to": z.number().optional(),
-      point_expiration_type: z.union([z.literal("0"), z.literal("1"), z.literal("2")]).optional(),
-      "ins_date_time-from": z.string().optional(),
-      "ins_date_time-to": z.string().optional(),
-      "upd_date_time-from": z.string().optional(),
-      "upd_date_time-to": z.string().optional(),
+      column_name: z.string().optional(),
+      value: z.union([z.literal("0"), z.literal("1")]).optional(),
     }),
   }),
-  response: z.array(CustomerRank),
-};
-
-export type post_Customer_ranks = typeof post_Customer_ranks;
-export const post_Customer_ranks = {
-  method: z.literal("POST"),
-  path: z.literal("/customer_ranks"),
-  requestFormat: z.literal("json"),
-  parameters: z.object({
-    body: CustomerRankCreate,
-  }),
-  response: CustomerRank,
-};
-
-export type get_Customer_ranksId = typeof get_Customer_ranksId;
-export const get_Customer_ranksId = {
-  method: z.literal("GET"),
-  path: z.literal("/customer_ranks/{id}"),
-  requestFormat: z.literal("json"),
-  parameters: z.object({
-    path: z.object({
-      id: z.string(),
-    }),
-  }),
-  response: CustomerRank,
-};
-
-export type put_Customer_ranksId = typeof put_Customer_ranksId;
-export const put_Customer_ranksId = {
-  method: z.literal("PUT"),
-  path: z.literal("/customer_ranks/{id}"),
-  requestFormat: z.literal("json"),
-  parameters: z.object({
-    path: z.object({
-      id: z.string(),
-    }),
-    body: CustomerRankUpdate,
-  }),
-  response: CustomerRank,
-};
-
-export type delete_Customer_ranksId = typeof delete_Customer_ranksId;
-export const delete_Customer_ranksId = {
-  method: z.literal("DELETE"),
-  path: z.literal("/customer_ranks/{id}"),
-  requestFormat: z.literal("json"),
-  parameters: z.object({
-    path: z.object({
-      id: z.string(),
-    }),
-  }),
-  response: z.unknown(),
-};
-
-export type get_Staff_ranks = typeof get_Staff_ranks;
-export const get_Staff_ranks = {
-  method: z.literal("GET"),
-  path: z.literal("/staff_ranks"),
-  requestFormat: z.literal("json"),
-  parameters: z.object({
-    query: z.object({
-      fields: z.array(z.string()).optional(),
-      sort: z.string().optional(),
-      limit: z.number().optional(),
-      page: z.number().optional(),
-      staff_rank_id: z.string().optional(),
-      staff_rank_name: z.string().optional(),
-      "discount_rate-from": z.number().optional(),
-      "discount_rate-to": z.number().optional(),
-      "point_rate-from": z.number().optional(),
-      "point_rate-to": z.number().optional(),
-      "ins_date_time-from": z.string().optional(),
-      "ins_date_time-to": z.string().optional(),
-      "upd_date_time-from": z.string().optional(),
-      "upd_date_time-to": z.string().optional(),
-    }),
-  }),
-  response: z.array(StaffRank),
-};
-
-export type post_Staff_ranks = typeof post_Staff_ranks;
-export const post_Staff_ranks = {
-  method: z.literal("POST"),
-  path: z.literal("/staff_ranks"),
-  requestFormat: z.literal("json"),
-  parameters: z.object({
-    body: StaffRankCreate,
-  }),
-  response: StaffRank,
-};
-
-export type get_Staff_ranksId = typeof get_Staff_ranksId;
-export const get_Staff_ranksId = {
-  method: z.literal("GET"),
-  path: z.literal("/staff_ranks/{id}"),
-  requestFormat: z.literal("json"),
-  parameters: z.object({
-    path: z.object({
-      id: z.string(),
-    }),
-  }),
-  response: StaffRank,
-};
-
-export type put_Staff_ranksId = typeof put_Staff_ranksId;
-export const put_Staff_ranksId = {
-  method: z.literal("PUT"),
-  path: z.literal("/staff_ranks/{id}"),
-  requestFormat: z.literal("json"),
-  parameters: z.object({
-    path: z.object({
-      id: z.string(),
-    }),
-    body: StaffRankUpdate,
-  }),
-  response: StaffRank,
-};
-
-export type delete_Staff_ranksId = typeof delete_Staff_ranksId;
-export const delete_Staff_ranksId = {
-  method: z.literal("DELETE"),
-  path: z.literal("/staff_ranks/{id}"),
-  requestFormat: z.literal("json"),
-  parameters: z.object({
-    path: z.object({
-      id: z.string(),
-    }),
-  }),
-  response: z.unknown(),
-};
-
-export type get_Customersrequired = typeof get_Customersrequired;
-export const get_Customersrequired = {
-  method: z.literal("GET"),
-  path: z.literal("/customers/required"),
-  requestFormat: z.literal("json"),
-  parameters: z.never(),
   response: CustomerRequired,
 };
 
 export type get_GetStocks = typeof get_GetStocks;
 export const get_GetStocks = {
   method: z.literal("GET"),
-  path: z.literal("/stocks"),
+  path: z.literal("/stock"),
   requestFormat: z.literal("json"),
   parameters: z.object({
     query: z.object({
-      store_id: z.number().optional(),
-      product_id: z.number().optional(),
-      product_code: z.string().optional(),
-      product_name: z.string().optional(),
-      category_id: z.number().optional(),
-      barcode: z.string().optional(),
       limit: z.number().optional(),
       page: z.number().optional(),
+      store_id: z.number().optional(),
+      product_id: z.number().optional(),
+      "upd_date_time-from": z.string().optional(),
+      "upd_date_time-to": z.string().optional(),
     }),
   }),
   response: z.object({
@@ -4313,2968 +3924,76 @@ export const get_GetStocks = {
   }),
 };
 
-export type patch_UpdateStock = typeof patch_UpdateStock;
-export const patch_UpdateStock = {
+export type patch_PatchProductStock = typeof patch_PatchProductStock;
+export const patch_PatchProductStock = {
   method: z.literal("PATCH"),
-  path: z.literal("/stocks"),
+  path: z.literal("/stock/{product_id}"),
   requestFormat: z.literal("json"),
   parameters: z.object({
+    path: z.object({
+      product_id: z.number().optional(),
+    }),
     body: StockUpdate,
   }),
-  response: z.unknown(),
+  response: StockUpdate,
+};
+
+export type post_UpdateStockRelative = typeof post_UpdateStockRelative;
+export const post_UpdateStockRelative = {
+  method: z.literal("POST"),
+  path: z.literal("/stock/{product_id}/add"),
+  requestFormat: z.literal("json"),
+  parameters: z.object({
+    path: z.object({
+      product_id: z.number(),
+    }),
+    body: StockRelativeUpdate,
+  }),
+  response: StockUpdate,
 };
 
 export type get_GetStockChanges = typeof get_GetStockChanges;
 export const get_GetStockChanges = {
   method: z.literal("GET"),
-  path: z.literal("/stocks/changes"),
+  path: z.literal("/stock/changes/{product_id}/{store_id}"),
   requestFormat: z.literal("json"),
   parameters: z.object({
     query: z.object({
-      store_id: z.number().optional(),
-      product_id: z.number().optional(),
-      product_code: z.string().optional(),
-      product_name: z.string().optional(),
-      division: z.number().optional(),
-      target_date_from: z.string().optional(),
-      target_date_to: z.string().optional(),
       limit: z.number().optional(),
       page: z.number().optional(),
-    }),
-  }),
-  response: z.object({
-    stockChanges: z.array(StockChange).optional(),
-    pagination: Pagination.optional(),
-  }),
-};
-
-export type get_Bargain = typeof get_Bargain;
-export const get_Bargain = {
-  method: z.literal("GET"),
-  path: z.literal("/bargain"),
-  requestFormat: z.literal("json"),
-  parameters: z.object({
-    query: z.object({
-      fields: z.array(z.string()).optional(),
-      sort: z.string().optional(),
-      limit: z.number().optional(),
-      page: z.number().optional(),
-      bargain_id: z.string().optional(),
-      term_start: z.string().optional(),
-      term_end: z.string().optional(),
-    }),
-    path: z.object({
-      contract_id: z.string(),
-    }),
-  }),
-  response: z.array(Bargain),
-};
-
-export type post_Bargain = typeof post_Bargain;
-export const post_Bargain = {
-  method: z.literal("POST"),
-  path: z.literal("/bargain"),
-  requestFormat: z.literal("json"),
-  parameters: z.object({
-    path: z.object({
-      contract_id: z.string(),
-    }),
-    body: BargainCreate,
-  }),
-  response: Bargain,
-};
-
-export type patch_BargainId = typeof patch_BargainId;
-export const patch_BargainId = {
-  method: z.literal("PATCH"),
-  path: z.literal("/bargain/{id}"),
-  requestFormat: z.literal("json"),
-  parameters: z.object({
-    path: z.object({
-      contract_id: z.string(),
-      id: z.string(),
-    }),
-    body: BargainUpdate,
-  }),
-  response: Bargain,
-};
-
-export type delete_BargainId = typeof delete_BargainId;
-export const delete_BargainId = {
-  method: z.literal("DELETE"),
-  path: z.literal("/bargain/{id}"),
-  requestFormat: z.literal("json"),
-  parameters: z.object({
-    path: z.object({
-      contract_id: z.string(),
-      id: z.string(),
-    }),
-  }),
-  response: z.unknown(),
-};
-
-export type get_BargainIdstores = typeof get_BargainIdstores;
-export const get_BargainIdstores = {
-  method: z.literal("GET"),
-  path: z.literal("/bargain/{id}/stores"),
-  requestFormat: z.literal("json"),
-  parameters: z.object({
-    query: z.object({
-      fields: z.array(z.string()).optional(),
-      sort: z.string().optional(),
-      limit: z.number().optional(),
-      page: z.number().optional(),
-      store_id: z.string().optional(),
+      id: z.number().optional(),
+      target_date: z.string().optional(),
+      stock_amount: z.number().optional(),
+      stock_division: z
+        .union([
+          z.literal("01"),
+          z.literal("02"),
+          z.literal("03"),
+          z.literal("04"),
+          z.literal("05"),
+          z.literal("06"),
+          z.literal("07"),
+          z.literal("08"),
+          z.literal("09"),
+          z.literal("10"),
+          z.literal("12"),
+          z.literal("13"),
+          z.literal("14"),
+          z.literal("15"),
+          z.literal("16"),
+          z.literal("17"),
+          z.literal("18"),
+        ])
+        .optional(),
+      from_store_id: z.number().optional(),
+      to_store_id: z.number().optional(),
     }),
     path: z.object({
-      contract_id: z.string(),
-      id: z.string(),
-    }),
-  }),
-  response: z.array(BargainStore),
-};
-
-export type post_BargainIdstores = typeof post_BargainIdstores;
-export const post_BargainIdstores = {
-  method: z.literal("POST"),
-  path: z.literal("/bargain/{id}/stores"),
-  requestFormat: z.literal("json"),
-  parameters: z.object({
-    path: z.object({
-      contract_id: z.string(),
-      id: z.string(),
-    }),
-    body: BargainStoreCreate,
-  }),
-  response: BargainStore,
-};
-
-export type patch_BargainIdstoresBargainStoreId = typeof patch_BargainIdstoresBargainStoreId;
-export const patch_BargainIdstoresBargainStoreId = {
-  method: z.literal("PATCH"),
-  path: z.literal("/bargain/{id}/stores/{bargainStoreId}"),
-  requestFormat: z.literal("json"),
-  parameters: z.object({
-    path: z.object({
-      contract_id: z.string(),
-      id: z.string(),
-      bargainStoreId: z.string(),
-    }),
-    body: BargainStoreUpdate,
-  }),
-  response: BargainStore,
-};
-
-export type delete_BargainIdstoresBargainStoreId = typeof delete_BargainIdstoresBargainStoreId;
-export const delete_BargainIdstoresBargainStoreId = {
-  method: z.literal("DELETE"),
-  path: z.literal("/bargain/{id}/stores/{bargainStoreId}"),
-  requestFormat: z.literal("json"),
-  parameters: z.object({
-    path: z.object({
-      contract_id: z.string(),
-      id: z.string(),
-      bargainStoreId: z.string(),
-    }),
-  }),
-  response: z.unknown(),
-};
-
-export type get_BargainIdproducts = typeof get_BargainIdproducts;
-export const get_BargainIdproducts = {
-  method: z.literal("GET"),
-  path: z.literal("/bargain/{id}/products"),
-  requestFormat: z.literal("json"),
-  parameters: z.object({
-    query: z.object({
-      fields: z.array(z.string()).optional(),
-      sort: z.string().optional(),
-      limit: z.number().optional(),
-      page: z.number().optional(),
-      target_division: z.union([z.literal("1"), z.literal("2"), z.literal("3")]).optional(),
-      target_id: z.string().optional(),
-    }),
-    path: z.object({
-      contract_id: z.string(),
-      id: z.string(),
-    }),
-  }),
-  response: z.array(BargainProduct),
-};
-
-export type post_BargainIdproducts = typeof post_BargainIdproducts;
-export const post_BargainIdproducts = {
-  method: z.literal("POST"),
-  path: z.literal("/bargain/{id}/products"),
-  requestFormat: z.literal("json"),
-  parameters: z.object({
-    path: z.object({
-      contract_id: z.string(),
-      id: z.string(),
-    }),
-    body: BargainProductCreate,
-  }),
-  response: BargainProduct,
-};
-
-export type patch_BargainIdproductsBargainProductId = typeof patch_BargainIdproductsBargainProductId;
-export const patch_BargainIdproductsBargainProductId = {
-  method: z.literal("PATCH"),
-  path: z.literal("/bargain/{id}/products/{bargainProductId}"),
-  requestFormat: z.literal("json"),
-  parameters: z.object({
-    path: z.object({
-      contract_id: z.string(),
-      id: z.string(),
-      bargainProductId: z.string(),
-    }),
-    body: BargainProductUpdate,
-  }),
-  response: BargainProduct,
-};
-
-export type delete_BargainIdproductsBargainProductId = typeof delete_BargainIdproductsBargainProductId;
-export const delete_BargainIdproductsBargainProductId = {
-  method: z.literal("DELETE"),
-  path: z.literal("/bargain/{id}/products/{bargainProductId}"),
-  requestFormat: z.literal("json"),
-  parameters: z.object({
-    path: z.object({
-      contract_id: z.string(),
-      id: z.string(),
-      bargainProductId: z.string(),
-    }),
-  }),
-  response: z.unknown(),
-};
-
-export type get_Product_option_groups = typeof get_Product_option_groups;
-export const get_Product_option_groups = {
-  method: z.literal("GET"),
-  path: z.literal("/product_option_groups"),
-  requestFormat: z.literal("json"),
-  parameters: z.object({
-    query: z.object({
-      fields: z.array(z.string()).optional(),
-      sort: z.string().optional(),
-      limit: z.number().optional(),
-      page: z.number().optional(),
-      product_option_group_name: z.string().optional(),
-      condition_id: z.string().optional(),
-    }),
-    path: z.object({
-      contract_id: z.string(),
-    }),
-  }),
-  response: z.array(ProductOptionGroup),
-};
-
-export type post_Product_option_groups = typeof post_Product_option_groups;
-export const post_Product_option_groups = {
-  method: z.literal("POST"),
-  path: z.literal("/product_option_groups"),
-  requestFormat: z.literal("json"),
-  parameters: z.object({
-    path: z.object({
-      contract_id: z.string(),
-    }),
-    body: ProductOptionGroupCreate,
-  }),
-  response: ProductOptionGroup,
-};
-
-export type get_Product_option_groupsId = typeof get_Product_option_groupsId;
-export const get_Product_option_groupsId = {
-  method: z.literal("GET"),
-  path: z.literal("/product_option_groups/{id}"),
-  requestFormat: z.literal("json"),
-  parameters: z.object({
-    query: z.object({
-      fields: z.array(z.string()).optional(),
-      with_products: z.union([z.literal("all"), z.literal("none")]).optional(),
-    }),
-    path: z.object({
-      contract_id: z.string(),
-      id: z.string(),
-    }),
-  }),
-  response: ProductOptionGroup,
-};
-
-export type patch_Product_option_groupsId = typeof patch_Product_option_groupsId;
-export const patch_Product_option_groupsId = {
-  method: z.literal("PATCH"),
-  path: z.literal("/product_option_groups/{id}"),
-  requestFormat: z.literal("json"),
-  parameters: z.object({
-    path: z.object({
-      contract_id: z.string(),
-      id: z.string(),
-    }),
-    body: ProductOptionGroupUpdate,
-  }),
-  response: ProductOptionGroup,
-};
-
-export type delete_Product_option_groupsId = typeof delete_Product_option_groupsId;
-export const delete_Product_option_groupsId = {
-  method: z.literal("DELETE"),
-  path: z.literal("/product_option_groups/{id}"),
-  requestFormat: z.literal("json"),
-  parameters: z.object({
-    path: z.object({
-      contract_id: z.string(),
-      id: z.string(),
-    }),
-  }),
-  response: z.unknown(),
-};
-
-export type delete_Product_option_groupsIdproductsProduct_id = typeof delete_Product_option_groupsIdproductsProduct_id;
-export const delete_Product_option_groupsIdproductsProduct_id = {
-  method: z.literal("DELETE"),
-  path: z.literal("/product_option_groups/{id}/products/{product_id}"),
-  requestFormat: z.literal("json"),
-  parameters: z.object({
-    path: z.object({
-      contract_id: z.string(),
-      id: z.string(),
-      product_id: z.string(),
-    }),
-  }),
-  response: z.unknown(),
-};
-
-export type get_Bundles = typeof get_Bundles;
-export const get_Bundles = {
-  method: z.literal("GET"),
-  path: z.literal("/bundles"),
-  requestFormat: z.literal("json"),
-  parameters: z.object({
-    query: z.object({
-      fields: z.array(z.string()).optional(),
-      sort: z.string().optional(),
-      limit: z.number().optional(),
-      page: z.number().optional(),
-      product_bundle_group_id: z.string().optional(),
-      term_from: z.string().optional(),
-      term_to: z.string().optional(),
-    }),
-    path: z.object({
-      contract_id: z.string(),
-    }),
-  }),
-  response: z.array(Bundle),
-};
-
-export type post_Bundles = typeof post_Bundles;
-export const post_Bundles = {
-  method: z.literal("POST"),
-  path: z.literal("/bundles"),
-  requestFormat: z.literal("json"),
-  parameters: z.object({
-    path: z.object({
-      contract_id: z.string(),
-    }),
-    body: BundleCreate,
-  }),
-  response: Bundle,
-};
-
-export type get_BundlesId = typeof get_BundlesId;
-export const get_BundlesId = {
-  method: z.literal("GET"),
-  path: z.literal("/bundles/{id}"),
-  requestFormat: z.literal("json"),
-  parameters: z.object({
-    query: z.object({
-      fields: z.array(z.string()).optional(),
-    }),
-    path: z.object({
-      contract_id: z.string(),
-      id: z.string(),
-    }),
-  }),
-  response: Bundle,
-};
-
-export type patch_BundlesId = typeof patch_BundlesId;
-export const patch_BundlesId = {
-  method: z.literal("PATCH"),
-  path: z.literal("/bundles/{id}"),
-  requestFormat: z.literal("json"),
-  parameters: z.object({
-    path: z.object({
-      contract_id: z.string(),
-      id: z.string(),
-    }),
-    body: BundleUpdate,
-  }),
-  response: Bundle,
-};
-
-export type delete_BundlesId = typeof delete_BundlesId;
-export const delete_BundlesId = {
-  method: z.literal("DELETE"),
-  path: z.literal("/bundles/{id}"),
-  requestFormat: z.literal("json"),
-  parameters: z.object({
-    path: z.object({
-      contract_id: z.string(),
-      id: z.string(),
-    }),
-  }),
-  response: z.unknown(),
-};
-
-export type delete_BundlesIdproductsBundleProductId = typeof delete_BundlesIdproductsBundleProductId;
-export const delete_BundlesIdproductsBundleProductId = {
-  method: z.literal("DELETE"),
-  path: z.literal("/bundles/{id}/products/{bundleProductId}"),
-  requestFormat: z.literal("json"),
-  parameters: z.object({
-    path: z.object({
-      contract_id: z.string(),
-      id: z.string(),
-      bundleProductId: z.string(),
-    }),
-  }),
-  response: z.unknown(),
-};
-
-export type get_Stores = typeof get_Stores;
-export const get_Stores = {
-  method: z.literal("GET"),
-  path: z.literal("/stores"),
-  requestFormat: z.literal("json"),
-  parameters: z.object({
-    query: z.object({
-      fields: z.array(z.string()).optional(),
-      sort: z.string().optional(),
-      limit: z.number().optional(),
-      page: z.number().optional(),
-      store_id: z.string().optional(),
-      store_code: z.string().optional(),
-      store_division: z.union([z.literal("0"), z.literal("1")]).optional(),
-    }),
-    path: z.object({
-      contract_id: z.string(),
-    }),
-  }),
-  response: z.array(Store),
-};
-
-export type post_Stores = typeof post_Stores;
-export const post_Stores = {
-  method: z.literal("POST"),
-  path: z.literal("/stores"),
-  requestFormat: z.literal("json"),
-  parameters: z.object({
-    path: z.object({
-      contract_id: z.string(),
-    }),
-    body: StoreCreate,
-  }),
-  response: Store,
-};
-
-export type get_StoresId = typeof get_StoresId;
-export const get_StoresId = {
-  method: z.literal("GET"),
-  path: z.literal("/stores/{id}"),
-  requestFormat: z.literal("json"),
-  parameters: z.object({
-    query: z.object({
-      fields: z.array(z.string()).optional(),
-    }),
-    path: z.object({
-      contract_id: z.string(),
-      id: z.string(),
-    }),
-  }),
-  response: Store,
-};
-
-export type patch_StoresId = typeof patch_StoresId;
-export const patch_StoresId = {
-  method: z.literal("PATCH"),
-  path: z.literal("/stores/{id}"),
-  requestFormat: z.literal("json"),
-  parameters: z.object({
-    path: z.object({
-      contract_id: z.string(),
-      id: z.string(),
-    }),
-    body: StoreUpdate,
-  }),
-  response: Store,
-};
-
-export type delete_StoresId = typeof delete_StoresId;
-export const delete_StoresId = {
-  method: z.literal("DELETE"),
-  path: z.literal("/stores/{id}"),
-  requestFormat: z.literal("json"),
-  parameters: z.object({
-    path: z.object({
-      contract_id: z.string(),
-      id: z.string(),
-    }),
-  }),
-  response: z.unknown(),
-};
-
-export type get_StoresStore_idproducts = typeof get_StoresStore_idproducts;
-export const get_StoresStore_idproducts = {
-  method: z.literal("GET"),
-  path: z.literal("/stores/{store_id}/products"),
-  requestFormat: z.literal("json"),
-  parameters: z.object({
-    query: z.object({
-      fields: z.array(z.string()).optional(),
-      limit: z.number().optional(),
-      page: z.number().optional(),
-    }),
-    path: z.object({
-      contract_id: z.string(),
-      store_id: z.string(),
-    }),
-  }),
-  response: z.array(
-    z.object({
-      storeId: z.string(),
-      productId: z.string(),
-      orderPoint: z.string(),
-    }),
-  ),
-};
-
-export type post_StoresStore_idproducts = typeof post_StoresStore_idproducts;
-export const post_StoresStore_idproducts = {
-  method: z.literal("POST"),
-  path: z.literal("/stores/{store_id}/products"),
-  requestFormat: z.literal("json"),
-  parameters: z.object({
-    path: z.object({
-      contract_id: z.string(),
-      store_id: z.string(),
-    }),
-    body: z.object({
-      productId: z.string(),
-      orderPoint: z.string(),
-    }),
-  }),
-  response: z.object({
-    storeId: z.string(),
-    productId: z.string(),
-    orderPoint: z.string(),
-  }),
-};
-
-export type get_GetStoreProductPrices = typeof get_GetStoreProductPrices;
-export const get_GetStoreProductPrices = {
-  method: z.literal("GET"),
-  path: z.literal("/stores/{store_id}/product_prices"),
-  requestFormat: z.literal("json"),
-  parameters: z.object({
-    query: z.object({
-      productId: z.number().optional(),
-      priceDivision: z.union([z.literal(1), z.literal(2)]).optional(),
-      startDate: z.string().optional(),
-      limit: z.number().optional(),
-      page: z.number().optional(),
-      fields: z.array(z.string()).optional(),
-    }),
-    path: z.object({
+      product_id: z.number(),
       store_id: z.number(),
     }),
   }),
-  response: z.object({
-    items: z.array(ProductPrice).optional(),
-    total: z.number().optional(),
-    limit: z.number().optional(),
-    page: z.number().optional(),
-  }),
-};
-
-export type post_CreateOrUpdateStoreProductPrice = typeof post_CreateOrUpdateStoreProductPrice;
-export const post_CreateOrUpdateStoreProductPrice = {
-  method: z.literal("POST"),
-  path: z.literal("/stores/{store_id}/product_prices"),
-  requestFormat: z.literal("json"),
-  parameters: z.object({
-    path: z.object({
-      store_id: z.number(),
-    }),
-    body: z.object({
-      items: z.array(ProductPrice),
-    }),
-  }),
-  response: z.object({
-    items: z.array(ProductPrice).optional(),
-  }),
-};
-
-export type get_Store_groups = typeof get_Store_groups;
-export const get_Store_groups = {
-  method: z.literal("GET"),
-  path: z.literal("/store_groups"),
-  requestFormat: z.literal("json"),
-  parameters: z.object({
-    query: z.object({
-      fields: z.array(z.string()).optional(),
-      sort: z.string().optional(),
-      limit: z.number().optional(),
-      page: z.number().optional(),
-      store_group_id: z.string().optional(),
-    }),
-    path: z.object({
-      contract_id: z.string(),
-    }),
-  }),
-  response: z.array(StoreGroup),
-};
-
-export type post_Store_groups = typeof post_Store_groups;
-export const post_Store_groups = {
-  method: z.literal("POST"),
-  path: z.literal("/store_groups"),
-  requestFormat: z.literal("json"),
-  parameters: z.object({
-    path: z.object({
-      contract_id: z.string(),
-    }),
-    body: StoreGroupCreate,
-  }),
-  response: StoreGroup,
-};
-
-export type patch_Store_groupsId = typeof patch_Store_groupsId;
-export const patch_Store_groupsId = {
-  method: z.literal("PATCH"),
-  path: z.literal("/store_groups/{id}"),
-  requestFormat: z.literal("json"),
-  parameters: z.object({
-    path: z.object({
-      contract_id: z.string(),
-      id: z.string(),
-    }),
-    body: StoreGroupUpdate,
-  }),
-  response: StoreGroup,
-};
-
-export type delete_Store_groupsId = typeof delete_Store_groupsId;
-export const delete_Store_groupsId = {
-  method: z.literal("DELETE"),
-  path: z.literal("/store_groups/{id}"),
-  requestFormat: z.literal("json"),
-  parameters: z.object({
-    path: z.object({
-      contract_id: z.string(),
-      id: z.string(),
-    }),
-  }),
-  response: z.unknown(),
-};
-
-export type get_Store_group_items = typeof get_Store_group_items;
-export const get_Store_group_items = {
-  method: z.literal("GET"),
-  path: z.literal("/store_group_items"),
-  requestFormat: z.literal("json"),
-  parameters: z.object({
-    query: z.object({
-      fields: z.array(z.string()).optional(),
-      sort: z.string().optional(),
-      limit: z.number().optional(),
-      page: z.number().optional(),
-      store_group_item_id: z.string().optional(),
-      store_group_id: z.string().optional(),
-      store_id: z.string().optional(),
-    }),
-    path: z.object({
-      contract_id: z.string(),
-    }),
-  }),
-  response: z.array(StoreGroupItem),
-};
-
-export type post_Store_group_items = typeof post_Store_group_items;
-export const post_Store_group_items = {
-  method: z.literal("POST"),
-  path: z.literal("/store_group_items"),
-  requestFormat: z.literal("json"),
-  parameters: z.object({
-    path: z.object({
-      contract_id: z.string(),
-    }),
-    body: StoreGroupItemCreate,
-  }),
-  response: StoreGroupItem,
-};
-
-export type patch_Store_group_itemsId = typeof patch_Store_group_itemsId;
-export const patch_Store_group_itemsId = {
-  method: z.literal("PATCH"),
-  path: z.literal("/store_group_items/{id}"),
-  requestFormat: z.literal("json"),
-  parameters: z.object({
-    path: z.object({
-      contract_id: z.string(),
-      id: z.string(),
-    }),
-    body: StoreGroupItemUpdate,
-  }),
-  response: StoreGroupItem,
-};
-
-export type delete_Store_group_itemsId = typeof delete_Store_group_itemsId;
-export const delete_Store_group_itemsId = {
-  method: z.literal("DELETE"),
-  path: z.literal("/store_group_items/{id}"),
-  requestFormat: z.literal("json"),
-  parameters: z.object({
-    path: z.object({
-      contract_id: z.string(),
-      id: z.string(),
-    }),
-  }),
-  response: z.unknown(),
-};
-
-export type get_Staffs = typeof get_Staffs;
-export const get_Staffs = {
-  method: z.literal("GET"),
-  path: z.literal("/staffs"),
-  requestFormat: z.literal("json"),
-  parameters: z.object({
-    query: z.object({
-      fields: z.array(z.string()).optional(),
-      sort: z.string().optional(),
-      limit: z.number().optional(),
-      page: z.number().optional(),
-      staff_id: z.string().optional(),
-      staff_code: z.string().optional(),
-      first_name: z.string().optional(),
-      last_name: z.string().optional(),
-      first_name_kana: z.string().optional(),
-      last_name_kana: z.string().optional(),
-      tel: z.string().optional(),
-      mobile_phone: z.string().optional(),
-      mail: z.string().optional(),
-      staff_authorization: z.union([z.literal("0"), z.literal("1"), z.literal("2"), z.literal("3")]).optional(),
-      store_id: z.string().optional(),
-      role_id: z.string().optional(),
-      status: z.union([z.literal("1"), z.literal("2")]).optional(),
-      "ins_date_time-from": z.string().optional(),
-      "ins_date_time-to": z.string().optional(),
-      "upd_date_time-from": z.string().optional(),
-      "upd_date_time-to": z.string().optional(),
-    }),
-  }),
-  response: z.array(Staff),
-};
-
-export type post_Staffs = typeof post_Staffs;
-export const post_Staffs = {
-  method: z.literal("POST"),
-  path: z.literal("/staffs"),
-  requestFormat: z.literal("json"),
-  parameters: z.object({
-    body: z.object({
-      staffCode: z.string(),
-      firstName: z.union([z.string(), z.undefined()]).optional(),
-      lastName: z.union([z.string(), z.undefined()]).optional(),
-      firstNameKana: z.union([z.string(), z.undefined()]).optional(),
-      lastNameKana: z.union([z.string(), z.undefined()]).optional(),
-      tel: z.union([z.string(), z.undefined()]).optional(),
-      mobilePhone: z.union([z.string(), z.undefined()]).optional(),
-      mail: z.union([z.string(), z.undefined()]).optional(),
-      zipCode: z.union([z.string(), z.undefined()]).optional(),
-      address: z.union([z.string(), z.undefined()]).optional(),
-      password: z.string(),
-      staffAuthorization: z.union([z.literal("0"), z.literal("1"), z.literal("2"), z.literal("3")]),
-      salePassword: z.union([z.string(), z.undefined()]).optional(),
-      startAtHourOfDay: z.union([z.string(), z.undefined()]).optional(),
-      endAtHourOfDay: z.union([z.string(), z.undefined()]).optional(),
-      storeIds: z.union([z.array(z.string()), z.undefined()]).optional(),
-      roleIds: z.union([z.array(z.string()), z.undefined()]).optional(),
-      status: z.union([z.literal("1"), z.literal("2"), z.undefined()]).optional(),
-    }),
-  }),
-  response: Staff,
-};
-
-export type get_StaffsId = typeof get_StaffsId;
-export const get_StaffsId = {
-  method: z.literal("GET"),
-  path: z.literal("/staffs/{id}"),
-  requestFormat: z.literal("json"),
-  parameters: z.object({
-    path: z.object({
-      id: z.string(),
-    }),
-  }),
-  response: Staff,
-};
-
-export type put_StaffsId = typeof put_StaffsId;
-export const put_StaffsId = {
-  method: z.literal("PUT"),
-  path: z.literal("/staffs/{id}"),
-  requestFormat: z.literal("json"),
-  parameters: z.object({
-    path: z.object({
-      id: z.string(),
-    }),
-    body: z.object({
-      staffCode: z.string().optional(),
-      firstName: z.string().optional(),
-      lastName: z.string().optional(),
-      firstNameKana: z.string().optional(),
-      lastNameKana: z.string().optional(),
-      tel: z.string().optional(),
-      mobilePhone: z.string().optional(),
-      mail: z.string().optional(),
-      zipCode: z.string().optional(),
-      address: z.string().optional(),
-      password: z.string().optional(),
-      staffAuthorization: z.union([z.literal("0"), z.literal("1"), z.literal("2"), z.literal("3")]).optional(),
-      salePassword: z.string().optional(),
-      startAtHourOfDay: z.string().optional(),
-      endAtHourOfDay: z.string().optional(),
-      storeIds: z.array(z.string()).optional(),
-      roleIds: z.array(z.string()).optional(),
-      status: z.union([z.literal("1"), z.literal("2")]).optional(),
-    }),
-  }),
-  response: Staff,
-};
-
-export type delete_StaffsId = typeof delete_StaffsId;
-export const delete_StaffsId = {
-  method: z.literal("DELETE"),
-  path: z.literal("/staffs/{id}"),
-  requestFormat: z.literal("json"),
-  parameters: z.object({
-    path: z.object({
-      id: z.string(),
-    }),
-  }),
-  response: z.unknown(),
-};
-
-export type get_Roles = typeof get_Roles;
-export const get_Roles = {
-  method: z.literal("GET"),
-  path: z.literal("/roles"),
-  requestFormat: z.literal("json"),
-  parameters: z.object({
-    query: z.object({
-      fields: z.array(z.string()).optional(),
-      sort: z.string().optional(),
-      limit: z.number().optional(),
-      page: z.number().optional(),
-      role_id: z.string().optional(),
-      role_name: z.string().optional(),
-      permission_id: z.string().optional(),
-      permission_value: z.union([z.literal(0), z.literal(1)]).optional(),
-      "ins_date_time-from": z.string().optional(),
-      "ins_date_time-to": z.string().optional(),
-      "upd_date_time-from": z.string().optional(),
-      "upd_date_time-to": z.string().optional(),
-    }),
-  }),
-  response: z.array(Role),
-};
-
-export type post_Roles = typeof post_Roles;
-export const post_Roles = {
-  method: z.literal("POST"),
-  path: z.literal("/roles"),
-  requestFormat: z.literal("json"),
-  parameters: z.object({
-    body: RoleCreate,
-  }),
-  response: Role,
-};
-
-export type get_RolesId = typeof get_RolesId;
-export const get_RolesId = {
-  method: z.literal("GET"),
-  path: z.literal("/roles/{id}"),
-  requestFormat: z.literal("json"),
-  parameters: z.object({
-    path: z.object({
-      id: z.string(),
-    }),
-  }),
-  response: Role,
-};
-
-export type put_RolesId = typeof put_RolesId;
-export const put_RolesId = {
-  method: z.literal("PUT"),
-  path: z.literal("/roles/{id}"),
-  requestFormat: z.literal("json"),
-  parameters: z.object({
-    path: z.object({
-      id: z.string(),
-    }),
-    body: RoleUpdate,
-  }),
-  response: Role,
-};
-
-export type delete_RolesId = typeof delete_RolesId;
-export const delete_RolesId = {
-  method: z.literal("DELETE"),
-  path: z.literal("/roles/{id}"),
-  requestFormat: z.literal("json"),
-  parameters: z.object({
-    path: z.object({
-      id: z.string(),
-    }),
-  }),
-  response: z.unknown(),
-};
-
-export type get_Budgetsmonthly = typeof get_Budgetsmonthly;
-export const get_Budgetsmonthly = {
-  method: z.literal("GET"),
-  path: z.literal("/budgets/monthly"),
-  requestFormat: z.literal("json"),
-  parameters: z.object({
-    query: z.object({
-      fields: z.array(z.string()).optional(),
-      sort: z.string().optional(),
-      limit: z.number().optional(),
-      page: z.number().optional(),
-      budget_id: z.string().optional(),
-      store_id: z.string().optional(),
-      "year_month-from": z.string().optional(),
-      "year_month-to": z.string().optional(),
-      "ins_date_time-from": z.string().optional(),
-      "ins_date_time-to": z.string().optional(),
-      "upd_date_time-from": z.string().optional(),
-      "upd_date_time-to": z.string().optional(),
-    }),
-  }),
-  response: z.array(MonthlyBudget),
-};
-
-export type get_BudgetsdailyDate = typeof get_BudgetsdailyDate;
-export const get_BudgetsdailyDate = {
-  method: z.literal("GET"),
-  path: z.literal("/budgets/daily/{date}"),
-  requestFormat: z.literal("json"),
-  parameters: z.object({
-    query: z.object({
-      fields: z.array(z.string()).optional(),
-      sort: z.string().optional(),
-      limit: z.number().optional(),
-      page: z.number().optional(),
-      budget_id: z.string().optional(),
-      store_id: z.string().optional(),
-      "ins_date_time-from": z.string().optional(),
-      "ins_date_time-to": z.string().optional(),
-      "upd_date_time-from": z.string().optional(),
-      "upd_date_time-to": z.string().optional(),
-    }),
-    path: z.object({
-      date: z.string(),
-    }),
-  }),
-  response: z.array(DailyBudget),
-};
-
-export type post_BudgetsdailyDate = typeof post_BudgetsdailyDate;
-export const post_BudgetsdailyDate = {
-  method: z.literal("POST"),
-  path: z.literal("/budgets/daily/{date}"),
-  requestFormat: z.literal("json"),
-  parameters: z.object({
-    path: z.object({
-      date: z.string(),
-    }),
-    body: DailyBudgetCreate,
-  }),
-  response: DailyBudget,
-};
-
-export type put_BudgetsdailyDate = typeof put_BudgetsdailyDate;
-export const put_BudgetsdailyDate = {
-  method: z.literal("PUT"),
-  path: z.literal("/budgets/daily/{date}"),
-  requestFormat: z.literal("json"),
-  parameters: z.object({
-    query: z.object({
-      store_id: z.string(),
-    }),
-    path: z.object({
-      date: z.string(),
-    }),
-    body: DailyBudgetUpdate,
-  }),
-  response: DailyBudget,
-};
-
-export type delete_BudgetsdailyDate = typeof delete_BudgetsdailyDate;
-export const delete_BudgetsdailyDate = {
-  method: z.literal("DELETE"),
-  path: z.literal("/budgets/daily/{date}"),
-  requestFormat: z.literal("json"),
-  parameters: z.object({
-    query: z.object({
-      store_id: z.string(),
-    }),
-    path: z.object({
-      date: z.string(),
-    }),
-  }),
-  response: z.unknown(),
-};
-
-export type get_Budgetsstaff = typeof get_Budgetsstaff;
-export const get_Budgetsstaff = {
-  method: z.literal("GET"),
-  path: z.literal("/budgets/staff"),
-  requestFormat: z.literal("json"),
-  parameters: z.object({
-    query: z.object({
-      fields: z.array(z.string()).optional(),
-      sort: z.string().optional(),
-      limit: z.number().optional(),
-      page: z.number().optional(),
-      budget_id: z.string().optional(),
-      store_id: z.string().optional(),
-      staff_id: z.string().optional(),
-      "year_month-from": z.string().optional(),
-      "year_month-to": z.string().optional(),
-      "ins_date_time-from": z.string().optional(),
-      "ins_date_time-to": z.string().optional(),
-      "upd_date_time-from": z.string().optional(),
-      "upd_date_time-to": z.string().optional(),
-    }),
-  }),
-  response: z.array(StaffBudget),
-};
-
-export type post_Budgetsstaff = typeof post_Budgetsstaff;
-export const post_Budgetsstaff = {
-  method: z.literal("POST"),
-  path: z.literal("/budgets/staff"),
-  requestFormat: z.literal("json"),
-  parameters: z.object({
-    body: StaffBudgetCreate,
-  }),
-  response: StaffBudget,
-};
-
-export type put_Budgetsstaff = typeof put_Budgetsstaff;
-export const put_Budgetsstaff = {
-  method: z.literal("PUT"),
-  path: z.literal("/budgets/staff"),
-  requestFormat: z.literal("json"),
-  parameters: z.object({
-    query: z.object({
-      budget_id: z.string(),
-    }),
-    body: StaffBudgetUpdate,
-  }),
-  response: StaffBudget,
-};
-
-export type delete_Budgetsstaff = typeof delete_Budgetsstaff;
-export const delete_Budgetsstaff = {
-  method: z.literal("DELETE"),
-  path: z.literal("/budgets/staff"),
-  requestFormat: z.literal("json"),
-  parameters: z.object({
-    query: z.object({
-      budget_id: z.string(),
-    }),
-  }),
-  response: z.unknown(),
-};
-
-export type get_Suppliers = typeof get_Suppliers;
-export const get_Suppliers = {
-  method: z.literal("GET"),
-  path: z.literal("/suppliers"),
-  requestFormat: z.literal("json"),
-  parameters: z.object({
-    query: z.object({
-      fields: z.array(z.string()).optional(),
-      sort: z.string().optional(),
-      limit: z.number().optional(),
-      page: z.number().optional(),
-      supplier_id: z.string().optional(),
-      supplier_code: z.string().optional(),
-      supplier_name: z.string().optional(),
-      supplier_abbr: z.string().optional(),
-      supplier_division_id: z.string().optional(),
-      phone_number: z.string().optional(),
-      status: z.union([z.literal("0"), z.literal("1")]).optional(),
-      "ins_date_time-from": z.string().optional(),
-      "ins_date_time-to": z.string().optional(),
-      "upd_date_time-from": z.string().optional(),
-      "upd_date_time-to": z.string().optional(),
-    }),
-  }),
-  response: z.array(Supplier),
-};
-
-export type post_Suppliers = typeof post_Suppliers;
-export const post_Suppliers = {
-  method: z.literal("POST"),
-  path: z.literal("/suppliers"),
-  requestFormat: z.literal("json"),
-  parameters: z.object({
-    body: SupplierCreate,
-  }),
-  response: Supplier,
-};
-
-export type get_SuppliersId = typeof get_SuppliersId;
-export const get_SuppliersId = {
-  method: z.literal("GET"),
-  path: z.literal("/suppliers/{id}"),
-  requestFormat: z.literal("json"),
-  parameters: z.object({
-    path: z.object({
-      id: z.string(),
-    }),
-  }),
-  response: Supplier,
-};
-
-export type put_SuppliersId = typeof put_SuppliersId;
-export const put_SuppliersId = {
-  method: z.literal("PUT"),
-  path: z.literal("/suppliers/{id}"),
-  requestFormat: z.literal("json"),
-  parameters: z.object({
-    path: z.object({
-      id: z.string(),
-    }),
-    body: SupplierUpdate,
-  }),
-  response: Supplier,
-};
-
-export type delete_SuppliersId = typeof delete_SuppliersId;
-export const delete_SuppliersId = {
-  method: z.literal("DELETE"),
-  path: z.literal("/suppliers/{id}"),
-  requestFormat: z.literal("json"),
-  parameters: z.object({
-    path: z.object({
-      id: z.string(),
-    }),
-  }),
-  response: z.unknown(),
-};
-
-export type get_SuppliersIdproducts = typeof get_SuppliersIdproducts;
-export const get_SuppliersIdproducts = {
-  method: z.literal("GET"),
-  path: z.literal("/suppliers/{id}/products"),
-  requestFormat: z.literal("json"),
-  parameters: z.object({
-    query: z.object({
-      fields: z.array(z.string()).optional(),
-      sort: z.string().optional(),
-      limit: z.number().optional(),
-      page: z.number().optional(),
-      supplier_product_id: z.string().optional(),
-      product_id: z.string().optional(),
-      product_code: z.string().optional(),
-      product_name: z.string().optional(),
-      supplier_product_code: z.string().optional(),
-      supplier_product_name: z.string().optional(),
-      status: z.union([z.literal("0"), z.literal("1")]).optional(),
-      "ins_date_time-from": z.string().optional(),
-      "ins_date_time-to": z.string().optional(),
-      "upd_date_time-from": z.string().optional(),
-      "upd_date_time-to": z.string().optional(),
-    }),
-    path: z.object({
-      id: z.string(),
-    }),
-  }),
-  response: z.array(SupplierProduct),
-};
-
-export type post_SuppliersIdproducts = typeof post_SuppliersIdproducts;
-export const post_SuppliersIdproducts = {
-  method: z.literal("POST"),
-  path: z.literal("/suppliers/{id}/products"),
-  requestFormat: z.literal("json"),
-  parameters: z.object({
-    path: z.object({
-      id: z.string(),
-    }),
-    body: SupplierProductCreate,
-  }),
-  response: SupplierProduct,
-};
-
-export type get_Supplier_divisions = typeof get_Supplier_divisions;
-export const get_Supplier_divisions = {
-  method: z.literal("GET"),
-  path: z.literal("/supplier_divisions"),
-  requestFormat: z.literal("json"),
-  parameters: z.object({
-    query: z.object({
-      fields: z.array(z.string()).optional(),
-      sort: z.string().optional(),
-      limit: z.number().optional(),
-      page: z.number().optional(),
-      supplier_division_id: z.string().optional(),
-      supplier_division_name: z.string().optional(),
-      "ins_date_time-from": z.string().optional(),
-      "ins_date_time-to": z.string().optional(),
-      "upd_date_time-from": z.string().optional(),
-      "upd_date_time-to": z.string().optional(),
-    }),
-  }),
-  response: z.array(SupplierDivision),
-};
-
-export type post_Supplier_divisions = typeof post_Supplier_divisions;
-export const post_Supplier_divisions = {
-  method: z.literal("POST"),
-  path: z.literal("/supplier_divisions"),
-  requestFormat: z.literal("json"),
-  parameters: z.object({
-    body: SupplierDivisionCreate,
-  }),
-  response: SupplierDivision,
-};
-
-export type get_Supplier_divisionsId = typeof get_Supplier_divisionsId;
-export const get_Supplier_divisionsId = {
-  method: z.literal("GET"),
-  path: z.literal("/supplier_divisions/{id}"),
-  requestFormat: z.literal("json"),
-  parameters: z.object({
-    path: z.object({
-      id: z.string(),
-    }),
-  }),
-  response: SupplierDivision,
-};
-
-export type put_Supplier_divisionsId = typeof put_Supplier_divisionsId;
-export const put_Supplier_divisionsId = {
-  method: z.literal("PUT"),
-  path: z.literal("/supplier_divisions/{id}"),
-  requestFormat: z.literal("json"),
-  parameters: z.object({
-    path: z.object({
-      id: z.string(),
-    }),
-    body: SupplierDivisionUpdate,
-  }),
-  response: SupplierDivision,
-};
-
-export type delete_Supplier_divisionsId = typeof delete_Supplier_divisionsId;
-export const delete_Supplier_divisionsId = {
-  method: z.literal("DELETE"),
-  path: z.literal("/supplier_divisions/{id}"),
-  requestFormat: z.literal("json"),
-  parameters: z.object({
-    path: z.object({
-      id: z.string(),
-    }),
-  }),
-  response: z.unknown(),
-};
-
-export type get_Terminals = typeof get_Terminals;
-export const get_Terminals = {
-  method: z.literal("GET"),
-  path: z.literal("/terminals"),
-  requestFormat: z.literal("json"),
-  parameters: z.object({
-    query: z.object({
-      fields: z.array(z.string()).optional(),
-      sort: z.string().optional(),
-      limit: z.number().optional(),
-      page: z.number().optional(),
-      terminal_id: z.string().optional(),
-      terminal_code: z.string().optional(),
-      terminal_name: z.string().optional(),
-      store_id: z.string().optional(),
-      terminal_type: z.union([z.literal("1"), z.literal("2"), z.literal("3")]).optional(),
-      status: z.union([z.literal("0"), z.literal("1")]).optional(),
-      "ins_date_time-from": z.string().optional(),
-      "ins_date_time-to": z.string().optional(),
-      "upd_date_time-from": z.string().optional(),
-      "upd_date_time-to": z.string().optional(),
-    }),
-  }),
-  response: z.array(Terminal),
-};
-
-export type post_Terminals = typeof post_Terminals;
-export const post_Terminals = {
-  method: z.literal("POST"),
-  path: z.literal("/terminals"),
-  requestFormat: z.literal("json"),
-  parameters: z.object({
-    body: TerminalCreate,
-  }),
-  response: Terminal,
-};
-
-export type get_TerminalsId = typeof get_TerminalsId;
-export const get_TerminalsId = {
-  method: z.literal("GET"),
-  path: z.literal("/terminals/{id}"),
-  requestFormat: z.literal("json"),
-  parameters: z.object({
-    path: z.object({
-      id: z.string(),
-    }),
-  }),
-  response: Terminal,
-};
-
-export type put_TerminalsId = typeof put_TerminalsId;
-export const put_TerminalsId = {
-  method: z.literal("PUT"),
-  path: z.literal("/terminals/{id}"),
-  requestFormat: z.literal("json"),
-  parameters: z.object({
-    path: z.object({
-      id: z.string(),
-    }),
-    body: TerminalUpdate,
-  }),
-  response: Terminal,
-};
-
-export type delete_TerminalsId = typeof delete_TerminalsId;
-export const delete_TerminalsId = {
-  method: z.literal("DELETE"),
-  path: z.literal("/terminals/{id}"),
-  requestFormat: z.literal("json"),
-  parameters: z.object({
-    path: z.object({
-      id: z.string(),
-    }),
-  }),
-  response: z.unknown(),
-};
-
-export type get_Settlements = typeof get_Settlements;
-export const get_Settlements = {
-  method: z.literal("GET"),
-  path: z.literal("/settlements"),
-  requestFormat: z.literal("json"),
-  parameters: z.object({
-    query: z.object({
-      fields: z.array(z.string()).optional(),
-      sort: z.string().optional(),
-      limit: z.number().optional(),
-      page: z.number().optional(),
-      settlement_id: z.string().optional(),
-      settlement_no: z.string().optional(),
-      store_id: z.string().optional(),
-      terminal_id: z.string().optional(),
-      staff_id: z.string().optional(),
-      "settlement_date_time-from": z.string().optional(),
-      "settlement_date_time-to": z.string().optional(),
-      "opening_date_time-from": z.string().optional(),
-      "opening_date_time-to": z.string().optional(),
-      "closing_date_time-from": z.string().optional(),
-      "closing_date_time-to": z.string().optional(),
-      "ins_date_time-from": z.string().optional(),
-      "ins_date_time-to": z.string().optional(),
-      "upd_date_time-from": z.string().optional(),
-      "upd_date_time-to": z.string().optional(),
-    }),
-  }),
-  response: z.array(Settlement),
-};
-
-export type post_Settlements = typeof post_Settlements;
-export const post_Settlements = {
-  method: z.literal("POST"),
-  path: z.literal("/settlements"),
-  requestFormat: z.literal("json"),
-  parameters: z.object({
-    body: SettlementCreate,
-  }),
-  response: Settlement,
-};
-
-export type get_Daily_settlements = typeof get_Daily_settlements;
-export const get_Daily_settlements = {
-  method: z.literal("GET"),
-  path: z.literal("/daily_settlements"),
-  requestFormat: z.literal("json"),
-  parameters: z.object({
-    query: z.object({
-      fields: z.array(z.string()).optional(),
-      sort: z.string().optional(),
-      limit: z.number().optional(),
-      page: z.number().optional(),
-      daily_settlement_id: z.string().optional(),
-      store_id: z.string().optional(),
-      "business_date-from": z.string().optional(),
-      "business_date-to": z.string().optional(),
-      "closing_date-from": z.string().optional(),
-      "closing_date-to": z.string().optional(),
-      "closing_date_time-from": z.string().optional(),
-      "closing_date_time-to": z.string().optional(),
-      staff_id: z.string().optional(),
-      status: z.union([z.literal("0"), z.literal("1")]).optional(),
-      "ins_date_time-from": z.string().optional(),
-      "ins_date_time-to": z.string().optional(),
-      "upd_date_time-from": z.string().optional(),
-      "upd_date_time-to": z.string().optional(),
-    }),
-  }),
-  response: z.array(DailySettlement),
-};
-
-export type post_Daily_settlements = typeof post_Daily_settlements;
-export const post_Daily_settlements = {
-  method: z.literal("POST"),
-  path: z.literal("/daily_settlements"),
-  requestFormat: z.literal("json"),
-  parameters: z.object({
-    body: DailySettlementCreate,
-  }),
-  response: DailySettlement,
-};
-
-export type get_Payment_methods = typeof get_Payment_methods;
-export const get_Payment_methods = {
-  method: z.literal("GET"),
-  path: z.literal("/payment_methods"),
-  requestFormat: z.literal("json"),
-  parameters: z.object({
-    query: z.object({
-      fields: z.array(z.string()).optional(),
-      sort: z.string().optional(),
-      limit: z.number().optional(),
-      page: z.number().optional(),
-      payment_method_id: z.string().optional(),
-      payment_method_code: z.string().optional(),
-      payment_method_name: z.string().optional(),
-      payment_method_division_id: z.string().optional(),
-      amount_input_type: z.union([z.literal("0"), z.literal("1"), z.literal("2")]).optional(),
-      change_type: z.union([z.literal("0"), z.literal("1"), z.literal("2")]).optional(),
-      status: z.union([z.literal("0"), z.literal("1")]).optional(),
-      "ins_date_time-from": z.string().optional(),
-      "ins_date_time-to": z.string().optional(),
-      "upd_date_time-from": z.string().optional(),
-      "upd_date_time-to": z.string().optional(),
-    }),
-  }),
-  response: z.array(PaymentMethod),
-};
-
-export type post_Payment_methods = typeof post_Payment_methods;
-export const post_Payment_methods = {
-  method: z.literal("POST"),
-  path: z.literal("/payment_methods"),
-  requestFormat: z.literal("json"),
-  parameters: z.object({
-    body: PaymentMethodCreate,
-  }),
-  response: PaymentMethod,
-};
-
-export type get_Payment_methodsId = typeof get_Payment_methodsId;
-export const get_Payment_methodsId = {
-  method: z.literal("GET"),
-  path: z.literal("/payment_methods/{id}"),
-  requestFormat: z.literal("json"),
-  parameters: z.object({
-    path: z.object({
-      id: z.string(),
-    }),
-  }),
-  response: PaymentMethod,
-};
-
-export type put_Payment_methodsId = typeof put_Payment_methodsId;
-export const put_Payment_methodsId = {
-  method: z.literal("PUT"),
-  path: z.literal("/payment_methods/{id}"),
-  requestFormat: z.literal("json"),
-  parameters: z.object({
-    path: z.object({
-      id: z.string(),
-    }),
-    body: PaymentMethodUpdate,
-  }),
-  response: PaymentMethod,
-};
-
-export type delete_Payment_methodsId = typeof delete_Payment_methodsId;
-export const delete_Payment_methodsId = {
-  method: z.literal("DELETE"),
-  path: z.literal("/payment_methods/{id}"),
-  requestFormat: z.literal("json"),
-  parameters: z.object({
-    path: z.object({
-      id: z.string(),
-    }),
-  }),
-  response: z.unknown(),
-};
-
-export type get_StoresStore_idpayment_methods = typeof get_StoresStore_idpayment_methods;
-export const get_StoresStore_idpayment_methods = {
-  method: z.literal("GET"),
-  path: z.literal("/stores/{store_id}/payment_methods"),
-  requestFormat: z.literal("json"),
-  parameters: z.object({
-    query: z.object({
-      fields: z.array(z.string()).optional(),
-      sort: z.string().optional(),
-      limit: z.number().optional(),
-      page: z.number().optional(),
-      store_payment_method_id: z.string().optional(),
-      payment_method_id: z.string().optional(),
-      status: z.union([z.literal("0"), z.literal("1")]).optional(),
-      "ins_date_time-from": z.string().optional(),
-      "ins_date_time-to": z.string().optional(),
-      "upd_date_time-from": z.string().optional(),
-      "upd_date_time-to": z.string().optional(),
-    }),
-    path: z.object({
-      store_id: z.string(),
-    }),
-  }),
-  response: z.array(StorePaymentMethod),
-};
-
-export type get_Payment_method_divisions = typeof get_Payment_method_divisions;
-export const get_Payment_method_divisions = {
-  method: z.literal("GET"),
-  path: z.literal("/payment_method_divisions"),
-  requestFormat: z.literal("json"),
-  parameters: z.object({
-    query: z.object({
-      fields: z.array(z.string()).optional(),
-      sort: z.string().optional(),
-      limit: z.number().optional(),
-      page: z.number().optional(),
-      payment_method_division_id: z.string().optional(),
-      payment_method_division_name: z.string().optional(),
-      "ins_date_time-from": z.string().optional(),
-      "ins_date_time-to": z.string().optional(),
-      "upd_date_time-from": z.string().optional(),
-      "upd_date_time-to": z.string().optional(),
-    }),
-  }),
-  response: z.array(PaymentMethodDivision),
-};
-
-export type post_Payment_method_divisions = typeof post_Payment_method_divisions;
-export const post_Payment_method_divisions = {
-  method: z.literal("POST"),
-  path: z.literal("/payment_method_divisions"),
-  requestFormat: z.literal("json"),
-  parameters: z.object({
-    body: PaymentMethodDivisionCreate,
-  }),
-  response: PaymentMethodDivision,
-};
-
-export type get_Payment_method_divisionsId = typeof get_Payment_method_divisionsId;
-export const get_Payment_method_divisionsId = {
-  method: z.literal("GET"),
-  path: z.literal("/payment_method_divisions/{id}"),
-  requestFormat: z.literal("json"),
-  parameters: z.object({
-    path: z.object({
-      id: z.string(),
-    }),
-  }),
-  response: PaymentMethodDivision,
-};
-
-export type put_Payment_method_divisionsId = typeof put_Payment_method_divisionsId;
-export const put_Payment_method_divisionsId = {
-  method: z.literal("PUT"),
-  path: z.literal("/payment_method_divisions/{id}"),
-  requestFormat: z.literal("json"),
-  parameters: z.object({
-    path: z.object({
-      id: z.string(),
-    }),
-    body: PaymentMethodDivisionUpdate,
-  }),
-  response: PaymentMethodDivision,
-};
-
-export type delete_Payment_method_divisionsId = typeof delete_Payment_method_divisionsId;
-export const delete_Payment_method_divisionsId = {
-  method: z.literal("DELETE"),
-  path: z.literal("/payment_method_divisions/{id}"),
-  requestFormat: z.literal("json"),
-  parameters: z.object({
-    path: z.object({
-      id: z.string(),
-    }),
-  }),
-  response: z.unknown(),
-};
-
-export type get_App_payment_methods = typeof get_App_payment_methods;
-export const get_App_payment_methods = {
-  method: z.literal("GET"),
-  path: z.literal("/app_payment_methods"),
-  requestFormat: z.literal("json"),
-  parameters: z.object({
-    query: z.object({
-      fields: z.array(z.string()).optional(),
-      sort: z.string().optional(),
-      limit: z.number().optional(),
-      page: z.number().optional(),
-      app_payment_method_id: z.string().optional(),
-      payment_method_id: z.string().optional(),
-      app_payment_code: z.string().optional(),
-      status: z.union([z.literal("0"), z.literal("1")]).optional(),
-      "ins_date_time-from": z.string().optional(),
-      "ins_date_time-to": z.string().optional(),
-      "upd_date_time-from": z.string().optional(),
-      "upd_date_time-to": z.string().optional(),
-    }),
-  }),
-  response: z.array(AppPaymentMethod),
-};
-
-export type post_App_payment_methods = typeof post_App_payment_methods;
-export const post_App_payment_methods = {
-  method: z.literal("POST"),
-  path: z.literal("/app_payment_methods"),
-  requestFormat: z.literal("json"),
-  parameters: z.object({
-    body: AppPaymentMethodCreate,
-  }),
-  response: AppPaymentMethod,
-};
-
-export type get_App_payment_methodsId = typeof get_App_payment_methodsId;
-export const get_App_payment_methodsId = {
-  method: z.literal("GET"),
-  path: z.literal("/app_payment_methods/{id}"),
-  requestFormat: z.literal("json"),
-  parameters: z.object({
-    path: z.object({
-      id: z.string(),
-    }),
-  }),
-  response: AppPaymentMethod,
-};
-
-export type delete_App_payment_methodsId = typeof delete_App_payment_methodsId;
-export const delete_App_payment_methodsId = {
-  method: z.literal("DELETE"),
-  path: z.literal("/app_payment_methods/{id}"),
-  requestFormat: z.literal("json"),
-  parameters: z.object({
-    path: z.object({
-      id: z.string(),
-    }),
-  }),
-  response: z.unknown(),
-};
-
-export type get_GetCoupons = typeof get_GetCoupons;
-export const get_GetCoupons = {
-  method: z.literal("GET"),
-  path: z.literal("/coupons"),
-  requestFormat: z.literal("json"),
-  parameters: z.object({
-    query: z.object({
-      coupon_id: z.number().optional(),
-      coupon_name: z.string().optional(),
-      start_date_from: z.string().optional(),
-      start_date_to: z.string().optional(),
-      end_date_from: z.string().optional(),
-      end_date_to: z.string().optional(),
-      limit: z.number().optional(),
-      page: z.number().optional(),
-    }),
-  }),
-  response: z.object({
-    couponInfos: z.array(Coupon).optional(),
-    pagination: Pagination.optional(),
-  }),
-};
-
-export type post_CreateCoupon = typeof post_CreateCoupon;
-export const post_CreateCoupon = {
-  method: z.literal("POST"),
-  path: z.literal("/coupons"),
-  requestFormat: z.literal("json"),
-  parameters: z.object({
-    body: CouponCreate,
-  }),
-  response: z.object({
-    id: z.number().optional(),
-  }),
-};
-
-export type get_GetCoupon = typeof get_GetCoupon;
-export const get_GetCoupon = {
-  method: z.literal("GET"),
-  path: z.literal("/coupons/{id}"),
-  requestFormat: z.literal("json"),
-  parameters: z.object({
-    path: z.object({
-      id: z.number(),
-    }),
-  }),
-  response: Coupon,
-};
-
-export type patch_UpdateCoupon = typeof patch_UpdateCoupon;
-export const patch_UpdateCoupon = {
-  method: z.literal("PATCH"),
-  path: z.literal("/coupons/{id}"),
-  requestFormat: z.literal("json"),
-  parameters: z.object({
-    path: z.object({
-      id: z.number(),
-    }),
-    body: CouponUpdate,
-  }),
-  response: z.unknown(),
-};
-
-export type delete_DeleteCoupon = typeof delete_DeleteCoupon;
-export const delete_DeleteCoupon = {
-  method: z.literal("DELETE"),
-  path: z.literal("/coupons/{id}"),
-  requestFormat: z.literal("json"),
-  parameters: z.object({
-    path: z.object({
-      id: z.number(),
-    }),
-  }),
-  response: z.unknown(),
-};
-
-export type get_GetCouponProducts = typeof get_GetCouponProducts;
-export const get_GetCouponProducts = {
-  method: z.literal("GET"),
-  path: z.literal("/coupons/{id}/products"),
-  requestFormat: z.literal("json"),
-  parameters: z.object({
-    query: z.object({
-      limit: z.number().optional(),
-      page: z.number().optional(),
-    }),
-    path: z.object({
-      id: z.number(),
-    }),
-  }),
-  response: z.object({
-    couponProducts: z.array(CouponProduct).optional(),
-    pagination: Pagination.optional(),
-  }),
-};
-
-export type post_CreateCouponProduct = typeof post_CreateCouponProduct;
-export const post_CreateCouponProduct = {
-  method: z.literal("POST"),
-  path: z.literal("/coupons/{id}/products"),
-  requestFormat: z.literal("json"),
-  parameters: z.object({
-    path: z.object({
-      id: z.number(),
-    }),
-    body: CouponProductCreate,
-  }),
-  response: z.object({
-    id: z.number().optional(),
-  }),
-};
-
-export type get_GetCouponProduct = typeof get_GetCouponProduct;
-export const get_GetCouponProduct = {
-  method: z.literal("GET"),
-  path: z.literal("/coupons/{id}/products/{couponProductId}"),
-  requestFormat: z.literal("json"),
-  parameters: z.object({
-    path: z.object({
-      id: z.number(),
-      couponProductId: z.number(),
-    }),
-  }),
-  response: CouponProduct,
-};
-
-export type patch_UpdateCouponProduct = typeof patch_UpdateCouponProduct;
-export const patch_UpdateCouponProduct = {
-  method: z.literal("PATCH"),
-  path: z.literal("/coupons/{id}/products/{couponProductId}"),
-  requestFormat: z.literal("json"),
-  parameters: z.object({
-    path: z.object({
-      id: z.number(),
-      couponProductId: z.number(),
-    }),
-    body: CouponProductUpdate,
-  }),
-  response: z.unknown(),
-};
-
-export type delete_DeleteCouponProduct = typeof delete_DeleteCouponProduct;
-export const delete_DeleteCouponProduct = {
-  method: z.literal("DELETE"),
-  path: z.literal("/coupons/{id}/products/{couponProductId}"),
-  requestFormat: z.literal("json"),
-  parameters: z.object({
-    path: z.object({
-      id: z.number(),
-      couponProductId: z.number(),
-    }),
-  }),
-  response: z.unknown(),
-};
-
-export type get_Losses = typeof get_Losses;
-export const get_Losses = {
-  method: z.literal("GET"),
-  path: z.literal("/losses"),
-  requestFormat: z.literal("json"),
-  parameters: z.object({
-    query: z.object({
-      fields: z.array(z.string()).optional(),
-      sort: z.string().optional(),
-      limit: z.number().optional(),
-      page: z.number().optional(),
-      loss_id: z.string().optional(),
-      store_id: z.string().optional(),
-      "loss_date-from": z.string().optional(),
-      "loss_date-to": z.string().optional(),
-      loss_division_id: z.string().optional(),
-      "upd_date_time-from": z.string().optional(),
-      "upd_date_time-to": z.string().optional(),
-    }),
-  }),
-  response: z.array(Loss),
-};
-
-export type post_Losses = typeof post_Losses;
-export const post_Losses = {
-  method: z.literal("POST"),
-  path: z.literal("/losses"),
-  requestFormat: z.literal("json"),
-  parameters: z.object({
-    body: LossCreate,
-  }),
-  response: Loss,
-};
-
-export type get_LossesId = typeof get_LossesId;
-export const get_LossesId = {
-  method: z.literal("GET"),
-  path: z.literal("/losses/{id}"),
-  requestFormat: z.literal("json"),
-  parameters: z.object({
-    query: z.object({
-      fields: z.array(z.string()).optional(),
-    }),
-    path: z.object({
-      id: z.string(),
-    }),
-  }),
-  response: Loss,
-};
-
-export type patch_LossesId = typeof patch_LossesId;
-export const patch_LossesId = {
-  method: z.literal("PATCH"),
-  path: z.literal("/losses/{id}"),
-  requestFormat: z.literal("json"),
-  parameters: z.object({
-    path: z.object({
-      id: z.string(),
-    }),
-    body: LossUpdate,
-  }),
-  response: Loss,
-};
-
-export type delete_LossesId = typeof delete_LossesId;
-export const delete_LossesId = {
-  method: z.literal("DELETE"),
-  path: z.literal("/losses/{id}"),
-  requestFormat: z.literal("json"),
-  parameters: z.object({
-    path: z.object({
-      id: z.string(),
-    }),
-  }),
-  response: z.unknown(),
-};
-
-export type get_LossesIddetails = typeof get_LossesIddetails;
-export const get_LossesIddetails = {
-  method: z.literal("GET"),
-  path: z.literal("/losses/{id}/details"),
-  requestFormat: z.literal("json"),
-  parameters: z.object({
-    query: z.object({
-      fields: z.array(z.string()).optional(),
-      sort: z.string().optional(),
-      limit: z.number().optional(),
-      page: z.number().optional(),
-    }),
-    path: z.object({
-      id: z.string(),
-    }),
-  }),
-  response: z.array(LossDetail),
-};
-
-export type get_Loss_divisions = typeof get_Loss_divisions;
-export const get_Loss_divisions = {
-  method: z.literal("GET"),
-  path: z.literal("/loss_divisions"),
-  requestFormat: z.literal("json"),
-  parameters: z.object({
-    query: z.object({
-      fields: z.array(z.string()).optional(),
-      sort: z.string().optional(),
-      limit: z.number().optional(),
-      page: z.number().optional(),
-      loss_division_id: z.string().optional(),
-    }),
-  }),
-  response: z.array(LossDivision),
-};
-
-export type post_Loss_divisions = typeof post_Loss_divisions;
-export const post_Loss_divisions = {
-  method: z.literal("POST"),
-  path: z.literal("/loss_divisions"),
-  requestFormat: z.literal("json"),
-  parameters: z.object({
-    body: LossDivisionCreate,
-  }),
-  response: LossDivision,
-};
-
-export type get_Loss_divisionsId = typeof get_Loss_divisionsId;
-export const get_Loss_divisionsId = {
-  method: z.literal("GET"),
-  path: z.literal("/loss_divisions/{id}"),
-  requestFormat: z.literal("json"),
-  parameters: z.object({
-    query: z.object({
-      fields: z.array(z.string()).optional(),
-    }),
-    path: z.object({
-      id: z.string(),
-    }),
-  }),
-  response: LossDivision,
-};
-
-export type patch_Loss_divisionsId = typeof patch_Loss_divisionsId;
-export const patch_Loss_divisionsId = {
-  method: z.literal("PATCH"),
-  path: z.literal("/loss_divisions/{id}"),
-  requestFormat: z.literal("json"),
-  parameters: z.object({
-    path: z.object({
-      id: z.string(),
-    }),
-    body: LossDivisionUpdate,
-  }),
-  response: LossDivision,
-};
-
-export type delete_Loss_divisionsId = typeof delete_Loss_divisionsId;
-export const delete_Loss_divisionsId = {
-  method: z.literal("DELETE"),
-  path: z.literal("/loss_divisions/{id}"),
-  requestFormat: z.literal("json"),
-  parameters: z.object({
-    path: z.object({
-      id: z.string(),
-    }),
-  }),
-  response: z.unknown(),
-};
-
-export type get_Orders = typeof get_Orders;
-export const get_Orders = {
-  method: z.literal("GET"),
-  path: z.literal("/orders"),
-  requestFormat: z.literal("json"),
-  parameters: z.object({
-    query: z.object({
-      fields: z.array(z.string()).optional(),
-      sort: z.string().optional(),
-      limit: z.number().optional(),
-      page: z.number().optional(),
-      order_id: z.string().optional(),
-      store_id: z.string().optional(),
-      supplier_id: z.string().optional(),
-      "estimated_arrival_date-from": z.string().optional(),
-      "estimated_arrival_date-to": z.string().optional(),
-      "order_date-from": z.string().optional(),
-      "order_date-to": z.string().optional(),
-      status: z.union([z.literal("0"), z.literal("1"), z.literal("2"), z.literal("3")]).optional(),
-      "upd_date_time-from": z.string().optional(),
-      "upd_date_time-to": z.string().optional(),
-    }),
-  }),
-  response: z.array(Order),
-};
-
-export type post_Orders = typeof post_Orders;
-export const post_Orders = {
-  method: z.literal("POST"),
-  path: z.literal("/orders"),
-  requestFormat: z.literal("json"),
-  parameters: z.object({
-    body: OrderCreate,
-  }),
-  response: Order,
-};
-
-export type get_OrdersId = typeof get_OrdersId;
-export const get_OrdersId = {
-  method: z.literal("GET"),
-  path: z.literal("/orders/{id}"),
-  requestFormat: z.literal("json"),
-  parameters: z.object({
-    query: z.object({
-      fields: z.array(z.string()).optional(),
-    }),
-    path: z.object({
-      id: z.string(),
-    }),
-  }),
-  response: Order,
-};
-
-export type patch_OrdersId = typeof patch_OrdersId;
-export const patch_OrdersId = {
-  method: z.literal("PATCH"),
-  path: z.literal("/orders/{id}"),
-  requestFormat: z.literal("json"),
-  parameters: z.object({
-    path: z.object({
-      id: z.string(),
-    }),
-    body: OrderUpdate,
-  }),
-  response: Order,
-};
-
-export type delete_OrdersId = typeof delete_OrdersId;
-export const delete_OrdersId = {
-  method: z.literal("DELETE"),
-  path: z.literal("/orders/{id}"),
-  requestFormat: z.literal("json"),
-  parameters: z.object({
-    path: z.object({
-      id: z.string(),
-    }),
-  }),
-  response: z.unknown(),
-};
-
-export type get_Ordersproducts = typeof get_Ordersproducts;
-export const get_Ordersproducts = {
-  method: z.literal("GET"),
-  path: z.literal("/orders/products"),
-  requestFormat: z.literal("json"),
-  parameters: z.object({
-    query: z.object({
-      fields: z.array(z.string()).optional(),
-      sort: z.string().optional(),
-      limit: z.number().optional(),
-      page: z.number().optional(),
-      product_id: z.string().optional(),
-      product_code: z.string().optional(),
-      supplier_id: z.string().optional(),
-      category_id: z.string().optional(),
-      min_remains_inventories: z.boolean().optional(),
-      store_id: z.string().optional(),
-    }),
-  }),
-  response: z.array(OrderProduct),
-};
-
-export type get_Ordersstores = typeof get_Ordersstores;
-export const get_Ordersstores = {
-  method: z.literal("GET"),
-  path: z.literal("/orders/stores"),
-  requestFormat: z.literal("json"),
-  parameters: z.object({
-    query: z.object({
-      fields: z.array(z.string()).optional(),
-      sort: z.string().optional(),
-      limit: z.number().optional(),
-      page: z.number().optional(),
-    }),
-  }),
-  response: z.array(OrderStore),
-};
-
-export type get_Arrivals = typeof get_Arrivals;
-export const get_Arrivals = {
-  method: z.literal("GET"),
-  path: z.literal("/arrivals"),
-  requestFormat: z.literal("json"),
-  parameters: z.object({
-    query: z.object({
-      fields: z.array(z.string()).optional(),
-      sort: z.string().optional(),
-      limit: z.number().optional(),
-      page: z.number().optional(),
-      arrival_id: z.string().optional(),
-      order_id: z.string().optional(),
-      store_id: z.string().optional(),
-      supplier_id: z.string().optional(),
-      "arrival_date-from": z.string().optional(),
-      "arrival_date-to": z.string().optional(),
-      "upd_date_time-from": z.string().optional(),
-      "upd_date_time-to": z.string().optional(),
-    }),
-  }),
-  response: z.array(Arrival),
-};
-
-export type post_Arrivals = typeof post_Arrivals;
-export const post_Arrivals = {
-  method: z.literal("POST"),
-  path: z.literal("/arrivals"),
-  requestFormat: z.literal("json"),
-  parameters: z.object({
-    body: ArrivalCreate,
-  }),
-  response: Arrival,
-};
-
-export type get_ArrivalsId = typeof get_ArrivalsId;
-export const get_ArrivalsId = {
-  method: z.literal("GET"),
-  path: z.literal("/arrivals/{id}"),
-  requestFormat: z.literal("json"),
-  parameters: z.object({
-    query: z.object({
-      fields: z.array(z.string()).optional(),
-    }),
-    path: z.object({
-      id: z.string(),
-    }),
-  }),
-  response: Arrival,
-};
-
-export type patch_ArrivalsId = typeof patch_ArrivalsId;
-export const patch_ArrivalsId = {
-  method: z.literal("PATCH"),
-  path: z.literal("/arrivals/{id}"),
-  requestFormat: z.literal("json"),
-  parameters: z.object({
-    path: z.object({
-      id: z.string(),
-    }),
-    body: ArrivalUpdate,
-  }),
-  response: Arrival,
-};
-
-export type get_ArrivalsIddetails = typeof get_ArrivalsIddetails;
-export const get_ArrivalsIddetails = {
-  method: z.literal("GET"),
-  path: z.literal("/arrivals/{id}/details"),
-  requestFormat: z.literal("json"),
-  parameters: z.object({
-    query: z.object({
-      fields: z.array(z.string()).optional(),
-      sort: z.string().optional(),
-      limit: z.number().optional(),
-      page: z.number().optional(),
-    }),
-    path: z.object({
-      id: z.string(),
-    }),
-  }),
-  response: z.array(ArrivalDetail),
-};
-
-export type get_Shipments = typeof get_Shipments;
-export const get_Shipments = {
-  method: z.literal("GET"),
-  path: z.literal("/shipments"),
-  requestFormat: z.literal("json"),
-  parameters: z.object({
-    query: z.object({
-      fields: z.array(z.string()).optional(),
-      sort: z.string().optional(),
-      limit: z.number().optional(),
-      page: z.number().optional(),
-      shipment_id: z.string().optional(),
-      store_id: z.string().optional(),
-      "shipment_date-from": z.string().optional(),
-      "shipment_date-to": z.string().optional(),
-      destination_store_id: z.string().optional(),
-      "upd_date_time-from": z.string().optional(),
-      "upd_date_time-to": z.string().optional(),
-    }),
-  }),
-  response: z.array(Shipment),
-};
-
-export type post_Shipments = typeof post_Shipments;
-export const post_Shipments = {
-  method: z.literal("POST"),
-  path: z.literal("/shipments"),
-  requestFormat: z.literal("json"),
-  parameters: z.object({
-    body: ShipmentCreate,
-  }),
-  response: Shipment,
-};
-
-export type get_ShipmentsId = typeof get_ShipmentsId;
-export const get_ShipmentsId = {
-  method: z.literal("GET"),
-  path: z.literal("/shipments/{id}"),
-  requestFormat: z.literal("json"),
-  parameters: z.object({
-    query: z.object({
-      fields: z.array(z.string()).optional(),
-    }),
-    path: z.object({
-      id: z.string(),
-    }),
-  }),
-  response: Shipment,
-};
-
-export type patch_ShipmentsId = typeof patch_ShipmentsId;
-export const patch_ShipmentsId = {
-  method: z.literal("PATCH"),
-  path: z.literal("/shipments/{id}"),
-  requestFormat: z.literal("json"),
-  parameters: z.object({
-    path: z.object({
-      id: z.string(),
-    }),
-    body: ShipmentUpdate,
-  }),
-  response: Shipment,
-};
-
-export type delete_ShipmentsId = typeof delete_ShipmentsId;
-export const delete_ShipmentsId = {
-  method: z.literal("DELETE"),
-  path: z.literal("/shipments/{id}"),
-  requestFormat: z.literal("json"),
-  parameters: z.object({
-    path: z.object({
-      id: z.string(),
-    }),
-  }),
-  response: z.unknown(),
-};
-
-export type get_ShipmentsIddetails = typeof get_ShipmentsIddetails;
-export const get_ShipmentsIddetails = {
-  method: z.literal("GET"),
-  path: z.literal("/shipments/{id}/details"),
-  requestFormat: z.literal("json"),
-  parameters: z.object({
-    query: z.object({
-      fields: z.array(z.string()).optional(),
-      sort: z.string().optional(),
-      limit: z.number().optional(),
-      page: z.number().optional(),
-    }),
-    path: z.object({
-      id: z.string(),
-    }),
-  }),
-  response: z.array(ShipmentDetail),
-};
-
-export type get_GetIncomingStocks = typeof get_GetIncomingStocks;
-export const get_GetIncomingStocks = {
-  method: z.literal("GET"),
-  path: z.literal("/incoming_stocks"),
-  requestFormat: z.literal("json"),
-  parameters: z.object({
-    query: z.object({
-      incoming_stock_id: z.number().optional(),
-      store_id: z.number().optional(),
-      division: z.number().optional(),
-      status: z.number().optional(),
-      target_date_from: z.string().optional(),
-      target_date_to: z.string().optional(),
-      limit: z.number().optional(),
-      page: z.number().optional(),
-    }),
-  }),
-  response: z.object({
-    incomingStocks: z.array(IncomingStock).optional(),
-    pagination: Pagination.optional(),
-  }),
-};
-
-export type post_CreateIncomingStock = typeof post_CreateIncomingStock;
-export const post_CreateIncomingStock = {
-  method: z.literal("POST"),
-  path: z.literal("/incoming_stocks"),
-  requestFormat: z.literal("json"),
-  parameters: z.object({
-    body: z.object({
-      division: z.number(),
-      status: z.number(),
-      storeId: z.number(),
-      supplierStoreId: z.union([z.number(), z.undefined()]).optional(),
-      supplierId: z.union([z.number(), z.undefined()]).optional(),
-      arrivalId: z.union([z.number(), z.undefined()]).optional(),
-      arrivalDate: z.union([z.string(), z.undefined()]).optional(),
-      orderId: z.union([z.number(), z.undefined()]).optional(),
-      targetDate: z.string(),
-      estimatedDate: z.union([z.string(), z.undefined()]).optional(),
-      staffId: z.union([z.number(), z.undefined()]).optional(),
-      memo: z.union([z.string(), z.undefined()]).optional(),
-      details: z.array(
-        z.object({
-          productId: z.number(),
-          quantity: z.number(),
-          costPrice: z.union([z.number(), z.undefined()]).optional(),
-          memo: z.union([z.string(), z.undefined()]).optional(),
-        }),
-      ),
-    }),
-  }),
-  response: z.object({
-    id: z.number().optional(),
-  }),
-};
-
-export type get_GetIncomingStock = typeof get_GetIncomingStock;
-export const get_GetIncomingStock = {
-  method: z.literal("GET"),
-  path: z.literal("/incoming_stocks/{id}"),
-  requestFormat: z.literal("json"),
-  parameters: z.object({
-    path: z.object({
-      id: z.number(),
-    }),
-  }),
-  response: IncomingStock,
-};
-
-export type patch_UpdateIncomingStock = typeof patch_UpdateIncomingStock;
-export const patch_UpdateIncomingStock = {
-  method: z.literal("PATCH"),
-  path: z.literal("/incoming_stocks/{id}"),
-  requestFormat: z.literal("json"),
-  parameters: z.object({
-    path: z.object({
-      id: z.number(),
-    }),
-    body: IncomingStockUpdate,
-  }),
-  response: z.unknown(),
-};
-
-export type delete_DeleteIncomingStock = typeof delete_DeleteIncomingStock;
-export const delete_DeleteIncomingStock = {
-  method: z.literal("DELETE"),
-  path: z.literal("/incoming_stocks/{id}"),
-  requestFormat: z.literal("json"),
-  parameters: z.object({
-    path: z.object({
-      id: z.number(),
-    }),
-  }),
-  response: z.unknown(),
-};
-
-export type get_GetIncomingStockDetails = typeof get_GetIncomingStockDetails;
-export const get_GetIncomingStockDetails = {
-  method: z.literal("GET"),
-  path: z.literal("/incoming_stocks/{id}/details"),
-  requestFormat: z.literal("json"),
-  parameters: z.object({
-    query: z.object({
-      limit: z.number().optional(),
-      page: z.number().optional(),
-    }),
-    path: z.object({
-      id: z.number(),
-    }),
-  }),
-  response: z.object({
-    incomingStockDetails: z.array(IncomingStockDetail).optional(),
-    pagination: Pagination.optional(),
-  }),
-};
-
-export type patch_UpdateIncomingStockDetails = typeof patch_UpdateIncomingStockDetails;
-export const patch_UpdateIncomingStockDetails = {
-  method: z.literal("PATCH"),
-  path: z.literal("/incoming_stocks/{id}/details"),
-  requestFormat: z.literal("json"),
-  parameters: z.object({
-    path: z.object({
-      id: z.number(),
-    }),
-    body: z.object({
-      details: z.array(
-        z.object({
-          id: z.number(),
-          productId: z.number(),
-          quantity: z.number(),
-          costPrice: z.union([z.number(), z.undefined()]).optional(),
-          memo: z.union([z.string(), z.undefined()]).optional(),
-        }),
-      ),
-    }),
-  }),
-  response: z.unknown(),
-};
-
-export type get_GetOutgoingStocks = typeof get_GetOutgoingStocks;
-export const get_GetOutgoingStocks = {
-  method: z.literal("GET"),
-  path: z.literal("/outgoing_stocks"),
-  requestFormat: z.literal("json"),
-  parameters: z.object({
-    query: z.object({
-      outgoing_stock_id: z.number().optional(),
-      store_id: z.number().optional(),
-      division: z.number().optional(),
-      status: z.number().optional(),
-      target_date_from: z.string().optional(),
-      target_date_to: z.string().optional(),
-      limit: z.number().optional(),
-      page: z.number().optional(),
-    }),
-  }),
-  response: z.object({
-    outgoingStocks: z.array(OutgoingStock).optional(),
-    pagination: Pagination.optional(),
-  }),
-};
-
-export type post_CreateOutgoingStock = typeof post_CreateOutgoingStock;
-export const post_CreateOutgoingStock = {
-  method: z.literal("POST"),
-  path: z.literal("/outgoing_stocks"),
-  requestFormat: z.literal("json"),
-  parameters: z.object({
-    body: OutgoingStockCreate,
-  }),
-  response: z.object({
-    id: z.number().optional(),
-  }),
-};
-
-export type get_GetOutgoingStock = typeof get_GetOutgoingStock;
-export const get_GetOutgoingStock = {
-  method: z.literal("GET"),
-  path: z.literal("/outgoing_stocks/{id}"),
-  requestFormat: z.literal("json"),
-  parameters: z.object({
-    path: z.object({
-      id: z.number(),
-    }),
-  }),
-  response: OutgoingStock,
-};
-
-export type patch_UpdateOutgoingStock = typeof patch_UpdateOutgoingStock;
-export const patch_UpdateOutgoingStock = {
-  method: z.literal("PATCH"),
-  path: z.literal("/outgoing_stocks/{id}"),
-  requestFormat: z.literal("json"),
-  parameters: z.object({
-    path: z.object({
-      id: z.number(),
-    }),
-    body: OutgoingStockUpdate,
-  }),
-  response: z.unknown(),
-};
-
-export type delete_DeleteOutgoingStock = typeof delete_DeleteOutgoingStock;
-export const delete_DeleteOutgoingStock = {
-  method: z.literal("DELETE"),
-  path: z.literal("/outgoing_stocks/{id}"),
-  requestFormat: z.literal("json"),
-  parameters: z.object({
-    path: z.object({
-      id: z.number(),
-    }),
-  }),
-  response: z.unknown(),
-};
-
-export type get_GetOutgoingStockDetails = typeof get_GetOutgoingStockDetails;
-export const get_GetOutgoingStockDetails = {
-  method: z.literal("GET"),
-  path: z.literal("/outgoing_stocks/{id}/details"),
-  requestFormat: z.literal("json"),
-  parameters: z.object({
-    query: z.object({
-      limit: z.number().optional(),
-      page: z.number().optional(),
-    }),
-    path: z.object({
-      id: z.number(),
-    }),
-  }),
-  response: z.object({
-    outgoingStockDetails: z.array(OutgoingStockDetail).optional(),
-    pagination: Pagination.optional(),
-  }),
-};
-
-export type patch_UpdateOutgoingStockDetails = typeof patch_UpdateOutgoingStockDetails;
-export const patch_UpdateOutgoingStockDetails = {
-  method: z.literal("PATCH"),
-  path: z.literal("/outgoing_stocks/{id}/details"),
-  requestFormat: z.literal("json"),
-  parameters: z.object({
-    path: z.object({
-      id: z.number(),
-    }),
-    body: z.object({
-      details: z.array(
-        z.object({
-          id: z.number(),
-          productId: z.number(),
-          quantity: z.number(),
-          costPrice: z.union([z.number(), z.undefined()]).optional(),
-          memo: z.union([z.string(), z.undefined()]).optional(),
-        }),
-      ),
-    }),
-  }),
-  response: z.unknown(),
-};
-
-export type get_GetCorrectionOutgoingStocks = typeof get_GetCorrectionOutgoingStocks;
-export const get_GetCorrectionOutgoingStocks = {
-  method: z.literal("GET"),
-  path: z.literal("/correction_requests/outgoing_stocks"),
-  requestFormat: z.literal("json"),
-  parameters: z.object({
-    query: z.object({
-      correction_outgoing_stock_id: z.number().optional(),
-      store_id: z.number().optional(),
-      status: z.number().optional(),
-      target_date_from: z.string().optional(),
-      target_date_to: z.string().optional(),
-      limit: z.number().optional(),
-      page: z.number().optional(),
-    }),
-  }),
-  response: z.object({
-    correctionOutgoingStocks: z.array(CorrectionRequestOutgoingStock).optional(),
-    pagination: Pagination.optional(),
-  }),
-};
-
-export type post_CreateCorrectionOutgoingStock = typeof post_CreateCorrectionOutgoingStock;
-export const post_CreateCorrectionOutgoingStock = {
-  method: z.literal("POST"),
-  path: z.literal("/correction_requests/outgoing_stocks"),
-  requestFormat: z.literal("json"),
-  parameters: z.object({
-    body: z.object({
-      outgoingStockId: z.number(),
-      storeId: z.number(),
-      requestDate: z.string(),
-      requestReason: z.string(),
-      requestStaffId: z.union([z.number(), z.undefined()]).optional(),
-    }),
-  }),
-  response: z.object({
-    id: z.number().optional(),
-  }),
-};
-
-export type get_GetCorrectionOutgoingStock = typeof get_GetCorrectionOutgoingStock;
-export const get_GetCorrectionOutgoingStock = {
-  method: z.literal("GET"),
-  path: z.literal("/correction_requests/outgoing_stocks/{id}"),
-  requestFormat: z.literal("json"),
-  parameters: z.object({
-    path: z.object({
-      id: z.number(),
-    }),
-  }),
-  response: CorrectionRequestOutgoingStock,
-};
-
-export type patch_UpdateCorrectionOutgoingStock = typeof patch_UpdateCorrectionOutgoingStock;
-export const patch_UpdateCorrectionOutgoingStock = {
-  method: z.literal("PATCH"),
-  path: z.literal("/correction_requests/outgoing_stocks/{id}"),
-  requestFormat: z.literal("json"),
-  parameters: z.object({
-    path: z.object({
-      id: z.number(),
-    }),
-    body: z.object({
-      status: z.number(),
-      approvalDate: z.string(),
-      approvalReason: z.union([z.string(), z.undefined()]).optional(),
-      approvalStaffId: z.union([z.number(), z.undefined()]).optional(),
-    }),
-  }),
-  response: z.unknown(),
-};
-
-export type delete_DeleteCorrectionOutgoingStock = typeof delete_DeleteCorrectionOutgoingStock;
-export const delete_DeleteCorrectionOutgoingStock = {
-  method: z.literal("DELETE"),
-  path: z.literal("/correction_requests/outgoing_stocks/{id}"),
-  requestFormat: z.literal("json"),
-  parameters: z.object({
-    path: z.object({
-      id: z.number(),
-    }),
-  }),
-  response: z.unknown(),
-};
-
-export type get_GetStocktakings = typeof get_GetStocktakings;
-export const get_GetStocktakings = {
-  method: z.literal("GET"),
-  path: z.literal("/stocktakings"),
-  requestFormat: z.literal("json"),
-  parameters: z.object({
-    query: z.object({
-      stocktaking_id: z.number().optional(),
-      store_id: z.number().optional(),
-      stocktaking_name: z.string().optional(),
-      stocktaking_status: z.number().optional(),
-      start_date_from: z.string().optional(),
-      start_date_to: z.string().optional(),
-      end_date_from: z.string().optional(),
-      end_date_to: z.string().optional(),
-      limit: z.number().optional(),
-      page: z.number().optional(),
-    }),
-  }),
-  response: z.object({
-    stocktakings: z.array(Stocktaking).optional(),
-    pagination: Pagination.optional(),
-  }),
-};
-
-export type post_CreateStocktaking = typeof post_CreateStocktaking;
-export const post_CreateStocktaking = {
-  method: z.literal("POST"),
-  path: z.literal("/stocktakings"),
-  requestFormat: z.literal("json"),
-  parameters: z.object({
-    body: z.object({
-      stocktakingName: z.string(),
-      storeId: z.number(),
-      stocktakingStatus: z.number(),
-      startDate: z.string(),
-      endDate: z.union([z.string(), z.undefined()]).optional(),
-      stockAmount: z.union([z.number(), z.undefined()]).optional(),
-      staffId: z.union([z.number(), z.undefined()]).optional(),
-      memo: z.union([z.string(), z.undefined()]).optional(),
-      isExcludeOutOfStock: z.union([z.boolean(), z.undefined()]).optional(),
-      categoryTarget: z.union([z.number(), z.undefined()]).optional(),
-      categoryIds: z.union([z.array(z.number()), z.undefined()]).optional(),
-    }),
-  }),
-  response: z.object({
-    id: z.number().optional(),
-  }),
-};
-
-export type get_GetStocktakingCategories = typeof get_GetStocktakingCategories;
-export const get_GetStocktakingCategories = {
-  method: z.literal("GET"),
-  path: z.literal("/stocktakings/categories"),
-  requestFormat: z.literal("json"),
-  parameters: z.object({
-    query: z.object({
-      stocktaking_id: z.number().optional(),
-      store_id: z.number().optional(),
-      category_id: z.number().optional(),
-      category_code: z.string().optional(),
-      category_name: z.string().optional(),
-      is_complete: z.number().optional(),
-      limit: z.number().optional(),
-      page: z.number().optional(),
-    }),
-  }),
-  response: z.object({
-    stocktakingCategories: z.array(StocktakingCategory).optional(),
-    pagination: Pagination.optional(),
-  }),
-};
-
-export type patch_UpdateStocktakingCategory = typeof patch_UpdateStocktakingCategory;
-export const patch_UpdateStocktakingCategory = {
-  method: z.literal("PATCH"),
-  path: z.literal("/stocktakings/categories"),
-  requestFormat: z.literal("json"),
-  parameters: z.object({
-    body: z.object({
-      stocktakingId: z.number(),
-      storeId: z.number(),
-      categoryId: z.number(),
-      isComplete: z.boolean(),
-    }),
-  }),
-  response: z.unknown(),
-};
-
-export type get_GetStocktakingProducts = typeof get_GetStocktakingProducts;
-export const get_GetStocktakingProducts = {
-  method: z.literal("GET"),
-  path: z.literal("/stocktakings/products"),
-  requestFormat: z.literal("json"),
-  parameters: z.object({
-    query: z.object({
-      stocktaking_id: z.number().optional(),
-      store_id: z.number().optional(),
-      category_id: z.number().optional(),
-      product_id: z.number().optional(),
-      product_code: z.string().optional(),
-      product_name: z.string().optional(),
-      barcode: z.string().optional(),
-      is_counted: z.number().optional(),
-      limit: z.number().optional(),
-      page: z.number().optional(),
-    }),
-  }),
-  response: z.object({
-    stocktakingProducts: z.array(StocktakingProduct).optional(),
-    pagination: Pagination.optional(),
-  }),
-};
-
-export type patch_UpdateStocktakingProduct = typeof patch_UpdateStocktakingProduct;
-export const patch_UpdateStocktakingProduct = {
-  method: z.literal("PATCH"),
-  path: z.literal("/stocktakings/products"),
-  requestFormat: z.literal("json"),
-  parameters: z.object({
-    body: z.object({
-      stocktakingId: z.number(),
-      storeId: z.number(),
-      productId: z.number(),
-      countedQuantity: z.number(),
-      isCounted: z.boolean(),
-    }),
-  }),
-  response: z.unknown(),
-};
-
-export type get_GetStocktakingStocks = typeof get_GetStocktakingStocks;
-export const get_GetStocktakingStocks = {
-  method: z.literal("GET"),
-  path: z.literal("/stocktakings/stocks"),
-  requestFormat: z.literal("json"),
-  parameters: z.object({
-    query: z.object({
-      stocktaking_id: z.number().optional(),
-      store_id: z.number().optional(),
-      product_id: z.number().optional(),
-      limit: z.number().optional(),
-      page: z.number().optional(),
-    }),
-  }),
-  response: z.object({
-    stocktakingStocks: z.array(StocktakingStock).optional(),
-    pagination: Pagination.optional(),
-  }),
-};
-
-export type post_CreateStocktakingStock = typeof post_CreateStocktakingStock;
-export const post_CreateStocktakingStock = {
-  method: z.literal("POST"),
-  path: z.literal("/stocktakings/stocks"),
-  requestFormat: z.literal("json"),
-  parameters: z.object({
-    body: z.object({
-      stocktakingId: z.number(),
-      storeId: z.number(),
-      productId: z.number(),
-      inventoryQuantity: z.number(),
-      countedQuantity: z.number(),
-    }),
-  }),
-  response: z.object({
-    id: z.number().optional(),
-  }),
-};
-
-export type patch_UpdateStocktakingStock = typeof patch_UpdateStocktakingStock;
-export const patch_UpdateStocktakingStock = {
-  method: z.literal("PATCH"),
-  path: z.literal("/stocktakings/stocks"),
-  requestFormat: z.literal("json"),
-  parameters: z.object({
-    body: z.object({
-      stocktakingId: z.number(),
-      storeId: z.number(),
-      productId: z.number(),
-      countedQuantity: z.number(),
-    }),
-  }),
-  response: z.unknown(),
-};
-
-export type get_GetTaxRates = typeof get_GetTaxRates;
-export const get_GetTaxRates = {
-  method: z.literal("GET"),
-  path: z.literal("/tax_rates"),
-  requestFormat: z.literal("json"),
-  parameters: z.never(),
-  response: z.object({
-    taxRates: z.array(TaxRate).optional(),
-  }),
-};
-
-export type get_GetReduceTaxRates = typeof get_GetReduceTaxRates;
-export const get_GetReduceTaxRates = {
-  method: z.literal("GET"),
-  path: z.literal("/reduce_tax_rates"),
-  requestFormat: z.literal("json"),
-  parameters: z.never(),
-  response: z.object({
-    reduceTaxRates: z.array(ReduceTaxRate).optional(),
-  }),
-};
-
-export type get_GetReceiptRemarks = typeof get_GetReceiptRemarks;
-export const get_GetReceiptRemarks = {
-  method: z.literal("GET"),
-  path: z.literal("/receipt_remarks"),
-  requestFormat: z.literal("json"),
-  parameters: z.never(),
-  response: z.object({
-    receiptRemarks: z.array(ReceiptRemark).optional(),
-  }),
-};
-
-export type post_CreateReceiptRemark = typeof post_CreateReceiptRemark;
-export const post_CreateReceiptRemark = {
-  method: z.literal("POST"),
-  path: z.literal("/receipt_remarks"),
-  requestFormat: z.literal("json"),
-  parameters: z.object({
-    body: ReceiptRemarkCreate,
-  }),
-  response: z.object({
-    id: z.number().optional(),
-  }),
-};
-
-export type get_GetDiscountDivisions = typeof get_GetDiscountDivisions;
-export const get_GetDiscountDivisions = {
-  method: z.literal("GET"),
-  path: z.literal("/discount_divisions"),
-  requestFormat: z.literal("json"),
-  parameters: z.never(),
-  response: z.object({
-    discountDivisions: z.array(DiscountDivision).optional(),
-  }),
-};
-
-export type get_GetCatCctCardCompanies = typeof get_GetCatCctCardCompanies;
-export const get_GetCatCctCardCompanies = {
-  method: z.literal("GET"),
-  path: z.literal("/cat_cct_card_companies"),
-  requestFormat: z.literal("json"),
-  parameters: z.never(),
-  response: z.object({
-    catCctCardCompanies: z.array(CatCctCardCompany).optional(),
-  }),
-};
-
-export type get_GetCustomerTypes = typeof get_GetCustomerTypes;
-export const get_GetCustomerTypes = {
-  method: z.literal("GET"),
-  path: z.literal("/customer_types"),
-  requestFormat: z.literal("json"),
-  parameters: z.object({
-    query: z.object({
-      customer_type_id: z.number().optional(),
-      code: z.string().optional(),
-      name: z.string().optional(),
-      limit: z.number().optional(),
-      page: z.number().optional(),
-    }),
-  }),
-  response: z.object({
-    customerTypes: z.array(CustomerType).optional(),
-    pagination: Pagination.optional(),
-  }),
-};
-
-export type post_CreateCustomerType = typeof post_CreateCustomerType;
-export const post_CreateCustomerType = {
-  method: z.literal("POST"),
-  path: z.literal("/customer_types"),
-  requestFormat: z.literal("json"),
-  parameters: z.object({
-    body: CustomerTypeCreate,
-  }),
-  response: z.object({
-    id: z.number().optional(),
-  }),
-};
-
-export type get_GetCustomerTypeSections = typeof get_GetCustomerTypeSections;
-export const get_GetCustomerTypeSections = {
-  method: z.literal("GET"),
-  path: z.literal("/customer_type_sections"),
-  requestFormat: z.literal("json"),
-  parameters: z.object({
-    query: z.object({
-      customer_type_section_id: z.number().optional(),
-      customer_type_id: z.number().optional(),
-      name: z.string().optional(),
-      limit: z.number().optional(),
-      page: z.number().optional(),
-    }),
-  }),
-  response: z.object({
-    customerTypeSections: z.array(CustomerTypeSection).optional(),
-    pagination: Pagination.optional(),
-  }),
-};
-
-export type patch_UpdateCustomerTypeSection = typeof patch_UpdateCustomerTypeSection;
-export const patch_UpdateCustomerTypeSection = {
-  method: z.literal("PATCH"),
-  path: z.literal("/customer_type_sections"),
-  requestFormat: z.literal("json"),
-  parameters: z.object({
-    body: CustomerTypeSectionUpdate,
-  }),
-  response: z.unknown(),
+  response: z.array(StockChange),
 };
 
 // <EndpointByMethod>
@@ -7294,114 +4013,20 @@ export const EndpointByMethod = {
     "/products/{id}/inventory_reservations": get_GetProductInventoryReservations,
     "/products/reserve_item_labels": get_GetProductReserveItemLabels,
     "/products/images": get_GetProductImages,
-    "/products/{id}/image": get_GetProductImage,
-    "/products/{id}/icon_image": get_GetProductIconImage,
-    "/products/{product_id}/reserve_items/{no}": get_GetProductReserveItem,
-    "/products/attributes/{no}": get_GetProductAttribute,
-    "/products/attribute_items/{code}": get_GetProductAttributeItem,
-    "/products/{id}/inventory_reservations/{reservation_product_id}": get_GetProductInventoryReservation,
-    "/products/reserve_item_labels/{no}": get_GetProductReserveItemLabel,
     "/transactions": get_Transactions,
     "/transactions/{id}": get_TransactionsId,
     "/transactions/{id}/details": get_TransactionsIddetails,
-    "/layaways": get_Layaways,
-    "/layaways/{id}": get_LayawaysId,
-    "/pre_sales": get_Pre_sales,
-    "/pre_sales/{id}": get_Pre_salesId,
-    "/ticket_transactions": get_Ticket_transactions,
-    "/ticket_transactions/{id}": get_Ticket_transactionsId,
     "/customers": get_Customers,
     "/customers/{id}": get_CustomersId,
-    "/customers/{id}/points": get_CustomersIdpoints,
-    "/customer_ranks": get_Customer_ranks,
-    "/customer_ranks/{id}": get_Customer_ranksId,
-    "/staff_ranks": get_Staff_ranks,
-    "/staff_ranks/{id}": get_Staff_ranksId,
-    "/customers/required": get_Customersrequired,
-    "/stocks": get_GetStocks,
-    "/stocks/changes": get_GetStockChanges,
-    "/bargain": get_Bargain,
-    "/bargain/{id}/stores": get_BargainIdstores,
-    "/bargain/{id}/products": get_BargainIdproducts,
-    "/product_option_groups": get_Product_option_groups,
-    "/product_option_groups/{id}": get_Product_option_groupsId,
-    "/bundles": get_Bundles,
-    "/bundles/{id}": get_BundlesId,
-    "/stores": get_Stores,
-    "/stores/{id}": get_StoresId,
-    "/stores/{store_id}/products": get_StoresStore_idproducts,
-    "/stores/{store_id}/product_prices": get_GetStoreProductPrices,
-    "/store_groups": get_Store_groups,
-    "/store_group_items": get_Store_group_items,
-    "/staffs": get_Staffs,
-    "/staffs/{id}": get_StaffsId,
-    "/roles": get_Roles,
-    "/roles/{id}": get_RolesId,
-    "/budgets/monthly": get_Budgetsmonthly,
-    "/budgets/daily/{date}": get_BudgetsdailyDate,
-    "/budgets/staff": get_Budgetsstaff,
-    "/suppliers": get_Suppliers,
-    "/suppliers/{id}": get_SuppliersId,
-    "/suppliers/{id}/products": get_SuppliersIdproducts,
-    "/supplier_divisions": get_Supplier_divisions,
-    "/supplier_divisions/{id}": get_Supplier_divisionsId,
-    "/terminals": get_Terminals,
-    "/terminals/{id}": get_TerminalsId,
-    "/settlements": get_Settlements,
-    "/daily_settlements": get_Daily_settlements,
-    "/payment_methods": get_Payment_methods,
-    "/payment_methods/{id}": get_Payment_methodsId,
-    "/stores/{store_id}/payment_methods": get_StoresStore_idpayment_methods,
-    "/payment_method_divisions": get_Payment_method_divisions,
-    "/payment_method_divisions/{id}": get_Payment_method_divisionsId,
-    "/app_payment_methods": get_App_payment_methods,
-    "/app_payment_methods/{id}": get_App_payment_methodsId,
-    "/coupons": get_GetCoupons,
-    "/coupons/{id}": get_GetCoupon,
-    "/coupons/{id}/products": get_GetCouponProducts,
-    "/coupons/{id}/products/{couponProductId}": get_GetCouponProduct,
-    "/losses": get_Losses,
-    "/losses/{id}": get_LossesId,
-    "/losses/{id}/details": get_LossesIddetails,
-    "/loss_divisions": get_Loss_divisions,
-    "/loss_divisions/{id}": get_Loss_divisionsId,
-    "/orders": get_Orders,
-    "/orders/{id}": get_OrdersId,
-    "/orders/products": get_Ordersproducts,
-    "/orders/stores": get_Ordersstores,
-    "/arrivals": get_Arrivals,
-    "/arrivals/{id}": get_ArrivalsId,
-    "/arrivals/{id}/details": get_ArrivalsIddetails,
-    "/shipments": get_Shipments,
-    "/shipments/{id}": get_ShipmentsId,
-    "/shipments/{id}/details": get_ShipmentsIddetails,
-    "/incoming_stocks": get_GetIncomingStocks,
-    "/incoming_stocks/{id}": get_GetIncomingStock,
-    "/incoming_stocks/{id}/details": get_GetIncomingStockDetails,
-    "/outgoing_stocks": get_GetOutgoingStocks,
-    "/outgoing_stocks/{id}": get_GetOutgoingStock,
-    "/outgoing_stocks/{id}/details": get_GetOutgoingStockDetails,
-    "/correction_requests/outgoing_stocks": get_GetCorrectionOutgoingStocks,
-    "/correction_requests/outgoing_stocks/{id}": get_GetCorrectionOutgoingStock,
-    "/stocktakings": get_GetStocktakings,
-    "/stocktakings/categories": get_GetStocktakingCategories,
-    "/stocktakings/products": get_GetStocktakingProducts,
-    "/stocktakings/stocks": get_GetStocktakingStocks,
-    "/tax_rates": get_GetTaxRates,
-    "/reduce_tax_rates": get_GetReduceTaxRates,
-    "/receipt_remarks": get_GetReceiptRemarks,
-    "/discount_divisions": get_GetDiscountDivisions,
-    "/cat_cct_card_companies": get_GetCatCctCardCompanies,
-    "/customer_types": get_GetCustomerTypes,
-    "/customer_type_sections": get_GetCustomerTypeSections,
+    "/customer_required_column_setting": get_Customer_required_column_setting,
+    "/stock": get_GetStocks,
+    "/stock/changes/{product_id}/{store_id}": get_GetStockChanges,
   },
   post: {
     "/categories": post_Categories,
     "/category_groups": post_Category_groups,
     "/products": post_CreateProduct,
-    "/products/bulk": post_BulkCreateProducts,
     "/products/{id}/prices": post_CreateProductPrice,
-    "/products/{id}/reserve_items": post_CreateProductReserveItem,
     "/products/attributes": post_CreateProductAttribute,
     "/products/attribute_items": post_CreateProductAttributeItem,
     "/products/{id}/stores": post_CreateProductStore,
@@ -7409,159 +4034,42 @@ export const EndpointByMethod = {
     "/products/reserve_item_labels": post_CreateProductReserveItemLabel,
     "/products/images": post_UploadProductImage,
     "/transactions": post_Transactions,
-    "/layaways": post_Layaways,
-    "/pre_sales": post_Pre_sales,
+    "/transactions/{id}/cancel": post_TransactionsIdcancel,
+    "/transactions/{id}/dispose": post_TransactionsIddispose,
     "/customers": post_Customers,
-    "/customers/bulk": post_Customersbulk,
-    "/customer_ranks": post_Customer_ranks,
-    "/staff_ranks": post_Staff_ranks,
-    "/bargain": post_Bargain,
-    "/bargain/{id}/stores": post_BargainIdstores,
-    "/bargain/{id}/products": post_BargainIdproducts,
-    "/product_option_groups": post_Product_option_groups,
-    "/bundles": post_Bundles,
-    "/stores": post_Stores,
-    "/stores/{store_id}/products": post_StoresStore_idproducts,
-    "/stores/{store_id}/product_prices": post_CreateOrUpdateStoreProductPrice,
-    "/store_groups": post_Store_groups,
-    "/store_group_items": post_Store_group_items,
-    "/staffs": post_Staffs,
-    "/roles": post_Roles,
-    "/budgets/daily/{date}": post_BudgetsdailyDate,
-    "/budgets/staff": post_Budgetsstaff,
-    "/suppliers": post_Suppliers,
-    "/suppliers/{id}/products": post_SuppliersIdproducts,
-    "/supplier_divisions": post_Supplier_divisions,
-    "/terminals": post_Terminals,
-    "/settlements": post_Settlements,
-    "/daily_settlements": post_Daily_settlements,
-    "/payment_methods": post_Payment_methods,
-    "/payment_method_divisions": post_Payment_method_divisions,
-    "/app_payment_methods": post_App_payment_methods,
-    "/coupons": post_CreateCoupon,
-    "/coupons/{id}/products": post_CreateCouponProduct,
-    "/losses": post_Losses,
-    "/loss_divisions": post_Loss_divisions,
-    "/orders": post_Orders,
-    "/arrivals": post_Arrivals,
-    "/shipments": post_Shipments,
-    "/incoming_stocks": post_CreateIncomingStock,
-    "/outgoing_stocks": post_CreateOutgoingStock,
-    "/correction_requests/outgoing_stocks": post_CreateCorrectionOutgoingStock,
-    "/stocktakings": post_CreateStocktaking,
-    "/stocktakings/stocks": post_CreateStocktakingStock,
-    "/receipt_remarks": post_CreateReceiptRemark,
-    "/customer_types": post_CreateCustomerType,
+    "/stock/{product_id}/add": post_UpdateStockRelative,
   },
   patch: {
     "/categories/{id}": patch_CategoriesId,
     "/category_groups/{id}": patch_Category_groupsId,
-    "/customers/{id}/points": patch_CustomersIdpoints,
-    "/stocks": patch_UpdateStock,
-    "/bargain/{id}": patch_BargainId,
-    "/bargain/{id}/stores/{bargainStoreId}": patch_BargainIdstoresBargainStoreId,
-    "/bargain/{id}/products/{bargainProductId}": patch_BargainIdproductsBargainProductId,
-    "/product_option_groups/{id}": patch_Product_option_groupsId,
-    "/bundles/{id}": patch_BundlesId,
-    "/stores/{id}": patch_StoresId,
-    "/store_groups/{id}": patch_Store_groupsId,
-    "/store_group_items/{id}": patch_Store_group_itemsId,
-    "/coupons/{id}": patch_UpdateCoupon,
-    "/coupons/{id}/products/{couponProductId}": patch_UpdateCouponProduct,
-    "/losses/{id}": patch_LossesId,
-    "/loss_divisions/{id}": patch_Loss_divisionsId,
-    "/orders/{id}": patch_OrdersId,
-    "/arrivals/{id}": patch_ArrivalsId,
-    "/shipments/{id}": patch_ShipmentsId,
-    "/incoming_stocks/{id}": patch_UpdateIncomingStock,
-    "/incoming_stocks/{id}/details": patch_UpdateIncomingStockDetails,
-    "/outgoing_stocks/{id}": patch_UpdateOutgoingStock,
-    "/outgoing_stocks/{id}/details": patch_UpdateOutgoingStockDetails,
-    "/correction_requests/outgoing_stocks/{id}": patch_UpdateCorrectionOutgoingStock,
-    "/stocktakings/categories": patch_UpdateStocktakingCategory,
-    "/stocktakings/products": patch_UpdateStocktakingProduct,
-    "/stocktakings/stocks": patch_UpdateStocktakingStock,
-    "/customer_type_sections": patch_UpdateCustomerTypeSection,
+    "/products/attribute_items/{code}": patch_UpdateProductAttributeItem,
+    "/transactions/{id}": patch_TransactionsId,
+    "/stock/{product_id}": patch_PatchProductStock,
   },
   delete: {
     "/categories/{id}": delete_CategoriesId,
     "/category_groups/{id}": delete_Category_groupsId,
     "/products/{id}": delete_DeleteProduct,
-    "/products/{id}/image": delete_DeleteProductImage,
-    "/products/{id}/icon_image": delete_DeleteProductIconImage,
     "/products/{product_id}/prices/{price_division}/{store_id}/{start_date}": delete_DeleteProductPrice,
-    "/products/{product_id}/reserve_items/{no}": delete_DeleteProductReserveItem,
     "/products/attributes/{no}": delete_DeleteProductAttribute,
     "/products/attribute_items/{code}": delete_DeleteProductAttributeItem,
     "/products/{id}/inventory_reservations/{reservation_product_id}": delete_DeleteProductInventoryReservation,
+    "/products/{product_id}/reserve_items/{no}": delete_DeleteProductReserveItem,
     "/products/reserve_item_labels/{no}": delete_DeleteProductReserveItemLabel,
+    "/products/{id}/image": delete_DeleteProductImage,
+    "/products/{id}/icon_image": delete_DeleteProductIconImage,
     "/transactions/{id}": delete_TransactionsId,
-    "/layaways/{id}": delete_LayawaysId,
-    "/pre_sales/{id}": delete_Pre_salesId,
     "/customers/{id}": delete_CustomersId,
-    "/customer_ranks/{id}": delete_Customer_ranksId,
-    "/staff_ranks/{id}": delete_Staff_ranksId,
-    "/bargain/{id}": delete_BargainId,
-    "/bargain/{id}/stores/{bargainStoreId}": delete_BargainIdstoresBargainStoreId,
-    "/bargain/{id}/products/{bargainProductId}": delete_BargainIdproductsBargainProductId,
-    "/product_option_groups/{id}": delete_Product_option_groupsId,
-    "/product_option_groups/{id}/products/{product_id}": delete_Product_option_groupsIdproductsProduct_id,
-    "/bundles/{id}": delete_BundlesId,
-    "/bundles/{id}/products/{bundleProductId}": delete_BundlesIdproductsBundleProductId,
-    "/stores/{id}": delete_StoresId,
-    "/store_groups/{id}": delete_Store_groupsId,
-    "/store_group_items/{id}": delete_Store_group_itemsId,
-    "/staffs/{id}": delete_StaffsId,
-    "/roles/{id}": delete_RolesId,
-    "/budgets/daily/{date}": delete_BudgetsdailyDate,
-    "/budgets/staff": delete_Budgetsstaff,
-    "/suppliers/{id}": delete_SuppliersId,
-    "/supplier_divisions/{id}": delete_Supplier_divisionsId,
-    "/terminals/{id}": delete_TerminalsId,
-    "/payment_methods/{id}": delete_Payment_methodsId,
-    "/payment_method_divisions/{id}": delete_Payment_method_divisionsId,
-    "/app_payment_methods/{id}": delete_App_payment_methodsId,
-    "/coupons/{id}": delete_DeleteCoupon,
-    "/coupons/{id}/products/{couponProductId}": delete_DeleteCouponProduct,
-    "/losses/{id}": delete_LossesId,
-    "/loss_divisions/{id}": delete_Loss_divisionsId,
-    "/orders/{id}": delete_OrdersId,
-    "/shipments/{id}": delete_ShipmentsId,
-    "/incoming_stocks/{id}": delete_DeleteIncomingStock,
-    "/outgoing_stocks/{id}": delete_DeleteOutgoingStock,
-    "/correction_requests/outgoing_stocks/{id}": delete_DeleteCorrectionOutgoingStock,
   },
   put: {
     "/products/{id}": put_UpdateProduct,
-    "/products/bulk": put_BulkUpdateProducts,
-    "/products/{id}/prices": put_UpdateProductPrices,
-    "/products/{id}/reserve_items": put_UpdateProductReserveItems,
+    "/products/attributes/{no}": put_UpdateProductAttribute,
     "/products/{id}/stores": put_UpdateProductStores,
     "/products/{id}/inventory_reservations": put_UpdateProductInventoryReservations,
+    "/products/reserve_item_labels/{no}": put_UpdateProductReserveItemLabel,
     "/products/{id}/image": put_UpdateProductImage,
     "/products/{id}/icon_image": put_UpdateProductIconImage,
-    "/products/{product_id}/reserve_items/{no}": put_UpdateProductReserveItem,
-    "/products/attributes/{no}": put_UpdateProductAttribute,
-    "/products/attribute_items/{code}": put_UpdateProductAttributeItem,
-    "/products/{id}/inventory_reservations/{reservation_product_id}": put_UpdateProductInventoryReservation,
-    "/products/reserve_item_labels/{no}": put_UpdateProductReserveItemLabel,
-    "/transactions/{id}": put_TransactionsId,
-    "/pre_sales/{id}": put_Pre_salesId,
-    "/ticket_transactions/{id}": put_Ticket_transactionsId,
     "/customers/{id}": put_CustomersId,
-    "/customers/bulk": put_Customersbulk,
-    "/customers/{id}/points": put_CustomersIdpoints,
-    "/customer_ranks/{id}": put_Customer_ranksId,
-    "/staff_ranks/{id}": put_Staff_ranksId,
-    "/staffs/{id}": put_StaffsId,
-    "/roles/{id}": put_RolesId,
-    "/budgets/daily/{date}": put_BudgetsdailyDate,
-    "/budgets/staff": put_Budgetsstaff,
-    "/suppliers/{id}": put_SuppliersId,
-    "/supplier_divisions/{id}": put_Supplier_divisionsId,
-    "/terminals/{id}": put_TerminalsId,
-    "/payment_methods/{id}": put_Payment_methodsId,
-    "/payment_method_divisions/{id}": put_Payment_method_divisionsId,
   },
 };
 export type EndpointByMethod = typeof EndpointByMethod;

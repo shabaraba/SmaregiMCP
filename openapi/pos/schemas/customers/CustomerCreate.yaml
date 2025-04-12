@@ -1,6 +1,8 @@
 type: object
 required:
   - customerCode
+  - firstName
+  - lastName
 properties:
   customerCode:
     type: string
@@ -20,24 +22,13 @@ properties:
   lastName:
     type: string
     description: 苗字
-  firstNameKana:
+  firstKana:
     type: string
     description: 名前カナ
-  lastNameKana:
+  lastKana:
     type: string
     description: 苗字カナ
-  sex:
-    type: string
-    enum: ['0', '1', '2']
-    description: 性別(0:不明, 1:男性, 2:女性)
-  barcode:
-    type: string
-    description: バーコード
-  birthDate:
-    type: string
-    format: date
-    description: 生年月日
-  zipCode:
+  postCode:
     type: string
     description: 郵便番号
   address:
@@ -67,33 +58,70 @@ properties:
   departmentName:
     type: string
     description: 部署名
-  managerFlag:
+  managerialPosition:
     type: boolean
-    description: 担当者フラグ
-  isStaff:
-    type: boolean
-    description: スタッフフラグ
-  points:
-    type: integer
-    description: ポイント
-  storeId:
+    description: 役職
+  sex:
     type: string
-    description: 店舗ID
-  note:
-    type: string
-    description: 備考
-  statusId:
-    type: integer
-    description: 状態(1:利用, 2:停止)
-  enterDate:
+    enum: ['0', '1', '2']
+    description: 性別(0:不明, 1:男性, 2:女性)
+  birthDate:
     type: string
     format: date
-    description: 入会日
-  suspendDate:
-    type: string
-    format: date
-    description: 退会日
+    description: 生年月日
   pointExpireDate:
     type: string
     format: date
     description: ポイント有効期限
+  entryDate:
+    type: string
+    format: date
+    description: 入会日
+  leaveDate:
+    type: string
+    format: date
+    description: 退会日
+  pointGivingUnitPrice:
+    type: integer
+    description: ポイント付与単位(金額)
+  pointGivingUnit:
+    type: number
+    format: float
+    description: 値を指定した場合、ポイント付与単位(金額)も必須
+  pinCode:
+    type: string
+    description: PINコード
+  passportNo:
+    type: string
+    description: 旅券番号
+  nationality:
+    type: string
+    description: 国籍
+  alphabetName:
+    type: string
+    description: アルファベット氏名
+  mailReceiveFlag:
+    type: string
+    enum: ['0','1']
+    description: |
+      案内メール受取許可フラグ
+      (0:拒否、1:許可)
+  note:
+    type: string
+    description: 備考
+  note2:
+    type: string
+    description: 備考2
+  favoriteList:
+    type: string
+    description: お気に入りリスト。商品コードをカンマ区切りで設定可能。
+  browsingList:
+    type: string
+    description: 閲覧履歴リスト。商品コードをカンマ区切りで設定可能。
+  status:
+    type: string
+    enum: ['0','1','2','3','4']
+    description: 状態(0:利用可、1:利用停止、2:紛失、3:退会、4:名寄せ)
+  storeId:
+    type: string
+    description: 店舗ID

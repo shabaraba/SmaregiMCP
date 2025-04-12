@@ -1,0 +1,51 @@
+post:
+  summary: 取引取り消し
+  description: |-
+    取引を取消します。
+    ※外部決済連携を行う支払方法での決済を含む取引を取消しても、外部決済システムへの返金処理は行われません。
+  tags:
+    - 取引
+  parameters:
+    - name: id
+      in: path
+      required: true
+      description: 取引ID
+      schema:
+        type: integer
+        format: int64
+  requestBody:
+    required: true
+    content:
+      application/json:
+        schema:
+          $ref: "../../schemas/transactions/TransactionCancel.yaml"
+  responses:
+    "200":
+      description: 成功時のレスポンス
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              message:
+                type: string
+                description: 取消完了メッセージ
+                example: "取消が完了しました"
+    "400":
+      description: バリデーションエラー
+      content:
+        application/json:
+          schema:
+            $ref: "../../schemas/common/Error.yaml"
+    "404":
+      description: 指定された取引が見つからない
+      content:
+        application/json:
+          schema:
+            $ref: "../../schemas/common/Error.yaml"
+  security:
+    - AppAccessToken:
+        - pos.transactions:write
+    - UserAccessToken:
+        - pos.transactions:write
+

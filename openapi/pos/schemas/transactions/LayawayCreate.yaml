@@ -1,5 +1,5 @@
 type: object
-description: 預かり取引作成リクエスト
+description: 取置作成リクエスト
 properties:
   storeId:
     type: integer

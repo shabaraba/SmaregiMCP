@@ -4,71 +4,43 @@ properties:
   id:
     type: integer
     description: 在庫変動ID
-  storeId:
-    type: integer
-    description: 店舗ID
-  storeName:
+  updDateTime:
     type: string
-    description: 店舗名
+    format: date-time
+    description: 更新日時：データ更新時の日時。[YYYY-MM-DDThh:mm:ssTZD]
+  targetDateTime:
+    type: string
+    format: date-time
+    description: 対象日時：在庫数を変更した時の日時。[YYYY-MM-DDThh:mm:ssTZD] 棚卸、ロス登録時に日時を指定する場合があります。 通常は更新日時と同じ日時が設定されます。
   productId:
     type: integer
     description: 商品ID
-  productCode:
-    type: string
-    description: 商品コード
-  productName:
-    type: string
-    description: 商品名
-  barcode:
-    type: string
-    description: バーコード
-  categoryId:
+  storeId:
     type: integer
-    description: 部門ID
-  categoryName:
-    type: string
-    description: 部門名
-  stockDivision:
-    type: integer
-    description: 区分（1:取引、2:入庫、3:出庫、4:棚卸、5:発注、6:受注、7:ロス、8:その他）
-  divisionName:
-    type: string
-    description: 区分名
-  beforeQuantity:
-    type: number
-    format: float
-    description: 変動前在庫数
+    description: 店舗ID
   amount:
-    type: number
-    format: float
-    description: 変動数
-  stockAmount:
-    type: number
-    format: float
-    description: 変動後在庫数
-  targetDateTime:
-    type: string
-    format: date
-    description: 変動日
-  upDateTime:
-    type: string
-    format: date-time
-    description: 更新日時
-  staffId:
     type: integer
-    description: 担当スタッフID
-  staffName:
+    description: 数量：入出庫数（相対値で設定）
+  stockAmount:
+    type: integer
+    description: 在庫数：処理後の在庫数
+  layawayStockAmount:
+    type: integer
+    description: 取置き在庫数：処理後の取置き在庫数。
+  stockDivision:
     type: string
-    description: 担当スタッフ名
+    enum: ['01','02','03','04','05','06','07','08','09','10','12','13','14','15','16','17','18']
+    description: 在庫区分：在庫を更新理由となる区分 (01:修正、02:売上、03:仕入、04:出庫、05:入庫、06:レンタル、07:取置き、08:棚卸、09:調整、10:出荷、12:返品、13:販促品、14:ロス、15:スマレジAPI連携、16:売上引当、17:入庫欠品、18:受注在庫引当)
   fromStoreId:
     type: integer
-    description: 移動元店舗ID
+    description: 配送元店舗ID
   toStoreId:
     type: integer
-    description: 移動先店舗ID
+    description: 配送先店舗ID
   taxDivision:
-    type: integer
-    description: 税区分
+    type: string
+    enum: ['0','1','2']
+    description: 税区分：商品単価の税区分 (0：税込、1：税抜、2：非課税)
   price:
     type: number
     format: float
@@ -77,18 +49,12 @@ properties:
     type: number
     format: float
     description: 原価
-  refId:
-    type: integer
-    description: 関連ID（取引ID、入庫ID、出庫ID等）
   memo:
     type: string
     description: メモ
-required:
-  - id
-  - storeId
-  - productId
-  - stockDivision
-  - beforeQuantity
-  - amount
-  - stockAmount
-  - targetDateTime
+  staffId:
+    type: integer
+    description: 担当スタッフID
+  staffName:
+    type: string
+    description: 担当スタッフ名

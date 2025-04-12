@@ -5,36 +5,6 @@ get:
   description: 条件を指定して、在庫情報の一覧を取得します。
   operationId: getStocks
   parameters:
-    - name: store_id
-      in: query
-      description: 店舗ID
-      schema:
-        type: integer
-    - name: product_id
-      in: query
-      description: 商品ID
-      schema:
-        type: integer
-    - name: product_code
-      in: query
-      description: 商品コード
-      schema:
-        type: string
-    - name: product_name
-      in: query
-      description: 商品名
-      schema:
-        type: string
-    - name: category_id
-      in: query
-      description: 部門ID
-      schema:
-        type: integer
-    - name: barcode
-      in: query
-      description: バーコード
-      schema:
-        type: string
     - name: limit
       in: query
       description: 取得件数
@@ -47,6 +17,32 @@ get:
       schema:
         type: integer
         default: 1
+    - name: store_id
+      in: query
+      description: 店舗ID
+      schema:
+        type: integer
+    - name: product_id
+      in: query
+      description: 商品ID
+      schema:
+        type: integer
+    - name: upd_date_time-from
+      in: query
+      description: |
+        更新日時(from)：登録時・更新時の日時。[YYYY-MM-DDThh:mm:ssTZD]
+        ※ From〜Toの期間は最大31日までの指定でご利用ください
+      schema:
+        type: string
+        format: date-time
+    - name: upd_date_time-to
+      in: query
+      description: |
+        更新日時(to)：登録時・更新時の日時。[YYYY-MM-DDThh:mm:ssTZD]
+        ※ From〜Toの期間は最大31日までの指定でご利用ください
+      schema:
+        type: string
+        format: date-time
   responses:
     '200':
       description: 成功
@@ -78,42 +74,3 @@ get:
         - pos.stock:read
     - UserAccessToken:
         - pos.stock:read
-
-patch:
-  tags:
-    - 在庫
-  summary: 在庫更新
-  description: 在庫情報を更新します。
-  operationId: updateStock
-  requestBody:
-    content:
-      application/json:
-        schema:
-          $ref: '../../schemas/stocks/StockUpdate.yaml'
-    required: true
-  responses:
-    '200':
-      description: 成功
-    '400':
-      description: バリデーションエラー
-      content:
-        application/json:
-          schema:
-            $ref: '../../schemas/common/Error.yaml'
-    '401':
-      description: 認証エラー
-      content:
-        application/json:
-          schema:
-            $ref: '../../schemas/common/Error.yaml'
-    '404':
-      description: 指定された在庫情報が存在しない
-      content:
-        application/json:
-          schema:
-            $ref: '../../schemas/common/Error.yaml'
-  security:
-    - AppAccessToken:
-        - pos.stock:write
-    - UserAccessToken:
-        - pos.stock:write

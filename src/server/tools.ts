@@ -25,16 +25,16 @@ export async function registerTools(
   registerAuthTools(mcpServer, authService);
   
   // Register API request tools
-  registerApiRequestTools(mcpServer, apiService);
+  // registerApiRequestTools(mcpServer, apiService);
   
   // Register API info tools
-  registerApiInfoTools(mcpServer, apiService);
+  // registerApiInfoTools(mcpServer, apiService);
   
   // Register Zod-based API tools
   await registerZodApiTools(mcpServer, apiService);
   
   // Register generated API tools (will be gradually replaced by Zod-based tools)
-  await registerGeneratedApiTools(mcpServer, apiToolGenerator, apiService);
+  // await registerGeneratedApiTools(mcpServer, apiToolGenerator, apiService);
   
   console.error('[INFO] Tools registered successfully');
 }

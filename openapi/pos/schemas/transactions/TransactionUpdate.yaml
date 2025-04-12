@@ -1,25 +1,78 @@
 type: object
 description: 取引更新リクエスト
 properties:
-  customerId:
+  customerGroupId:
     type: integer
     format: int64
-    description: 会員ID
+    description: |
+      客層ID。客層セクションIDが1の客層IDを設定。
+      ※客層情報が存在しない場合エラー
+    nullable: true
+  customerGroupId2:
+    type: integer
+    format: int64
+    description: |
+      客層ID2。客層セクションIDが2の客層IDを設定。
+      ※客層情報が存在しない場合エラー
+    nullable: true
+  customerGroupId3:
+    type: integer
+    format: int64
+    description: |
+      客層ID3。客層セクションIDが3の客層IDを設定。
+      ※客層情報が存在しない場合エラー
+    nullable: true
+  customerGroupId4:
+    type: integer
+    format: int64
+    description: |
+      客層ID4。客層セクションIDが4の客層IDを設定。
+      ※客層情報が存在しない場合エラー
+    nullable: true
+  customerGroupId5:
+    type: integer
+    format: int64
+    description: |
+      客層ID5。客層セクションIDが5の客層IDを設定。
+      ※客層情報が存在しない場合エラー
     nullable: true
   staffId:
     type: integer
     format: int64
     description: スタッフID
     nullable: true
-  status:
-    type: integer
-    description: |-
-      取引ステータス
-      * 1: 会計済
-      * 2: 返品
-      * 3: 取消
   memo:
     type: string
     description: メモ
+    nullable: true
+  receiptMemo:
+    type: string
+    description: レシートに印字するメモ
+    nullable: true
+  guestNumbers:
+    type: integer
+    format: int64
+    description: 客数
+    nullable: true
+  guestNumbersMale:
+    type: integer
+    format: int64
+    description: 客数(男)
+    nullable: true
+  guestNumbersFemale:
+    type: integer
+    format: int64
+    description: 客数(女)
+    nullable: true
+  guestNumbersUnknown:
+    type: integer
+    format: int64
+    description: 客数(不明)
+    nullable: true
+  tags:
+    type: string
+    description: |
+      レジ端末よりクイックコマンドを押下した値を設定。 和名を設定する。
+      ※1取引タグは最大64文字。複数ある場合は、カンマ区切りで設定。
     nullable: true
 minProperties: 1
