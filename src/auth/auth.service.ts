@@ -1,10 +1,11 @@
 import { OpenIdAuthService } from './openid-auth.service.js';
+import { AuthServiceInterface } from './interfaces/auth-service.interface.js';
 
 /**
  * Adapter class for AuthService to maintain backward compatibility
  * while using OpenID Client for the implementation
  */
-export class AuthService {
+export class AuthService implements AuthServiceInterface {
   private openIdAuthService: OpenIdAuthService;
   
   constructor() {

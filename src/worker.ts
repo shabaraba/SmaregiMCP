@@ -1,5 +1,4 @@
 import { handleRequest } from './server/cloudflare-server.js';
-import { HttpServerTransport } from '@modelcontextprotocol/sdk/server/http.js';
 
 /**
  * Cloudflare Workers向けのMCPエントリポイント
@@ -9,22 +8,8 @@ import { HttpServerTransport } from '@modelcontextprotocol/sdk/server/http.js';
  * ワーカーはHTTPリクエストを処理し、RESTful APIとMCP SDKの両方のエンドポイントを提供します。
  */
 
-// MCP SDKのHTTPトランスポートの設定
-let mcpTransport: HttpServerTransport | null = null;
-
-/**
- * MCP SDKのHTTPトランスポートを作成
- * @param env Cloudflare環境変数
- */
-function getMcpTransport(env: Env): HttpServerTransport {
-  if (mcpTransport === null) {
-    mcpTransport = new HttpServerTransport({
-      path: '/mcp',
-      httpServer: null, // Cloudflareではnullを設定（HTTPサーバーは使わない）
-    });
-  }
-  return mcpTransport;
-}
+// MCPトランスポートの参照（実際にはcloudflare-server.jsで直接処理）
+let mcpServerInitialized = false;
 
 /**
  * Cloudflare Workersのメインハンドラー関数
@@ -42,13 +27,9 @@ export default {
     // MCPリクエストの処理
     if (url.pathname.startsWith('/mcp')) {
       try {
-        // MCPトランスポートの取得
-        const transport = getMcpTransport(env);
-        
-        // MCPリクエストを処理
-        // 注意: MCPサーバーの初期化は実際のリクエスト時に内部で行われるように設計
-        const response = await transport.handleRequest(request);
-        return response;
+        // MCPリクエストをcloudflare-server.jsでのハンドラに転送
+        // cloudflare-server.js内でMCPサーバーが作成され、リクエストを処理
+        return handleRequest(request, env, ctx);
       } catch (error) {
         console.error(`[ERROR] MCP request handling error: ${error}`);
         return new Response(JSON.stringify({ error: 'MCP Processing Error' }), {

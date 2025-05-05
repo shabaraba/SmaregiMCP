@@ -3,6 +3,7 @@ import { CloudflareTokenManager } from './cloudflare-token-manager.js';
 import { AUTH_HTML_TEMPLATES } from '../server/auth/cloudflare-auth-routes.js';
 import { TokenEntity } from './entities/token.entity.js';
 import { AuthStatus, CloudflareAuthStore } from './auth-store.js';
+import { AuthServiceInterface } from './interfaces/auth-service.interface.js';
 import { v4 as uuidv4 } from 'uuid';
 
 /**
@@ -11,42 +12,24 @@ import { v4 as uuidv4 } from 'uuid';
 interface UserInfoResponse {
   sub: string;
   name?: string;
-  given_name?: string;
-  family_name?: string;
-  middle_name?: string;
-  nickname?: string;
-  preferred_username?: string;
-  profile?: string;
-  picture?: string;
-  website?: string;
   email?: string;
   email_verified?: boolean;
-  gender?: string;
-  birthdate?: string;
-  zoneinfo?: string;
-  locale?: string;
-  phone_number?: string;
-  phone_number_verified?: boolean;
-  address?: {
-    formatted?: string;
-    street_address?: string;
-    locality?: string;
-    region?: string;
-    postal_code?: string;
-    country?: string;
+  contract?: {
+    id?: string;
+    user_id?: string;
+    is_owner?: boolean;
   };
-  updated_at?: number;
-  contract_id?: string; // スマレジの契約ID
 }
 
 /**
  * Cloudflare Workers用の認証サービス
  */
-export class CloudflareAuthService {
+export class CloudflareAuthService implements AuthServiceInterface {
   private sessionManager: CloudflareSessionManager;
   private tokenManager: CloudflareTokenManager;
   private authStore: CloudflareAuthStore;
   private env: Env;
+  public openIdAuthService: null = null; // AuthServiceと互換性を持たせるためのダミープロパティ
 
   constructor(env: Env) {
     this.env = env;
@@ -110,7 +93,7 @@ export class CloudflareAuthService {
       }
       
       const userInfo: UserInfoResponse = await response.json();
-      console.error(`[INFO] Retrieved user info with contract_id: ${userInfo.contract_id}`);
+      console.error(`[INFO] Retrieved user info with contract.id: ${userInfo.contract?.id}`);
       return userInfo;
     } catch (error) {
       console.error(`[ERROR] Error getting user info: ${error}`);
@@ -160,8 +143,8 @@ export class CloudflareAuthService {
     // ユーザー情報を取得してcontractIdを取得
     let contractId = "default";
     const userInfo = await this.getUserInfo(tokenData.access_token);
-    if (userInfo && userInfo.contract_id) {
-      contractId = userInfo.contract_id;
+    if (userInfo && userInfo.contract && userInfo.contract.id) {
+      contractId = userInfo.contract.id;
       console.error(`[INFO] Retrieved contract ID: ${contractId}`);
     } else {
       console.error(`[WARN] Could not retrieve contract ID, using default value`);
@@ -363,6 +346,86 @@ export class CloudflareAuthService {
       status: 'pending',
       message: '認証処理中です'
     };
+  }
+
+  /**
+   * アクセストークンを取得
+   * @param sessionId セッションID
+   */
+  async getAccessToken(sessionId: string): Promise<string | null> {
+    try {
+      const token = await this.tokenManager.getToken(sessionId);
+      if (!token) {
+        return null;
+      }
+      
+      // トークンが期限切れかどうかチェック
+      if (this.tokenManager.isTokenExpired(token)) {
+        if (token.refresh_token) {
+          // リフレッシュトークンがあれば更新を試みる
+          const refreshedToken = await this.refreshToken(sessionId);
+          return refreshedToken.access_token;
+        }
+        return null;
+      }
+      
+      return token.access_token;
+    } catch (error) {
+      console.error(`[ERROR] Failed to get access token: ${error}`);
+      return null;
+    }
+  }
+
+  /**
+   * AuthService互換のための認証URL生成メソッド
+   * @param scopes アクセス権限のスコープ
+   */
+  async getAuthorizationUrl(scopes: string[]): Promise<{ url: string; sessionId: string }> {
+    const { url, requestId } = await this.generateAuthUrl(scopes);
+    // StatusStoreを使って認証リクエストIDとセッションIDのマッピングを取得
+    const statusData = await this.authStore.getAuthStatus(requestId);
+    const sessionId = statusData?.data?.sessionId || requestId;
+    
+    return { url, sessionId };
+  }
+
+  /**
+   * AuthService互換のためのコールバック処理メソッド
+   * @param code 認証コード
+   * @param state 状態パラメータ
+   */
+  async handleCallback(code: string, state: string): Promise<string> {
+    const token = await this.getTokenFromCode(code, state);
+    // セッションを検索
+    const session = await this.sessionManager.getSessionByState(state);
+    if (!session) {
+      throw new Error('Invalid state parameter');
+    }
+    return session.id;
+  }
+
+  /**
+   * AuthService互換のための認証状態確認メソッド
+   * @param sessionId セッションID
+   */
+  async checkAuthStatus(sessionId: string): Promise<{ isAuthenticated: boolean; sessionId: string }> {
+    const isAuthenticated = await this.isAuthenticated(sessionId);
+    return { isAuthenticated, sessionId };
+  }
+
+  /**
+   * AuthService互換のためのトークン無効化メソッド
+   * @param sessionId セッションID
+   */
+  async revokeToken(sessionId: string): Promise<boolean> {
+    try {
+      // 実際には無効化処理を実装する（Cloudflareではトークンをストレージから削除するだけでも良い）
+      await this.tokenManager.deleteToken(sessionId);
+      return true;
+    } catch (error) {
+      console.error(`[ERROR] Token revocation failed: ${error}`);
+      return false;
+    }
   }
 
   /**

@@ -579,4 +579,3 @@ export const AUTH_HTML_TEMPLATES = {
 </body>
 </html>`
 };
-};

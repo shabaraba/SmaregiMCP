@@ -1,4 +1,4 @@
-import { McpServer } from '@modelcontextprotocol/sdk/server/mcp.js';
+import { McpServer } from '@modelcontextprotocol/sdk/dist/esm/server/mcp.js';
 import { SchemaConverter } from '../conversion/schema-converter.js';
 import { ApiToolGenerator } from '../conversion/tool-generator.js';
 import { ApiService } from '../api/api.service.js';
@@ -135,9 +135,35 @@ export async function handleRequest(
       // このサンプルコードは概念的なものです
       const body = await request.json();
       
-      // MCPメッセージングプロトコルに対応するレスポンスの処理は、
-      // 実際のMCP SDKのCloudflare Workers対応の詳細に依存します
-      const result = await mcpServer.handleMessage(body);
+      // MCPメッセージングプロトコルに対応するレスポンスの処理
+      // ここでは直接レスポンスを構築
+      // 注意: 完全な実装では、SDK内部の処理と同等の実装が必要
+      
+      // SDKのメソッドを使ってリクエストハンドリングを行う 
+      // シンプルなPingリクエストのレスポンスをサンプル実装
+      let result: any;
+      
+      if (body.method === 'ping') {
+        result = { jsonrpc: "2.0", id: body.id, result: {} };
+      } else if (body.method === 'resources/list') {
+        result = { 
+          jsonrpc: "2.0", 
+          id: body.id, 
+          result: { 
+            resources: [] // 空のリソースリスト 
+          } 
+        };
+      } else {
+        // その他のメソッドは未実装としてエラーを返す
+        result = { 
+          jsonrpc: "2.0", 
+          id: body.id, 
+          error: { 
+            code: -32601, 
+            message: "Method not implemented" 
+          } 
+        };
+      }
       
       return new Response(JSON.stringify(result), {
         headers: { 'Content-Type': 'application/json' }

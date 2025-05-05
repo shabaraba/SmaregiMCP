@@ -1,9 +1,10 @@
-import { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
+import { McpServer } from "@modelcontextprotocol/sdk/dist/esm/server/mcp.js";
 import { z } from "zod";
 import { AuthService } from "../auth/auth.service.js";
 import { ApiService } from "../api/api.service.js";
 import { ApiToolGenerator } from "../conversion/tool-generator.js";
 import { ZodApiToolGenerator } from "../tools/generators/zod-api-tool-generator.js";
+import { AuthServiceInterface } from "../auth/interfaces/auth-service.interface.js";
 
 /**
  * Register all tools to the MCP server
@@ -14,7 +15,7 @@ import { ZodApiToolGenerator } from "../tools/generators/zod-api-tool-generator.
  */
 export async function registerTools(
   mcpServer: McpServer,
-  authService: AuthService,
+  authService: AuthServiceInterface,
   apiService: ApiService,
   apiToolGenerator: ApiToolGenerator,
 ): Promise<void> {
@@ -45,7 +46,7 @@ export async function registerTools(
  */
 function registerAuthTools(
   mcpServer: McpServer,
-  authService: AuthService,
+  authService: AuthServiceInterface,
 ): void {
   console.error("[INFO] Registering authentication tools");
 

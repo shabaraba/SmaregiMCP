@@ -18,6 +18,10 @@ declare interface Env {
   SMAREGI_AUTH_URL?: string;
   SMAREGI_TOKEN_ENDPOINT?: string;
   SMAREGI_API_URL?: string;
+  DEBUG?: string;
+  SERVER_NAME?: string;
+  SERVER_VERSION?: string;
+  NODE_ENV?: string;
 }
 
 declare interface ExecutionContext {
