@@ -28,3 +28,5 @@ dist_test/
 ai/
 src/tools/generated/
 smaregi-mcp.sqlite
+
+**/.claude/settings.local.json

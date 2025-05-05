@@ -9,6 +9,10 @@
     "build": "tsc && npm run copy:static",
     "build:static": "npm run fix:imports && npm run copy:static",
     "build:full": "npm run pre_build && npm run build",
+    "build:cloudflare": "npm run pre_build && npm run build:cloudflare:worker",
+    "build:cloudflare:worker": "esbuild src/cloudflare-main.ts --bundle --outfile=dist/worker/index.js --format=esm --platform=browser --minify --sourcemap --external:node:*",
+    "dev:cloudflare": "wrangler dev",
+    "deploy:cloudflare": "wrangler publish",
     "copy:static": "npm run copy:html && npm run copy:json && npm run copy:assets",
     "copy:html": "mkdir -p dist/server/auth && cp src/server/auth/*.html dist/server/auth/",
     "copy:json": "mkdir -p dist/schema/converted && cp src/schema/converted/*.json dist/schema/converted/",
@@ -71,6 +75,7 @@
   },
   "devDependencies": {
     "@apidevtools/swagger-cli": "^4.0.4",
+    "@cloudflare/workers-types": "^4.20240312.0",
     "@eslint/js": "^9.22.0",
     "@modelcontextprotocol/inspector": "^0.8.1",
     "@nestjs/cli": "^11.0.5",
@@ -82,6 +87,7 @@
     "@types/node": "^20.10.0",
     "@types/supertest": "^2.0.12",
     "@types/uuid": "^9.0.1",
+    "esbuild": "^0.20.2",
     "eslint": "^8.57.0",
     "glob": "^11.0.1",
     "jest": "^29.5.0",
@@ -98,7 +104,8 @@
     "typed-openapi": "^0.10.1",
     "typescript": "^5.0.0",
     "typescript-eslint": "^8.26.1",
-    "typescript-json-schema": "^0.65.1"
+    "typescript-json-schema": "^0.65.1",
+    "wrangler": "^3.34.2"
   },
   "jest": {
     "moduleFileExtensions": [
