@@ -1,16 +1,19 @@
 name = "smaregi-mcp"
 main = "dist/worker/index.js"
 compatibility_date = "2023-10-30"
-node_compat = true
+compatibility_flags = ["nodejs_compat"]
 
 # 対象となるワーカーのタイプ
 workers_dev = true
 
 # KVネームスペースの設定
-kv_namespaces = [
-  { binding = "SESSIONS", id = "SESSIONS_ID", preview_id = "SESSIONS_PREVIEW_ID" },
-  { binding = "TOKENS", id = "TOKENS_ID", preview_id = "TOKENS_PREVIEW_ID" }
-]
+[[kv_namespaces]]
+binding = "SESSIONS"
+id = "211b932e0cc24c66b86c109ad8919aa3"
+
+[[kv_namespaces]]
+binding = "TOKENS"
+id = "d32b32df7285453193aacd29f84a262f"
 
 # 各環境の設定
 [env.production]
@@ -34,11 +37,6 @@ kv_namespaces = [
 # ビルド設定
 [build]
 command = "npm run build:cloudflare"
-watch = false
-
-# バンドル設定
-[build.upload]
-format = "modules"
 
 # ローカル開発設定
 [dev]

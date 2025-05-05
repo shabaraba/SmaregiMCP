@@ -6,6 +6,40 @@ import { AuthStatus, CloudflareAuthStore } from './auth-store.js';
 import { v4 as uuidv4 } from 'uuid';
 
 /**
+ * ユーザー情報レスポンスの型定義
+ */
+interface UserInfoResponse {
+  sub: string;
+  name?: string;
+  given_name?: string;
+  family_name?: string;
+  middle_name?: string;
+  nickname?: string;
+  preferred_username?: string;
+  profile?: string;
+  picture?: string;
+  website?: string;
+  email?: string;
+  email_verified?: boolean;
+  gender?: string;
+  birthdate?: string;
+  zoneinfo?: string;
+  locale?: string;
+  phone_number?: string;
+  phone_number_verified?: boolean;
+  address?: {
+    formatted?: string;
+    street_address?: string;
+    locality?: string;
+    region?: string;
+    postal_code?: string;
+    country?: string;
+  };
+  updated_at?: number;
+  contract_id?: string; // スマレジの契約ID
+}
+
+/**
  * Cloudflare Workers用の認証サービス
  */
 export class CloudflareAuthService {
@@ -59,6 +93,32 @@ export class CloudflareAuthService {
   }
 
   /**
+   * ユーザー情報を取得して契約IDを取得
+   * @param accessToken アクセストークン
+   */
+  private async getUserInfo(accessToken: string): Promise<UserInfoResponse | null> {
+    try {
+      const response = await fetch('https://id.smaregi.dev/userinfo', {
+        headers: {
+          'Authorization': `Bearer ${accessToken}`
+        }
+      });
+      
+      if (!response.ok) {
+        console.error(`[ERROR] Failed to get user info: ${response.statusText}`);
+        return null;
+      }
+      
+      const userInfo: UserInfoResponse = await response.json();
+      console.error(`[INFO] Retrieved user info with contract_id: ${userInfo.contract_id}`);
+      return userInfo;
+    } catch (error) {
+      console.error(`[ERROR] Error getting user info: ${error}`);
+      return null;
+    }
+  }
+
+  /**
    * 認証コードを使ってトークンを取得
    * @param code 認証コード
    * @param state stateパラメータ
@@ -97,11 +157,26 @@ export class CloudflareAuthService {
     // トークンレスポンスをパース
     const tokenData = await tokenResponse.json();
     
+    // ユーザー情報を取得してcontractIdを取得
+    let contractId = "default";
+    const userInfo = await this.getUserInfo(tokenData.access_token);
+    if (userInfo && userInfo.contract_id) {
+      contractId = userInfo.contract_id;
+      console.error(`[INFO] Retrieved contract ID: ${contractId}`);
+    } else {
+      console.error(`[WARN] Could not retrieve contract ID, using default value`);
+    }
+    
     // セッションを認証済みに更新
     await this.sessionManager.updateSessionAuthentication(session.id);
     
-    // トークンを保存
-    await this.tokenManager.saveToken(session.id, tokenData);
+    // トークンを保存（契約IDと一緒に）
+    await this.tokenManager.saveToken(session.id, tokenData, contractId);
+    
+    // メタデータに契約IDを保存
+    await this.sessionManager.updateSessionMetadata(session.id, { 
+      contract_id: contractId
+    });
     
     // トークンを取得
     const token = await this.tokenManager.getToken(session.id);
@@ -118,7 +193,8 @@ export class CloudflareAuthService {
         access_token: token.access_token,
         token_type: token.token_type,
         expires_at: token.expires_at.toISOString(),
-        scope: token.scope
+        scope: token.scope,
+        contract_id: contractId
       }
     });
     

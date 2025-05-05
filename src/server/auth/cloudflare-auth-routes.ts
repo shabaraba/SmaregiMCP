@@ -530,10 +530,11 @@ export const AUTH_HTML_TEMPLATES = {
           statusLoader.style.display = 'none';
           statusMessage.textContent = '認証が完了しました！';
           
-          // トークンを表示
+          // トークンと契約IDを表示
           const token = data.auth_data?.access_token;
+          const contractId = data.auth_data?.contract_id;
           if (token) {
-            tokenDisplay.textContent = \`Access Token: \${token.substring(0, 20)}...\`;
+            tokenDisplay.textContent = \`Access Token: \${token.substring(0, 20)}...\n\nContract ID: \${contractId || 'Not available'}\`;
             tokenDisplay.setAttribute('data-token', token);
             tokenDisplay.classList.remove('hidden');
             tokenDisplay.classList.add('visible');
