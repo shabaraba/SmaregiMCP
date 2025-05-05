@@ -2,6 +2,8 @@ import { CloudflareSessionManager } from './cloudflare-session-manager.js';
 import { CloudflareTokenManager } from './cloudflare-token-manager.js';
 import { AUTH_HTML_TEMPLATES } from '../server/auth/cloudflare-auth-routes.js';
 import { TokenEntity } from './entities/token.entity.js';
+import { AuthStatus, CloudflareAuthStore } from './auth-store.js';
+import { v4 as uuidv4 } from 'uuid';
 
 /**
  * Cloudflare Workers用の認証サービス
@@ -9,21 +11,35 @@ import { TokenEntity } from './entities/token.entity.js';
 export class CloudflareAuthService {
   private sessionManager: CloudflareSessionManager;
   private tokenManager: CloudflareTokenManager;
+  private authStore: CloudflareAuthStore;
   private env: Env;
 
   constructor(env: Env) {
     this.env = env;
     this.sessionManager = new CloudflareSessionManager(env.SESSIONS);
     this.tokenManager = new CloudflareTokenManager(env.TOKENS);
+    this.authStore = new CloudflareAuthStore(env.SESSIONS); // 同じKVを使用
   }
 
   /**
    * 認証URLを生成
    * @param scopes アクセス権限のスコープ
+   * @param requestId 認証リクエストの一意のID（指定がなければ生成）
    */
-  async generateAuthUrl(scopes: string[]): Promise<string> {
+  async generateAuthUrl(scopes: string[], requestId?: string): Promise<{ url: string, requestId: string }> {
+    // リクエストIDが指定されていなければ生成
+    const authRequestId = requestId || uuidv4();
+    
+    // セッションを作成
     const session = await this.sessionManager.createSession(scopes);
     
+    // セッションIDとリクエストIDの関連付けを保存
+    await this.authStore.setAuthStatus(authRequestId, AuthStatus.PENDING, {
+      sessionId: session.id,
+      state: session.state
+    });
+    
+    // 認証URLを生成
     const params = new URLSearchParams({
       client_id: this.env.CLIENT_ID || '',
       redirect_uri: this.env.REDIRECT_URI || 'https://mcp.example.com/auth/callback',
@@ -34,7 +50,12 @@ export class CloudflareAuthService {
       scope: scopes.join(' ')
     });
     
-    return `${this.env.SMAREGI_AUTH_URL || 'https://id.smaregi.dev/authorize'}?${params.toString()}`;
+    const authUrl = `${this.env.SMAREGI_AUTH_URL || 'https://id.smaregi.dev/authorize'}?${params.toString()}`;
+    
+    return {
+      url: authUrl,
+      requestId: authRequestId
+    };
   }
 
   /**
@@ -68,6 +89,8 @@ export class CloudflareAuthService {
     
     if (!tokenResponse.ok) {
       const errorText = await tokenResponse.text();
+      // stateに関連付けられた認証リクエストIDがあれば、ステータスを失敗に更新
+      await this.updateAuthStatusByState(state, AuthStatus.FAILED, { error: errorText });
       throw new Error(`Token request failed: ${errorText}`);
     }
     
@@ -83,10 +106,54 @@ export class CloudflareAuthService {
     // トークンを取得
     const token = await this.tokenManager.getToken(session.id);
     if (!token) {
+      // stateに関連付けられた認証リクエストIDがあれば、ステータスを失敗に更新
+      await this.updateAuthStatusByState(state, AuthStatus.FAILED, { error: 'Failed to retrieve saved token' });
       throw new Error('Failed to retrieve saved token');
     }
     
+    // stateに関連付けられた認証リクエストIDがあれば、ステータスを完了に更新
+    await this.updateAuthStatusByState(state, AuthStatus.COMPLETED, { 
+      sessionId: session.id,
+      token: {
+        access_token: token.access_token,
+        token_type: token.token_type,
+        expires_at: token.expires_at.toISOString(),
+        scope: token.scope
+      }
+    });
+    
     return token;
+  }
+
+  /**
+   * stateパラメータに関連する認証リクエストのステータスを更新
+   * @param state stateパラメータ
+   * @param status 新しいステータス
+   * @param data 関連データ
+   */
+  private async updateAuthStatusByState(state: string, status: AuthStatus, data?: any): Promise<void> {
+    try {
+      // KVから全ての認証ステータスを取得して、対応するものを更新
+      // 注意: これは非効率だが、KVには特定の値で検索する機能がないため、
+      // 実際の実装ではセカンダリインデックスやフラグメントインデックスを構築すべき
+      const allAuthStatus = await this.env.SESSIONS.list({ prefix: 'auth_status:' });
+      
+      for (const key of allAuthStatus.keys) {
+        const requestId = key.name.replace('auth_status:', '');
+        const statusData = await this.authStore.getAuthStatus(requestId);
+        if (statusData?.data?.state === state) {
+          await this.authStore.setAuthStatus(statusData.requestId, status, {
+            ...statusData.data,
+            ...data
+          });
+          return;
+        }
+      }
+      
+      console.error(`[WARN] No auth request found for state: ${state}`);
+    } catch (error) {
+      console.error(`[ERROR] Failed to update auth status by state: ${error}`);
+    }
   }
 
   /**
@@ -179,6 +246,48 @@ export class CloudflareAuthService {
     const session = await this.sessionManager.getSession(sessionId);
     return session ? session.is_authenticated : false;
   }
+  
+  /**
+   * 認証リクエストの状態を確認
+   * @param requestId 認証リクエストID
+   */
+  async getAuthRequestStatus(requestId: string): Promise<any> {
+    const statusData = await this.authStore.getAuthStatus(requestId);
+    
+    if (!statusData) {
+      return {
+        status: 'not_found',
+        message: '認証リクエストが見つかりません'
+      };
+    }
+    
+    // 成功した場合、最小限の情報のみ返す
+    if (statusData.status === AuthStatus.COMPLETED) {
+      return {
+        status: 'completed',
+        auth_data: {
+          access_token: statusData.data?.token?.access_token,
+          token_type: statusData.data?.token?.token_type,
+          expires_at: statusData.data?.token?.expires_at,
+          scope: statusData.data?.token?.scope
+        }
+      };
+    }
+    
+    // 失敗した場合はエラー情報を返す
+    if (statusData.status === AuthStatus.FAILED) {
+      return {
+        status: 'failed',
+        error: statusData.data?.error || '認証に失敗しました'
+      };
+    }
+    
+    // 処理中の場合
+    return {
+      status: 'pending',
+      message: '認証処理中です'
+    };
+  }
 
   /**
    * 認証リクエストハンドラー
@@ -202,12 +311,46 @@ export class CloudflareAuthService {
         const scopesParam = params.get('scopes') || 'pos.products:read';
         const scopes = scopesParam.split(' ');
         
-        const authUrl = await this.generateAuthUrl(scopes);
+        // 新しい認証フローを使用
+        const { url: authUrl, requestId } = await this.generateAuthUrl(scopes);
         
-        return Response.redirect(authUrl, 302);
+        // JSON形式で返すか、リダイレクトするかをクエリパラメータで判断
+        const format = params.get('format') || 'redirect';
+        
+        if (format === 'json') {
+          return new Response(JSON.stringify({
+            request_id: requestId,
+            auth_url: authUrl
+          }), {
+            headers: { 'Content-Type': 'application/json' }
+          });
+        } else {
+          return Response.redirect(authUrl, 302);
+        }
       } catch (error) {
         console.error(`[ERROR] Authorization error: ${error}`);
         return new Response(`Authorization error: ${error}`, { status: 500 });
+      }
+    }
+    
+    // 認証ステータス確認エンドポイント
+    else if (path.match(/^\/auth\/status\/[a-zA-Z0-9-]+$/)) {
+      try {
+        const requestId = path.split('/').pop() || '';
+        const status = await this.getAuthRequestStatus(requestId);
+        
+        return new Response(JSON.stringify(status), {
+          headers: { 'Content-Type': 'application/json' }
+        });
+      } catch (error) {
+        console.error(`[ERROR] Status check error: ${error}`);
+        return new Response(JSON.stringify({
+          status: 'error',
+          message: `${error}`
+        }), {
+          status: 500,
+          headers: { 'Content-Type': 'application/json' }
+        });
       }
     }
     
@@ -248,6 +391,13 @@ export class CloudflareAuthService {
     // 認証エラーページ
     else if (path === '/auth/error') {
       return new Response(AUTH_HTML_TEMPLATES.error, {
+        headers: { 'Content-Type': 'text/html' }
+      });
+    }
+    
+    // 自動認証ページ
+    else if (path === '/auth/auto') {
+      return new Response(AUTH_HTML_TEMPLATES.auto_auth, {
         headers: { 'Content-Type': 'text/html' }
       });
     }
