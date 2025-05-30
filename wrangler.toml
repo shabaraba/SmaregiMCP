@@ -1,0 +1,59 @@
+name = "smaregi-mcp"
+main = "dist/worker/index.js"
+compatibility_date = "2023-10-30"
+compatibility_flags = ["nodejs_compat"]
+
+# 対象となるワーカーのタイプ
+workers_dev = true
+
+# KVネームスペースの設定
+[[kv_namespaces]]
+binding = "SESSIONS"
+id = "211b932e0cc24c66b86c109ad8919aa3"
+
+[[kv_namespaces]]
+binding = "TOKENS"
+id = "d32b32df7285453193aacd29f84a262f"
+
+# 各環境の設定
+[env.production]
+# 本番環境用の設定
+# 実際のIDは管理画面から取得した値で置き換える
+kv_namespaces = [
+  { binding = "SESSIONS", id = "PRODUCTION_SESSIONS_ID" },
+  { binding = "TOKENS", id = "PRODUCTION_TOKENS_ID" }
+]
+# シークレットはワーカー管理画面やCLIから設定する
+# wrangler secret put CLIENT_ID
+# wrangler secret put CLIENT_SECRET
+
+[env.staging]
+# ステージング環境用の設定
+kv_namespaces = [
+  { binding = "SESSIONS", id = "STAGING_SESSIONS_ID" },
+  { binding = "TOKENS", id = "STAGING_TOKENS_ID" }
+]
+
+# ビルド設定
+[build]
+command = "npm run build:cloudflare"
+
+# ローカル開発設定
+[dev]
+port = 8787
+local_protocol = "http"
+
+# ワーカーの設定変数
+[vars]
+DEBUG = "false"
+SERVER_NAME = "smaregi"
+SERVER_VERSION = "1.0.0"
+REDIRECT_URI = "https://smaregi-mcp.yourdomain.workers.dev/auth/callback"
+SMAREGI_AUTH_URL = "https://id.smaregi.dev/authorize"
+SMAREGI_TOKEN_ENDPOINT = "https://id.smaregi.dev/authorize/token"
+SMAREGI_API_URL = "https://api.smaregi.dev"
+NODE_ENV = "production"
+
+# 定期実行設定（必要に応じて）
+# [triggers]
+# crons = ["0 0 * * *"] # 毎日午前0時に実行

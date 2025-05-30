@@ -1,51 +1,6 @@
-
-// Cloudflare Workers環境用のポリフィル
-const fs = {
-  readFileSync: (filePath, options) => {
-    console.error(`[WARN] fs.readFileSync called in Cloudflare environment: ${filePath}`);
-    return '';
-  },
-  existsSync: (filePath) => {
-    console.error(`[WARN] fs.existsSync called in Cloudflare environment: ${filePath}`);
-    return false;
-  },
-  writeFileSync: (filePath, data, options) => {
-    console.error(`[WARN] fs.writeFileSync called in Cloudflare environment: ${filePath}`);
-    return;
-  },
-  mkdirSync: (dirPath, options) => {
-    console.error(`[WARN] fs.mkdirSync called in Cloudflare environment: ${dirPath}`);
-    return;
-  }
-};
-
-const path = {
-  resolve: (...paths) => {
-    return '/' + paths.filter(Boolean).join('/').replace(/\/+/g, '/');
-  },
-  join: (...paths) => {
-    return paths.filter(Boolean).join('/').replace(/\/+/g, '/');
-  },
-  dirname: (filePath) => {
-    return filePath.split('/').slice(0, -1).join('/') || '/';
-  },
-  basename: (filePath, ext) => {
-    const base = filePath.split('/').pop() || '';
-    if (ext && base.endsWith(ext)) {
-      return base.slice(0, -ext.length);
-    }
-    return base;
-  }
-};
-
-// Cloudflare Workers環境用のprocess.cwdポリフィル
-const process = {
-  cwd: () => '/',
-  env: { NODE_ENV: 'production' }
-};
 import { McpServer, ResourceTemplate } from '@modelcontextprotocol/sdk/server/mcp.js';
-// import * as fs from 'fs';
-// import * as path from 'path';
+import * as fs from 'fs';
+import * as path from 'path';
 import { ApiService } from '../api/api.service.js';
 import { SchemaConverter } from '../conversion/schema-converter.js';
 import { ApiToolGenerator } from '../conversion/tool-generator.js';

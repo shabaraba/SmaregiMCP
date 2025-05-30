@@ -6,9 +6,39 @@
 非公式です。
 当MCPの利用によって生じたいかなる損害についても、一切責任を負いません。
 
-## 使用方法
+## 主要コマンド
 
-```sh
+### Node.js版（ローカル実行）
+
+```bash
+# 基本ビルド
+npm run build
+
+# 開発モードで実行
+npm run dev:node
+
+# MCP初期化（Claude Desktopへの登録）
+npm run mcp:init
+```
+
+### Cloudflare Workers版（クラウド実行）
+
+```bash
+# Cloudflare向けビルド
+npm run build:cloudflare
+
+# ローカル開発モードで実行
+npm run dev:cloudflare
+
+# デプロイ
+npm run deploy:cloudflare
+```
+
+## Claude Desktopでの設定
+
+```json
+{
+  "mcpServers": {
     "smaregi": {
       "command": "path/to/node",
       "args": [
@@ -16,7 +46,8 @@
         "run-proxy"
       ]
     }
-
+  }
+}
 ```
 
 ## ライセンス
@@ -65,6 +96,8 @@ NO_COLOR=1 npm run mcp:run
 
 ### MCPサーバーのセットアップ
 
+### Node.js版（ローカル実行）
+
 1. 必要なパッケージをインストール
 
 ```bash
@@ -94,7 +127,66 @@ npm run mcp:init
 この操作により、MCPサーバーがClaude Desktopの設定に登録されます。**このステップだけで完了です**。
 MCPサーバーはClaude Desktopにより必要なときに自動的に起動されます。
 
+### Cloudflare Workers版（クラウド実行）
+
+1. 必要なパッケージをインストール
+
+```bash
+npm install
+```
+
+2. Wranglerをインストール
+
+```bash
+npm install -g wrangler
+```
+
+3. Wranglerにログイン
+
+```bash
+wrangler login
+```
+
+4. KVネームスペースを作成
+
+```bash
+wrangler kv:namespace create SESSIONS
+wrangler kv:namespace create TOKENS
+```
+
+5. wrangler.tomlを編集し、生成されたKV IDを設定
+
+```toml
+[[kv_namespaces]]
+binding = "SESSIONS"
+id = "generated-id-from-step-4"
+
+[[kv_namespaces]]
+binding = "TOKENS"
+id = "generated-id-from-step-4"
+```
+
+6. アプリケーションをビルド
+
+```bash
+npm run build:cloudflare
+```
+
+7. ローカルで動作確認
+
+```bash
+npm run dev:cloudflare
+```
+
+8. デプロイ
+
+```bash
+npm run deploy:cloudflare
+```
+
 ### 使用方法
+
+#### Node.js版
 
 **注意**: `npm run mcp:init` を実行した後は、通常、手動でサーバーを起動する必要はありません。
 Claude Desktopはスマレジの機能にアクセスするときに自動的にMCPサーバーを起動します。
@@ -102,20 +194,26 @@ Claude Desktopはスマレジの機能にアクセスするときに自動的に
 開発やテスト目的で手動でサーバーを起動する場合：
 
 ```bash
-npm run mcp:run
+npm run dev:node
 ```
 
-開発モードで起動（ファイル変更の監視）：
+#### Cloudflare Workers版
+
+ローカル開発モードで起動：
 
 ```bash
-npm run mcp:dev
+npm run dev:cloudflare
 ```
 
-ヘルプを表示：
+このコマンドを実行すると、`http://localhost:8787`でサーバーが起動します。
 
-```bash
-npm run mcp:help
+認証フローをテストするには、ブラウザで以下のURLにアクセスします：
+
 ```
+http://localhost:8787/auth/auto
+```
+
+このページで「認証開始」ボタンをクリックすると、スマレジIDログイン画面が開き、認証後に自動的にcontract IDを取得します。
 
 ### 既知の問題: サーバーの二重起動
 

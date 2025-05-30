@@ -3,11 +3,11 @@ import createFetch, {
   MaybeOptionalInit,
 } from "openapi-fetch";
 import type { PathsWithMethod } from "openapi-typescript-helpers";
-import { AuthService } from "../auth/auth.service.js";
 import {
   ApiRequestInterface,
   ApiServiceInterface,
 } from "./interfaces/api-request.interface.js";
+import { AuthServiceInterface } from "../auth/interfaces/auth-service.interface.js";
 import { config } from "../utils/config.js";
 import axios from "axios";
 import createClient from "openapi-fetch/dist/index.js";
@@ -24,7 +24,7 @@ interface ApiRequestParams extends ApiRequestInterface {
  * Handles API requests to Smaregi API
  */
 export class ApiService implements ApiServiceInterface {
-  constructor(private readonly authService: AuthService) {}
+  constructor(private readonly authService: AuthServiceInterface) {}
 
   /**
    * Create API client for TypeScript typed requests
