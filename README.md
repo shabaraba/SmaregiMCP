@@ -127,61 +127,46 @@ npm run mcp:init
 この操作により、MCPサーバーがClaude Desktopの設定に登録されます。**このステップだけで完了です**。
 MCPサーバーはClaude Desktopにより必要なときに自動的に起動されます。
 
-### Cloudflare Workers版（クラウド実行）
+### Cloudflare Workers版（リモートMCP）
 
-1. 必要なパッケージをインストール
+詳細な手順は[Cloudflare デプロイメントガイド](docs/cloudflare-deployment.md)を参照してください。
+
+#### クイックスタート
+
+1. 依存関係のインストールとビルド
 
 ```bash
 npm install
-```
-
-2. Wranglerをインストール
-
-```bash
-npm install -g wrangler
-```
-
-3. Wranglerにログイン
-
-```bash
-wrangler login
-```
-
-4. KVネームスペースを作成
-
-```bash
-wrangler kv:namespace create SESSIONS
-wrangler kv:namespace create TOKENS
-```
-
-5. wrangler.tomlを編集し、生成されたKV IDを設定
-
-```toml
-[[kv_namespaces]]
-binding = "SESSIONS"
-id = "generated-id-from-step-4"
-
-[[kv_namespaces]]
-binding = "TOKENS"
-id = "generated-id-from-step-4"
-```
-
-6. アプリケーションをビルド
-
-```bash
 npm run build:cloudflare
 ```
 
-7. ローカルで動作確認
+2. Cloudflareへのデプロイ
 
 ```bash
-npm run dev:cloudflare
+wrangler login
+wrangler deploy
 ```
 
-8. デプロイ
+3. シークレットの設定
 
 ```bash
-npm run deploy:cloudflare
+wrangler secret put CLIENT_ID
+wrangler secret put CLIENT_SECRET
+```
+
+4. Claude Desktopの設定
+
+```json
+{
+  "mcpServers": {
+    "smaregi-remote": {
+      "url": "https://smaregi-mcp.your-subdomain.workers.dev/mcp",
+      "transport": {
+        "type": "http"
+      }
+    }
+  }
+}
 ```
 
 ### 使用方法

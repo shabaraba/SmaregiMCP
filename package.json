@@ -7,7 +7,7 @@
     "// ===== 基本ビルドコマンド =====": "",
     "build": "npm run build:node",
     "build:node": "npm run generate-schemas && tsc && npm run copy:static",
-    "build:cloudflare": "mkdir -p dist/worker && esbuild src/worker.ts --bundle --outfile=dist/worker/worker.js --format=esm --platform=browser --minify --sourcemap --external:crypto --external:fs --external:path --external:os --external:url",
+    "build:cloudflare": "mkdir -p dist/worker && esbuild src/cloudflare-worker.ts --bundle --outfile=dist/worker/worker.js --format=esm --platform=browser --minify --sourcemap",
     "// ===== 開発・サーバー起動コマンド =====": "",
     "dev:node": "node dist/main.js run",
     "dev:cloudflare": "wrangler dev",

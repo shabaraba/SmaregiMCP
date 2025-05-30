@@ -1,4 +1,5 @@
 import { handleRequest } from './server/cloudflare-server.js';
+import { handleSSE } from './server/cloudflare-sse-server.js';
 
 /**
  * Cloudflare Workers向けのMCPエントリポイント
@@ -23,6 +24,11 @@ export default {
   async fetch(request: Request, env: Env, ctx: ExecutionContext): Promise<Response> {
     // リクエストURLの解析
     const url = new URL(request.url);
+    
+    // SSEエンドポイントの処理
+    if (url.pathname === '/sse' || url.pathname === '/message') {
+      return handleSSE(request, env, ctx);
+    }
     
     // MCPリクエストの処理
     if (url.pathname.startsWith('/mcp')) {
