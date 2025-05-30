@@ -1,0 +1,79 @@
+name: Deploy to Preview Environment
+
+on:
+  pull_request:
+    types: [opened, synchronize, reopened]
+    branches: [main]
+
+jobs:
+  deploy-preview:
+    runs-on: ubuntu-latest
+    name: Deploy to Cloudflare Workers Preview
+    
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+          
+      - name: Install dependencies
+        run: npm ci
+        
+      - name: Build project
+        run: npm run build:cloudflare
+        
+      - name: Deploy to Preview
+        uses: cloudflare/wrangler-action@v3
+        with:
+          apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          command: deploy --env preview
+          
+      - name: Comment PR with preview URL
+        uses: actions/github-script@v7
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          script: |
+            const accountId = '${{ secrets.CLOUDFLARE_ACCOUNT_ID }}';
+            const workerName = 'smaregi-mcp';
+            const prNumber = context.issue.number;
+            
+            // Construct preview URL (adjust pattern based on your Cloudflare setup)
+            const previewUrl = `https://preview.${workerName}.${accountId}.workers.dev`;
+            
+            const comment = `## 🚀 Preview Deployment Ready!
+            
+            Your changes have been deployed to the preview environment:
+            
+            🔗 **Preview URL**: ${previewUrl}
+            
+            ### Testing the deployment:
+            
+            1. Update your Claude Desktop config to use the preview URL:
+               \`\`\`json
+               {
+                 "mcpServers": {
+                   "smaregi-preview": {
+                     "url": "${previewUrl}/mcp",
+                     "transport": {
+                       "type": "http"
+                     }
+                   }
+                 }
+               }
+               \`\`\`
+            
+            2. Test the authentication flow and API calls
+            
+            ---
+            _This preview will be updated automatically when you push new commits._`;
+            
+            github.rest.issues.createComment({
+              issue_number: prNumber,
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              body: comment
+            });
