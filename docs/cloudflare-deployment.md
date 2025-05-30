@@ -42,12 +42,31 @@ wrangler d1 create smaregi-mcp-cache
 
 #### シークレットの設定
 
+##### デフォルト環境（開発用）
 ```bash
 # OAuthクライアントID
 wrangler secret put CLIENT_ID
 
 # OAuthクライアントシークレット
 wrangler secret put CLIENT_SECRET
+```
+
+##### プレビュー環境
+```bash
+# プレビュー環境用のOAuthクライアントID
+wrangler secret put CLIENT_ID --env preview
+
+# プレビュー環境用のOAuthクライアントシークレット
+wrangler secret put CLIENT_SECRET --env preview
+```
+
+##### 本番環境
+```bash
+# 本番環境用のOAuthクライアントID
+wrangler secret put CLIENT_ID --env production
+
+# 本番環境用のOAuthクライアントシークレット
+wrangler secret put CLIENT_SECRET --env production
 ```
 
 #### wrangler.tomlの更新
@@ -69,20 +88,49 @@ SMAREGI_API_URL = "https://api.smaregi.dev"
 
 ### 5. ビルドとデプロイ
 
+#### プレビュー環境へのデプロイ
+
 ```bash
 # プロジェクトをビルド
 npm run build:cloudflare
 
-# Workersにデプロイ
+# プレビュー環境にデプロイ
+npm run deploy:preview
+
+# または直接
+wrangler deploy --env preview
+```
+
+デプロイ後のURL例：
+```
+https://preview.smaregi-mcp.<your-subdomain>.workers.dev
+```
+
+#### 本番環境へのデプロイ
+
+```bash
+# プロジェクトをビルド
+npm run build:cloudflare
+
+# 本番環境にデプロイ
+npm run deploy:cloudflare
+
+# または直接
 wrangler deploy
 ```
 
 ### 6. スマレジOAuthアプリの設定
 
-スマレジの開発者ポータルで、リダイレクトURIを以下のように設定してください：
+スマレジの開発者ポータルで、環境ごとにリダイレクトURIを設定してください：
 
+#### プレビュー環境
 ```
-https://smaregi-mcp.your-subdomain.workers.dev/auth/callback
+https://preview.smaregi-mcp.<your-subdomain>.workers.dev/auth/callback
+```
+
+#### 本番環境
+```
+https://smaregi-mcp.<your-subdomain>.workers.dev/auth/callback
 ```
 
 ## Claude Desktopでの設定
@@ -138,28 +186,54 @@ transactions_list
   transaction_date_time-to: "2024-01-31T23:59:59+09:00"
 ```
 
-## トラブルシューティング
+## 環境別の開発とテスト
 
-### KVネームスペースのデバッグ
-
-```bash
-# セッション一覧
-wrangler kv:key list --namespace-id=YOUR_SESSIONS_ID
-
-# 特定のセッションを確認
-wrangler kv:key get "session:SESSION_ID" --namespace-id=YOUR_SESSIONS_ID
-```
-
-### ログの確認
+### ローカル開発（プレビュー環境）
 
 ```bash
-wrangler tail
+# プレビュー環境でローカル開発
+npm run preview:cloudflare
+
+# または
+wrangler dev --env preview
 ```
 
 ### 環境変数の確認
 
 ```bash
+# デフォルト環境
 wrangler secret list
+
+# プレビュー環境
+wrangler secret list --env preview
+
+# 本番環境
+wrangler secret list --env production
+```
+
+## トラブルシューティング
+
+### KVネームスペースのデバッグ
+
+```bash
+# セッション一覧（環境を指定）
+wrangler kv:key list --namespace-id=YOUR_SESSIONS_ID --env preview
+
+# 特定のセッションを確認
+wrangler kv:key get "session:SESSION_ID" --namespace-id=YOUR_SESSIONS_ID --env preview
+```
+
+### ログの確認
+
+```bash
+# デフォルト環境のログ
+wrangler tail
+
+# プレビュー環境のログ
+wrangler tail --env preview
+
+# 本番環境のログ
+wrangler tail --env production
 ```
 
 ## セキュリティ上の注意

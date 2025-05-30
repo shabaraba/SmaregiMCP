@@ -25,6 +25,27 @@ id = "d32b32df7285453193aacd29f84a262f"
 # database_id = "YOUR_D1_DATABASE_ID"
 
 # 各環境の設定
+[env.preview]
+# プレビュー環境用の設定
+workers_dev = true
+# プレビュー環境用のKVネームスペース（開発環境と共有可能）
+kv_namespaces = [
+  { binding = "SESSIONS", id = "211b932e0cc24c66b86c109ad8919aa3" },
+  { binding = "TOKENS", id = "d32b32df7285453193aacd29f84a262f" }
+]
+# プレビュー環境用の変数（本番とは異なる値を設定可能）
+[env.preview.vars]
+DEBUG = "true"
+SERVER_NAME = "smaregi-preview"
+SERVER_VERSION = "1.0.0"
+# プレビュー環境用のリダイレクトURI
+REDIRECT_URI = "https://preview.smaregi-mcp.youraccount.workers.dev/auth/callback"
+SMAREGI_AUTH_URL = "https://id.smaregi.dev/authorize"
+SMAREGI_TOKEN_ENDPOINT = "https://id.smaregi.dev/authorize/token"
+SMAREGI_USERINFO_ENDPOINT = "https://id.smaregi.dev/userinfo"
+SMAREGI_API_URL = "https://api.smaregi.dev"
+NODE_ENV = "preview"
+
 [env.production]
 # 本番環境用の設定
 # 実際のIDは管理画面から取得した値で置き換える
@@ -33,8 +54,8 @@ kv_namespaces = [
   { binding = "TOKENS", id = "PRODUCTION_TOKENS_ID" }
 ]
 # シークレットはワーカー管理画面やCLIから設定する
-# wrangler secret put CLIENT_ID
-# wrangler secret put CLIENT_SECRET
+# wrangler secret put CLIENT_ID --env production
+# wrangler secret put CLIENT_SECRET --env production
 
 [env.staging]
 # ステージング環境用の設定

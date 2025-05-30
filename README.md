@@ -146,14 +146,24 @@ npm run build:cloudflare
 
 ```bash
 wrangler login
-wrangler deploy
+
+# プレビュー環境にデプロイ
+npm run deploy:preview
+
+# 本番環境にデプロイ
+npm run deploy:cloudflare
 ```
 
 3. シークレットの設定
 
 ```bash
-wrangler secret put CLIENT_ID
-wrangler secret put CLIENT_SECRET
+# プレビュー環境用
+wrangler secret put CLIENT_ID --env preview
+wrangler secret put CLIENT_SECRET --env preview
+
+# 本番環境用（必要な場合）
+wrangler secret put CLIENT_ID --env production
+wrangler secret put CLIENT_SECRET --env production
 ```
 
 4. Claude Desktopの設定
