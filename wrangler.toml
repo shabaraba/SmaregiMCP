@@ -61,6 +61,7 @@ SERVER_VERSION = "1.0.0"
 REDIRECT_URI = "https://smaregi-mcp.youraccount.workers.dev/auth/callback"
 SMAREGI_AUTH_URL = "https://id.smaregi.dev/authorize"
 SMAREGI_TOKEN_ENDPOINT = "https://id.smaregi.dev/authorize/token"
+SMAREGI_USERINFO_ENDPOINT = "https://id.smaregi.dev/userinfo"
 SMAREGI_API_URL = "https://api.smaregi.dev"
 NODE_ENV = "production"
 

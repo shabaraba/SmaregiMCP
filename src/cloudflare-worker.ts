@@ -14,6 +14,7 @@ interface Env {
   SMAREGI_AUTH_URL: string;
   SMAREGI_TOKEN_ENDPOINT: string;
   SMAREGI_API_URL: string;
+  SMAREGI_USERINFO_ENDPOINT: string;
 }
 
 // グローバル変数でツール定義を保持
@@ -350,7 +351,7 @@ async function handleTransactionsTool(args: any, env: Env): Promise<any> {
   
   // contractIdが保存されていない場合は、userinfoから取得
   if (!contractId) {
-    const userinfoResponse = await fetch('https://id.smaregi.dev/userinfo', {
+    const userinfoResponse = await fetch(env.SMAREGI_USERINFO_ENDPOINT, {
       headers: {
         'Authorization': `Bearer ${accessToken}`,
       },
@@ -474,7 +475,7 @@ async function handleAuthCallback(url: URL, env: Env): Promise<Response> {
   const tokenData = await tokenResponse.json();
   
   // userinfoを取得してcontractIdも保存
-  const userinfoResponse = await fetch('https://id.smaregi.dev/userinfo', {
+  const userinfoResponse = await fetch(env.SMAREGI_USERINFO_ENDPOINT, {
     headers: {
       'Authorization': `Bearer ${tokenData.access_token}`,
     },

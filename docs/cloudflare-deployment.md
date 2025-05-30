@@ -59,6 +59,12 @@ wrangler secret put CLIENT_SECRET
 # あなたのWorkers URLに置き換えてください
 REDIRECT_URI = "https://smaregi-mcp.your-subdomain.workers.dev/auth/callback"
 MCP_BASE_URL = "https://smaregi-mcp.your-subdomain.workers.dev"
+
+# スマレジのエンドポイント（必要に応じて変更）
+SMAREGI_AUTH_URL = "https://id.smaregi.dev/authorize"
+SMAREGI_TOKEN_ENDPOINT = "https://id.smaregi.dev/authorize/token"
+SMAREGI_USERINFO_ENDPOINT = "https://id.smaregi.dev/userinfo"
+SMAREGI_API_URL = "https://api.smaregi.dev"
 ```
 
 ### 5. ビルドとデプロイ
