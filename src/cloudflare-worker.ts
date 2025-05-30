@@ -320,6 +320,7 @@ async function handleTransactionsTool(args: any, env: Env): Promise<any> {
   // 認証確認
   const list = await env.SESSIONS.list({ prefix: 'session:' });
   let accessToken = null;
+  let contractId = null;
   
   for (const key of list.keys) {
     const tokenKey = `token:${key.name.replace('session:', '')}`;
@@ -327,6 +328,7 @@ async function handleTransactionsTool(args: any, env: Env): Promise<any> {
     if (tokenData) {
       const token = JSON.parse(tokenData);
       accessToken = token.access_token;
+      contractId = token.contractId;
       break;
     }
   }
@@ -346,8 +348,32 @@ async function handleTransactionsTool(args: any, env: Env): Promise<any> {
     };
   }
   
-  // contractIdを取得（トークンから抽出するか、デフォルト値を使用）
-  const contractId = 'sb_skc130x6'; // TODO: トークンから抽出する実装を追加
+  // contractIdが保存されていない場合は、userinfoから取得
+  if (!contractId) {
+    const userinfoResponse = await fetch('https://id.smaregi.dev/userinfo', {
+      headers: {
+        'Authorization': `Bearer ${accessToken}`,
+      },
+    });
+    
+    if (!userinfoResponse.ok) {
+      return {
+        result: {
+          content: [{
+            type: 'text',
+            text: JSON.stringify({
+              error: 'USERINFO_ERROR',
+              message: 'ユーザー情報の取得に失敗しました',
+            }),
+          }],
+          isError: true,
+        },
+      };
+    }
+    
+    const userinfo = await userinfoResponse.json();
+    contractId = userinfo.contract?.id || 'sb_skc130x6';
+  }
   
   // APIリクエスト
   const queryParams = new URLSearchParams({
@@ -447,8 +473,24 @@ async function handleAuthCallback(url: URL, env: Env): Promise<Response> {
   
   const tokenData = await tokenResponse.json();
   
-  // トークンを保存
-  await env.TOKENS.put(`token:${validSession}`, JSON.stringify(tokenData), {
+  // userinfoを取得してcontractIdも保存
+  const userinfoResponse = await fetch('https://id.smaregi.dev/userinfo', {
+    headers: {
+      'Authorization': `Bearer ${tokenData.access_token}`,
+    },
+  });
+  
+  let contractId = 'sb_skc130x6';
+  if (userinfoResponse.ok) {
+    const userinfo = await userinfoResponse.json();
+    contractId = userinfo.contract?.id || contractId;
+  }
+  
+  // トークンとcontractIdを保存
+  await env.TOKENS.put(`token:${validSession}`, JSON.stringify({
+    ...tokenData,
+    contractId,
+  }), {
     expirationTtl: tokenData.expires_in || 3600,
   });
   
