@@ -181,6 +181,15 @@ wrangler secret put CLIENT_SECRET --env production
 }
 ```
 
+#### 自動デプロイ（GitHub Actions）
+
+このプロジェクトはGitHub Actionsによる自動デプロイに対応しています：
+
+- **Pull Request作成/更新時** → プレビュー環境に自動デプロイ
+- **mainブランチへのマージ時** → 本番環境に自動デプロイ
+
+詳細な設定方法は[GitHub Actions セットアップガイド](docs/github-actions-setup.md)を参照してください。
+
 ### 使用方法
 
 #### Node.js版
