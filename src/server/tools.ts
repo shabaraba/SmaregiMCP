@@ -5,6 +5,8 @@ import { ApiService } from "../api/api.service.js";
 import { ApiToolGenerator } from "../conversion/tool-generator.js";
 import { ZodApiToolGenerator } from "../tools/generators/zod-api-tool-generator.js";
 import { AuthServiceInterface } from "../auth/interfaces/auth-service.interface.js";
+import { AuthHelperTool } from "../tools/auth-helper-tool.js";
+import { TransactionListTool } from "../tools/transaction-list-tool.js";
 
 /**
  * Register all tools to the MCP server
@@ -21,8 +23,8 @@ export async function registerTools(
 ): Promise<void> {
   console.error("[INFO] Registering tools...");
 
-  // Register authentication tools
-  registerAuthTools(mcpServer, authService);
+  // 認証ヘルパーツールを登録
+  await registerAuthHelperTool(mcpServer, authService);
 
   // Register API request tools
   // registerApiRequestTools(mcpServer, apiService);
@@ -30,13 +32,64 @@ export async function registerTools(
   // Register API info tools
   // registerApiInfoTools(mcpServer, apiService);
 
-  // Register Zod-based API tools
-  await registerZodApiTools(mcpServer, apiService);
+  // Zod-based API toolsは一旦無効化（取引関連以外）
+  // 後続の機能追加で再提供予定
+  // await registerZodApiTools(mcpServer, apiService);
+
+  // 取引関連ツールのみ登録（カスタムツール使用）
+  await registerCustomTransactionTool(mcpServer, apiService, authService);
 
   // Register generated API tools (will be gradually replaced by Zod-based tools)
   // await registerGeneratedApiTools(mcpServer, apiToolGenerator, apiService);
 
   console.error("[INFO] Tools registered successfully");
+}
+
+/**
+ * Register authentication helper tool
+ * @param mcpServer - The MCP server instance
+ * @param authService - The authentication service
+ */
+async function registerAuthHelperTool(
+  mcpServer: McpServer,
+  authService: AuthServiceInterface,
+): Promise<void> {
+  console.error("[INFO] Registering authentication helper tool...");
+  
+  // AuthServiceインスタンスが必要
+  if (!(authService instanceof AuthService)) {
+    console.error("[WARN] AuthService instance required for auth helper tool");
+    return;
+  }
+  
+  const authHelperTool = new AuthHelperTool(authService as AuthService);
+  
+  const paramsSchema: Record<string, z.ZodTypeAny> = {};
+  for (const param of authHelperTool.parameters) {
+    paramsSchema[param.name] = param.schema.describe(param.description);
+  }
+  
+  mcpServer.tool(
+    authHelperTool.name,
+    authHelperTool.description,
+    paramsSchema,
+    async (args) => {
+      try {
+        return await authHelperTool.execute(args);
+      } catch (error) {
+        console.error(`[ERROR] ${authHelperTool.name} execution error:`, error);
+        return {
+          content: [{
+            type: "text",
+            text: `認証ツールエラー: ${error instanceof Error ? error.message : String(error)}`
+          }],
+          isError: true
+        };
+      }
+    }
+  );
+  
+  console.error("[INFO] Authentication helper tool registered successfully");
 }
 
 /**
@@ -198,7 +251,8 @@ function registerAuthTools(
 
 /**
  * 動的に生成されたAPIツールでリクエストを実行する共通関数
- * @param sessionId
+ * @param accessToken アクセストークン
+ * @param contractId コントラクトID
  * @param endpoint APIエンドポイント
  * @param method HTTPメソッド
  * @param apiService APIサービス
@@ -208,7 +262,8 @@ function registerAuthTools(
  * @returns ツール実行結果
  */
 async function executeApiRequest(
-  sessionId: string,
+  accessToken: string,
+  contractId: string,
   endpoint: string,
   method: string,
   apiService: ApiService,
@@ -224,8 +279,9 @@ async function executeApiRequest(
       console.error(`[DEBUG] Body params: ${JSON.stringify(bodyParams)}`);
     }
 
-    const response = await apiService.executeRequest({
-      sessionId,
+    const response = await apiService.executeRequestWithToken({
+      accessToken,
+      contractId,
       endpoint,
       method,
       body: bodyParams,
@@ -276,14 +332,113 @@ async function executeApiRequest(
 }
 
 /**
- * ZodスキーマからAPIツールを登録
+ * カスタム取引一覧ツールを登録（日付必須、ISO 8601対応）
  * @param mcpServer - The MCP server instance
  * @param apiService - The API service
+ * @param authService - The authentication service
+ */
+async function registerCustomTransactionTool(
+  mcpServer: McpServer,
+  apiService: ApiService,
+  authService: AuthServiceInterface,
+): Promise<void> {
+  console.error("[INFO] Registering custom transaction list tool...");
+  
+  const transactionTool = new TransactionListTool(apiService, authService);
+  
+  const paramsSchema: Record<string, z.ZodTypeAny> = {};
+  for (const param of transactionTool.parameters) {
+    paramsSchema[param.name] = param.schema.describe(param.description);
+  }
+  
+  mcpServer.tool(
+    transactionTool.name,
+    transactionTool.description,
+    paramsSchema,
+    async (args) => {
+      try {
+        return await transactionTool.execute(args);
+      } catch (error) {
+        console.error(`[ERROR] ${transactionTool.name} execution error:`, error);
+        return {
+          content: [{
+            type: "text",
+            text: `ツール実行エラー (${transactionTool.name}): ${error instanceof Error ? error.message : String(error)}`
+          }],
+          isError: true
+        };
+      }
+    }
+  );
+  
+  console.error("[INFO] Custom transaction list tool registered successfully");
+}
+
+/**
+ * 取引一覧取得ツールのみを登録（旧Zodベース - 廃止予定）
+ * @param mcpServer - The MCP server instance
+ * @param apiService - The API service
+ * @param authService - The authentication service
+ * @returns Number of registered tools
+ */
+async function registerTransactionTools(
+  mcpServer: McpServer,
+  apiService: ApiService,
+  authService: AuthServiceInterface,
+): Promise<number> {
+  try {
+    console.error("[INFO] Registering transaction list tool only...");
+
+    // ZodApiToolGeneratorのインスタンス化
+    const zodGenerator = new ZodApiToolGenerator();
+
+    // Zodスキーマからツールを生成
+    const tools = await zodGenerator.generateToolsFromZodSchema();
+    console.error(`[INFO] Generated ${tools.length} Zod API tools`);
+
+    // 取引一覧取得ツールのみフィルタリング
+    const transactionListTools = tools.filter(tool => 
+      tool.name === 'transactions_list'
+    );
+    
+    console.error(`[INFO] Filtered to ${transactionListTools.length} transaction list tool only`);
+
+    // ツールを登録
+    let registeredCount = 0;
+
+    for (const tool of transactionListTools) {
+      try {
+        await registerSingleTool(mcpServer, tool, apiService, authService);
+        registeredCount++;
+      } catch (error) {
+        console.error(
+          `[ERROR] Failed to register transaction list tool ${tool.name}:`,
+          error,
+        );
+      }
+    }
+
+    console.error(
+      `[INFO] Successfully registered ${registeredCount} transaction list tool`,
+    );
+    return registeredCount;
+  } catch (error) {
+    console.error("[ERROR] Failed to register transaction API tools:", error);
+    return 0;
+  }
+}
+
+/**
+ * ZodスキーマからAPIツールを登録（全て - 現在無効化中）
+ * @param mcpServer - The MCP server instance
+ * @param apiService - The API service
+ * @param authService - The authentication service
  * @returns Number of registered tools
  */
 async function registerZodApiTools(
   mcpServer: McpServer,
   apiService: ApiService,
+  authService: AuthServiceInterface,
 ): Promise<number> {
   try {
     console.error("[INFO] Registering Zod API tools...");
@@ -318,7 +473,7 @@ async function registerZodApiTools(
 
       for (const tool of categoryTools) {
         try {
-          await registerSingleTool(mcpServer, tool, apiService);
+          await registerSingleTool(mcpServer, tool, apiService, authService);
           registeredCount++;
         } catch (error) {
           console.error(
@@ -344,11 +499,13 @@ async function registerZodApiTools(
  * @param mcpServer - The MCP server instance
  * @param tool - API tool definition
  * @param apiService - The API service
+ * @param authService - The authentication service
  */
 async function registerSingleTool(
   mcpServer: McpServer,
   tool: any,
   apiService: ApiService,
+  authService: AuthServiceInterface,
 ): Promise<void> {
   try {
     console.error(`[DEBUG] Registering tool: ${tool.name}`);
@@ -386,14 +543,76 @@ async function registerSingleTool(
             }
           }
 
+          // 認証済みセッションを取得
+          const sessions = await authService.getAllSessions?.() || [];
+          
+          if (sessions.length === 0) {
+            // 認証されていない場合
+            return {
+              content: [{
+                type: "text",
+                text: `🔐 認証が必要です
+
+このツールはスマレジAPIへのアクセスに認証が必要です。
+
+**認証手順:**
+1. \`authenticate_smaregi\` ツールで \`action: start\` を実行
+2. 表示された認証URLでスマレジアカウントにログイン
+3. 認証完了後、このツールを再実行
+
+**または手動認証:**
+- 認証URL: http://127.0.0.1:3000/oauth/authorize
+- 必要スコープ: pos.transactions:read`
+              }],
+              isError: true
+            };
+          }
+
+          // 最新のセッションを使用
+          const latestSession = sessions[0];
+          const authStatus = await authService.checkAuthStatus?.(latestSession.sessionId);
+          
+          if (!authStatus?.isAuthenticated) {
+            return {
+              content: [{
+                type: "text",
+                text: `⏳ 認証処理中です
+
+認証が完了していません。
+\`authenticate_smaregi\` ツールで \`action: status\` を実行して認証状態を確認してください。`
+              }],
+              isError: true
+            };
+          }
+
+          // 認証済みの場合、実際のAPIリクエストを実行
+          const accessToken = await authService.getAccessToken?.(latestSession.sessionId);
+          if (!accessToken) {
+            return {
+              content: [{
+                type: "text",
+                text: `❌ アクセストークンが取得できませんでした
+
+認証をやり直してください。
+\`authenticate_smaregi\` ツールで \`action: start\` を実行してください。`
+              }],
+              isError: true
+            };
+          }
+
+          // contractIdを取得
+          const contractId = authService.getContractIdFromToken?.(accessToken) || 'sb_skc130x6';
+
+          // 実際のAPIリクエストを実行
           return await executeApiRequest(
-            args.sessionId,
+            accessToken,
+            contractId,
             tool.path,
             tool.method,
             apiService,
             pathParams,
             queryParams,
-            bodyParams,
+            bodyParams
           );
         } catch (error) {
           console.error(`[ERROR] ${tool.name} execution error:`, error);

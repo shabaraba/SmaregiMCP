@@ -6,6 +6,7 @@ import { packageInfo } from '../utils/package-info.js';
 import { registerResources } from './resources.js';
 import { registerTools } from './tools.js';
 import { registerPrompts } from './prompts.js';
+import { registerCloudflareTools } from './cloudflare-tools.js';
 import { z } from 'zod';
 import { setupCloudflareAuthRoutes } from './auth/cloudflare-auth-routes.js';
 
@@ -62,7 +63,10 @@ export async function createCloudflareServer(env: Env) {
   
   // リソース、ツール、プロンプトを登録
   await registerResources(mcpServer, apiService, schemaConverter, apiToolGenerator);
-  await registerTools(mcpServer, authService, apiService, apiToolGenerator);
+  
+  // 既存のツールではなく、Cloudflare専用ツールを登録
+  await registerCloudflareTools(mcpServer, authService, env, env.DB);
+  
   await registerPrompts(mcpServer);
   
   console.error('[INFO] Cloudflare MCP server created and configured successfully');

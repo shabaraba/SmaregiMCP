@@ -39,4 +39,15 @@ export interface AuthServiceInterface {
    * @param sessionId セッションID
    */
   revokeToken?(sessionId: string): Promise<boolean>;
+  
+  /**
+   * 全セッション情報を取得
+   */
+  getAllSessions?(): Promise<Array<{ sessionId: string; createdAt: Date }>>;
+  
+  /**
+   * アクセストークンからcontractIdを取得
+   * @param token アクセストークン
+   */
+  getContractIdFromToken?(token: string): string | null;
 }

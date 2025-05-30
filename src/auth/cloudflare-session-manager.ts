@@ -1,4 +1,4 @@
-import * as crypto from 'crypto';
+// Cloudflare Workers環境ではWeb Crypto APIを使用
 import { config } from '../utils/config.js';
 
 /**
@@ -40,8 +40,9 @@ export class CloudflareSessionManager {
    * ランダム文字列を生成 (verifierやstate用)
    */
   generateRandomString(length: number): string {
-    return crypto.randomBytes(Math.ceil(length * 0.75))
-      .toString('base64')
+    const array = new Uint8Array(Math.ceil(length * 0.75));
+    crypto.getRandomValues(array);
+    return btoa(String.fromCharCode(...array))
       .replace(/[+/]/g, '_')
       .slice(0, length);
   }
@@ -49,11 +50,12 @@ export class CloudflareSessionManager {
   /**
    * verifierからcode challengeを作成 (PKCE)
    */
-  createCodeChallenge(verifier: string): string {
-    return crypto
-      .createHash('sha256')
-      .update(verifier)
-      .digest('base64')
+  async createCodeChallenge(verifier: string): Promise<string> {
+    const encoder = new TextEncoder();
+    const data = encoder.encode(verifier);
+    const digest = await crypto.subtle.digest('SHA-256', data);
+    
+    return btoa(String.fromCharCode(...new Uint8Array(digest)))
       .replace(/\+/g, '-')
       .replace(/\//g, '_')
       .replace(/=/g, '');
@@ -70,7 +72,7 @@ export class CloudflareSessionManager {
       
       const sessionId = this.generateRandomString(32);
       const verifier = this.generateRandomString(64);
-      const codeChallenge = this.createCodeChallenge(verifier);
+      const codeChallenge = await this.createCodeChallenge(verifier);
       const state = this.generateRandomString(32);
       
       const session: SessionData = {
@@ -306,6 +308,32 @@ export class CloudflareSessionManager {
     } catch (error) {
       console.error(`[ERROR] Failed to delete session: ${error}`);
       throw error;
+    }
+  }
+
+  /**
+   * 全ての有効なセッションを取得
+   */
+  async getAllActiveSessions(): Promise<SessionData[]> {
+    try {
+      const sessionKeys = await this.kvNamespace.list({ prefix: 'session:' });
+      const sessions: SessionData[] = [];
+      
+      for (const key of sessionKeys.keys) {
+        const sessionJson = await this.kvNamespace.get(key.name);
+        if (sessionJson) {
+          const session = this.mapSessionFromJson(sessionJson);
+          // 有効期限をチェック
+          if (session.expires_at > new Date()) {
+            sessions.push(session);
+          }
+        }
+      }
+      
+      return sessions;
+    } catch (error) {
+      console.error(`[ERROR] Failed to get all active sessions: ${error}`);
+      return [];
     }
   }
 

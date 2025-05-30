@@ -7,7 +7,7 @@
     "// ===== 基本ビルドコマンド =====": "",
     "build": "npm run build:node",
     "build:node": "npm run generate-schemas && tsc && npm run copy:static",
-    "build:cloudflare": "mkdir -p dist/worker && esbuild src/cloudflare-main.ts --bundle --outfile=dist/worker/index.js --format=esm --platform=browser --minify --sourcemap",
+    "build:cloudflare": "mkdir -p dist/worker && esbuild src/worker.ts --bundle --outfile=dist/worker/worker.js --format=esm --platform=browser --minify --sourcemap --external:crypto --external:fs --external:path --external:os --external:url",
     "// ===== 開発・サーバー起動コマンド =====": "",
     "dev:node": "node dist/main.js run",
     "dev:cloudflare": "wrangler dev",
@@ -38,7 +38,7 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "@modelcontextprotocol/sdk": "^1.9.0",
+    "@modelcontextprotocol/sdk": "^1.12.1",
     "@nestjs/axios": "^4.0.0",
     "@nestjs/common": "^11.0.12",
     "@nestjs/config": "^4.0.2",
@@ -92,22 +92,5 @@
     "typescript-eslint": "^8.26.1",
     "typescript-json-schema": "^0.65.1",
     "wrangler": "^3.34.2"
-  },
-  "jest": {
-    "moduleFileExtensions": [
-      "js",
-      "json",
-      "ts"
-    ],
-    "rootDir": "src",
-    "testRegex": ".*\\.spec\\.ts$",
-    "transform": {
-      "^.+\\.(t|j)s$": "ts-jest"
-    },
-    "collectCoverageFrom": [
-      "**/*.(t|j)s"
-    ],
-    "coverageDirectory": "../coverage",
-    "testEnvironment": "node"
   }
 }

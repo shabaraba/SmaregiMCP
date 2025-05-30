@@ -1,7 +1,7 @@
 import express from 'express';
 import { Server } from 'http';
 import { setupProxyAuthRoutes } from './auth/proxy-auth-routes.js';
-import { config } from '../utils/config.js';
+import { config } from '../utils/node-config.js';
 import { ProxyAuthService } from '../auth/proxy-auth-service.js';
 
 /**

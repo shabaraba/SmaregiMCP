@@ -11,6 +11,9 @@ import * as os from 'node:os';
 import { createServer } from './server/server.js';
 import { createProxyServer } from './server/proxy-server.js';
 
+// Node.js用設定を読み込み
+import { config } from './utils/node-config.js';
+
 /**
  * ロックファイルパス (重複起動防止用)
  */
@@ -271,6 +274,46 @@ async function runWithProxy() {
   await run();
 }
 
+/**
+ * HTTP専用でMCPサーバーを実行 (SSE接続用)
+ */
+async function runHttpOnly() {
+  console.error('[INFO] HTTP専用モードで起動します (SSE接続用)');
+  
+  try {
+    // MCPサーバーを作成
+    const { server, mcpServer, expressServer } = await createServer();
+    
+    console.error('[INFO] HTTP MCPサーバーが起動しました');
+    console.error('[INFO] SSE endpoint: http://127.0.0.1:3000/sse');
+    console.error('[INFO] Status endpoint: http://127.0.0.1:3000/status');
+    
+    // サーバーを永続化
+    global.expressServer = expressServer;
+    
+    // シグナルハンドラー設定
+    const cleanup = async (signal: string) => {
+      console.error(`[INFO] シグナル${signal}を受信しました。HTTPサーバーを終了します...`);
+      if (expressServer) {
+        expressServer.close(() => {
+          console.error('[INFO] HTTP server has been closed');
+          process.exit(0);
+        });
+      }
+    };
+    
+    process.on('SIGINT', () => cleanup('SIGINT'));
+    process.on('SIGTERM', () => cleanup('SIGTERM'));
+    
+    // サーバーを永続的に稼働させる
+    await new Promise(() => {}); // 無限に待機
+    
+  } catch (error) {
+    console.error(`[ERROR] HTTPサーバー起動中にエラーが発生しました: ${error}`);
+    process.exit(1);
+  }
+}
+
 // コマンドライン引数のパース
 const [cmd, ...args] = process.argv.slice(2);
 
@@ -303,6 +346,14 @@ switch (cmd) {
         process.exit(1);
       });
     break;
+    
+  case 'run-http':
+    runHttpOnly()
+      .catch((error) => {
+        console.error(`Unhandled error: ${error}`);
+        process.exit(1);
+      });
+    break;
   
   default:
     // ヘルプ表示
@@ -311,6 +362,7 @@ switch (cmd) {
     console.log('  init      - Configure the MCP server in Claude Desktop');
     console.log('  run       - Run the MCP server with the standard AuthService');
     console.log('  run-proxy - Run the MCP server with the ProxyOAuthProvider');
+    console.log('  run-http  - Run the MCP server in HTTP-only mode (for SSE connections)');
     process.exit(0);
 }
 

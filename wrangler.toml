@@ -1,5 +1,5 @@
 name = "smaregi-mcp"
-main = "dist/worker/index.js"
+main = "dist/worker/worker.js"
 compatibility_date = "2023-10-30"
 compatibility_flags = ["nodejs_compat"]
 
@@ -14,6 +14,12 @@ id = "211b932e0cc24c66b86c109ad8919aa3"
 [[kv_namespaces]]
 binding = "TOKENS"
 id = "d32b32df7285453193aacd29f84a262f"
+
+# D1データベースの設定（一時キャッシュ用）
+[[d1_databases]]
+binding = "DB"
+database_name = "smaregi-mcp-cache"
+database_id = "YOUR_D1_DATABASE_ID"
 
 # 各環境の設定
 [env.production]
