@@ -183,7 +183,12 @@ async function handleMCPMessage(message: any, env: Env, ctx: ExecutionContext): 
       };
       
     case 'tools/call':
-      return await handleToolCall(params, env, ctx);
+      const toolResult = await handleToolCall(params, env, ctx);
+      return {
+        jsonrpc: '2.0',
+        id,
+        ...toolResult
+      };
       
     case 'resources/list':
       return {
@@ -219,7 +224,6 @@ async function handleToolCall(params: any, env: Env, ctx: ExecutionContext): Pro
       return await handleTransactionsTool(args, env);
     } else {
       return {
-        jsonrpc: '2.0',
         error: {
           code: -32602,
           message: `Unknown tool: ${name}`,
@@ -228,7 +232,6 @@ async function handleToolCall(params: any, env: Env, ctx: ExecutionContext): Pro
     }
   } catch (error) {
     return {
-      jsonrpc: '2.0',
       error: {
         code: -32603,
         message: 'Tool execution error',
@@ -258,7 +261,6 @@ async function handleAuthTool(args: any, env: Env): Promise<any> {
     const authUrl = `${env.SMAREGI_AUTH_URL}?response_type=code&client_id=${env.CLIENT_ID}&scope=pos.transactions:read&state=${state}&redirect_uri=${encodeURIComponent(env.REDIRECT_URI)}`;
     
     return {
-      jsonrpc: '2.0',
       result: {
         content: [{
           type: 'text',
@@ -291,7 +293,6 @@ async function handleAuthTool(args: any, env: Env): Promise<any> {
     }
     
     return {
-      jsonrpc: '2.0',
       result: {
         content: [{
           type: 'text',
@@ -305,7 +306,6 @@ async function handleAuthTool(args: any, env: Env): Promise<any> {
   }
   
   return {
-    jsonrpc: '2.0',
     error: {
       code: -32602,
       message: 'Invalid action',
@@ -333,7 +333,6 @@ async function handleTransactionsTool(args: any, env: Env): Promise<any> {
   
   if (!accessToken) {
     return {
-      jsonrpc: '2.0',
       result: {
         content: [{
           type: 'text',
@@ -347,6 +346,9 @@ async function handleTransactionsTool(args: any, env: Env): Promise<any> {
     };
   }
   
+  // contractIdを取得（トークンから抽出するか、デフォルト値を使用）
+  const contractId = 'sb_skc130x6'; // TODO: トークンから抽出する実装を追加
+  
   // APIリクエスト
   const queryParams = new URLSearchParams({
     limit: '100',
@@ -356,7 +358,7 @@ async function handleTransactionsTool(args: any, env: Env): Promise<any> {
     'transaction_date_time-to': args['transaction_date_time-to'],
   });
   
-  const response = await fetch(`${env.SMAREGI_API_URL}/pos/transactions?${queryParams}`, {
+  const response = await fetch(`${env.SMAREGI_API_URL}/${contractId}/pos/transactions?${queryParams}`, {
     headers: {
       'Authorization': `Bearer ${accessToken}`,
       'Content-Type': 'application/json',
@@ -366,7 +368,6 @@ async function handleTransactionsTool(args: any, env: Env): Promise<any> {
   if (!response.ok) {
     const error = await response.text();
     return {
-      jsonrpc: '2.0',
       result: {
         content: [{
           type: 'text',
@@ -383,7 +384,6 @@ async function handleTransactionsTool(args: any, env: Env): Promise<any> {
   const data = await response.json();
   
   return {
-    jsonrpc: '2.0',
     result: {
       content: [{
         type: 'text',
