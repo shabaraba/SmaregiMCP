@@ -1,6 +1,6 @@
 import { TokenManager } from './token-manager.js';
 import { SessionManager } from './session-manager.js';
-import { config } from '../utils/config.js';
+import { config } from '../utils/node-config.js';
 import * as openidClient from 'openid-client';
 
 /**
@@ -354,5 +354,12 @@ export class OpenIdAuthService {
       console.error(`[ERROR] Token revocation failed: ${error}`);
       return false;
     }
+  }
+
+  /**
+   * 全セッション情報を取得
+   */
+  async getAllSessions(): Promise<Array<{ sessionId: string; createdAt: Date }>> {
+    return this.sessionManager.getAllSessions();
   }
 }

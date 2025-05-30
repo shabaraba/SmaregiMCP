@@ -1,7 +1,7 @@
 import * as crypto from 'crypto';
 import sqlite3 from 'sqlite3';
 import { promisify } from 'util';
-import { config } from '../utils/config.js';
+import { config } from '../utils/node-config.js';
 import * as fs from 'fs';
 import * as path from 'path';
 
@@ -50,8 +50,8 @@ export class SessionManager {
     this.allAsync = promisify(this.db.all.bind(this.db));
     this.getAsync = promisify(this.db.get.bind(this.db));
     
-    // Initialize database schema
-    this.initializeSchema();
+    // Initialize database schema - We'll call ensureInitialized() before each operation instead
+    // this.initializeSchema();
   }
 
   /**
@@ -59,8 +59,8 @@ export class SessionManager {
    */
   private async initializeSchema(): Promise<void> {
     try {
-      // Drop existing sessions table if it exists to ensure clean schema
-      await this.runAsync(`DROP TABLE IF EXISTS sessions`);
+      // Don't drop the table, just create if not exists to preserve data
+      // await this.runAsync(`DROP TABLE IF EXISTS sessions`);
       
       // Create new sessions table with the optimized schema
       await this.runAsync(`
@@ -431,6 +431,30 @@ export class SessionManager {
     } catch (error) {
       console.error(`[ERROR] Failed to clean up expired sessions: ${error}`);
       return 0;
+    }
+  }
+
+  /**
+   * 全セッション情報を取得
+   */
+  async getAllSessions(): Promise<Array<{ sessionId: string; createdAt: Date }>> {
+    try {
+      await this.ensureInitialized();
+      
+      const sessions = await this.allAsync(`
+        SELECT id, created_at 
+        FROM sessions 
+        WHERE is_authenticated = 1
+        ORDER BY created_at DESC
+      `);
+      
+      return sessions.map(session => ({
+        sessionId: session.id,
+        createdAt: new Date(session.created_at)
+      }));
+    } catch (error) {
+      console.error(`[ERROR] Failed to get all sessions: ${error}`);
+      return [];
     }
   }
 

@@ -12,6 +12,7 @@ declare interface KVNamespace {
 declare interface Env {
   SESSIONS: KVNamespace;
   TOKENS: KVNamespace;
+  DB: import('@cloudflare/workers-types').D1Database;
   CLIENT_ID?: string;
   CLIENT_SECRET?: string;
   REDIRECT_URI?: string;

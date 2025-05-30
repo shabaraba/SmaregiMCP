@@ -289,6 +289,42 @@ export class CloudflareAuthService implements AuthServiceInterface {
   }
 
   /**
+   * 自動認証機能付きでアクセストークンを取得
+   * @param sessionId セッションID（オプション）
+   * @returns 有効なアクセストークン
+   */
+  async getAccessTokenWithAutoAuth(sessionId?: string): Promise<{ token: string; sessionId: string }> {
+    try {
+      // セッションIDが提供されている場合
+      if (sessionId) {
+        try {
+          const token = await this.getValidToken(sessionId);
+          return { token: token.access_token, sessionId };
+        } catch (error) {
+          console.error(`[INFO] Session ${sessionId} is invalid or expired, will create new session`);
+        }
+      }
+
+      // 既存の有効なセッションを探す
+      const sessions = await this.sessionManager.getAllActiveSessions();
+      for (const session of sessions) {
+        try {
+          const token = await this.getValidToken(session.id);
+          return { token: token.access_token, sessionId: session.id };
+        } catch (error) {
+          // このセッションは無効、次を試す
+          continue;
+        }
+      }
+
+      // 有効なセッションがない場合は新規認証が必要
+      throw new Error('No valid authentication found. Please authenticate first.');
+    } catch (error) {
+      throw new Error(`Auto authentication failed: ${error instanceof Error ? error.message : String(error)}`);
+    }
+  }
+
+  /**
    * セッションIDを生成
    * @param scopes アクセス権限のスコープ
    */

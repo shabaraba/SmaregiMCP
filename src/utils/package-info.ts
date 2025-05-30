@@ -43,8 +43,6 @@ const process = {
   cwd: () => '/',
   env: { NODE_ENV: 'production' }
 };
-import * as fs from 'fs';
-// import * as path from 'path';
 
 /**
  * Package info from package.json

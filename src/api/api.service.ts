@@ -8,7 +8,7 @@ import {
   ApiServiceInterface,
 } from "./interfaces/api-request.interface.js";
 import { AuthServiceInterface } from "../auth/interfaces/auth-service.interface.js";
-import { config } from "../utils/config.js";
+import { config } from "../utils/node-config.js";
 import axios from "axios";
 import createClient from "openapi-fetch/dist/index.js";
 import type { paths } from "../schema/pos.d.ts";
@@ -505,5 +505,124 @@ export class ApiService implements ApiServiceInterface {
       limit: 100,
       offset: 0,
     };
+  }
+
+  /**
+   * Execute API request with access token (for MCP OAuth)
+   */
+  async executeRequestWithToken(params: {
+    accessToken: string;
+    contractId?: string;
+    endpoint: string;
+    method: string;
+    body?: any;
+    query?: Record<string, any>;
+    path?: Record<string, any>;
+  }): Promise<any> {
+    const { accessToken, contractId, endpoint, method, body, query, path } = params;
+
+    // contractIdを検証
+    const finalContractId = contractId || config.contractId;
+    if (!finalContractId) {
+      throw new Error('Contract ID is required but not provided. Please ensure authentication is complete.');
+    }
+
+    const client = createClient<paths>({
+      baseUrl: `${config.smaregiApiUrl}/${finalContractId}/pos`,
+      headers: {
+        Authorization: `Bearer ${accessToken}`,
+      },
+      // ドット記法を保持するカスタムシリアライザー
+      querySerializer: (obj: Record<string, any>) => {
+        const params = new URLSearchParams();
+        
+        // ドット記法をそのまま保持するカスタムシリアライズ関数
+        for (const key in obj) {
+          if (obj[key] !== undefined && obj[key] !== null) {
+            // 配列の場合は特別な処理
+            if (Array.isArray(obj[key])) {
+              obj[key].forEach((value: any) => {
+                params.append(key, String(value));
+              });
+            } else {
+              params.append(key, String(obj[key]));
+            }
+          }
+        }
+        
+        return params.toString();
+      }
+    });
+
+    switch (method) {
+      case "GET": {
+        const { data, error } = await client.GET(endpoint as any, {
+          params: {
+            path: path as any,
+            query: query as any,
+          },
+        });
+        if (error) {
+          const errorStr = `
+          [ERROR] get api failed: ${JSON.stringify(error, null, 2)}
+          [ERRPR] endpoint: ${method} ${config.smaregiApiUrl}/${config.contractId}/pos${endpoint}
+          [ERRPR] header: Authorization: Bearer ${accessToken}
+          [ERRPR] path: ${JSON.stringify(path, null, 2)}
+          [ERRPR] query: ${JSON.stringify(query, null, 2)}
+          `;
+          console.error(errorStr);
+          throw new Error(errorStr);
+        }
+        console.error(`[INFO] API request successful: ${method} ${endpoint}`);
+        return data;
+      }
+      case "POST": {
+        const { data, error } = await client.POST(endpoint as any, {
+          params: {
+            path: path as any,
+          },
+          body: body as any,
+        });
+        if (error) {
+          const errorStr = `[ERROR] post api failed: ${JSON.stringify(error, null, 2)}`;
+          console.error(errorStr);
+          throw new Error(errorStr);
+        }
+        console.error(`[INFO] API request successful: ${method} ${endpoint}`);
+        return data;
+      }
+      case "PUT": {
+        const { data, error } = await client.PUT(endpoint as any, {
+          params: {
+            path: path as any,
+          },
+          body: body as any,
+        });
+        if (error) {
+          const errorStr = `[ERROR] put api failed: ${JSON.stringify(error, null, 2)}`;
+          console.error(errorStr);
+          throw new Error(errorStr);
+        }
+        console.error(`[INFO] API request successful: ${method} ${endpoint}`);
+        return data;
+      }
+      case "DELETE": {
+        const { data, error } = await client.DELETE(endpoint as any, {
+          params: {
+            path: path as any,
+          },
+          body: body as any,
+        });
+        if (error) {
+          const errorStr = `[ERROR] delete api failed: ${JSON.stringify(error, null, 2)}`;
+          console.error(errorStr);
+          throw new Error(errorStr);
+        }
+        console.error(`[INFO] API request successful: ${method} ${endpoint}`);
+        return data;
+      }
+      default:
+        throw new Error(`Unsupported HTTP method: ${method}`);
+    }
   }
 }

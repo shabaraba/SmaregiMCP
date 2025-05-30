@@ -1,7 +1,7 @@
 import sqlite3 from 'sqlite3';
 import { TokenEntity } from './entities/token.entity.js';
 import { promisify } from 'util';
-import { config } from '../utils/config.js';
+import { config } from '../utils/node-config.js';
 import * as fs from 'fs';
 import * as path from 'path';
 
@@ -13,6 +13,7 @@ export class TokenManager {
   private runAsync: (sql: string, params?: any) => Promise<any>;
   private allAsync: (sql: string, params?: any) => Promise<any[]>;
   private getAsync: (sql: string, params?: any) => Promise<any>;
+  private isInitialized: boolean = false;
 
   constructor() {
     const dbPath = config.databasePath;
@@ -31,8 +32,8 @@ export class TokenManager {
     this.allAsync = promisify(this.db.all.bind(this.db));
     this.getAsync = promisify(this.db.get.bind(this.db));
     
-    // Initialize database schema
-    this.initializeSchema();
+    // Initialize database schema - We'll call ensureInitialized() before each operation instead
+    // this.initializeSchema();
   }
 
   /**
@@ -55,9 +56,19 @@ export class TokenManager {
         )
       `);
       console.error('[INFO] Token table initialized');
+      this.isInitialized = true;
     } catch (error) {
       console.error(`[ERROR] Failed to initialize schema: ${error}`);
       throw error;
+    }
+  }
+
+  /**
+   * Ensure the database schema is initialized before performing operations
+   */
+  private async ensureInitialized(): Promise<void> {
+    if (!this.isInitialized) {
+      await this.initializeSchema();
     }
   }
 
@@ -69,6 +80,7 @@ export class TokenManager {
    */
   async saveToken(id: string, tokenSet: any, contractId: string = "default"): Promise<void> {
     try {
+      await this.ensureInitialized();
       const now = new Date();
       
       // Determine expires_at from either expires_at or expires_in
@@ -156,6 +168,7 @@ export class TokenManager {
    */
   async getToken(id: string): Promise<TokenEntity | null> {
     try {
+      await this.ensureInitialized();
       const token = await this.getAsync(`
         SELECT * FROM tokens WHERE id = ?
       `, [id]);
@@ -182,6 +195,7 @@ export class TokenManager {
    */
   async deleteToken(id: string): Promise<void> {
     try {
+      await this.ensureInitialized();
       await this.runAsync(`
         DELETE FROM tokens WHERE id = ?
       `, [id]);

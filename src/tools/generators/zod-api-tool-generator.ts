@@ -120,16 +120,8 @@ export class ZodApiToolGenerator {
    * Zodスキーマからパラメータを抽出
    */
   private convertZodSchemaToParameters( endpoint: object ): ApiToolParameter[] {
-    const result: ApiToolParameter[] = [
-      // セッションIDは常に必須
-      {
-        name: "sessionId",
-        description: "認証済みのセッションID",
-        required: true,
-        type: "auth",
-        schema: z.string(),
-      },
-    ];
+    // OAuth認証方式のため、sessionIdパラメータは不要
+    const result: ApiToolParameter[] = [];
     if (!("parameters" in endpoint) || endpoint.parameters == null || endpoint.parameters == undefined) {
       return result;
     }

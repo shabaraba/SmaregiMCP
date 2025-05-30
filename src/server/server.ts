@@ -68,7 +68,7 @@ export async function createServer() {
   await registerPrompts(mcpServer);
   
   // Create and set up Express server for handling auth callbacks
-  const { server: expressServer } = createExpressServer();
+  const { server: expressServer } = createExpressServer(mcpServer);
   
   console.error('[INFO] MCP server created and configured successfully');
   

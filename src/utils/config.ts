@@ -41,7 +41,24 @@ const path = {
 // Cloudflare Workers環境用のprocess.cwdポリフィル
 const process = {
   cwd: () => '/',
-  env: { NODE_ENV: 'production' }
+  env: { 
+    NODE_ENV: 'production',
+    DEBUG: 'false',
+    SERVER_NAME: 'smaregi',
+    SERVER_VERSION: '1.0.0',
+    DATABASE_PATH: '/tmp/smaregi-mcp.sqlite',
+    JWT_SECRET: 'default_jwt_secret',
+    JWT_EXPIRES_IN: '1d',
+    CONTRACT_ID: '',
+    CLIENT_ID: '',
+    CLIENT_SECRET: '',
+    REDIRECT_URI: 'http://127.0.0.1:3000/auth/callback',
+    SMAREGI_AUTH_URL: 'https://id.smaregi.dev/authorize',
+    SMAREGI_TOKEN_ENDPOINT: 'https://id.smaregi.dev/authorize/token',
+    SMAREGI_API_URL: 'https://api.smaregi.dev',
+    PORT: '3000'
+  },
+  argv: ['node', 'index.js']
 };
 import dotenv from 'dotenv';
 // import * as path from 'path';
