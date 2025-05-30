@@ -129,6 +129,8 @@ MCPサーバーはClaude Desktopにより必要なときに自動的に起動さ
 
 ### Cloudflare Workers版（リモートMCP）
 
+Cloudflare Workers版は、**KVストレージ**を使用してセッションとトークンを管理します（SQLiteは使用しません）。
+
 詳細な手順は[Cloudflare デプロイメントガイド](docs/cloudflare-deployment.md)を参照してください。
 
 #### クイックスタート

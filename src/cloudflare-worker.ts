@@ -1,8 +1,10 @@
 /**
  * Cloudflare Workers用のシンプルなMCPサーバー実装
  * 
- * SSEを使わず、REST APIとして実装します。
- * MCPクライアントは、HTTP POSTでメッセージを送信し、レスポンスを受け取ります。
+ * 特徴:
+ * - KVストレージを使用（SQLiteは使用しません）
+ * - SSEを使わず、HTTP REST APIとして実装
+ * - MCPクライアントは、HTTP POSTでメッセージを送信し、レスポンスを受け取ります
  */
 
 interface Env {
@@ -101,8 +103,10 @@ export default {
           }
         });
       } catch (error) {
+        console.error('[ERROR] MCP message processing error:', error);
         return new Response(JSON.stringify({
           jsonrpc: '2.0',
+          id: message?.id || null,
           error: {
             code: -32603,
             message: 'Internal error',
@@ -154,6 +158,7 @@ export default {
  */
 async function handleMCPMessage(message: any, env: Env, ctx: ExecutionContext): Promise<any> {
   const { method, params, id } = message;
+  console.error(`[DEBUG] Processing MCP message: method=${method}, id=${id}`);
   
   switch (method) {
     case 'initialize':
@@ -184,7 +189,9 @@ async function handleMCPMessage(message: any, env: Env, ctx: ExecutionContext): 
       };
       
     case 'tools/call':
+      console.error(`[DEBUG] Executing tool: ${params?.name}`);
       const toolResult = await handleToolCall(params, env, ctx);
+      console.error(`[DEBUG] Tool result:`, toolResult);
       return {
         jsonrpc: '2.0',
         id,
@@ -247,30 +254,46 @@ async function handleToolCall(params: any, env: Env, ctx: ExecutionContext): Pro
  */
 async function handleAuthTool(args: any, env: Env): Promise<any> {
   const { action, code } = args;
+  console.error(`[DEBUG] Auth tool - action: ${action}`);
   
   if (action === 'start') {
     // セッションIDを生成
     const sessionId = crypto.randomUUID();
     const state = crypto.randomUUID();
+    console.error(`[DEBUG] Generated sessionId: ${sessionId}, state: ${state}`);
     
-    // セッション情報を保存
-    await env.SESSIONS.put(`session:${sessionId}`, JSON.stringify({
-      state,
-      createdAt: new Date().toISOString(),
-    }), { expirationTtl: 600 }); // 10分で期限切れ
+    try {
+      // セッション情報を保存
+      await env.SESSIONS.put(`session:${sessionId}`, JSON.stringify({
+        state,
+        createdAt: new Date().toISOString(),
+      }), { expirationTtl: 600 }); // 10分で期限切れ
+      console.error(`[DEBUG] Session saved to KV`);
+    } catch (error) {
+      console.error(`[ERROR] Failed to save session:`, error);
+      return {
+        error: {
+          code: -32603,
+          message: 'セッション保存エラー',
+          data: error instanceof Error ? error.message : String(error),
+        },
+      };
+    }
     
     const authUrl = `${env.SMAREGI_AUTH_URL}?response_type=code&client_id=${env.CLIENT_ID}&scope=pos.transactions:read&state=${state}&redirect_uri=${encodeURIComponent(env.REDIRECT_URI)}`;
+    console.error(`[DEBUG] Generated auth URL: ${authUrl}`);
     
     return {
       result: {
         content: [{
           type: 'text',
-          text: JSON.stringify({
-            status: 'auth_required',
-            authUrl,
-            sessionId,
-            message: '認証URLにアクセスしてログインしてください',
-          }),
+          text: `🔐 **スマレジ認証が必要です**
+
+認証URLにアクセスしてログインしてください：
+${authUrl}
+
+セッションID: ${sessionId}
+状態: 認証開始`,
         }],
       },
     };
@@ -293,14 +316,17 @@ async function handleAuthTool(args: any, env: Env): Promise<any> {
       }
     }
     
+    const isAuthenticated = sessions.length > 0;
     return {
       result: {
         content: [{
           type: 'text',
-          text: JSON.stringify({
-            authenticated: sessions.length > 0,
-            sessions,
-          }),
+          text: `📊 **認証状態**
+
+認証済み: ${isAuthenticated ? '✅ はい' : '❌ いいえ'}
+アクティブセッション数: ${sessions.length}
+
+${sessions.length > 0 ? '認証されています。取引データを取得できます。' : '認証が必要です。authenticate_smaregi で action: start を実行してください。'}`,
         }],
       },
     };
